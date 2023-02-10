@@ -10,13 +10,28 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/TextBoxTheme.xaml" />
+                <ResourceDictionary Source="Theme/WindowControlButtonTheme.xaml" />
+                <ResourceDictionary Source="Theme/ModernButtonTheme.xaml" />
+                <ResourceDictionary Source="Theme/ModernToolTipTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <view:HomeView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:PlayViewModel}">
+                <view:PlayView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ServerListViewModel}">
+                <view:ServerListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:InstanceViewModel}">
+                <view:InstanceView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ConfigEditorViewModel}">
+                <view:ConfigEditorView />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

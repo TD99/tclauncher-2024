@@ -18,15 +18,14 @@
                 </Setter.Value>
             </Setter>
 
+            <Setter Property="Height" Value="50" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
         </Style.Setters>
 
         <Style.Triggers>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="#11000000" />
-                <Setter Property="BorderThickness" Value="4" />
-            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#11000000" />
                 <Setter Property="BorderThickness" Value="4" />

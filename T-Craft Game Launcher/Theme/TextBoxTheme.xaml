@@ -24,7 +24,7 @@
                                      SelectionBrush="#9FB1CB"
                                      x:Name="TextEntry" />
                             <TextBlock IsHitTestVisible="False"
-                                       Text="Enter your query"
+                                       Text="Text eingeben"
                                        VerticalAlignment="Center"
                                        Margin="9, 0, 0, 0"
                                        FontSize="11"

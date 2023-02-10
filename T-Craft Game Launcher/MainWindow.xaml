@@ -11,82 +11,174 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        Icon="/Images/logo.png"
+        StateChanged="Window_StateChanged"
+        Title="TCLauncher"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
 
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
-    
-    <Border BorderBrush="#55000000"
-            BorderThickness="1"
-            Background="#1d2633"
-            CornerRadius="20">
-        <Grid Margin="20, 10, 20, 10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
 
-            <TextBlock Text="TCLauncher"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Foreground="White"
-                       FontSize="22"
-                       Margin="20, 0, 0, 0"
-                       Grid.Row="0"
-                       Grid.Column="0" />
-            
-            <StackPanel Grid.Column="0"
-                        Grid.Row="1">
-                <RadioButton Content="Home"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             IsChecked="True"
-                             Command="{Binding HomeViewCommand}" />
-                <RadioButton Content="Settings"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding SettingsViewCommand}" />
-            </StackPanel>
+    <Grid>
+        <Grid>
+            <Image x:Name="loadingImg"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Source="/Images/logo.png"
 
-            <Grid Grid.Column="1"
-                  Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox HorizontalAlignment="Left"
-                     Style="{StaticResource ModernTextBox}"
-                     Margin="15, 0, 0, 0"
-                     Grid.Column="0"
-                     Grid.Row="0" />
-
-                <Button x:Name="closeBtn"
-                        Content="X"
-                        Background="Black"
-                        Foreground="White"
-                        FontSize="20"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Click="closeBtn_Click" />
-            </Grid>
-
-            <ContentControl Grid.Column="1"
-                            Grid.Row="1"
-                            Margin="15"
-                            Content="{Binding CurrentView}" />
-            <!--Bug-->
+                   Panel.ZIndex="99" />
         </Grid>
-    </Border>
+
+        <Border x:Name="mainBorder"
+                BorderBrush="#10FFFFFF"
+                BorderThickness="2"
+                Background="#1d2633"
+                CornerRadius="20">
+        
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="10" />
+                </Grid.RowDefinitions>
+
+                <Border x:Name="topDrag"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Background="Transparent"
+                        Panel.ZIndex="-1"
+                        MouseDown="topDrag_MouseDown" />
+
+                <Grid Grid.Row="1"
+                      Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/Images/logo.png"
+                           Grid.Row="0"
+                           Grid.Column="0" />
+                    <TextBlock Text="TCLauncher"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               Foreground="#D3DBF2"
+                               FontWeight="Medium"
+                               FontSize="22"
+                               Grid.Row="0"
+                               Grid.Column="2" />
+                </Grid>
+            
+                <StackPanel Grid.Column="1"
+                            Grid.Row="2">
+                    <RadioButton x:Name="homeBtn"
+                                 Content="Home"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 IsChecked="True"
+                                 Command="{Binding HomeViewCommand}" />
+                    <RadioButton x:Name="playBtn"
+                                 Content="Spielen"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Command="{Binding PlayViewCommand}" />
+                    <RadioButton x:Name="serverBtn"
+                                 Content="Öffentliche Spiele"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Command="{Binding ServerListViewCommand}" />
+                    <RadioButton x:Name="instanceBtn"
+                                 Content="Meine Spiele"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Command="{Binding InstanceViewCommand}" />
+                    <RadioButton x:Name="settingsBtn"
+                                 Content="Einstellungen"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Command="{Binding SettingsViewCommand}" />
+                </StackPanel>
+
+                <Grid Grid.Column="2"
+                      Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--<TextBox HorizontalAlignment="Left"
+                         Style="{StaticResource ModernTextBox}"
+                         Margin="15, 0, 0, 0"
+                         Grid.Column="0"
+                         Grid.Row="0" />-->
+                    <Border x:Name="connectionBorder"
+                            CornerRadius="10"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Margin="15, 0, 0, 0"
+                            Padding="10"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            MouseDown="connectionBorder_MouseDown">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="connectionIndicator"
+                                     Width="6"
+                                     Height="6"
+                                     Fill="Red" />
+                            <TextBlock x:Name="connectionStatus"
+                                       Text="Connection"
+                                       Foreground="White"
+                                       FontSize="15"
+                                       VerticalAlignment="Center"
+                                       Margin="10, 0, 0, 0" />
+                        </StackPanel>
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#88000000" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Grid.Column="1"
+                                Grid.Row="0">
+                        <Button x:Name="minimizeBtn"
+                                Content="&#128469;&#xFE0E;"
+                                Click="minimizeBtn_Click"
+                                Style="{StaticResource WindowControlButton}">
+                        
+                        </Button>
+                        <Button x:Name="closeBtn"
+                                Content="&#128473;&#xFE0E;"
+                                Margin="10, 0, 0, 0"
+                                Click="closeBtn_Click"
+                                Style="{StaticResource WindowControlButton}" />
+                    </StackPanel>
+                
+                </Grid>
+
+                <ContentControl Grid.Column="2"
+                                Grid.Row="2"
+                                Margin="15"
+                                Content="{Binding CurrentView}"
+                                Focusable="False" />
+                <!--Bug-->
+            </Grid>
+        </Border>
+    </Grid>
 </Window>
