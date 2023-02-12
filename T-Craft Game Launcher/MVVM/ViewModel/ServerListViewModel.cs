@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using System.Windows;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.MVVM.View;
 
 namespace T_Craft_Game_Launcher.MVVM.ViewModel
 {
@@ -28,11 +31,18 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
         private async void LoadServers()
         {
-            var response = await _httpClient.GetAsync("https://tcraft.link/tclauncher/api/");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
+                var response = await _httpClient.GetAsync("https://tcraft.link/tclauncher/api/");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
+                }
+            }
+            catch 
+            {
+                MessageBox.Show("Ein Fehler beim Laden der verfügbaren Profile ist aufgetreten.", "Fehler");
             }
         }
     }

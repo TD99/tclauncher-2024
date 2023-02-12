@@ -11,37 +11,181 @@
     <UserControl.DataContext>
         <vm:ServerListViewModel />
     </UserControl.DataContext>
-    <StackPanel>
-        <ListView ItemsSource="{Binding ServerList}" Margin="10">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="150">
-                        <GridViewColumn.CellTemplate>
+
+    <Grid>
+        <StackPanel x:Name="itemFocus" Visibility="Collapsed">
+            <TextBlock Text="SOON" />
+        </StackPanel>
+        <StackPanel x:Name="serverList">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Profile"
+                           Foreground="White"
+                           FontSize="28"
+                           HorizontalAlignment="Left"
+                           Margin="0, 0, 0, 20"
+                           Grid.Column="0"/>
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right">
+                    <Button Content="+"
+                            FontSize="25"
+                            FontWeight="SemiBold"
+                            Width="45"
+                            Height="45"
+                            Style="{StaticResource ModernButton}" />
+                </StackPanel>
+            </Grid>
+            <Grid VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel x:Name="serverInstances"
+                            Grid.Column="0"
+                            Grid.Row="0">
+                    <TextBlock Text="Verfügbar"
+                               Foreground="White"
+                               FontSize="20"/>
+                    <ListView ItemsSource="{Binding ServerList}"
+                              Background="Transparent"
+                              BorderThickness="0">
+
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding ThumbnailURL}" Width="50" Height="50"/>
-                                    <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="10, 0, 0, 0"/>
-                                </StackPanel>
+                                <Border BorderThickness="0"
+                                        Height="200px"
+                                        Width="200px"
+                                        Background="#88000000"
+                                        MouseDown="ServerItem_Clicked">
+
+                                    <Border.Clip>
+                                        <RectangleGeometry RadiusX="10"
+                                                           RadiusY="10"
+                                                           Rect="0, 0, 200, 200" />
+                                    </Border.Clip>
+
+                                    <Grid>
+                                        <Image Stretch="UniformToFill"
+                                               Source="{Binding ThumbnailURL}"
+                                               RenderTransformOrigin="0.5,0.5"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center">
+                                            <Image.OpacityMask>
+                                                <SolidColorBrush Color="Black" Opacity="0.5"/>
+                                            </Image.OpacityMask>
+                                        </Image>
+
+                                        <StackPanel Margin="20">
+                                            <TextBlock x:Name="DisplayName"
+                                                       Text="{Binding DisplayName}"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       FontSize="20"
+                                                       TextTrimming="CharacterEllipsis">
+                                                <TextBlock.ToolTip>
+                                                    <ToolTip Style="{StaticResource ModernToolTip}"
+                                                             Content="{Binding DisplayName}" />
+                                                </TextBlock.ToolTip>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Left">
+                                                <TextBlock Text="Typ:"
+                                                           Foreground="White"
+                                                           FontSize="16" />
+                                                <TextBlock Text="{Binding Type}"
+                                                           Margin="10, 0, 0, 0"
+                                                           Foreground="White"
+                                                           FontSize="16"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="MC Version:"
+                                                           Foreground="White"
+                                                           FontSize="16"/>
+                                                <TextBlock Text="{Binding McVersion}"
+                                                           Margin="10, 0, 0, 0"
+                                                           Foreground="White"
+                                                           FontSize="16"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Version:"
+                                                           Foreground="White"
+                                                           FontSize="16"/>
+                                                <TextBlock Text="{Binding Version}"
+                                                           Margin="10, 0, 0, 0"
+                                                           Foreground="White"
+                                                           FontSize="16"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Typ" DisplayMemberBinding="{Binding Type}" Width="100" />
-                    <GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}" Width="100" />
-                    <GridViewColumn Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <Button Width="30" Height="30" BorderThickness="0">
-                                        <Button.Background>
-                                            <ImageBrush ImageSource="/Images/import.png"/>
-                                        </Button.Background>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </StackPanel>
+                        </ListView.ItemTemplate>
+                    
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Focusable" Value="False" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="OpacityMask">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="Black" Opacity="0.3" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="OpacityMask">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="Black" Opacity="0.8" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </StackPanel>
+            </Grid>
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Visibility, ElementName=itemFocus}" Value="Collapsed">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
+    </Grid>
 </UserControl>

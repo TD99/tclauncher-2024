@@ -18,7 +18,7 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#88000000" />
+            <Setter Property="Background" Value="#0E1218" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="10, 10, 10, 10" />
         </Style.Setters>

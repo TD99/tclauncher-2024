@@ -25,16 +25,5 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 }
             }
         }
-
-        private void playBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.GetType() == typeof(MainWindow))
-                {
-                    (window as MainWindow).navigateToPlay();
-                }
-            }
-        }
     }
 }

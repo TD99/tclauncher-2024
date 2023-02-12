@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using T_Craft_Game_Launcher.MVVM.Model;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -23,6 +24,14 @@ namespace T_Craft_Game_Launcher.MVVM.View
         public ServerListView()
         {
             InitializeComponent();
+        }
+
+        private void ServerItem_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            Border border = (Border)sender;
+            Instance instance = (Instance)border.DataContext;
+
+            MessageBox.Show(instance.DisplayName);
         }
     }
 }

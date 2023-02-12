@@ -8,158 +8,152 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
 
-    <StackPanel>
-        <TextBlock Text="Home"
-                   Foreground="White"
-                   FontSize="28"
-                   HorizontalAlignment="Left"
-                   Margin="0, 0, 0, 20" />
-
-        <StackPanel Orientation="Horizontal"
-                    Margin="0, 0, 0, 20">
-            <Border x:Name="discoverBorder"
-                    Width="400"
-                    Height="200"
-                    BorderThickness="0"
-                    Background="#88000000"
-                    MouseDown="discoverBorder_MouseDown">
-
-                <Border.Clip>
-                    <RectangleGeometry RadiusX="10"
-                                       RadiusY="10"
-                                       Rect="0, 0, 400, 200" />
-                </Border.Clip>
-
-                <Grid>
-                    <Image Stretch="UniformToFill"
-                           Source="/Images/banner1.png"
-                           RenderTransformOrigin="0.5,0.5">
-                        <Image.OpacityMask>
-                            <SolidColorBrush Color="Black" Opacity="0.5"/>
-                        </Image.OpacityMask>
-                    </Image>
-
-                    <StackPanel>
-                        <TextBlock Text="Öffentliche Spiele"
-                                   Foreground="White"
-                                   FontSize="28"
-                                   Margin="20,10,20,0" />
-                        <TextBlock Text="Spiele entdecken und herunterladen"
-                                   Foreground="White"
-                                   FontSize="18"
-                                   Margin="20,10,20,0" />
-                    </StackPanel>
-                </Grid>
-
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Setter Property="OpacityMask">
-                                    <Setter.Value>
-                                        <SolidColorBrush Color="Black" Opacity="0.8"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
-            <Border x:Name="playBorder"
-                    Width="200"
-                    Height="200"
-                    Margin="25, 0, 0, 0"
-                    BorderThickness="0"
-                    MouseDown="playBorder_MouseDown">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                        <GradientStop Color="#5BC3FF" Offset="0" />
-                        <GradientStop Color="#2E80CC" Offset="1" />
-                    </LinearGradientBrush>
-                </Border.Background>
-
-                <Border.Clip>
-                    <RectangleGeometry RadiusX="10"
-                                       RadiusY="10"
-                                       Rect="0, 0, 200, 200" />
-                </Border.Clip>
-
-                <Grid>
-                    <StackPanel>
-                        <TextBlock Text="Spielen"
-                                   Foreground="White"
-                                   FontSize="28"
-                                   Margin="20,10,20,0" />
-                        <TextBlock Text="Entdecke neue Welten"
-                                   Foreground="White"
-                                   FontSize="16.4"
-                                   Margin="20,10,20,0" />
-                    </StackPanel>
-                </Grid>
-
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Setter Property="OpacityMask">
-                                    <Setter.Value>
-                                        <SolidColorBrush Color="Black" Opacity="0.8"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
-        </StackPanel>
-
-        <TextBlock Text="Kürzlich gespielt"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Home"
                        Foreground="White"
-                       FontSize="20"
+                       FontSize="28"
                        HorizontalAlignment="Left"
-                       Margin="0, 0, 0, 10"/>
-        <StackPanel Orientation="Horizontal">
-            <Border Width="120"
-                    Height="120"
-                    Background="#FFBE49"
-                    CornerRadius="10">
-                <TextBlock Text="Bald verfügbar"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Border>
-            <Border Width="120"
-                    Height="120"
-                    Background="#FFCE4A4A"
-                    CornerRadius="10"
-                    Margin="10, 0, 0, 0">
-                <TextBlock Text="Bald verfügbar"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Border>
-            <Border Width="120"
-                    Height="120"
-                    Background="#FF65C0D8"
-                    CornerRadius="10"
-                    Margin="10, 0, 0, 0">
-                <TextBlock Text="Bald verfügbar"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Border>
-            <Border Width="120"
-                    Height="120"
-                    Background="#FF65D88C"
-                    CornerRadius="10"
-                    Margin="10, 0, 0, 0">
-                <TextBlock Text="Bald verfügbar"
-                           FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Border>
+                       Margin="0, 0, 0, 20" />
+        
+            <StackPanel Orientation="Horizontal"
+                        Margin="0, 0, 0, 20">
+                <Border x:Name="discoverBorder"
+                        Width="400"
+                        Height="200"
+                        BorderThickness="0"
+                        Background="#88000000"
+                        MouseDown="discoverBorder_MouseDown">
+
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="10"
+                                           RadiusY="10"
+                                           Rect="0, 0, 400, 200" />
+                    </Border.Clip>
+
+                    <Grid>
+                        <Image Stretch="UniformToFill"
+                               Source="/Images/banner1.png"
+                               RenderTransformOrigin="0.5,0.5">
+                            <Image.OpacityMask>
+                                <SolidColorBrush Color="Black" Opacity="0.5"/>
+                            </Image.OpacityMask>
+                        </Image>
+
+                        <StackPanel>
+                            <TextBlock Text="Öffentliche Spiele"
+                                       Foreground="White"
+                                       FontSize="28"
+                                       Margin="20,10,20,0" />
+                            <TextBlock Text="Spiele entdecken und herunterladen"
+                                       Foreground="White"
+                                       FontSize="18"
+                                       Margin="20,10,20,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="OpacityMask">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="Black" Opacity="0.8"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Border x:Name="playBorder"
+                        Width="200"
+                        Height="200"
+                        Margin="25, 0, 0, 0"
+                        BorderThickness="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#5BC3FF" Offset="0" />
+                            <GradientStop Color="#2E80CC" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="10"
+                                           RadiusY="10"
+                                           Rect="0, 0, 200, 200" />
+                    </Border.Clip>
+
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Spielen"
+                                       Foreground="White"
+                                       FontSize="28"
+                                       Margin="20,10,20,0" />
+                            <TextBlock Text="Entdecke neue Welten"
+                                       Foreground="White"
+                                       FontSize="16.4"
+                                       Margin="20,10,20,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="OpacityMask">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="Black" Opacity="0.8"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+
+        <Border Background="#2a384b"
+                CornerRadius="15"
+                Grid.Row="1">
+            <Grid Height="50"
+                  Margin="30, 10, 30, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          Style="{StaticResource ModernComboBox}">
+                    <ComboBox.Items>
+                        <ComboBoxItem Name="Profile" Content="Profile" IsSelected="True" />
+                        <ComboBoxItem Name="Profile2" Content="Profile2" />
+                        <ComboBoxItem Name="Profile3" Content="Profile2" />
+                        <ComboBoxItem Name="Profile4" Content="Profile2" />
+                    </ComboBox.Items>
+                </ComboBox>
+                <Button Content="Spielen"
+                        FontSize="20"
+                        FontWeight="Medium"
+                        Grid.Column="1"
+                        Style="{StaticResource ModernButton}" />
+                <TextBlock Text="Anonym"
+                           Foreground="White"
+                           FontSize="15"
+                           Grid.Column="2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

@@ -171,27 +171,15 @@ namespace T_Craft_Game_Launcher
             vm.HomeViewCommand.Execute(null);
         }
 
-        public void navigateToPlay()
-        {
-            playBtn.IsChecked = true;
-            vm.PlayViewCommand.Execute(null);
-        }
-
         public void navigateToServer()
         {
             serverBtn.IsChecked = true;
             vm.ServerListViewCommand.Execute(null);
         }
 
-        public void navigateToInstance()
-        {
-            instanceBtn.IsChecked = true;
-            vm.InstanceViewCommand.Execute(null);
-        }
-
         public void navigateToSettings()
         {
-            instanceBtn.IsChecked = true;
+            settingsBtn.IsChecked = true;
             vm.SettingsViewCommand.Execute(null);
         }
 
