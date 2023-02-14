@@ -13,9 +13,39 @@
     </UserControl.DataContext>
 
     <Grid>
-        <StackPanel x:Name="itemFocus" Visibility="Collapsed">
-            <TextBlock Text="SOON" />
-        </StackPanel>
+        <Grid x:Name="itemFocus"
+              Visibility="Collapsed"
+              Background="#99000000"
+              Panel.ZIndex="999">
+            <Border VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Width="600"
+                    Height="300"
+                    Background="#212121">
+
+                <Border.Clip>
+                    <RectangleGeometry RadiusX="10"
+                                       RadiusY="10"
+                                       Rect="0, 0, 600, 300" />
+                </Border.Clip>
+
+                <Grid>
+                    <Image x:Name="itemFocusBanner"
+                           Stretch="UniformToFill"
+                           Source="/Images/nothumb.png"
+                           RenderTransformOrigin="0.5,0.5"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center">
+                        <Image.OpacityMask>
+                            <SolidColorBrush Color="Black" Opacity="0.5"/>
+                        </Image.OpacityMask>
+                        <Image.Effect>
+                            <BlurEffect Radius="15" />
+                        </Image.Effect>
+                    </Image>
+                </Grid>
+            </Border>
+        </Grid>
         <StackPanel x:Name="serverList">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -132,7 +162,7 @@
                                 </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                    
+
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -176,16 +206,6 @@
                     </ListView>
                 </StackPanel>
             </Grid>
-            <StackPanel.Style>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Visibility, ElementName=itemFocus}" Value="Collapsed">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
         </StackPanel>
     </Grid>
 </UserControl>

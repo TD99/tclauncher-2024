@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net.Http;
 using System.Windows;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Model;
-using T_Craft_Game_Launcher.MVVM.View;
 
 namespace T_Craft_Game_Launcher.MVVM.ViewModel
 {
@@ -33,14 +32,28 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
         {
             try
             {
-                var response = await _httpClient.GetAsync("https://tcraft.link/tclauncher/api/");
+                var cacheFilePath = Path.Combine(Path.GetTempPath(), "ServerListCache.json");
+
+                if (File.Exists(cacheFilePath))
+                {
+                    var cacheContent = File.ReadAllText(cacheFilePath);
+                    ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(cacheContent);
+                }
+
+                var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
+
+                    if (ServerList == null || content != JsonConvert.SerializeObject(ServerList))
+                    {
+                        ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
+                        File.WriteAllText(cacheFilePath, content);
+                    }
                 }
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Ein Fehler beim Laden der verfügbaren Profile ist aufgetreten.", "Fehler");
             }

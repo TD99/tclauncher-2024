@@ -31,7 +31,8 @@ namespace T_Craft_Game_Launcher.MVVM.View
             Border border = (Border)sender;
             Instance instance = (Instance)border.DataContext;
 
-            MessageBox.Show(instance.DisplayName);
+            itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+            itemFocus.Visibility = Visibility.Visible;
         }
     }
 }
