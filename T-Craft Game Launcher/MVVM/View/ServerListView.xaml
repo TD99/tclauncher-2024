@@ -15,36 +15,71 @@
     <Grid>
         <Grid x:Name="itemFocus"
               Visibility="Collapsed"
-              Background="#99000000"
               Panel.ZIndex="999">
-            <Border VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Width="600"
-                    Height="300"
-                    Background="#212121">
-
-                <Border.Clip>
-                    <RectangleGeometry RadiusX="10"
-                                       RadiusY="10"
-                                       Rect="0, 0, 600, 300" />
-                </Border.Clip>
-
-                <Grid>
-                    <Image x:Name="itemFocusBanner"
-                           Stretch="UniformToFill"
-                           Source="/Images/nothumb.png"
-                           RenderTransformOrigin="0.5,0.5"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center">
-                        <Image.OpacityMask>
-                            <SolidColorBrush Color="Black" Opacity="0.5"/>
-                        </Image.OpacityMask>
-                        <Image.Effect>
-                            <BlurEffect Radius="15" />
-                        </Image.Effect>
-                    </Image>
+            <Grid>
+                <Image x:Name="itemFocusBanner"
+                       Stretch="UniformToFill"
+                       Source="/Images/nothumb.png"
+                       RenderTransformOrigin="0.5,0.5"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center">
+                </Image>
+                
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock x:Name="itemFocusName"
+                                   Text="Name"
+                                   Foreground="White" 
+                                   FontSize="40"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Version: "
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                            <TextBlock x:Name="itemFocusVersion"
+                                       Text="0.0.0"
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Typ: "
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                            <TextBlock x:Name="itemFocusType"
+                                       Text="Forge"
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Minecraft-Version: "
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                            <TextBlock x:Name="itemFocusMCVersion"
+                                       Text="0.0.0"
+                                       Foreground="White" 
+                                       FontSize="20"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="Weitere Eigenschaften: "
+                               Margin="0, 20, 0, 0"
+                               Foreground="White" 
+                               FontSize="25"
+                               Grid.Row="1"/>
+                    <ScrollViewer Background="#66000000"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Grid.Row="2">
+                        <StackPanel x:Name="itemFocusMCWorkingDirDesc"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch" />
+                    </ScrollViewer>
                 </Grid>
-            </Border>
+                
+            </Grid>
         </Grid>
         <StackPanel x:Name="serverList">
             <Grid>

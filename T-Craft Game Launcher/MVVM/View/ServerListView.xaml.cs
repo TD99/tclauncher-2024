@@ -32,6 +32,35 @@ namespace T_Craft_Game_Launcher.MVVM.View
             Instance instance = (Instance)border.DataContext;
 
             itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+            itemFocusVersion.Text = instance.Version;
+            itemFocusType.Text = instance.Type;
+            itemFocusMCVersion.Text = instance.McVersion;
+
+            if (instance.WorkingDirDesc != null)
+            {
+                foreach (string key in instance.WorkingDirDesc.Keys)
+                {
+                    TextBlock keyTextBlock = new TextBlock
+                    {
+                        Text = key,
+                        Foreground = Brushes.White,
+                        FontSize = 25
+                    };
+                    itemFocusMCWorkingDirDesc.Children.Add(keyTextBlock);
+
+                    foreach (string description in instance.WorkingDirDesc[key])
+                    {
+                        TextBlock descTextBlock = new TextBlock
+                        {
+                            Text = description,
+                            Foreground = Brushes.White,
+                            FontSize = 16
+                        };
+                        itemFocusMCWorkingDirDesc.Children.Add(descTextBlock);
+                    }
+                }
+            }
+
             itemFocus.Visibility = Visibility.Visible;
         }
     }
