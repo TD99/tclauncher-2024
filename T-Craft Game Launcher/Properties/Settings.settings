@@ -5,8 +5,5 @@
     <Setting Name="DownloadMirror" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://tcraft.link/tclauncher/api/</Value>
     </Setting>
-    <Setting Name="Setting" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
   </Settings>
 </SettingsFile>

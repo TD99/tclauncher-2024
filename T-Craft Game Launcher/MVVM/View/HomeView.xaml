@@ -71,7 +71,38 @@
                         </Style>
                     </Border.Style>
                 </Border>
-                <Border x:Name="playBorder"
+                <Border Width="200"
+                        Height="200"
+                        Margin="25, 0, 0, 0"
+                        BorderThickness="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                            <GradientStop Color="#5BC3FF" Offset="0" />
+                            <GradientStop Color="#2E80CC" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Border.Clip>
+                        <RectangleGeometry RadiusX="10"
+                                           RadiusY="10"
+                                           Rect="0, 0, 200, 200" />
+                    </Border.Clip>
+
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Tipp"
+                                       Foreground="White"
+                                       FontSize="28"
+                                       Margin="20,10,20,0" />
+                            <TextBlock Text="Klicke auf 'Profile', um ein neues Profil herunterzuladen."
+                                       TextWrapping="Wrap"
+                                       Foreground="White"
+                                       FontSize="16.4"
+                                       Margin="20,10,20,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!--<Border x:Name="playBorder"
                         Width="200"
                         Height="200"
                         Margin="25, 0, 0, 0"
@@ -116,7 +147,7 @@
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
-                </Border>
+                </Border>-->
             </StackPanel>
         </StackPanel>
 

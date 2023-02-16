@@ -16,20 +16,26 @@ namespace T_Craft_Game_Launcher.MVVM.Model
         public string McVersion { get; set; }
         public string WorkingDirZipURL { get; set; }
         public Dictionary<string, List<string>> WorkingDirDesc { get; set; }
-
+        public bool Is_Installed { get; set; }
         public Instance()
         {
-            this.ThumbnailURL = "/Images/nothumb.png";
+            ThumbnailURL = "/Images/nothumb.png";
+            Is_Installed = false;
         }
-        public Instance(bool isMessage)
+
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, Dictionary<string, List<string>> workingDirDesc, bool is_Installed)
         {
-            if (isMessage)
-            {
-                
-            } else
-            {
-                this.ThumbnailURL = "/Images/nothumb.png";
-            }
+            Name = name;
+            DisplayName = displayName;
+            Guid = guid;
+            Version = version;
+            Upgradeable = upgradeable;
+            ThumbnailURL = thumbnailURL;
+            Type = type;
+            McVersion = mcVersion;
+            WorkingDirZipURL = workingDirZipURL;
+            WorkingDirDesc = workingDirDesc;
+            Is_Installed = is_Installed;
         }
     }
 }

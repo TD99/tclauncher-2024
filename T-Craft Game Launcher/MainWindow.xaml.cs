@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using T_Craft_Game_Launcher.Core;
+using T_Craft_Game_Launcher.MVVM.Model;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
 
 namespace T_Craft_Game_Launcher
@@ -25,6 +27,18 @@ namespace T_Craft_Game_Launcher
             InitializeComponent();
             vm = (MainViewModel)this.DataContext;
             INetCheck();
+
+            string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+            string instanceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances");
+
+            try
+            {
+                if (!Directory.Exists(tclFolder)) Directory.CreateDirectory(tclFolder);
+                if (!Directory.Exists(instanceFolder)) Directory.CreateDirectory(instanceFolder);
+            } catch
+            {
+                MessageBox.Show("Ein Fehler ist aufgetreten.");
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

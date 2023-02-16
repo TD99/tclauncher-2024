@@ -13,6 +13,10 @@
     </UserControl.DataContext>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <Grid x:Name="itemFocus"
               Visibility="Collapsed"
               Panel.ZIndex="999">
@@ -31,78 +35,100 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="0">
                         <TextBlock x:Name="itemFocusName"
-                                   Text="Name"
                                    Foreground="White" 
-                                   FontSize="40"/>
+                                   FontSize="40" />
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Version: "
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
                             <TextBlock x:Name="itemFocusVersion"
-                                       Text="0.0.0"
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Paket: "
+                                       Foreground="White"
+                                       FontSize="20" />
+                            <TextBlock x:Name="itemFocusPackage"
+                                       Foreground="White" 
+                                       FontSize="20" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Typ: "
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
                             <TextBlock x:Name="itemFocusType"
-                                       Text="Forge"
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Minecraft-Version: "
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
                             <TextBlock x:Name="itemFocusMCVersion"
-                                       Text="0.0.0"
                                        Foreground="White" 
-                                       FontSize="20"/>
+                                       FontSize="20" />
                         </StackPanel>
                     </StackPanel>
+
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top">
+                        <Button x:Name="closeFocusBtn"
+                                Content="Schliessen"
+                                FontSize="20"
+                                Style="{StaticResource ModernButton}"
+                                Click="closeFocusBtn_Click" />
+                        <Button x:Name="specialFocusBtn"
+                                Margin="0, 15, 0, 0"
+                                Content="Aktion"
+                                FontSize="20"
+                                Style="{StaticResource ModernButton}"
+                                Click="specialFocusBtn_Click" />
+                        <Button x:Name="forceUninstallBtn"
+                                Margin="0, 50, 0, 0"
+                                Content="Deinstallation erzwingen"
+                                FontSize="20"
+                                Style="{StaticResource ModernButton}"
+                                Click="forceUninstallBtn_Click" />
+                    </StackPanel>
+                    
                     <TextBlock Text="Weitere Eigenschaften: "
                                Margin="0, 20, 0, 0"
                                Foreground="White" 
                                FontSize="25"
-                               Grid.Row="1"/>
-                    <ScrollViewer Background="#66000000"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  Grid.Row="2">
-                        <StackPanel x:Name="itemFocusMCWorkingDirDesc"
-                                    VerticalAlignment="Stretch"
-                                    HorizontalAlignment="Stretch" />
-                    </ScrollViewer>
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2" />
+                    <Border Background="#66000000"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2">
+                        <ScrollViewer Margin="15">
+                            <StackPanel x:Name="itemFocusMCWorkingDirDesc"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+                        </ScrollViewer>
+                    </Border>
                 </Grid>
                 
             </Grid>
         </Grid>
         <StackPanel x:Name="serverList">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Profile"
-                           Foreground="White"
-                           FontSize="28"
-                           HorizontalAlignment="Left"
-                           Margin="0, 0, 0, 20"
-                           Grid.Column="0"/>
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right">
-                    <Button Content="+"
-                            FontSize="25"
-                            FontWeight="SemiBold"
-                            Width="45"
-                            Height="45"
-                            Style="{StaticResource ModernButton}" />
-                </StackPanel>
-            </Grid>
+            <TextBlock Text="Profile"
+                        Foreground="White"
+                        FontSize="28"
+                        HorizontalAlignment="Left"
+                        Margin="0, 0, 0, 20"
+                        Grid.Column="0" />
             <Grid VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -120,21 +146,21 @@
                                Foreground="White"
                                FontSize="20"/>
                     <ListView ItemsSource="{Binding ServerList}"
-                              Background="Transparent"
-                              BorderThickness="0">
+                                Background="Transparent"
+                                BorderThickness="0">
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="0"
-                                        Height="200px"
-                                        Width="200px"
+                                        Height="250px"
+                                        Width="250px"
                                         Background="#88000000"
                                         MouseDown="ServerItem_Clicked">
 
                                     <Border.Clip>
                                         <RectangleGeometry RadiusX="10"
                                                            RadiusY="10"
-                                                           Rect="0, 0, 200, 200" />
+                                                           Rect="0, 0, 250, 250" />
                                     </Border.Clip>
 
                                     <Grid>
@@ -149,47 +175,61 @@
                                         </Image>
 
                                         <StackPanel Margin="20">
-                                            <TextBlock x:Name="DisplayName"
-                                                       Text="{Binding DisplayName}"
-                                                       HorizontalAlignment="Left"
-                                                       Foreground="White"
-                                                       FontWeight="Bold"
-                                                       FontSize="20"
-                                                       TextTrimming="CharacterEllipsis">
-                                                <TextBlock.ToolTip>
-                                                    <ToolTip Style="{StaticResource ModernToolTip}"
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Name="DisplayName"
+                                                           Text="{Binding DisplayName}"
+                                                           HorizontalAlignment="Left"
+                                                           Foreground="White"
+                                                           FontWeight="Bold"
+                                                           FontSize="25"
+                                                           TextTrimming="CharacterEllipsis">
+                                                    <TextBlock.ToolTip>
+                                                        <ToolTip Style="{StaticResource ModernToolTip}"
                                                              Content="{Binding DisplayName}" />
-                                                </TextBlock.ToolTip>
-                                            </TextBlock>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                                <Image Source="/Images/cloud.png"
+                                                       Margin="15, 0, 0, 0">
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Is_Installed}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                            </StackPanel>
                                             <StackPanel Orientation="Horizontal"
                                                         HorizontalAlignment="Left">
                                                 <TextBlock Text="Typ:"
                                                            Foreground="White"
-                                                           FontSize="16" />
+                                                           FontSize="20" />
                                                 <TextBlock Text="{Binding Type}"
                                                            Margin="10, 0, 0, 0"
                                                            Foreground="White"
-                                                           FontSize="16"
+                                                           FontSize="20"
                                                            TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="MC Version:"
                                                            Foreground="White"
-                                                           FontSize="16"/>
+                                                           FontSize="20"/>
                                                 <TextBlock Text="{Binding McVersion}"
                                                            Margin="10, 0, 0, 0"
                                                            Foreground="White"
-                                                           FontSize="16"
+                                                           FontSize="20"
                                                            TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Version:"
                                                            Foreground="White"
-                                                           FontSize="16"/>
+                                                           FontSize="20"/>
                                                 <TextBlock Text="{Binding Version}"
                                                            Margin="10, 0, 0, 0"
                                                            Foreground="White"
-                                                           FontSize="16"
+                                                           FontSize="20"
                                                            TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </StackPanel>
@@ -242,5 +282,10 @@
                 </StackPanel>
             </Grid>
         </StackPanel>
+        <TextBlock Grid.Row="1"
+                   Text="ⓘ Bugs und aussergewöhnliches Verhalten können auftreten, da es sich um eine Alpha-Version handelt."
+                   Margin="0, 10, 0, 0"
+                   FontSize="14"
+                   Foreground="White" />
     </Grid>
 </UserControl>
