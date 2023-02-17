@@ -1,21 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using T_Craft_Game_Launcher.MVVM.Model;
 
 namespace T_Craft_Game_Launcher.MVVM.View
@@ -110,17 +103,16 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 {
                     Directory.Delete(instanceFolder, true);
                     MessageBox.Show("Instanz erfolgreich gelöscht!", "Instanz löschen", MessageBoxButton.OK, MessageBoxImage.Information);
+                    instance.Is_Installed = false;
                 }
             }
             catch
             {
                 MessageBox.Show("Ein Fehler ist aufgetreten.");
             }
-
-            instance.Is_Installed = false;
         }
 
-        private void installInstance(Instance instance)
+        private async void installInstance(Instance instance)
         {
             string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", instance.Guid.ToString());
 
@@ -154,7 +146,25 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 using (var client = new WebClient())
                 {
-                    client.DownloadFile(instance.WorkingDirZipURL, System.IO.Path.Combine(instanceFolder, "base.zip"));
+                    ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'");
+                    action.Show();
+
+                    action.Closed += (sender, e) =>
+                    {
+                        client.CancelAsync();
+                    };
+
+                    try
+                    {
+                        await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), System.IO.Path.Combine(instanceFolder, "base.zip"));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Download abgebrochen!");
+                    }
+
+                    action.Close();
+                    uninstallInstance(current);
                 }
             }
             catch
@@ -163,7 +173,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
         }
 
-        public bool URLExists(string url)
+        private bool URLExists(string url)
         {
             bool result = true;
 

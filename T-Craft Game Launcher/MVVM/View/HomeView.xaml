@@ -164,8 +164,7 @@
 
                 <ComboBox Grid.Column="0"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Left"
-                          Style="{StaticResource ModernComboBox}">
+                          HorizontalAlignment="Left">
                     <ComboBox.Items>
                         <ComboBoxItem Name="Profile" Content="Profile" IsSelected="True" />
                         <ComboBoxItem Name="Profile2" Content="Profile2" />
@@ -173,6 +172,7 @@
                         <ComboBoxItem Name="Profile4" Content="Profile2" />
                     </ComboBox.Items>
                 </ComboBox>
+
                 <Button Content="Spielen"
                         FontSize="20"
                         FontWeight="Medium"
