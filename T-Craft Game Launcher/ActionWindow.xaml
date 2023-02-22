@@ -6,25 +6,40 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:T_Craft_Game_Launcher"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
+        WindowStyle="ThreeDBorderWindow"
         Title="Aktion wird ausgeführt..."
         Icon="/Images/logo.png"
         WindowStartupLocation="CenterScreen"
         Height="200"
         Width="400"
         WindowState="Normal"
+        Topmost="True"
         Background="#1D2633">
     <StackPanel VerticalAlignment="Center"
                 HorizontalAlignment="Center">
-        <fa:ImageAwesome Icon="SquareOutline"
-                         Spin="True"
-                         Height="60"
-                         Width="60"
-                         Foreground="White"
-                         Cursor="Wait" />
+        <Grid>
+            <fa:ImageAwesome Icon="SquareOutline"
+                             Spin="True"
+                             Height="60"
+                             Width="60"
+                             Foreground="White"
+                             Cursor="Wait" />
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <TextBlock x:Name="percentText"
+                           Text="0"
+                           Foreground="White"
+                           FontWeight="Bold" />
+                <TextBlock Text="%"
+                           Foreground="White"
+                           FontWeight="Bold" />
+            </StackPanel>
+        </Grid>
         <TextBlock x:Name="actionText"
                    Foreground="White"
-                   FontSize="10"
-                   Margin="0,15,0,0" />
+                   FontSize="12"
+                   Margin="0, 15, 0, 0" />
     </StackPanel>
 </Window>

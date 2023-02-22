@@ -37,7 +37,7 @@
                 BorderThickness="2"
                 Background="#1d2633"
                 CornerRadius="20">
-        
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
@@ -83,7 +83,7 @@
                                Grid.Row="0"
                                Grid.Column="2" />
                 </Grid>
-            
+
                 <StackPanel Grid.Column="1"
                             Grid.Row="2">
                     <RadioButton x:Name="homeBtn"
@@ -152,16 +152,18 @@
                         <Button x:Name="minimizeBtn"
                                 Content="&#128469;&#xFE0E;"
                                 Click="minimizeBtn_Click"
-                                Style="{StaticResource WindowControlButton}">
-                        
-                        </Button>
+                                Style="{StaticResource WindowControlButton}" />
+                        <Button x:Name="maximizeBtn"
+                                Content="&#x25A2;&#xFE0E;"
+                                Click="maximizeBtn_Click"
+                                Style="{StaticResource WindowControlButton}" />
                         <Button x:Name="closeBtn"
                                 Content="&#128473;&#xFE0E;"
                                 Margin="10, 0, 0, 0"
                                 Click="closeBtn_Click"
                                 Style="{StaticResource WindowControlButton}" />
                     </StackPanel>
-                
+
                 </Grid>
 
                 <ContentControl Grid.Column="2"
@@ -169,7 +171,6 @@
                                 Margin="15"
                                 Content="{Binding CurrentView}"
                                 Focusable="False" />
-                <!--Bug-->
             </Grid>
         </Border>
     </Grid>

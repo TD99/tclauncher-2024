@@ -102,52 +102,6 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-                <!--<Border x:Name="playBorder"
-                        Width="200"
-                        Height="200"
-                        Margin="25, 0, 0, 0"
-                        BorderThickness="0">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                            <GradientStop Color="#5BC3FF" Offset="0" />
-                            <GradientStop Color="#2E80CC" Offset="1" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-
-                    <Border.Clip>
-                        <RectangleGeometry RadiusX="10"
-                                           RadiusY="10"
-                                           Rect="0, 0, 200, 200" />
-                    </Border.Clip>
-
-                    <Grid>
-                        <StackPanel>
-                            <TextBlock Text="Spielen"
-                                       Foreground="White"
-                                       FontSize="28"
-                                       Margin="20,10,20,0" />
-                            <TextBlock Text="Entdecke neue Welten"
-                                       Foreground="White"
-                                       FontSize="16.4"
-                                       Margin="20,10,20,0" />
-                        </StackPanel>
-                    </Grid>
-
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Cursor" Value="Hand"/>
-                                    <Setter Property="OpacityMask">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="Black" Opacity="0.8"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                </Border>-->
             </StackPanel>
         </StackPanel>
 
@@ -162,21 +116,21 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0"
+                <ComboBox x:Name="profileSelect"
+                          ItemsSource="{Binding LocalList}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedValuePath="Guid"
+                          Grid.Column="0"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Left">
-                    <ComboBox.Items>
-                        <ComboBoxItem Name="Profile" Content="Profile" IsSelected="True" />
-                        <ComboBoxItem Name="Profile2" Content="Profile2" />
-                        <ComboBoxItem Name="Profile3" Content="Profile2" />
-                        <ComboBoxItem Name="Profile4" Content="Profile2" />
-                    </ComboBox.Items>
-                </ComboBox>
+                          HorizontalAlignment="Left"
+                          SelectedIndex="0" />
 
-                <Button Content="Spielen"
+                <Button x:Name="playBtn"
+                        Content="Spielen"
                         FontSize="20"
                         FontWeight="Medium"
                         Grid.Column="1"
+                        Click="playBtn_Click"
                         Style="{StaticResource ModernButton}" />
                 <TextBlock Text="Anonym"
                            Foreground="White"

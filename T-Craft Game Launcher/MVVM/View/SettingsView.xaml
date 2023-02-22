@@ -18,55 +18,14 @@
                    FontSize="28"
                    HorizontalAlignment="Left"
                    Margin="0, 0, 0, 20" />
-        <Grid Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Text="URL der Serverliste"
-                       FontSize="15"
-                       Foreground="White"
-                       VerticalAlignment="Top"
-                       Grid.Column="0"
-                       Grid.Row="0" />
-            <TextBox x:Name="downloadMirrorTextBox"
-                     Text="{Binding DownloadMirror, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Width="200"
-                     Style="{StaticResource ModernTextBox}"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Left"
-                     Grid.Column="2"
-                     Grid.Row="0" />
-        </Grid>
-        <Button x:Name="saveBtn"
-                Content="Speichern"
-                Width="100"
-                Height="30"
-                Margin="0, 20, 0, 0"
-                HorizontalAlignment="Left"
-                Command="{Binding SaveCommand}"
-                Click="saveBtn_Click"
-                Style="{StaticResource ModernButton}"
-                ToolTipService.Placement="Right"
-                Visibility="Collapsed">
-            <Button.ToolTip>
-                <ToolTip x:Name="SaveNotification"
-                         Content="Deine Einstellungen wurden erfolgreich gespiechert!"
-                         Visibility="Collapsed"
-                         Background="DarkGreen"
-                         Style="{StaticResource ModernToolTip}" />
-            </Button.ToolTip>
-        </Button>
-
-        <Button x:Name="resetBtn"
+        <Button x:Name="resetSettBtn"
                 Content="Debug.ResetLocalSettings"
-                Click="resetBtn_Click"
+                Click="resetSettBtn_Click"
+                Style="{StaticResource ModernButton}" />
+        <Button x:Name="resetDataBtn"
+                Content="Debug.ResetData"
+                Click="resetDataBtn_Click"
+                Margin="0, 10, 0, 0"
                 Style="{StaticResource ModernButton}" />
         <TextBlock x:Name="assemblyVersion"
                    Text="Version: 0.0.0"

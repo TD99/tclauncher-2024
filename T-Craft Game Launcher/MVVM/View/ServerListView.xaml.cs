@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.MVVM.ViewModel;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -37,6 +41,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
+            itemFocusMCWorkingDirDesc.Children.Clear();
 
             current = instance;
 
@@ -78,6 +83,9 @@ namespace T_Craft_Game_Launcher.MVVM.View
             itemFocusType.Text = "";
             itemFocusMCVersion.Text = "";
             specialFocusBtn.Content = "Aktion";
+            itemFocusMCWorkingDirDesc.Children.Clear();
+
+            this.DataContext = new ServerListViewModel();
 
             current = null;
         }
@@ -87,14 +95,21 @@ namespace T_Craft_Game_Launcher.MVVM.View
             uninstallInstance(current);
         }
 
-        private void uninstallInstance(Instance instance)
+        private void uninstallInstance(Instance instance, bool force = false)
         {
             try
             {
                 string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
-                    MessageBox.Show("Es wurden keine Daten gefunden!");
+                    MessageBox.Show("Es wurden keine Daten gefunden!", "Instanz löschen");
+                    return;
+                }
+
+                if (force)
+                {
+                    Directory.Delete(instanceFolder, true);
+                    instance.Is_Installed = false;
                     return;
                 }
 
@@ -102,8 +117,11 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 if (result == MessageBoxResult.Yes)
                 {
                     Directory.Delete(instanceFolder, true);
-                    MessageBox.Show("Instanz erfolgreich gelöscht!", "Instanz löschen", MessageBoxButton.OK, MessageBoxImage.Information);
                     instance.Is_Installed = false;
+
+                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
+                    Process.Start(appPath, $"--uninstallSuccess {instance.DisplayName}");
+                    Application.Current.Shutdown();
                 }
             }
             catch
@@ -115,27 +133,20 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private async void installInstance(Instance instance)
         {
             string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", instance.Guid.ToString());
+            string installFolder = System.IO.Path.Combine(instanceFolder, "data");
+            string payloadFile = System.IO.Path.Combine(instanceFolder, "base.zip");
 
             try
             {
-                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
-                
                 Directory.CreateDirectory(instanceFolder);
-
-                instance.Is_Installed = true;
-
-                var json = JsonConvert.SerializeObject(instance);
-                File.WriteAllText(configFile, json);
             }
             catch
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten (CONFIG_COULD_NOT_BE_SAVED).");
+                MessageBox.Show("Fehler beim Erstellen der Instanz!");
             }
 
             try
             {
-                string installFolder = System.IO.Path.Combine(instanceFolder, "data");
-
                 if (!URLExists(instance.WorkingDirZipURL))
                 {
                     MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
@@ -146,8 +157,15 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 using (var client = new WebClient())
                 {
-                    ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'");
+                    string fileSize = await GetFileSizeAsync(instance.WorkingDirZipURL);
+
+                    ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
                     action.Show();
+
+                    client.DownloadProgressChanged += (sender, e) =>
+                    {
+                        action.percent = e.ProgressPercentage;
+                    };
 
                     action.Closed += (sender, e) =>
                     {
@@ -156,21 +174,87 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                     try
                     {
-                        await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), System.IO.Path.Combine(instanceFolder, "base.zip"));
+                        await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), payloadFile);
                     }
                     catch
                     {
                         MessageBox.Show("Download abgebrochen!");
+                        uninstallInstance(current, true);
+                        action.Close();
+                        return;
                     }
 
                     action.Close();
-                    uninstallInstance(current);
                 }
+
+                ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}'");
+                action2.Show();
+
+                await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
+
+                action2.Close();
+
+                ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}'");
+                action3.Show();
+
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        File.Delete(payloadFile);
+                    });
+                } catch { }
+
+                action3.Close();
+
+                string appPath = Process.GetCurrentProcess().MainModule.FileName;
+                Process.Start(appPath, $"--installSuccess {instance.DisplayName}");
+                Application.Current.Shutdown();
             }
             catch
             {
                 MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
             }
+
+            try
+            {
+                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
+
+                instance.Is_Installed = true;
+
+                var json = JsonConvert.SerializeObject(instance);
+                File.WriteAllText(configFile, json);
+            }
+            catch
+            {
+                MessageBox.Show("Ein Konfigurationsfehler ist aufgetreten.");
+            }
+        }
+
+        public async Task<string> GetFileSizeAsync(string url)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        long fileSize = response.Content.Headers.ContentLength ?? 0;
+                        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+                        int order = 0;
+                        while (fileSize >= 1024 && order < sizes.Length - 1)
+                        {
+                            fileSize = fileSize / 1024;
+                            order++;
+                        }
+                        return string.Format("{0:0.##} {1}", fileSize, sizes[order]);
+                    }
+                }
+            }
+            catch { }
+
+            return "Unbekannt";
         }
 
         private bool URLExists(string url)

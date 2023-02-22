@@ -34,5 +34,17 @@ namespace T_Craft_Game_Launcher.Properties {
                 this["DownloadMirror"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
+        public global::System.Guid LastPlayed {
+            get {
+                return ((global::System.Guid)(this["LastPlayed"]));
+            }
+            set {
+                this["LastPlayed"] = value;
+            }
+        }
     }
 }

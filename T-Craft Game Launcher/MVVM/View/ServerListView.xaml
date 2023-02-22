@@ -19,7 +19,8 @@
         </Grid.RowDefinitions>
         <Grid x:Name="itemFocus"
               Visibility="Collapsed"
-              Panel.ZIndex="999">
+              Panel.ZIndex="999"
+              Background="#1D2633">
             <Grid>
                 <Image x:Name="itemFocusBanner"
                        Stretch="UniformToFill"
