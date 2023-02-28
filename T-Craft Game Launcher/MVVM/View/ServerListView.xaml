@@ -113,7 +113,9 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             Grid.ColumnSpan="2">
-                        <ScrollViewer Margin="15">
+                        <ScrollViewer Margin="15"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto">
                             <StackPanel x:Name="itemFocusMCWorkingDirDesc"
                                         VerticalAlignment="Stretch"
                                         HorizontalAlignment="Stretch" />

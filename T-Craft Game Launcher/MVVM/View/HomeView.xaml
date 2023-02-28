@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450"
@@ -12,8 +13,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
+        <StackPanel x:Name="homeOverview"
+                    Grid.Row="0">
             <TextBlock Text="Home"
                        Foreground="White"
                        FontSize="28"
@@ -105,9 +108,117 @@
             </StackPanel>
         </StackPanel>
 
+        <Grid x:Name="appletView"
+              Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Button x:Name="webViewBackButton"
+                    Content="Back"
+                    Style="{StaticResource ModernButton}"
+                    Height="30"
+                    Margin="0, 0, 0, 5"
+                    Click="webViewBackButton_Click" />
+            <wv2:WebView2 Name="webView"
+                          Source="https://tcraft.link/tclauncher/api/plugins/applet-loader/"
+                          Grid.Row="1" />
+        </Grid>
+
+        <ListView x:Name="mainApplets"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Grid.Row="1"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  Margin="0, 0, 0, 7">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border x:Name="AppletItem"
+                            BorderThickness="0"
+					        Height="150px"
+					        Width="250px"
+					        Background="#88000000"
+					        MouseDown="AppletItem_MouseDown">
+                        <Border.Clip>
+                            <RectangleGeometry RadiusX="10"
+									   RadiusY="10"
+									   Rect="0, 0, 250, 150" />
+                        </Border.Clip>
+
+                        <Grid>
+                            <Image Stretch="UniformToFill"
+						           Source="{Binding CoverURL}"
+						           RenderTransformOrigin="0.5,0.5"
+						           VerticalAlignment="Center"
+						           HorizontalAlignment="Center">
+                                <Image.OpacityMask>
+                                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                                </Image.OpacityMask>
+                            </Image>
+
+                            <StackPanel Margin="20">
+                                <TextBlock Text="{Binding Title}"
+                                           Foreground="White"
+                                           FontSize="28"
+                                           Margin="20,10,20,0" />
+                                <TextBlock Text="{Binding Description}"
+                                           TextWrapping="Wrap"
+                                           Foreground="White"
+                                           FontSize="16.4"
+                                           Margin="20,10,20,0" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                                    <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="OpacityMask">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="Black" Opacity="0.3" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="OpacityMask">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="Black" Opacity="0.8" />
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                        <Setter Property="Cursor" Value="Hand" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
         <Border Background="#2a384b"
                 CornerRadius="15"
-                Grid.Row="1">
+                Grid.Row="2">
             <Grid Height="50"
                   Margin="30, 10, 30, 10">
                 <Grid.ColumnDefinitions>
@@ -123,7 +234,8 @@
                           Grid.Column="0"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left"
-                          SelectedIndex="0" />
+                          SelectedIndex="0"
+                          SelectionChanged="profileSelect_SelectionChanged" />
 
                 <Button x:Name="playBtn"
                         Content="Spielen"
@@ -132,12 +244,20 @@
                         Grid.Column="1"
                         Click="playBtn_Click"
                         Style="{StaticResource ModernButton}" />
-                <TextBlock Text="Anonym"
-                           Foreground="White"
-                           FontSize="15"
-                           Grid.Column="2"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Image x:Name="imageUserPicture" 
+                           Width="32"
+                           Height="32" />
+                    <TextBlock x:Name="textUserName"
+                               Text="Anonym"
+                               Foreground="White"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               Margin="15, 0, 0, 0" />
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

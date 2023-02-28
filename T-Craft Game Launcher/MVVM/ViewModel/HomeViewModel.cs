@@ -54,16 +54,15 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
                         if (instance.Is_Installed)
                         {
-                            InstalledInstance installed = new InstalledInstance(instance.Name, instance.DisplayName, instance.Guid);
+                            InstalledInstance installed = new InstalledInstance(instance.Name, instance.DisplayName, instance.Guid, instance.AppletURL);
                             LocalList.Add(installed);
                         }
                     }
-
                 }
             }
             catch
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten!");
+                MessageBox.Show("Die lokalen Instanzen konnten nicht geladen werden!");
             }
         }
 

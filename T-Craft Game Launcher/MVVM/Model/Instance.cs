@@ -5,7 +5,6 @@ namespace T_Craft_Game_Launcher.MVVM.Model
 {
     public class Instance
     {
-
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public Guid Guid { get; set; }
@@ -17,13 +16,14 @@ namespace T_Craft_Game_Launcher.MVVM.Model
         public string WorkingDirZipURL { get; set; }
         public Dictionary<string, List<string>> WorkingDirDesc { get; set; }
         public bool Is_Installed { get; set; }
+        public string AppletURL { get; set; }
         public Instance()
         {
             ThumbnailURL = "/Images/nothumb.png";
             Is_Installed = false;
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, Dictionary<string, List<string>> workingDirDesc, bool is_Installed)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL)
         {
             Name = name;
             DisplayName = displayName;
@@ -36,6 +36,7 @@ namespace T_Craft_Game_Launcher.MVVM.Model
             WorkingDirZipURL = workingDirZipURL;
             WorkingDirDesc = workingDirDesc;
             Is_Installed = is_Installed;
+            AppletURL = appletURL;
         }
     }
 }
