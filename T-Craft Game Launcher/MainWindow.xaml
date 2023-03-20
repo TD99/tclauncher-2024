@@ -71,9 +71,11 @@
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Source="/Images/logo.png"
+                    <Image x:Name="logo"
+                           Source="/Images/logo.png"
                            Grid.Row="0"
-                           Grid.Column="0" />
+                           Grid.Column="0"
+                           MouseDown="Logo_MouseDown" />
                     <TextBlock Text="TCLauncher"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Left"

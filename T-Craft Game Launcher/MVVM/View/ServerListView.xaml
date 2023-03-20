@@ -94,6 +94,12 @@
                                 FontSize="20"
                                 Style="{StaticResource ModernButton}"
                                 Click="specialFocusBtn_Click" />
+                        <Button x:Name="openFolderBtn"
+                                Margin="0, 15, 0, 0"
+                                Content="Datenordner anzeigen"
+                                FontSize="20"
+                                Style="{StaticResource ModernButton}"
+                                Click="openFolderBtn_Click" />
                         <Button x:Name="forceUninstallBtn"
                                 Margin="0, 50, 0, 0"
                                 Content="Deinstallation erzwingen"

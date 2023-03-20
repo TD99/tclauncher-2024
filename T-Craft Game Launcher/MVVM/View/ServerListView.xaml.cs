@@ -41,6 +41,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
+            openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
 
             current = instance;
@@ -289,6 +290,12 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
 
             specialFocusBtn.Content = (current.Is_Installed) ? "Deinstallieren" : "Installieren";
+        }
+
+        private void openFolderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString(), "data");
+            Process.Start("explorer.exe", dataFolder);
         }
     }
 }

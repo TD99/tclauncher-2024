@@ -290,5 +290,22 @@ namespace T_Craft_Game_Launcher
         {
             vm.ConfigEditorViewCommand.Execute(null);
         }
+
+        private void Logo_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2) // (っ °Д °;)っ
+            {
+                var transform = logo.RenderTransform as RotateTransform;
+                double currentAngle = transform == null ? 0 : transform.Angle;
+
+                var rotateTransform = new RotateTransform(currentAngle, logo.ActualWidth / 2, logo.ActualHeight / 2);
+                logo.RenderTransform = rotateTransform;
+
+                var angle = e.ChangedButton == MouseButton.Right ? 360 : -360;
+
+                var animation = new DoubleAnimation(currentAngle, currentAngle + angle, TimeSpan.FromMilliseconds(350));
+                rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
+            }
+        }
     }
 }

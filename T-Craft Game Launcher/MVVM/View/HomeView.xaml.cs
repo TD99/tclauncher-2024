@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using T_Craft_Game_Launcher.MVVM.Model;
 
 namespace T_Craft_Game_Launcher.MVVM.View
@@ -31,54 +33,81 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void loadAccount()
         {
-            //string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-            //string udataFolder = Path.Combine(tclFolder, "UData");
-            //string accountFile = Path.Combine(udataFolder, "launcher_accounts.json");
+            try
+            {
+                string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+                string udataFolder = Path.Combine(tclFolder, "UData");
+                string avatarsFolder = Path.Combine(udataFolder, "Avatars");
+                string skinsFolder = Path.Combine(udataFolder, "Skins");
+                string accountFile = Path.Combine(udataFolder, "launcher_accounts.json");
 
-            //if (File.Exists(accountFile))
-            //{
-            //    try
-            //    {
-            //        string json = File.ReadAllText(accountFile);
-            //        JObject jsonObj = JObject.Parse(json);
-            //        JArray accounts = (JArray)jsonObj["accounts"];
-            //        JObject account = (JObject)accounts.FirstOrDefault();
-            //        if (account != null)
-            //        {
-            //            JObject minecraftProfile = (JObject)account["minecraftProfile"];
-            //            if (minecraftProfile != null)
-            //            {
-            //                string avatar = (string)account["avatar"];
-            //                string name = (string)minecraftProfile["name"];
+                string jsonText = File.ReadAllText(accountFile);
+                JObject json = JObject.Parse(jsonText);
 
-            //                textUserName.Text = name.ToString();
-            //                BitmapImage avatarBitmap = new BitmapImage();
-            //                avatarBitmap.BeginInit();
-            //                avatarBitmap.UriSource = new Uri(avatar.ToString());
-            //                avatarBitmap.EndInit();
+                string name = (string)json["accounts"][(string)json["activeAccountLocalId"]]["minecraftProfile"]["name"];
+                string id = (string)json["accounts"][(string)json["activeAccountLocalId"]]["minecraftProfile"]["id"];
 
-            //                imageUserPicture.Source = avatarBitmap;
-            //            }
-            //            else
-            //            {
-            //                MessageBox.Show("minecraftProfile not found!");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("Account not found!");
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show("Error: " + ex.Message);
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("USERDATA NOT FOUND!");
-            //}
+                string avatarSrc = $"https://mc-heads.net/avatar/{id}";
+                string avatarCacheFile = Path.Combine(avatarsFolder, $"{id}.png");
 
+                if (!Directory.Exists(avatarsFolder))
+                {
+                    Directory.CreateDirectory(avatarsFolder);
+                }
+
+                if (File.Exists(avatarCacheFile))
+                {
+                    avatarSrc = avatarCacheFile;
+                }
+                else
+                {
+                    var client = new WebClient();
+                    client.DownloadFile(avatarSrc, avatarCacheFile);
+                }
+
+                string skinSrc = $"https://mc-heads.net/body/{id}";
+                string skinCacheFile = Path.Combine(skinsFolder, $"{id}.png");
+
+                if (!Directory.Exists(skinsFolder))
+                {
+                    Directory.CreateDirectory(skinsFolder);
+                }
+
+                if (File.Exists(skinCacheFile))
+                {
+                    skinSrc = skinCacheFile;
+                }
+                else
+                {
+                    var client = new WebClient();
+                    client.DownloadFile(skinSrc, skinCacheFile);
+                }
+
+                BitmapImage avatarBitmap = new BitmapImage();
+                avatarBitmap.BeginInit();
+                avatarBitmap.UriSource = new Uri(avatarSrc);
+                avatarBitmap.EndInit();
+
+                BitmapImage skinBitmap = new BitmapImage();
+                skinBitmap.BeginInit();
+                skinBitmap.UriSource = new Uri(skinSrc);
+                skinBitmap.EndInit();
+
+                Dispatcher.Invoke(() =>
+                {
+                    textUserName.Text = name;
+                    imageUserPicture.Source = avatarBitmap;
+                    imageBodyPicture.Source = skinBitmap;
+                });
+            }
+            catch
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    textUserName.Text = "Anonym";
+                    imageUserPicture.Source = null;
+                });
+            }
         }
 
         private void discoverBorder_MouseDown(object sender, MouseButtonEventArgs e)
