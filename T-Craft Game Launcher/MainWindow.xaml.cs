@@ -307,5 +307,14 @@ namespace T_Craft_Game_Launcher
                 rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
             }
         }
+
+        private void loadingImg_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2) // (っ °Д °;)っ
+            {
+                this.FontFamily = new FontFamily("Comic Sans MS");
+                AppName.Text = "ComicLauncher";
+            }
+        }
     }
 }

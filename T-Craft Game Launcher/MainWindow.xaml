@@ -28,8 +28,8 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Source="/Images/logo.png"
-
-                   Panel.ZIndex="99" />
+                   Panel.ZIndex="99"
+                   MouseDown="loadingImg_MouseDown" />
         </Grid>
 
         <Border x:Name="mainBorder"
@@ -76,7 +76,8 @@
                            Grid.Row="0"
                            Grid.Column="0"
                            MouseDown="Logo_MouseDown" />
-                    <TextBlock Text="TCLauncher"
+                    <TextBlock x:Name="AppName"
+                               Text="TCLauncher"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Left"
                                Foreground="#D3DBF2"

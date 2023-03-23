@@ -8,6 +8,13 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string ActionURL { get; set; }
+        public bool is_action
+        {
+            get
+            {
+                return ActionURL != null;
+            }
+        }
 
         public Applet(int weight, string name, string coverURL, string title, string description, string actionURL)
         {

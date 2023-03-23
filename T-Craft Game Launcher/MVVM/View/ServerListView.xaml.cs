@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -12,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Model;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
 
@@ -33,10 +35,10 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             Border border = (Border)sender;
             Instance instance = (Instance)border.DataContext;
-
+            MessageBox.Show(SysInfo.getGpuMem());
             itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
             itemFocusName.Text = instance.DisplayName;
-            itemFocusVersion.Text = instance.Version;
+            itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name}@{instance.Version}";
             itemFocusPackage.Text = "ch.tcraft." + instance.Name;
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
@@ -79,7 +81,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             itemFocus.Visibility = Visibility.Collapsed;
             itemFocusBanner.Source = new BitmapImage(new Uri("/Images/nothumb.png", UriKind.RelativeOrAbsolute));
             itemFocusName.Text = "";
-            itemFocusVersion.Text = "";
+            itemFocusPatch.Text = "";
             itemFocusPackage.Text = "";
             itemFocusType.Text = "";
             itemFocusMCVersion.Text = "";
@@ -156,57 +158,122 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 Directory.CreateDirectory(installFolder);
 
-                using (var client = new WebClient())
+                if (instance.UsePatch != true)
                 {
-                    string fileSize = await GetFileSizeAsync(instance.WorkingDirZipURL);
-
-                    ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
-                    action.Show();
-
-                    client.DownloadProgressChanged += (sender, e) =>
+                    using (var client = new WebClient())
                     {
-                        action.percent = e.ProgressPercentage;
-                    };
+                        string fileSize = await GetFileSizeAsync(instance.WorkingDirZipURL);
 
-                    action.Closed += (sender, e) =>
-                    {
-                        client.CancelAsync();
-                    };
+                        ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
+                        action.Show();
+
+                        client.DownloadProgressChanged += (sender, e) =>
+                        {
+                            action.percent = e.ProgressPercentage;
+                        };
+
+                        action.Closed += (sender, e) =>
+                        {
+                            client.CancelAsync();
+                        };
+
+                        try
+                        {
+                            await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), payloadFile);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Download abgebrochen!");
+                            uninstallInstance(current, true);
+                            action.Close();
+                            return;
+                        }
+
+                        action.Close();
+                    }
+
+                    ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}'");
+                    action2.Show();
+
+                    await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
+
+                    action2.Close();
+
+                    ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}'");
+                    action3.Show();
 
                     try
                     {
-                        await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), payloadFile);
+                        await Task.Run(() =>
+                        {
+                            File.Delete(payloadFile);
+                        });
                     }
-                    catch
-                    {
-                        MessageBox.Show("Download abgebrochen!");
-                        uninstallInstance(current, true);
-                        action.Close();
-                        return;
-                    }
+                    catch { }
 
-                    action.Close();
+                    action3.Close();
                 }
-
-                ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}'");
-                action2.Show();
-
-                await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
-
-                action2.Close();
-
-                ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}'");
-                action3.Show();
-
-                try
+                else
                 {
-                    await Task.Run(() =>
+                    foreach (var patch in instance.Patches.OrderBy(p => p.ID))
                     {
-                        File.Delete(payloadFile);
-                    });
-                } catch { }
+                        using (var client = new WebClient())
+                        {
+                            string fileSize = await GetFileSizeAsync(patch.URL);
 
-                action3.Close();
+                            ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
+                            action.Show();
+
+                            client.DownloadProgressChanged += (sender, e) =>
+                            {
+                                action.percent = e.ProgressPercentage;
+                            };
+
+                            action.Closed += (sender, e) =>
+                            {
+                                client.CancelAsync();
+                            };
+
+                            bool err = false;
+
+                            try
+                            {
+                                await client.DownloadFileTaskAsync(new Uri(patch.URL), payloadFile);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Paketfehler, die Installation ist beschädigt!");
+                                err = true;
+                            }
+
+                            if (!err)
+                            {
+                                action.Close();
+
+                                ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'");
+                                action2.Show();
+
+                                await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
+
+                                action2.Close();
+
+                                ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'");
+                                action3.Show();
+
+                                try
+                                {
+                                    await Task.Run(() =>
+                                    {
+                                        File.Delete(payloadFile);
+                                    });
+                                }
+                                catch { }
+
+                                action3.Close();
+                            }
+                        }
+                    }
+                }
 
                 string appPath = Process.GetCurrentProcess().MainModule.FileName;
                 Process.Start(appPath, $"--installSuccess {instance.DisplayName}");

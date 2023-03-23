@@ -206,8 +206,10 @@
                                             </Setter.Value>
                                         </Setter>
                                         <Setter TargetName="Border" Property="Background" Value="Transparent"/>
-                                        <Setter Property="Cursor" Value="Hand" />
                                     </Trigger>
+                                    <DataTrigger Binding="{Binding is_action}" Value="True">
+                                        <Setter Property="Cursor" Value="Hand" />
+                                    </DataTrigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>

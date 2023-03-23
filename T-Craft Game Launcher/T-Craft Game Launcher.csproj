@@ -85,6 +85,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -123,6 +124,7 @@
     <Compile Include="Core\INetTools.cs" />
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
+    <Compile Include="Core\SysInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -176,6 +178,7 @@
     <Compile Include="MVVM\Model\Applet.cs" />
     <Compile Include="MVVM\Model\InstalledInstance.cs" />
     <Compile Include="MVVM\Model\Instance.cs" />
+    <Compile Include="MVVM\Model\Patch.cs" />
     <Compile Include="MVVM\ValidationRules\ValidURLValidationRule.cs" />
     <Compile Include="MVVM\ViewModel\ConfigEditorViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
@@ -214,6 +217,8 @@
     <Resource Include="Fonts\Rubik.ttf" />
     <Resource Include="Fonts\OpenSans.ttf" />
     <Resource Include="Fonts\RobotoFlex.ttf" />
+    <Resource Include="Fonts\Barlow-Regular.ttf" />
+    <Resource Include="Fonts\Tourney.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

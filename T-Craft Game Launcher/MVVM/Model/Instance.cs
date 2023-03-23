@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace T_Craft_Game_Launcher.MVVM.Model
 {
@@ -14,16 +15,19 @@ namespace T_Craft_Game_Launcher.MVVM.Model
         public string Type { get; set; }
         public string McVersion { get; set; }
         public string WorkingDirZipURL { get; set; }
+        public List<Patch> Patches { get; set; }
+        public bool UsePatch { get; set; }
         public Dictionary<string, List<string>> WorkingDirDesc { get; set; }
         public bool Is_Installed { get; set; }
         public string AppletURL { get; set; }
+
         public Instance()
         {
             ThumbnailURL = "/Images/nothumb.png";
             Is_Installed = false;
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL)
         {
             Name = name;
             DisplayName = displayName;
@@ -34,9 +38,18 @@ namespace T_Craft_Game_Launcher.MVVM.Model
             Type = type;
             McVersion = mcVersion;
             WorkingDirZipURL = workingDirZipURL;
+            Patches = patches;
+            UsePatch = usePatch;
             WorkingDirDesc = workingDirDesc;
             Is_Installed = is_Installed;
             AppletURL = appletURL;
+        }
+
+        public Patch GetCurrentPatch()
+        {
+            if (Patches == null) return null;
+
+            return Patches.OrderByDescending(p => p.ID).FirstOrDefault();
         }
     }
 }

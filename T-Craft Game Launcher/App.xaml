@@ -32,6 +32,8 @@
             
             <FontFamily x:Key="Rubik">Fonts/#Rubik</FontFamily>
             <FontFamily x:Key="OpenSans">Fonts/#Open Sans</FontFamily>
+            <FontFamily x:Key="Barlow">Fonts/#Barlow</FontFamily>
+            <FontFamily x:Key="Tourney">Fonts/#Tourney</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

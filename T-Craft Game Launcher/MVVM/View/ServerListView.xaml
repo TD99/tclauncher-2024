@@ -46,10 +46,10 @@
                                    Foreground="White" 
                                    FontSize="40" />
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Version: "
+                            <TextBlock Text="Aktueller Patch: "
                                        Foreground="White" 
                                        FontSize="20" />
-                            <TextBlock x:Name="itemFocusVersion"
+                            <TextBlock x:Name="itemFocusPatch"
                                        Foreground="White" 
                                        FontSize="20" />
                         </StackPanel>
