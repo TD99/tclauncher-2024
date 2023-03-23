@@ -35,13 +35,17 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             Border border = (Border)sender;
             Instance instance = (Instance)border.DataContext;
-            MessageBox.Show(SysInfo.getGpuMem());
             itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
             itemFocusName.Text = instance.DisplayName;
             itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name}@{instance.Version}";
             itemFocusPackage.Text = "ch.tcraft." + instance.Name;
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
+
+            string requiredRam = (instance.Requirements == null) ? "?" : instance.Requirements["ram"].ToString() ?? "?";
+            string totalPhysicalMemory = SysInfo.GetTotalPhysicalMemoryInGB().ToString();
+            itemFocusRam.Text = $"{requiredRam} GB / {totalPhysicalMemory} GB";
+
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();

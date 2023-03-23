@@ -77,6 +77,14 @@
                                        Foreground="White" 
                                        FontSize="20" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="RAM: "
+                                       Foreground="White" 
+                                       FontSize="20" />
+                            <TextBlock x:Name="itemFocusRam"
+                                       Foreground="White" 
+                                       FontSize="20" />
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Row="0"
