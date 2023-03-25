@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -236,6 +237,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private async void RefreshApplets()
         {
             mainApplets.ItemsSource = null;
+
             try
             {
                 InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
@@ -247,7 +249,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    Applets = JsonConvert.DeserializeObject<ObservableCollection<Applet>>(content);
+                    Applets = new ObservableCollection<Applet>(JsonConvert.DeserializeObject<ObservableCollection<Applet>>(content).OrderByDescending(a => a.Weight));
                 }
             }
             catch {}
