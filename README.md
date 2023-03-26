@@ -40,7 +40,7 @@ To install TCLauncher, follow these steps:
 
 ## System Requirements
 To run TCLauncher (not the instances!), your system must meet the following requirements:
-- Operating System: Windows 10 or later
+- Operating System: Windows 10 x64 or later
 - Processor: Intel Core i3 or equivalent
 - Memory: 2GB RAM
 - Graphics: DirectX 11 compatible GPU
