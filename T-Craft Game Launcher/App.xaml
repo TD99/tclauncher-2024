@@ -29,7 +29,7 @@
             <DataTemplate DataType="{x:Type viewModel:ConfigEditorViewModel}">
                 <view:ConfigEditorView />
             </DataTemplate>
-            
+
             <FontFamily x:Key="Rubik">Fonts/#Rubik</FontFamily>
             <FontFamily x:Key="OpenSans">Fonts/#Open Sans</FontFamily>
             <FontFamily x:Key="Barlow">Fonts/#Barlow</FontFamily>

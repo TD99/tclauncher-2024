@@ -1,4 +1,11 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Policy;
+using System.Windows;
+using System.Windows.Documents;
 
 namespace T_Craft_Game_Launcher
 {
@@ -7,33 +14,131 @@ namespace T_Craft_Game_Launcher
     /// </summary>
     public partial class App : Application
     {
+        private const string URI_SCHEME = "tcl";
+        private const string FRIENDLY_NAME = "TCLauncher";
+
+
         public App()
         {
             this.Startup += App_Startup;
         }
 
-        void App_Startup(object sender, StartupEventArgs e)
+        private void App_Startup(object sender, StartupEventArgs e)
         {
-            for (int i = 0; i != e.Args.Length; ++i)
+            Uri uri = Get_AppURI(e.Args);
+
+            if (uri == null)
             {
-                if (e.Args[i] == "--installSuccess")
+                ProcessAppArgs(e);
+            }
+            else
+            {
+                ProcessAppURI(uri);
+            }
+
+            RegisterURIScheme();
+        }
+
+        private Uri Get_AppURI(string[] args)
+        {
+            if (args.Length > 0)
+            {
+                if (Uri.TryCreate(args[0], UriKind.Absolute, out var uri) &&
+                    string.Equals(uri.Scheme, URI_SCHEME, StringComparison.OrdinalIgnoreCase))
                 {
-                    try
-                    {
-                        MessageBox.Show($"Das Paket '{e.Args[i+1]}' wurde erfolgreich installiert.");
-                    }
-                    catch {}
-                }
-                if (e.Args[i] == "--uninstallSuccess")
-                {
-                    try
-                    {
-                        MessageBox.Show($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
-                    }
-                    catch { }
+                    return uri;
                 }
             }
 
+            return null;
+        }
+
+        private void ProcessAppArgs(StartupEventArgs e)
+        {
+            for (int i = 0; i != e.Args.Length; ++i)
+            {
+                switch (e.Args[i])
+                {
+                    case "--installSuccess":
+                        try
+                        {
+                            MessageBox.Show($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                        }
+                        catch
+                        {
+                            MessageBox.Show($"Das Paket wurde erfolgreich installiert.");
+                        }
+                        break;
+                    case "--uninstallSuccess":
+                        try
+                        {
+                            MessageBox.Show($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                        }
+                        catch
+                        {
+                            MessageBox.Show($"Das Paket wurde erfolgreich deinstalliert.");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void ProcessAppURI(Uri uri)
+        {
+            try
+            {
+                string URIStr = uri.OriginalString.Substring(uri.OriginalString.IndexOf(":") + 1);
+                string[] pairs = URIStr.Split('&');
+
+                Dictionary<string, string> URIArgs = pairs
+                    .Select(pair => pair.Split('='))
+                    .ToDictionary(keyValue => Uri.UnescapeDataString(keyValue[0]), keyValue => Uri.UnescapeDataString(keyValue[1]));
+
+                foreach (string arg in URIArgs.Keys)
+                {
+                    MessageBox.Show(arg + "//" + URIArgs[arg]);
+
+                    switch (arg)
+                    {
+                        case "message":
+                            MessageBox.Show(URIArgs[arg], "Nachricht");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch {}
+        }
+
+        private void RegisterURIScheme()
+        {
+            try
+            {
+                using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + URI_SCHEME))
+                {
+                    string applicationLocation = typeof(App).Assembly.Location;
+
+                    key.SetValue("", "URL:" + FRIENDLY_NAME);
+                    key.SetValue("URL Protocol", "");
+
+                    using (var defaultIcon = key.CreateSubKey("DefaultIcon"))
+                    {
+                        defaultIcon.SetValue("", applicationLocation + ",0");
+                    }
+
+                    using (var commandKey = key.CreateSubKey(@"shell\open\command"))
+                    {
+                        commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An Error occured while registering URI Schemes: " + e.Message);
+            }
         }
     }
 }
