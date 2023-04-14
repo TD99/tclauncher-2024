@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450"
@@ -24,10 +25,10 @@
                        Margin="0, 0, 0, 20" />
         
             <StackPanel Orientation="Horizontal"
-                        Margin="0, 0, 0, 5">
+                        Margin="0, 0, 0, 10">
                 <Border x:Name="discoverBorder"
                         Width="400"
-                        Height="200"
+                        Height="180"
                         BorderThickness="0"
                         Background="#88000000"
                         MouseDown="discoverBorder_MouseDown">
@@ -35,7 +36,7 @@
                     <Border.Clip>
                         <RectangleGeometry RadiusX="10"
                                            RadiusY="10"
-                                           Rect="0, 0, 400, 200" />
+                                           Rect="0, 0, 400, 180" />
                     </Border.Clip>
 
                     <Grid>
@@ -74,9 +75,9 @@
                         </Style>
                     </Border.Style>
                 </Border>
-                <Border Width="200"
-                        Height="200"
-                        Margin="25, 0, 0, 0"
+                <Border Width="235"
+                        Height="180"
+                        Margin="10, 0, 0, 0"
                         BorderThickness="0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
@@ -88,7 +89,7 @@
                     <Border.Clip>
                         <RectangleGeometry RadiusX="10"
                                            RadiusY="10"
-                                           Rect="0, 0, 200, 200" />
+                                           Rect="0, 0, 235, 180" />
                     </Border.Clip>
 
                     <Grid>
@@ -132,7 +133,7 @@
                   Grid.Row="1"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Stretch"
-                  Margin="0, 0, 0, 7">
+                  Margin="0, 0, 0, 8">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border x:Name="AppletItem"
@@ -149,6 +150,7 @@
 
                         <Grid>
                             <Image Stretch="UniformToFill"
+                                   gif:ImageBehavior.AnimatedSource="{Binding CoverURL}"
 						           Source="{Binding CoverURL}"
 						           RenderTransformOrigin="0.5,0.5"
 						           VerticalAlignment="Center"
@@ -188,7 +190,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                                <Border Name="Border" Padding="0, 0, 10, 0" SnapsToDevicePixels="true" Background="Transparent">
                                     <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
@@ -236,7 +238,7 @@
                           Grid.Column="0"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left"
-                          SelectedIndex="0"
+                          SelectedItem="{Binding LastSelected}"
                           SelectionChanged="profileSelect_SelectionChanged" />
 
                 <Button x:Name="playBtn"

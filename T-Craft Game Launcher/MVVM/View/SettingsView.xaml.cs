@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using T_Craft_Game_Launcher.Core;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -48,6 +49,11 @@ namespace T_Craft_Game_Launcher.MVVM.View
                     MessageBox.Show("Ein Fehler beim Löschen ist aufgetreten. Bitte starte den Launcher und seine Prozesse neu und stelle sicher, dass die Daten nicht verwendet werden.");
                 }
             }
+        }
+
+        private void updateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AppTools.HandleUpdates(true);
         }
     }
 }

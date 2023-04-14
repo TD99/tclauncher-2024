@@ -1,9 +1,26 @@
 ﻿using System.Net;
+using System.Net.NetworkInformation;
 
 namespace T_Craft_Game_Launcher.Core
 {
     public static class INetTools
     {
+        public static long pingPage(string url)
+        {
+            try
+            {
+                Ping pingSender = new Ping();
+                PingReply reply = pingSender.Send(removeProtocol(url));
+
+                if (reply.Status == IPStatus.Success)
+                {
+                    return reply.RoundtripTime;
+                }
+            } catch { }
+
+            return -1;
+        }
+
         public static bool requestPage(string url)
         {
             string[] protocols = { "http://", "https://" };

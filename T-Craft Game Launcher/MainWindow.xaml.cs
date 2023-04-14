@@ -31,6 +31,8 @@ namespace T_Craft_Game_Launcher
             INetCheck();
 
             genericConfig();
+
+            AppTools.HandleUpdates();
         }
 
         private async void genericConfig()
@@ -223,7 +225,7 @@ namespace T_Craft_Game_Launcher
             if (INetTools.requestPage(remote_url))
             {
                 connectionIndicator.Fill = Brushes.Green;
-                connectionStatus.Text = "Verbunden";
+                connectionStatus.Text = $"Verbunden ({INetTools.pingPage("https://www.google.com")} ms)";
             }
             else if (INetTools.requestPage("google.com"))
             {

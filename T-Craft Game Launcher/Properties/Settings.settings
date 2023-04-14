@@ -5,7 +5,7 @@
     <Setting Name="DownloadMirror" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://tcraft.link/tclauncher/api/</Value>
     </Setting>
-    <Setting Name="LastPlayed" Type="System.Guid" Scope="User">
+    <Setting Name="LastSelected" Type="System.Guid" Scope="User">
       <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
     </Setting>
   </Settings>
