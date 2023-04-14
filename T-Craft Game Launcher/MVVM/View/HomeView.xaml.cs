@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows;
@@ -126,9 +127,6 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
 
-            Properties.Settings.Default.LastPlayed = selectedInstance.Guid;
-            Properties.Settings.Default.Save();
-
             try
             {
                 string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
@@ -231,19 +229,29 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void profileSelect_SelectionChanged(object sender, RoutedEventArgs e)
         {
+            InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
+            if (selectedInstance != null)
+            {
+                Properties.Settings.Default.LastSelected = selectedInstance.Guid;
+                Properties.Settings.Default.Save();
+            }
             RefreshApplets();
         }
 
         private async void RefreshApplets()
         {
-            mainApplets.ItemsSource = null;
+            mainApplets.ItemsSource = new ObservableCollection<Applet>
+            {
+                new Applet(1, null, "https://tcraft.link/tclauncher/api/assets/loader.gif", null, null, null),
+                new Applet(2, null, "https://tcraft.link/tclauncher/api/assets/loader.gif", null, null, null)
+            };
 
             try
             {
                 InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
-                if (selectedInstance is null) return;
+                if (selectedInstance is null) throw new Exception();
                 string appletsURL = selectedInstance.AppletURL;
-                if (String.IsNullOrEmpty(appletsURL)) return;
+                if (String.IsNullOrEmpty(appletsURL)) throw new Exception();
                 HttpClient httpClient = new HttpClient();
                 var response = await httpClient.GetAsync(appletsURL);
                 if (response.IsSuccessStatusCode)
@@ -252,7 +260,9 @@ namespace T_Craft_Game_Launcher.MVVM.View
                     Applets = new ObservableCollection<Applet>(JsonConvert.DeserializeObject<ObservableCollection<Applet>>(content).OrderByDescending(a => a.Weight));
                 }
             }
-            catch {}
+            catch {
+                Applets = null;
+            }
 
             mainApplets.ItemsSource = Applets;
         }

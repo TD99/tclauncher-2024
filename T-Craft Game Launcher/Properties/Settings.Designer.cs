@@ -38,12 +38,12 @@ namespace T_Craft_Game_Launcher.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
-        public global::System.Guid LastPlayed {
+        public global::System.Guid LastSelected {
             get {
-                return ((global::System.Guid)(this["LastPlayed"]));
+                return ((global::System.Guid)(this["LastSelected"]));
             }
             set {
-                this["LastPlayed"] = value;
+                this["LastSelected"] = value;
             }
         }
     }

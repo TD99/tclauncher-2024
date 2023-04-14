@@ -27,6 +27,11 @@
                 Click="resetDataBtn_Click"
                 Margin="0, 10, 0, 0"
                 Style="{StaticResource ModernButton}" />
+        <Button x:Name="updateBtn"
+                Content="Debug.UpdateCheck"
+                Click="updateBtn_Click"
+                Margin="0, 10, 0, 0"
+                Style="{StaticResource ModernButton}" />
         <TextBlock x:Name="assemblyVersion"
                    Text="Version: 0.0.0"
                    Foreground="White" />
