@@ -22,6 +22,7 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
         private InstalledInstance _lastSelected;
         public InstalledInstance LastSelected
         {
@@ -54,7 +55,7 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
                         if (instance.Is_Installed)
                         {
-                            InstalledInstance installed = new InstalledInstance(instance.Name, instance.DisplayName, instance.Guid, instance.AppletURL);
+                            InstalledInstance installed = new InstalledInstance(instance.Name, instance.DisplayName, instance.Guid, instance.AppletURL, instance.Servers);
                             LocalList.Add(installed);
                         }
                     }
@@ -69,10 +70,16 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
         private void LoadLastSelected()
         {
             Guid guidLastPlayed = Properties.Settings.Default.LastSelected;
-            if (guidLastPlayed == new Guid("00000000-0000-0000-0000-000000000000")) return;
-
             InstalledInstance instance = LocalList.FirstOrDefault(x => x.Guid == guidLastPlayed);
-            if (instance == null) return;
+
+            if (instance == null)
+            {
+                if (LocalList.Count() >= 1)
+                {
+                    LastSelected = LocalList[0];
+                }
+                return;
+            }
 
             LastSelected = instance;
         }

@@ -23,9 +23,8 @@
                        FontSize="28"
                        HorizontalAlignment="Left"
                        Margin="0, 0, 0, 20" />
-        
-            <StackPanel Orientation="Horizontal"
-                        Margin="0, 0, 0, 10">
+
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                 <Border x:Name="discoverBorder"
                         Width="400"
                         Height="180"
@@ -75,10 +74,13 @@
                         </Style>
                     </Border.Style>
                 </Border>
-                <Border Width="235"
+                <Border x:Name="servInfo"
+                        Visibility="Collapsed"
+                        Width="235"
                         Height="180"
                         Margin="10, 0, 0, 0"
                         BorderThickness="0">
+
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
                             <GradientStop Color="#5BC3FF" Offset="0" />
@@ -93,16 +95,29 @@
                     </Border.Clip>
 
                     <Grid>
+
+
+                        <Image Stretch="UniformToFill"
+                               Source="{Binding ElementName=serverSelect, Path=SelectedItem.ThumbnailURL}">
+                            <Image.OpacityMask>
+                                <SolidColorBrush Color="Black" Opacity="0.5"/>
+                            </Image.OpacityMask>
+                        </Image>
+                        
                         <StackPanel>
-                            <TextBlock Text="Tipp"
+                            <TextBlock Text="Server"
                                        Foreground="White"
                                        FontSize="28"
                                        Margin="20,10,20,0" />
-                            <TextBlock Text="Klicke auf 'Profile', um ein neues Profil herunterzuladen."
-                                       TextWrapping="Wrap"
-                                       Foreground="White"
-                                       FontSize="16.4"
-                                       Margin="20,10,20,0" />
+                            <ComboBox x:Name="serverSelect"
+                                      Margin="20, 0"
+                                      ItemsSource="{Binding Path=LastSelected.Servers}"
+                                      SelectedIndex="0"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="IP"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"
+                                      SelectionChanged="serverSelect_SelectionChanged"/>
                         </StackPanel>
                     </Grid>
                 </Border>

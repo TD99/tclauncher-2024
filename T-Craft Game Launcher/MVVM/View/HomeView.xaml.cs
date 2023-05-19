@@ -234,6 +234,16 @@ namespace T_Craft_Game_Launcher.MVVM.View
             {
                 Properties.Settings.Default.LastSelected = selectedInstance.Guid;
                 Properties.Settings.Default.Save();
+
+                if (selectedInstance.Servers != null && selectedInstance.Servers.Count() >= 1)
+                {
+                    servInfo.Visibility = Visibility.Visible;
+                    serverSelect.SelectedIndex = 0;
+                }
+                else
+                {
+                    servInfo.Visibility = Visibility.Collapsed;
+                }
             }
             RefreshApplets();
         }
@@ -270,6 +280,10 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private void webViewBackButton_Click(object sender, RoutedEventArgs e)
         {
             SetAppletViewState(false);
+        }
+
+        private void serverSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
         }
     }
 }

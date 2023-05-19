@@ -23,11 +23,14 @@ namespace T_Craft_Game_Launcher
         private DateTime lastWinAct = DateTime.MinValue;
         private string remote_url = Properties.Settings.Default.DownloadMirror;
         private MainViewModel vm;
+        private bool is_silent = false;
 
-        public MainWindow()
+        public MainWindow(bool silent = false)
         {
             InitializeComponent();
             vm = (MainViewModel)this.DataContext;
+            is_silent = silent;
+
             INetCheck();
 
             genericConfig();
@@ -114,7 +117,10 @@ namespace T_Craft_Game_Launcher
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            loadingAnim();
+            if (!is_silent)
+            {
+                loadingAnim();
+            }
         }
 
         private void loadingAnim()

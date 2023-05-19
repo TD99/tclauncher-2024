@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Windows;
 using System.Windows.Documents;
+using T_Craft_Game_Launcher.Core;
 
 namespace T_Craft_Game_Launcher
 {
@@ -16,6 +17,8 @@ namespace T_Craft_Game_Launcher
     {
         private const string URI_SCHEME = "tcl";
         private const string FRIENDLY_NAME = "TCLauncher";
+
+        private bool is_silent = false;
 
 
         public App()
@@ -37,6 +40,8 @@ namespace T_Craft_Game_Launcher
             }
 
             RegisterURIScheme();
+
+            ShowUI();
         }
 
         private Uri Get_AppURI(string[] args)
@@ -60,24 +65,40 @@ namespace T_Craft_Game_Launcher
                 switch (e.Args[i])
                 {
                     case "--installSuccess":
+                        is_silent = true;
                         try
                         {
-                            MessageBox.Show($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                            ModalTools.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
                         }
                         catch
                         {
-                            MessageBox.Show($"Das Paket wurde erfolgreich installiert.");
+                            ModalTools.ShowToVoid($"Das Paket wurde erfolgreich installiert.");
+                        }
+                        break;
+                    case "--updateSuccess":
+                        is_silent = true;
+                        try
+                        {
+                            ModalTools.ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
+                        }
+                        catch
+                        {
+                            ModalTools.ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
                         }
                         break;
                     case "--uninstallSuccess":
+                        is_silent = true;
                         try
                         {
-                            MessageBox.Show($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                            ModalTools.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
                         }
                         catch
                         {
-                            MessageBox.Show($"Das Paket wurde erfolgreich deinstalliert.");
+                            ModalTools.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
                         }
+                        break;
+                    case "--silent":
+                        is_silent = true;
                         break;
                     default:
                         break;
@@ -139,6 +160,11 @@ namespace T_Craft_Game_Launcher
             {
                 MessageBox.Show("An Error occured while registering URI Schemes: " + e.Message);
             }
+        }
+        private void ShowUI()
+        {
+            MainWindow mainWindow = new MainWindow(is_silent);
+            mainWindow.Show();
         }
     }
 }

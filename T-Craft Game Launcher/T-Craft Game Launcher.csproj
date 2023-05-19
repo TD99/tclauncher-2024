@@ -94,6 +94,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\ModalTools.cs" />
+    <Compile Include="MVVM\Model\Server.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="ActionWindow.xaml">
       <SubType>Designer</SubType>
@@ -257,6 +259,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\close.png" />
+    <Resource Include="Images\maximize.png" />
+    <Resource Include="Images\minimize.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.IO;
 
 namespace T_Craft_Game_Launcher.MVVM.Model
 {
@@ -21,6 +22,7 @@ namespace T_Craft_Game_Launcher.MVVM.Model
         public bool Is_Installed { get; set; }
         public string AppletURL { get; set; }
         public Dictionary<string, object> Requirements { get; set; }
+        public List<Server> Servers { get; set; }
 
         public Instance()
         {
@@ -28,7 +30,7 @@ namespace T_Craft_Game_Launcher.MVVM.Model
             Is_Installed = false;
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL, Dictionary<string, object> requirements)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL, Dictionary<string, object> requirements, List<Server> servers)
         {
             Name = name;
             DisplayName = displayName;
@@ -45,6 +47,7 @@ namespace T_Craft_Game_Launcher.MVVM.Model
             Is_Installed = is_Installed;
             AppletURL = appletURL;
             Requirements = requirements;
+            Servers = servers;
         }
 
         public Patch GetCurrentPatch()

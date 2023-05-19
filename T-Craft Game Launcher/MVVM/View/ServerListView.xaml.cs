@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -48,6 +49,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
+            reconfigDef.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
 
             current = instance;
@@ -288,19 +290,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
             }
 
-            try
-            {
-                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
-
-                instance.Is_Installed = true;
-
-                var json = JsonConvert.SerializeObject(instance);
-                File.WriteAllText(configFile, json);
-            }
-            catch
-            {
-                MessageBox.Show("Ein Konfigurationsfehler ist aufgetreten.");
-            }
+            reconfigure(instanceFolder, instance);
         }
 
         public async Task<string> GetFileSizeAsync(string url)
@@ -363,10 +353,56 @@ namespace T_Craft_Game_Launcher.MVVM.View
             specialFocusBtn.Content = (current.Is_Installed) ? "Deinstallieren" : "Installieren";
         }
 
+        private void reconfigure(string instanceFolder, Instance instance)
+        {
+            try
+            {
+                instance.Is_Installed = true;
+
+                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
+
+                var json = JsonConvert.SerializeObject(instance);
+                File.WriteAllText(configFile, json);
+            }
+            catch
+            {
+                MessageBox.Show("Ein Fehler bei der Neukonfiguration ist aufgetreten.");
+            }
+        }
+
         private void openFolderBtn_Click(object sender, RoutedEventArgs e)
         {
             string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString(), "data");
             Process.Start("explorer.exe", dataFolder);
+        }
+
+        private async void reconfigDef_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+
+                HttpClient _httpClient = new HttpClient();
+                var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror + "?guid=" + current.Guid.ToString());
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var instance = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content)[0];
+
+                    reconfigure(instanceFolder, instance);
+
+                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
+                    Process.Start(appPath, $"--updateSuccess {instance.DisplayName}");
+                    Application.Current.Shutdown();
+
+                    return;
+                }
+                MessageBox.Show($"Die Neukonfiguration von '{current.Name}' ist fehlgeschlagen.");
+            }
+            catch
+            {
+                MessageBox.Show($"Die Neukonfiguration von '{current.Name}' ist fehlgeschlagen.");
+            }
         }
     }
 }
