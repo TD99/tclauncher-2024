@@ -5,7 +5,7 @@ namespace T_Craft_Game_Launcher.Core
 {
     public static class ModalTools
     {
-        public static void ShowToVoid(string text, string title = null)
+        public static void ShowToVoid(string text, string title = "")
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() => MessageBox.Show(text, title)));
         }
