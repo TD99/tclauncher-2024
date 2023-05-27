@@ -36,6 +36,17 @@ namespace T_Craft_Game_Launcher
             genericConfig();
 
             AppTools.HandleUpdates();
+
+            handleFirstTime();
+        }
+
+        private void handleFirstTime()
+        {
+            if (Properties.Settings.Default.FirstTime)
+            {
+                newToolTip.PlacementTarget = serverBtn;
+                newToolTip.IsOpen = true;
+            }
         }
 
         private async void genericConfig()

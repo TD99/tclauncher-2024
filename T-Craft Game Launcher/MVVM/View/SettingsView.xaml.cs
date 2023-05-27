@@ -19,6 +19,16 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             InitializeComponent();
             assemblyVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            string tagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
+            foreach (ComboBoxItem item in Behaviour.Items)
+            {
+                if ((string) item.Tag == tagToSelect)
+                {
+                    Behaviour.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -38,8 +48,10 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 try
                 {
                     Directory.Delete(tclFolder, true);
-                    MessageBox.Show("Die Daten wurden erfolgreich zurückgesetzt.");
+                    Properties.Settings.Default.Reset();
+                    Properties.Settings.Default.Save();
 
+                    MessageBox.Show("Die Daten wurden erfolgreich zurückgesetzt.");
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     Process.Start(appPath);
                     Application.Current.Shutdown();
@@ -54,6 +66,58 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private void updateBtn_Click(object sender, RoutedEventArgs e)
         {
             AppTools.HandleUpdates(true);
+        }
+
+        private void codeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            EditorWindow editorWindow = new EditorWindow();
+            editorWindow.Show();
+        }
+
+        private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            string tag = (string)selectedItem.Tag;
+            byte value;
+
+            try
+            {
+                value = Byte.Parse(tag);
+            } catch
+            {
+                MessageBox.Show("Das Startverhalten konnte nicht gesetzt werden.");
+                return;
+            }
+
+            Properties.Settings.Default.StartBehaviour = value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void resetRuntime_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+                string runtimeFolder = Path.Combine(tclFolder, "Runtime");
+
+                if (Directory.Exists(runtimeFolder))
+                {
+                    Directory.Delete(runtimeFolder, true);
+
+                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
+                    Process.Start(appPath, $"--installSuccess runtime.core");
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    MessageBox.Show("Die Runtime wurde nicht gefunden!");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Während der Zurücksetzung der Runtime ist ein Fehler aufgetreten!");
+            }
         }
     }
 }

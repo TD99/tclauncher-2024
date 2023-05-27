@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher"
              xmlns:viewModel="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
-             xmlns:view="clr-namespace:T_Craft_Game_Launcher.MVVM.View">
+             xmlns:view="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
+             ShutdownMode="OnLastWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

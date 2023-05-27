@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
              xmlns:validationRules="clr-namespace:T_Craft_Game_Launcher.MVVM.ValidationRules"
+             xmlns:controls="clr-namespace:T_Craft_Game_Launcher.Controls"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450"
@@ -18,18 +19,36 @@
                    FontSize="28"
                    HorizontalAlignment="Left"
                    Margin="0, 0, 0, 20" />
+        <Label Content="Startverhalten" Foreground="White" />
+        <ComboBox x:Name="Behaviour"
+                  SelectionChanged="Behaviour_SelectionChanged">
+            <ComboBoxItem Tag="0">Geöffnet lassen</ComboBoxItem>
+            <ComboBoxItem Tag="1">Minimieren (empfohlen)</ComboBoxItem>
+            <ComboBoxItem Tag="2">Schliessen (nicht empfohlen)</ComboBoxItem>
+        </ComboBox>
+        <controls:HorizontalRow Fill="#99FFFFFF" Thickness="0.5" />
         <Button x:Name="resetSettBtn"
                 Content="Debug.ResetLocalSettings"
                 Click="resetSettBtn_Click"
                 Style="{StaticResource ModernButton}" />
+        <Button x:Name="resetRuntime"
+                Content="Debug.ResetRuntime"
+                Click="resetRuntime_Click"
+                Margin="0, 10, 0, 0"
+                Style="{StaticResource ModernButton}" />
         <Button x:Name="resetDataBtn"
-                Content="Debug.ResetData"
+                Content="Debug.ResetAll"
                 Click="resetDataBtn_Click"
                 Margin="0, 10, 0, 0"
                 Style="{StaticResource ModernButton}" />
         <Button x:Name="updateBtn"
                 Content="Debug.UpdateCheck"
                 Click="updateBtn_Click"
+                Margin="0, 10, 0, 0"
+                Style="{StaticResource ModernButton}" />
+        <Button x:Name="codeBtn"
+                Content="Debug.OpenEditor"
+                Click="codeBtn_Click"
                 Margin="0, 10, 0, 0"
                 Style="{StaticResource ModernButton}" />
         <TextBlock x:Name="assemblyVersion"

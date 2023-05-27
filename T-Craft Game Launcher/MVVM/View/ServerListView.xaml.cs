@@ -291,6 +291,12 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
 
             reconfigure(instanceFolder, instance);
+
+            if (Properties.Settings.Default.FirstTime)
+            {
+                Properties.Settings.Default.FirstTime = false;
+                Properties.Settings.Default.Save();
+            }
         }
 
         public async Task<string> GetFileSizeAsync(string url)

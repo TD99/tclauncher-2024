@@ -97,7 +97,23 @@
                     <RadioButton x:Name="serverBtn"
                                  Content="Profile"
                                  Style="{StaticResource MenuButtonTheme}"
-                                 Command="{Binding ServerListViewCommand}" />
+                                 Command="{Binding ServerListViewCommand}"
+                                 ToolTipService.IsEnabled="False">
+                        <RadioButton.ToolTip>
+                            <ToolTip x:Name="newToolTip"
+                                     Placement="Left"
+                                     Style="{StaticResource ModernToolTip}"
+                                     Background="#84caf4"
+                                     StaysOpen="False">
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="← Instanzen installieren"
+                                                   Foreground="Black" />
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </RadioButton.ToolTip>
+                    </RadioButton>
                     <RadioButton x:Name="settingsBtn"
                                  Content="Einstellungen"
                                  Style="{StaticResource MenuButtonTheme}"

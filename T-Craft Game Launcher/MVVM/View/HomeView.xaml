@@ -30,7 +30,7 @@
                         Height="180"
                         BorderThickness="0"
                         Background="#88000000"
-                        MouseDown="discoverBorder_MouseDown">
+                        MouseDown="discoverEvent">
 
                     <Border.Clip>
                         <RectangleGeometry RadiusX="10"
@@ -139,7 +139,8 @@
                     Click="webViewBackButton_Click" />
             <wv2:WebView2 Name="webView"
                           Source="https://tcraft.link/tclauncher/api/plugins/applet-loader/"
-                          Grid.Row="1" />
+                          Grid.Row="1" 
+                          Height="30px" />
         </Grid>
 
         <ListView x:Name="mainApplets"
@@ -255,6 +256,16 @@
                           HorizontalAlignment="Left"
                           SelectedItem="{Binding LastSelected}"
                           SelectionChanged="profileSelect_SelectionChanged" />
+
+                <TextBlock x:Name="profileNoneText"
+                           Foreground="#5b8dc1"
+                           TextDecorations="Underline"
+                           Text="Instanzen installieren" 
+                           Visibility="Collapsed"
+                           FontSize="15"
+                           VerticalAlignment="Center"
+                           Cursor="Hand"
+                           MouseDown="discoverEvent" />
 
                 <Button x:Name="playBtn"
                         Content="Spielen"

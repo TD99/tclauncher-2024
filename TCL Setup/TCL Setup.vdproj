@@ -15,38 +15,32 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_1D1440969B6FA805C3D5F25AFE7DB469"
-        "OwnerKey" = "8:_DAE35BFE9AD7493D82DB4197D4049DE1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_222C1EC868934CDB845A6B75ACED852D"
         "OwnerKey" = "8:_DAE35BFE9AD7493D82DB4197D4049DE1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2956741B3A5EF38B9C1F508BFC44AA66"
+        "MsmKey" = "8:_24E40570A93F96F0FC6C7E9C69999B8B"
         "OwnerKey" = "8:_DAE35BFE9AD7493D82DB4197D4049DE1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2956741B3A5EF38B9C1F508BFC44AA66"
-        "OwnerKey" = "8:_1D1440969B6FA805C3D5F25AFE7DB469"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2956741B3A5EF38B9C1F508BFC44AA66"
-        "OwnerKey" = "8:_39502BEE90F3FA8E99959B70F93C3487"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_39502BEE90F3FA8E99959B70F93C3487"
+        "MsmKey" = "8:_4F548CCD8507675F715944F7512D746E"
         "OwnerKey" = "8:_DAE35BFE9AD7493D82DB4197D4049DE1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4F548CCD8507675F715944F7512D746E"
+        "OwnerKey" = "8:_7588917721E7959EE2B3E51F4E13AB43"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4F548CCD8507675F715944F7512D746E"
+        "OwnerKey" = "8:_24E40570A93F96F0FC6C7E9C69999B8B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -65,6 +59,12 @@
         {
         "MsmKey" = "8:_73111234A4D425AA87FB570547FEEC37"
         "OwnerKey" = "8:_E8B8C100F6E2ECDC6C53B5BB30046889"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7588917721E7959EE2B3E51F4E13AB43"
+        "OwnerKey" = "8:_DAE35BFE9AD7493D82DB4197D4049DE1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,6 +100,24 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7588917721E7959EE2B3E51F4E13AB43"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_24E40570A93F96F0FC6C7E9C69999B8B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4F548CCD8507675F715944F7512D746E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B7AC0313916EDBA9F8AAE853FC95DA1C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -107,24 +125,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_222C1EC868934CDB845A6B75ACED852D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1D1440969B6FA805C3D5F25AFE7DB469"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_39502BEE90F3FA8E99959B70F93C3487"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2956741B3A5EF38B9C1F508BFC44AA66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -207,13 +207,13 @@
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
-            "ComponentsUrl" = "8:"
+            "ComponentsUrl" = "8:https://go.microsoft.com/fwlink/p/?LinkId=2124703"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    "Name" = "8:Microsoft .NET Framework 4.8 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.8"
                     }
                 }
             }
@@ -246,37 +246,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1D1440969B6FA805C3D5F25AFE7DB469"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.Wpf, Version=1.0.1587.40, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_1D1440969B6FA805C3D5F25AFE7DB469"
-                    {
-                    "Name" = "8:Microsoft.Web.WebView2.Wpf.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Web.WebView2.Wpf.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_222C1EC868934CDB845A6B75ACED852D"
             {
             "AssemblyRegister" = "3:1"
@@ -308,20 +277,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2956741B3A5EF38B9C1F508BFC44AA66"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_24E40570A93F96F0FC6C7E9C69999B8B"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.Core, Version=1.0.1587.40, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.WinForms, Version=1.0.1774.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2956741B3A5EF38B9C1F508BFC44AA66"
+                    "_24E40570A93F96F0FC6C7E9C69999B8B"
                     {
-                    "Name" = "8:Microsoft.Web.WebView2.Core.dll"
+                    "Name" = "8:Microsoft.Web.WebView2.WinForms.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Web.WebView2.Core.dll"
+            "SourcePath" = "8:Microsoft.Web.WebView2.WinForms.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
@@ -339,20 +308,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_39502BEE90F3FA8E99959B70F93C3487"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4F548CCD8507675F715944F7512D746E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.WinForms, Version=1.0.1587.40, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.Core, Version=1.0.1774.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_39502BEE90F3FA8E99959B70F93C3487"
+                    "_4F548CCD8507675F715944F7512D746E"
                     {
-                    "Name" = "8:Microsoft.Web.WebView2.WinForms.dll"
+                    "Name" = "8:Microsoft.Web.WebView2.Core.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Web.WebView2.WinForms.dll"
+            "SourcePath" = "8:Microsoft.Web.WebView2.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
@@ -449,6 +418,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7588917721E7959EE2B3E51F4E13AB43"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Web.WebView2.Wpf, Version=1.0.1774.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_7588917721E7959EE2B3E51F4E13AB43"
+                    {
+                    "Name" = "8:Microsoft.Web.WebView2.Wpf.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.Web.WebView2.Wpf.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -613,7 +613,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TCLauncher"
         "ProductCode" = "8:{2E30FFEC-253A-4019-8063-D8BFA97A439A}"
-        "PackageCode" = "8:{D090AE39-7D4F-4ED9-90D3-91EA951F3F90}"
+        "PackageCode" = "8:{8380EC60-E109-4E2D-86CB-B355505034C1}"
         "UpgradeCode" = "8:{6BE44004-C883-457B-8E2A-8046034FEF4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

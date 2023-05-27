@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -8,10 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
-using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,11 +22,27 @@ namespace T_Craft_Game_Launcher.MVVM.View
     public partial class HomeView : UserControl
     {
         public ObservableCollection<Applet> Applets { get; set; }
+        private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
 
         public HomeView()
         {
             InitializeComponent();
             loadAccount();
+            checkInstanceListEmpty();
+        }
+
+        private async void loadWV()
+        {
+            await webView.EnsureCoreWebView2Async();
+        }
+
+        private void checkInstanceListEmpty()
+        {
+            if (Properties.Settings.Default.FirstTime)
+            {
+                profileSelect.Visibility = Visibility.Collapsed;
+                profileNoneText.Visibility = Visibility.Visible;
+            }
         }
 
         private void loadAccount()
@@ -112,7 +124,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
         }
 
-        private void discoverBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        private void discoverEvent(object sender, MouseButtonEventArgs e)
         {
             foreach (Window window in Application.Current.Windows)
             {
@@ -188,6 +200,18 @@ namespace T_Craft_Game_Launcher.MVVM.View
                 };
 
                 launcher.Start();
+
+                switch (StartupBehaviourLevel)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        Application.Current.MainWindow.WindowState = WindowState.Minimized;
+                        break;
+                    case 2:
+                        Application.Current.Shutdown();
+                        break;
+                }
             }
             catch
             {
