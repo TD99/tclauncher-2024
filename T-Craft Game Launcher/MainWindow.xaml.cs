@@ -131,6 +131,9 @@ namespace T_Craft_Game_Launcher
             if (!is_silent)
             {
                 loadingAnim();
+            } else
+            {
+                loadingImg.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -242,7 +245,8 @@ namespace T_Craft_Game_Launcher
             if (INetTools.requestPage(remote_url))
             {
                 connectionIndicator.Fill = Brushes.Green;
-                connectionStatus.Text = $"Verbunden ({INetTools.pingPage("https://www.google.com")} ms)";
+                long ms = INetTools.pingPage("https://www.google.com");
+                connectionStatus.Text = (ms < 0) ? "Verbunden" : $"Verbunden ({ms} ms)";
             }
             else if (INetTools.requestPage("google.com"))
             {

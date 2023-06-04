@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using T_Craft_Game_Launcher.MVVM.Model;
 
@@ -199,7 +200,20 @@ namespace T_Craft_Game_Launcher.MVVM.View
                     catch { }
                 };
 
+                var action = new ActionWindow("Start vorbereiten...");
+                action.Owner = Application.Current.MainWindow;
+                action.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                action.Show();
+
                 launcher.Start();
+
+                Task.Delay(1000).ContinueWith(t =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        action.Hide();
+                    });
+                });
 
                 switch (StartupBehaviourLevel)
                 {
@@ -308,6 +322,9 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void serverSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (serverSelect.SelectedItem == null) return;
+            Server server = (Server)serverSelect.SelectedItem;
+            currentServerImg.Source = new BitmapImage(new Uri(@"https://tcraft.link/tclauncher/api/plugins/server-tool/GetAccent.php?literal&url=" + server.IP));
         }
     }
 }

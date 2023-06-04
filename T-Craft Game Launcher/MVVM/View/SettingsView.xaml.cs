@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using T_Craft_Game_Launcher.Core;
 
@@ -70,8 +71,13 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void codeBtn_Click(object sender, RoutedEventArgs e)
         {
-            EditorWindow editorWindow = new EditorWindow();
+            string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+            string instanceFolder = Path.Combine(tclFolder, "Instances");
+
+            this.Cursor = Cursors.Wait;
+            EditorWindow editorWindow = new EditorWindow(instanceFolder, true);
             editorWindow.Show();
+            this.Cursor = null;
         }
 
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)

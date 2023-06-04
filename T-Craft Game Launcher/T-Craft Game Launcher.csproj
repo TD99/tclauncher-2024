@@ -94,10 +94,12 @@
     <Compile Include="Controls\HorizontalRow.xaml.cs">
       <DependentUpon>HorizontalRow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\IOTools.cs" />
     <Compile Include="Core\ModalTools.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="MVVM\Model\Server.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="ActionWindow.xaml">
@@ -222,6 +224,7 @@
     <Resource Include="Fonts\RobotoFlex.ttf" />
     <Resource Include="Fonts\Barlow-Regular.ttf" />
     <Resource Include="Fonts\Tourney.ttf" />
+    <Resource Include="Plugins\Monaco\min\vs\base\browser\ui\codicons\codicon\codicon.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -279,5 +282,11 @@
     <Resource Include="Images\maximize.png" />
     <Resource Include="Images\minimize.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Plugins\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

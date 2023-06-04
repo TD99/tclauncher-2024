@@ -12,7 +12,7 @@
     <UserControl.DataContext>
         <vm:ServerListViewModel />
     </UserControl.DataContext>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -28,9 +28,8 @@
                        Source="/Images/nothumb.png"
                        RenderTransformOrigin="0.5,0.5"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Center">
-                </Image>
-                
+                       HorizontalAlignment="Center" />
+
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -115,6 +114,12 @@
                                 FontSize="20"
                                 Style="{StaticResource ModernButton}"
                                 Click="reconfigDef_Click" />
+                        <Button x:Name="editConfig"
+                                Margin="0, 15, 0, 0"
+                                Content="Konfigurationseditor"
+                                FontSize="20"
+                                Style="{StaticResource ModernButton}"
+                                Click="editConfig_Click" />
                         <Button x:Name="forceUninstallBtn"
                                 Margin="0, 50, 0, 0"
                                 Content="Deinstallation erzwingen"

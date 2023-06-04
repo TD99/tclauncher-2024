@@ -95,15 +95,18 @@
                     </Border.Clip>
 
                     <Grid>
-
-
-                        <Image Stretch="UniformToFill"
-                               Source="{Binding ElementName=serverSelect, Path=SelectedItem.ThumbnailURL}">
-                            <Image.OpacityMask>
-                                <SolidColorBrush Color="Black" Opacity="0.5"/>
-                            </Image.OpacityMask>
+                        <Image x:Name="currentServerImg"
+                               Stretch="UniformToFill"
+                               RenderTransformOrigin="0.5,0.5"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center">
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
                         </Image>
-                        
+
                         <StackPanel>
                             <TextBlock Text="Server"
                                        Foreground="White"
@@ -118,6 +121,19 @@
                                       VerticalAlignment="Center"
                                       HorizontalAlignment="Left"
                                       SelectionChanged="serverSelect_SelectionChanged"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="20, 0">
+                                <TextBlock x:Name="ServerMinPlayers"
+                                           Foreground="White"
+                                           Text="?" />
+                                <TextBlock Text=" / "
+                                           Foreground="White" />
+                                <TextBlock x:Name="ServerMaxPlayers"
+                                           Text="?"
+                                           Foreground="White" />
+                                <TextBlock Text=" Spieler"
+                                           Foreground="White" />
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>

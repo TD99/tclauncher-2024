@@ -50,6 +50,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             reconfigDef.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
+            editConfig.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
 
             current = instance;
@@ -408,6 +409,24 @@ namespace T_Craft_Game_Launcher.MVVM.View
             catch
             {
                 MessageBox.Show($"Die Neukonfiguration von '{current.Name}' ist fehlgeschlagen.");
+            }
+        }
+
+        private void editConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string instanceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+                string configFile = Path.Combine(instanceFolder, @"config.json");
+
+                this.Cursor = Cursors.Wait;
+                EditorWindow editorWindow = new EditorWindow(configFile, false);
+                editorWindow.Show();
+                this.Cursor = null;
+            }
+            catch
+            {
+                MessageBox.Show($"Die Konfiguration von '{current.Name}' ist fehlgeschlagen.");
             }
         }
     }
