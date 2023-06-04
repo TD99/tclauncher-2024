@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">A C# application that allows a secure connection to Minecraft servers and a fast switching between instances.⚡</h4>
+<h4 align="center">A C# application that allows fast switching between Minecraft instances.⚡</h4>
 
 <p align="center">
   <img src="https://img.shields.io/github/license/TD99/T-Craft-Game-Launcher?style=for-the-badge" alt="License">
