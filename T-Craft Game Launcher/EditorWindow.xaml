@@ -21,7 +21,7 @@
     <Grid Background="#343b48">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="fileBrowserColumn" Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition x:Name="gridSplitterColumn" Width="Auto" />
             <ColumnDefinition Width="3*" MinWidth="150" />
         </Grid.ColumnDefinitions>
         <Border x:Name="fileBrowser"

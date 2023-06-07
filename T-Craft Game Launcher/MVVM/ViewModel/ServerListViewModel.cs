@@ -31,16 +31,23 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
         private async void LoadServers()
         {
+            bool error = false;
+            var cacheFilePath = Path.Combine(Path.GetTempPath(), "ServerListCache.json");
+
             try
             {
-                var cacheFilePath = Path.Combine(Path.GetTempPath(), "ServerListCache.json");
-
                 if (File.Exists(cacheFilePath))
                 {
                     var cacheContent = File.ReadAllText(cacheFilePath);
                     ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(cacheContent);
                 }
+            }
+            catch
+            {
+                error = true;
+            }
 
+            try {
                 var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror);
 
                 if (response.IsSuccessStatusCode)
@@ -53,13 +60,16 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
                         File.WriteAllText(cacheFilePath, content);
                     }
                 }
-
-                CheckInstalled();
             }
             catch
             {
-                MessageBox.Show("Ein Fehler beim Laden der verfügbaren Profile ist aufgetreten.", "Fehler");
+                if (error)
+                {
+                    MessageBox.Show("Die Profilliste kann nicht geladen werden!", "Fehler");
+                }
             }
+
+            CheckInstalled();
         }
 
         private void CheckInstalled()

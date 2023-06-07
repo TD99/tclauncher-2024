@@ -34,7 +34,8 @@ namespace T_Craft_Game_Launcher
             {
                 fileBrowserView.Visibility = Visibility.Collapsed;
                 GridSplitter1.Visibility = Visibility.Collapsed;
-                fileBrowserColumn.Width = GridLength.Auto;
+                fileBrowserColumn.Width = new GridLength(0);
+                gridSplitterColumn.Width = new GridLength(0);
             }
 
             webView2Control.CoreWebView2InitializationCompleted += WebView2Control_CoreWebView2InitializationCompleted;
@@ -137,9 +138,19 @@ namespace T_Craft_Game_Launcher
             }
         }
 
-        private void CloseWin()
+        private void CloseFile()
         {
-            this.Close();
+            if (IsDirectory)
+            {
+                treeRoot.IsSelected = true;
+
+                webView2Control.Reload();
+                webView2Control.Source = new Uri(System.IO.Path.GetFullPath("Plugins/Monaco/index.html"));
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void ShowAbout()
@@ -267,6 +278,9 @@ namespace T_Craft_Game_Launcher
         private void fileBrowserView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeViewItem selectedItem = (TreeViewItem)fileBrowserView.SelectedItem;
+
+            if (selectedItem == treeRoot) return;
+
             try
             {
                 if (IsRecovery)
@@ -292,7 +306,7 @@ namespace T_Craft_Game_Launcher
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            CloseWin();
+            CloseFile();
         }
 
         private void About_Click(object sender, RoutedEventArgs e)
@@ -317,7 +331,7 @@ namespace T_Craft_Game_Launcher
             {
                 // Handle "Ctrl+W"
                 e.Handled = true;
-                CloseWin();
+                CloseFile();
             }
         }
     }
