@@ -206,7 +206,7 @@ namespace T_Craft_Game_Launcher
             if (String.IsNullOrEmpty(file)) return;
             if (Directory.Exists(file)) return;
             if (!File.Exists(file)) return;
-            if (IOTools.File.IsBinary(file))
+            if (IoUtils.File.IsBinary(file))
             {
                 MessageBox.Show("Binary files are not supported.");
                 return;

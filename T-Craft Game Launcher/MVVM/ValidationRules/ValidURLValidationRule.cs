@@ -9,7 +9,7 @@ namespace T_Craft_Game_Launcher.MVVM.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             return ValidationResult.ValidResult;
-            //if (INetTools.requestPage(value.ToString()))
+            //if (InternetUtils.requestPage(value.ToString()))
             //{
             //    return ValidationResult.ValidResult;
             //}

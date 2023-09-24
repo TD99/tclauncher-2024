@@ -16,7 +16,8 @@
         StateChanged="Window_StateChanged"
         Title="TCLauncher"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        KeyDown="MainWindow_OnKeyDown">
 
     <Window.DataContext>
         <viewModel:MainViewModel />
@@ -59,7 +60,8 @@
                         Grid.ColumnSpan="4"
                         Background="Transparent"
                         Panel.ZIndex="-1"
-                        MouseDown="topDrag_MouseDown" />
+                        MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown"
+                        MouseLeftButtonUp="TopDrag_OnMouseLeftButtonUp"/>
 
                 <Grid Grid.Row="1"
                       Grid.Column="1">

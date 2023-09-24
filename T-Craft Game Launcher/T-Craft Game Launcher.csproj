@@ -91,11 +91,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\HorizontalRow.xaml.cs">
-      <DependentUpon>HorizontalRow.xaml</DependentUpon>
+    <Compile Include="Controls\HorizontalSeparator.xaml.cs">
+      <DependentUpon>HorizontalSeparator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\IOTools.cs" />
-    <Compile Include="Core\ModalTools.cs" />
+    <Compile Include="Core\IoUtils.cs" />
+    <Compile Include="Core\MessageBoxUtils.cs" />
     <Compile Include="EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
@@ -106,7 +106,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HorizontalRow.xaml">
+    <Page Include="Controls\HorizontalSeparator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,19 +125,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\INetTools.cs" />
+    <Compile Include="Core\InternetUtils.cs" />
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
-    <Compile Include="Core\AppTools.cs" />
-    <Compile Include="Core\SysInfo.cs" />
+    <Compile Include="Core\AppUtils.cs" />
+    <Compile Include="Core\SystemInfoUtils.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MVVM\View\ConfigEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVVM\View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -185,14 +181,10 @@
     <Compile Include="MVVM\Model\Instance.cs" />
     <Compile Include="MVVM\Model\Patch.cs" />
     <Compile Include="MVVM\ValidationRules\ValidURLValidationRule.cs" />
-    <Compile Include="MVVM\ViewModel\ConfigEditorViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\ServerListViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SettingsViewModel.cs" />
-    <Compile Include="MVVM\View\ConfigEditorView.xaml.cs">
-      <DependentUpon>ConfigEditorView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MVVM\View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,15 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             InitializeComponent();
             assemblyVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            infoRam.Content = "RAM: " + SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString() + " GB";
+            var gpuMemory = SystemInfoUtils.GetTotalAdapterMemoryInGb();
+            var gpuInfo = new StringBuilder("GPU: ");
+            foreach (var entry in gpuMemory)
+            {
+                gpuInfo.Append($"{entry.Key}: {entry.Value} GB / ");
+            }
+            infoGpu.Content = gpuInfo.ToString();
+
 
             string tagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)
@@ -66,7 +76,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            AppTools.HandleUpdates(true);
+            AppUtils.HandleUpdates(true);
         }
 
         private void codeBtn_Click(object sender, RoutedEventArgs e)

@@ -3,35 +3,36 @@ using System.Net.NetworkInformation;
 
 namespace T_Craft_Game_Launcher.Core
 {
-    public static class INetTools
+    public static class InternetUtils
     {
-        public static long pingPage(string url)
+        public static long PingPage(string url)
         {
             try
             {
-                Ping pingSender = new Ping();
-                PingReply reply = pingSender.Send(removeProtocol(url));
+                var pingSender = new Ping();
+                var reply = pingSender.Send(RemoveProtocol(url));
 
-                if (reply.Status == IPStatus.Success)
-                {
+                if (reply != null && reply.Status == IPStatus.Success)
                     return reply.RoundtripTime;
-                }
-            } catch { }
+            }
+            catch
+            {
+                // TODO: Don't ignore
+            }
 
             return -1;
         }
 
-        public static bool requestPage(string url)
+        public static bool ReachPage(string url)
         {
             string[] protocols = { "http://", "https://" };
-            url = removeProtocol(url, protocols);
-            HttpWebRequest request;
+            url = RemoveProtocol(url, protocols);
 
-            foreach (string protocol in protocols)
+            foreach (var protocol in protocols)
             {
                 try
                 {
-                    request = (HttpWebRequest)HttpWebRequest.Create(protocol + url);
+                    var request = (HttpWebRequest)WebRequest.Create(protocol + url);
                     request.AllowAutoRedirect = false;
                     request.Method = "HEAD";
                     request.GetResponse();
@@ -45,7 +46,7 @@ namespace T_Craft_Game_Launcher.Core
             return false;
         }
 
-        public static string removeProtocol(string url, string[] protocols = null)
+        public static string RemoveProtocol(string url, string[] protocols = null)
         {
             if (protocols == null)
             {

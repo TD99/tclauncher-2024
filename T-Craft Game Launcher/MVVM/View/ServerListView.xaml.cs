@@ -44,7 +44,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             itemFocusMCVersion.Text = instance.McVersion;
 
             string requiredRam = (instance.Requirements == null) ? "?" : instance.Requirements["ram"].ToString() ?? "?";
-            string totalPhysicalMemory = SysInfo.GetTotalPhysicalMemoryInGB().ToString();
+            string totalPhysicalMemory = SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString();
             itemFocusRam.Text = $"{requiredRam} GB / {totalPhysicalMemory} GB";
 
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";

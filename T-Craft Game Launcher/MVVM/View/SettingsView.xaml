@@ -26,7 +26,11 @@
             <ComboBoxItem Tag="1">Minimieren (empfohlen)</ComboBoxItem>
             <ComboBoxItem Tag="2">Schliessen (nicht empfohlen)</ComboBoxItem>
         </ComboBox>
-        <controls:HorizontalRow Fill="#99FFFFFF" Thickness="0.5" />
+        <controls:HorizontalSeparator Fill="#99FFFFFF" Thickness="0.5" />
+        <Label Content="Info" Foreground="White" />
+        <Label x:Name="infoRam" Content="RAM: ?" Foreground="White" />
+        <Label x:Name="infoGpu" Content="GPU: ?" Foreground="White" />
+        <controls:HorizontalSeparator Fill="#99FFFFFF" Thickness="0.5" />
         <Button x:Name="resetSettBtn"
                 Content="Debug.ResetLocalSettings"
                 Click="resetSettBtn_Click"

@@ -68,33 +68,33 @@ namespace T_Craft_Game_Launcher
                         is_silent = true;
                         try
                         {
-                            ModalTools.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
                         }
                         catch
                         {
-                            ModalTools.ShowToVoid($"Das Paket wurde erfolgreich installiert.");
+                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich installiert.");
                         }
                         break;
                     case "--updateSuccess":
                         is_silent = true;
                         try
                         {
-                            ModalTools.ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
+                            MessageBoxUtils.ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
                         }
                         catch
                         {
-                            ModalTools.ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
+                            MessageBoxUtils.ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
                         }
                         break;
                     case "--uninstallSuccess":
                         is_silent = true;
                         try
                         {
-                            ModalTools.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
                         }
                         catch
                         {
-                            ModalTools.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
+                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
                         }
                         break;
                     case "--silent":

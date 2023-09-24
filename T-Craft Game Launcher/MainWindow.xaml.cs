@@ -5,11 +5,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Model;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
+using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
+using System.Windows.Media.Effects;
 
 namespace T_Craft_Game_Launcher
 {
@@ -18,8 +22,7 @@ namespace T_Craft_Game_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double lastTop;
-        private bool is_minimAnim = false;
+
         private DateTime lastWinAct = DateTime.MinValue;
         private string remote_url = Properties.Settings.Default.DownloadMirror;
         private MainViewModel vm;
@@ -31,11 +34,11 @@ namespace T_Craft_Game_Launcher
             vm = (MainViewModel)this.DataContext;
             is_silent = silent;
 
-            INetCheck();
+            UpdateNetSpeeds();
 
             genericConfig();
 
-            AppTools.HandleUpdates();
+            AppUtils.HandleUpdates();
 
             handleFirstTime();
         }
@@ -201,26 +204,53 @@ namespace T_Craft_Game_Launcher
 
         private async void minimizeBtn_Click(object sender, RoutedEventArgs e)
         {
-            TimeSpan elapsed = DateTime.Now - lastWinAct;
-            if (is_minimAnim || elapsed.TotalSeconds < 3) return;
+            if (WindowState == WindowState.Minimized) return;
 
-            is_minimAnim = true;
-            lastTop = this.Top;
+            minimizeBtn.IsEnabled = false;
+            
+            var opacity = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.15));
+            BeginAnimation(Window.OpacityProperty, opacity);
 
-            double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+            var blurEffect = new BlurEffect { Radius = 0 };
+            Effect = blurEffect;
+            var blurAnimation = new DoubleAnimation(0, 10, TimeSpan.FromSeconds(0.1));
+            blurEffect.BeginAnimation(BlurEffect.RadiusProperty, blurAnimation);
 
-            for (double i = this.Top; i < screenHeight; i += 50)
-            {
-                this.Top = i;
-                await Task.Delay(1);
-            }
+            await Task.Delay(150);
+            
+            WindowState = WindowState.Minimized;
 
-            this.Top = screenHeight;
+            var resetOpacity = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0));
+            BeginAnimation(Window.OpacityProperty, resetOpacity);
+            blurEffect.BeginAnimation(BlurEffect.RadiusProperty, new DoubleAnimation(10, 0, TimeSpan.FromSeconds(0)));
 
-            this.WindowState = WindowState.Minimized;
-
-            lastWinAct = DateTime.Now;
+            minimizeBtn.IsEnabled = true;
         }
+
+
+
+        //private async void minimizeBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //TimeSpan elapsed = DateTime.Now - lastWinAct;
+        //    //if (is_minimAnim || elapsed.TotalSeconds < 3) return;
+
+        //    //is_minimAnim = true;
+        //    //lastTop = this.Top;
+
+        //    //double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+
+        //    //for (double i = this.Top; i < screenHeight; i += 50)
+        //    //{
+        //    //    this.Top = i;
+        //    //    await Task.Delay(1);
+        //    //}
+
+        //    //this.Top = screenHeight;
+
+        //    this.WindowState = WindowState.Minimized;
+
+        //    //lastWinAct = DateTime.Now;
+        //}
 
         private void maximizeBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -229,26 +259,42 @@ namespace T_Craft_Game_Launcher
 
             this.WindowState = (this.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
 
-            lastWinAct = DateTime.Now;
+            //lastWinAct = DateTime.Now;
         }
 
-        private void topDrag_MouseDown(object sender, MouseButtonEventArgs e)
+        private void TopDrag_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ClickCount == 2)
+            {
+                this.WindowState = (this.WindowState == WindowState.Maximized)
+                    ? WindowState.Normal
+                    : WindowState.Maximized;
+            }
+            else
             {
                 this.DragMove();
             }
         }
 
-        private void INetCheck()
+        private void TopDrag_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (INetTools.requestPage(remote_url))
+            if (e.ClickCount == 2)
+            {
+                this.WindowState = (this.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
+            }
+        }
+
+
+
+        private void UpdateNetSpeeds()
+        {
+            if (InternetUtils.ReachPage(remote_url))
             {
                 connectionIndicator.Fill = Brushes.Green;
-                long ms = INetTools.pingPage("https://www.google.com");
+                long ms = InternetUtils.PingPage("https://www.google.com");
                 connectionStatus.Text = (ms < 0) ? "Verbunden" : $"Verbunden ({ms} ms)";
             }
-            else if (INetTools.requestPage("google.com"))
+            else if (InternetUtils.ReachPage("google.com"))
             {
                 connectionIndicator.Fill = Brushes.Yellow;
                 connectionStatus.Text = "Getrennt";
@@ -260,26 +306,22 @@ namespace T_Craft_Game_Launcher
             }
         }
 
-        private async void Window_StateChanged(object sender, System.EventArgs e)
+        private void Window_StateChanged(object sender, System.EventArgs e)
         {
-            INetCheck();
-            if (this.WindowState == WindowState.Normal && is_minimAnim)
+            switch (this.WindowState)
             {
-                for (double i = this.Top; i > lastTop; i -= 50)
-                {
-                    this.Top = i;
-                    await Task.Delay(1);
-                }
-
-                this.Top = lastTop;
-                is_minimAnim = false;
-            }
-            mainBorder.CornerRadius = new CornerRadius(20);
-            mainBorder.BorderThickness = new Thickness(2);
-            if (this.WindowState == WindowState.Maximized)
-            {
-                mainBorder.CornerRadius = new CornerRadius(0);
-                mainBorder.BorderThickness = new Thickness(0);
+                case WindowState.Normal:
+                    mainBorder.CornerRadius = new CornerRadius(20);
+                    mainBorder.BorderThickness = new Thickness(2);
+                    break;
+                case WindowState.Maximized:
+                    mainBorder.CornerRadius = new CornerRadius(0);
+                    mainBorder.BorderThickness = new Thickness(0);
+                    break;
+                case WindowState.Minimized:
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -288,7 +330,7 @@ namespace T_Craft_Game_Launcher
             connectionIndicator.Fill = Brushes.Gray;
             connectionStatus.Text = "Bitte warten";
             await Task.Delay(1000);
-            INetCheck();
+            UpdateNetSpeeds();
         }
 
         public void navigateToHome()
@@ -337,6 +379,14 @@ namespace T_Craft_Game_Launcher
             {
                 this.FontFamily = new FontFamily("Comic Sans MS");
                 AppName.Text = "ComicLauncher";
+            }
+        }
+
+        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F11)
+            {
+                this.WindowState = (this.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
             }
         }
     }
