@@ -21,15 +21,6 @@ namespace T_Craft_Game_Launcher.MVVM.View
         {
             InitializeComponent();
             assemblyVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            infoRam.Content = "RAM: " + SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString() + " GB";
-            var gpuMemory = SystemInfoUtils.GetTotalAdapterMemoryInGb();
-            var gpuInfo = new StringBuilder("GPU: ");
-            foreach (var entry in gpuMemory)
-            {
-                gpuInfo.Append($"{entry.Key}: {entry.Value} GB / ");
-            }
-            infoGpu.Content = gpuInfo.ToString();
-
 
             string tagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)

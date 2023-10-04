@@ -93,11 +93,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\HorizontalSeparator.xaml.cs">
+    <Compile Include="MVVM\Controls\HorizontalSeparator.xaml.cs">
       <DependentUpon>HorizontalSeparator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Icon.cs" />
-    <Compile Include="Controls\StackedBarChart.cs" />
+    <Compile Include="MVVM\Controls\Icon.cs" />
+    <Compile Include="MVVM\Controls\StackedBarChart.cs" />
     <Compile Include="MVVM\Model\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
@@ -115,7 +115,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HorizontalSeparator.xaml">
+    <Page Include="MVVM\Controls\HorizontalSeparator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -193,7 +193,6 @@
     <Compile Include="MVVM\Model\InstalledInstance.cs" />
     <Compile Include="MVVM\Model\Instance.cs" />
     <Compile Include="MVVM\Model\Patch.cs" />
-    <Compile Include="MVVM\ValidationRules\ValidURLValidationRule.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\ServerListViewModel.cs" />

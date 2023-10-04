@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Media;
@@ -85,11 +86,11 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
                 gpuInfo.Append($"{entry.Key}: {entry.Value} GB / ");
 
             //TODO: Add Global Mem requirements
-            IsRamReqirementMet = ramGb >= 4;
+            IsRamReqirementMet = ramGb >= 2;
 
             GpuInfo = gpuInfo.ToString();
 
-            IsGpuReqirementMet = gpusGb.Count >= 1;
+            IsGpuReqirementMet = gpusGb.Any(gpu => gpu.Value > 0.5);
 
             var tclSize = Math.Round(IoUtils.AppData.GetSize(), 2);
             var freeSize = Math.Round(IoUtils.FileSystem.GetFreeStorageInGb(), 2);
