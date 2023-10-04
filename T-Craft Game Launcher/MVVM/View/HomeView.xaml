@@ -40,7 +40,7 @@
 
                     <Grid>
                         <Image Stretch="UniformToFill"
-                               Source="/Images/banner1.png"
+                               Source="/Assets/Images/banner1.png"
                                RenderTransformOrigin="0.5,0.5">
                             <Image.OpacityMask>
                                 <SolidColorBrush Color="Black" Opacity="0.5"/>

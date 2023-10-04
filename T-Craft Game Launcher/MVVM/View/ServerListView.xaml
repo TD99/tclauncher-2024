@@ -25,7 +25,7 @@
             <Grid>
                 <Image x:Name="itemFocusBanner"
                        Stretch="UniformToFill"
-                       Source="/Images/nothumb.png"
+                       Source="/Assets/Images/nothumb.png"
                        RenderTransformOrigin="0.5,0.5"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center" />
@@ -218,7 +218,7 @@
                                                              Content="{Binding DisplayName}" />
                                                     </TextBlock.ToolTip>
                                                 </TextBlock>
-                                                <Image Source="/Images/cloud.png"
+                                                <Image Source="/Assets/Images/cloud.png"
                                                        Margin="15, 0, 0, 0">
                                                     <Image.Style>
                                                         <Style TargetType="{x:Type Image}">

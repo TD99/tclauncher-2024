@@ -17,16 +17,40 @@ namespace T_Craft_Game_Launcher.Core
         {
             var gpuMemory = new Dictionary<string, double>();
             var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
+            var gpuIndex = 0;
             foreach (var o in searcher.Get())
             {
                 var obj = (ManagementObject)o;
                 var gpuName = obj["Name"].ToString();
                 var adapterRamBytes = Convert.ToDouble(obj["AdapterRAM"]);
+                // Check if VRAM > 4GB
+                if (adapterRamBytes > 3.8 * 1024 * 1024 * 1024)
+                {
+                    try
+                    {
+                        // Try to get HardwareInformation.qwMemorySize from the registry
+                        var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Class\{{4d36e968-e325-11ce-bfc1-08002be10318}}\000{gpuIndex}");
+                        var qwMemorySize = key?.GetValue("HardwareInformation.qwMemorySize");
+                        var driverDesc = key?.GetValue("DriverDesc");
+                        if (qwMemorySize != null)
+                        {
+                            adapterRamBytes = Convert.ToDouble(qwMemorySize);
+                            gpuName = Convert.ToString(driverDesc);
+                        }
+                    }
+                    catch
+                    {
+                        // If it doesn't work, fall back to <4GB method
+                    }
+                }
                 var adapterRamGb = Math.Round(adapterRamBytes / (1024 * 1024 * 1024), 2);
                 gpuMemory[gpuName] = adapterRamGb;
+                gpuIndex++;
             }
             return gpuMemory;
         }
+
+
 
         /// <summary>
         /// Retrieves the total physical memory in GB.

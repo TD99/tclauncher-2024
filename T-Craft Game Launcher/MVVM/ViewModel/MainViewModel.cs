@@ -7,18 +7,20 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ServerListViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
-        public RelayCommand ConfigEditorViewCommand { get; set; }
+        public RelayCommand StatusViewCommand { get; set; }
 
-        public HomeViewModel HomeVM { get; set; }
-        public ServerListViewModel ServerListVM { get; set; }
-        public SettingsViewModel SettingsVM { get; set; }
+        private HomeViewModel HomeViewModel { get; set; }
+        private ServerListViewModel ServerListViewModel { get; set; }
+        private SettingsViewModel SettingsViewModel { get; set; }
+        private StatusViewModel StatusViewModel { get; set; }
+
 
         private object _currentView;
 
         public object CurrentView
         {
             get => _currentView;
-            set
+            private set
             {
                 _currentView = value;
                 OnPropertyChanged();
@@ -27,23 +29,28 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
         public MainViewModel()
         {
-            HomeVM = new HomeViewModel();
-            ServerListVM = new ServerListViewModel();
-            SettingsVM = new SettingsViewModel();
+            HomeViewModel = new HomeViewModel();
+            ServerListViewModel = new ServerListViewModel();
+            SettingsViewModel = new SettingsViewModel();
+            StatusViewModel = new StatusViewModel();
 
-            CurrentView = HomeVM;
+            CurrentView = HomeViewModel;
 
             HomeViewCommand = new RelayCommand(o =>
             {
-                CurrentView = HomeVM;
+                CurrentView = HomeViewModel;
             });
             ServerListViewCommand = new RelayCommand(o =>
             {
-                CurrentView = ServerListVM;
+                CurrentView = ServerListViewModel;
             });
             SettingsViewCommand = new RelayCommand(o =>
             {
-                CurrentView = SettingsVM;
+                CurrentView = SettingsViewModel;
+            });
+            StatusViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = StatusViewModel;
             });
         }
     }

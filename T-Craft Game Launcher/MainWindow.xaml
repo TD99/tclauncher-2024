@@ -11,8 +11,9 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
+        Foreground="White"
         AllowsTransparency="True"
-        Icon="/Images/logo.png"
+        Icon="Assets/Images/logo.png"
         StateChanged="Window_StateChanged"
         Title="TCLauncher"
         WindowStartupLocation="CenterScreen"
@@ -28,7 +29,7 @@
             <Image x:Name="loadingImg"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Source="/Images/logo.png"
+                   Source="Assets/Images/logo.png"
                    Panel.ZIndex="99"
                    MouseDown="loadingImg_MouseDown" />
         </Grid>
@@ -38,7 +39,6 @@
                 BorderThickness="2"
                 Background="#1d2633"
                 CornerRadius="20">
-
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20" />
@@ -74,7 +74,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Image x:Name="logo"
-                           Source="/Images/logo.png"
+                           Source="Assets/Images/logo.png"
                            Grid.Row="0"
                            Grid.Column="0"
                            MouseDown="Logo_MouseDown" />
@@ -120,6 +120,10 @@
                                  Content="Einstellungen"
                                  Style="{StaticResource MenuButtonTheme}"
                                  Command="{Binding SettingsViewCommand}" />
+                    <RadioButton x:Name="statusBtn"
+                                Content="Statistiken"
+                                Style="{StaticResource MenuButtonTheme}"
+                                Command="{Binding StatusViewCommand}" />
                 </StackPanel>
 
                 <Grid Grid.Column="2"

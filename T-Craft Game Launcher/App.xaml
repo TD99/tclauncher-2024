@@ -26,11 +26,17 @@
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:StatusViewModel}">
+                <view:StatusView />
+            </DataTemplate>
 
-            <FontFamily x:Key="Rubik">Fonts/#Rubik</FontFamily>
+            <FontFamily x:Key="FaRegular">Assets/Fonts/#Font Awesome 6 Free Regular</FontFamily>
+            <FontFamily x:Key="FaSolid">Assets/Fonts/#Font Awesome 6 Free Solid</FontFamily>
+            <FontFamily x:Key="FaBrands">Assets/Fonts/#Font Awesome 6 Brands Regular</FontFamily>
+            <!--<FontFamily x:Key="Rubik">Fonts/#Rubik</FontFamily>
             <FontFamily x:Key="OpenSans">Fonts/#Open Sans</FontFamily>
             <FontFamily x:Key="Barlow">Fonts/#Barlow</FontFamily>
-            <FontFamily x:Key="Tourney">Fonts/#Tourney</FontFamily>
+            <FontFamily x:Key="Tourney">Fonts/#Tourney</FontFamily>-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
