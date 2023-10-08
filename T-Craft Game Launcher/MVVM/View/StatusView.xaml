@@ -14,81 +14,94 @@
         <viewModel:StatusViewModel/>
     </UserControl.DataContext>
 
-    <StackPanel>
-        <TextBlock Text="Statistiken"
-                   FontSize="28"
-                   Margin="0, 0, 0, 20" />
-        <TextBlock Text="Komponenten"
-                   FontSize="20"/>
-        <StackPanel Orientation="Horizontal">
-            <controls:Icon FontFamily="{StaticResource FaSolid}"
-                           FontSize="20"
-                           Unicode="f538"
-                           Identifier="memory" />
-            <Label Content="{Binding RamInfo}" Foreground="White" />
-            <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f058" Identifier="circle-check">
-                <controls:Icon.Style>
-                    <Style TargetType="{x:Type controls:Icon}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsRamReqirementMet}" Value="True">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:Icon.Style>
-            </controls:Icon>
-            <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f057" Identifier="circle-xmark">
-                <controls:Icon.Style>
-                    <Style TargetType="{x:Type controls:Icon}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsRamReqirementMet}" Value="False">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:Icon.Style>
-            </controls:Icon>
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Statistiken"
+                       FontSize="28"
+                       Margin="0, 0, 0, 20" />
+            <TextBlock Text="Komponenten"
+                       FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <controls:Icon FontFamily="{StaticResource FaSolid}"
+                               FontSize="20"
+                               Unicode="f538"
+                               Identifier="memory" />
+                <Label Content="{Binding RamInfo}" Foreground="White" />
+                <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f058" Identifier="circle-check">
+                    <controls:Icon.Style>
+                        <Style TargetType="{x:Type controls:Icon}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsRamReqirementMet}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:Icon.Style>
+                </controls:Icon>
+                <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f057" Identifier="circle-xmark">
+                    <controls:Icon.Style>
+                        <Style TargetType="{x:Type controls:Icon}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsRamReqirementMet}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:Icon.Style>
+                </controls:Icon>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <controls:Icon FontFamily="{StaticResource FaSolid}"
+                               FontSize="20"
+                               Unicode="e163"
+                               Identifier="display" />
+                <Label Content="{Binding GpuInfo}" Foreground="White" />
+                <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f058" Identifier="circle-check">
+                    <controls:Icon.Style>
+                        <Style TargetType="{x:Type controls:Icon}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsGpuReqirementMet}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:Icon.Style>
+                </controls:Icon>
+                <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f057" Identifier="circle-xmark">
+                    <controls:Icon.Style>
+                        <Style TargetType="{x:Type controls:Icon}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsGpuReqirementMet}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:Icon.Style>
+                </controls:Icon>
+            </StackPanel>
+            <TextBlock Text="Speicher"
+                       FontSize="20"
+                       Margin="0, 20, 0, 0" />
+            <Border CornerRadius="20">
+                <controls:StackedBarChart ChartHeight="50"
+                                          Data="{Binding StorageAnalyzerData}"
+                                          DescriptionShown="True" />
+            </Border>
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <controls:Icon FontFamily="{StaticResource FaSolid}"
-                           FontSize="20"
-                           Unicode="e163"
-                           Identifier="display" />
-            <Label Content="{Binding GpuInfo}" Foreground="White" />
-            <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f058" Identifier="circle-check">
-                <controls:Icon.Style>
-                    <Style TargetType="{x:Type controls:Icon}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsGpuReqirementMet}" Value="True">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:Icon.Style>
-            </controls:Icon>
-            <controls:Icon FontFamily="{StaticResource FaSolid}" FontSize="15" Unicode="f057" Identifier="circle-xmark">
-                <controls:Icon.Style>
-                    <Style TargetType="{x:Type controls:Icon}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsGpuReqirementMet}" Value="False">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </controls:Icon.Style>
-            </controls:Icon>
-        </StackPanel>
-        <TextBlock Text="Speicher"
-                   FontSize="20"
-                   Margin="0, 20, 0, 0" />
-        <Border CornerRadius="20">
-            <controls:StackedBarChart ChartHeight="50"
-                                      Data="{Binding StorageAnalyzerData}"
-                                      DescriptionShown="True" />
-        </Border>
-    </StackPanel>
+        <Button Click="RefreshBtn_OnClick"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Style="{StaticResource ModernButton}">
+            <Button.Content>
+                <controls:Icon FontFamily="{StaticResource FaSolid}"
+                               Unicode="f021"
+                               Identifier="arrows-rotate"
+                               Margin="5" />
+            </Button.Content>
+        </Button>
+    </Grid>
 </UserControl>

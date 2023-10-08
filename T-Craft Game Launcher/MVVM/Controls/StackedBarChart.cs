@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Input;
 using T_Craft_Game_Launcher.MVVM.Model;
 
 namespace T_Craft_Game_Launcher.Controls
@@ -52,6 +53,23 @@ namespace T_Craft_Game_Launcher.Controls
             var chartPanel = new StackPanel() { Orientation = Orientation.Horizontal, Height = ChartHeight };
             var descriptionPanel = new StackPanel() { Orientation = Orientation.Vertical };
 
+            // Handle null Data
+            if (Data == null)
+            {
+                var loadingIcon = new FontAwesome.WPF.FontAwesome
+                {
+                    Icon = FontAwesome.WPF.FontAwesomeIcon.SquareOutline,
+                    Spin = true,
+                    FontSize = 40,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    Cursor = Cursors.Wait,
+                    RenderTransformOrigin = new Point(0.5, 0.5) // Set the rotation origin to the center
+                };
+                root.Children.Add(loadingIcon);
+                Content = root;
+                return;
+            }
+
             var total = Data.Sum(item => item.Value);
 
             foreach (var rectangle in Data.Select(item => new Rectangle()
@@ -81,5 +99,6 @@ namespace T_Craft_Game_Launcher.Controls
             root.Children.Add(descriptionPanel);
             Content = root;
         }
+
     }
 }

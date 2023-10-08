@@ -69,33 +69,47 @@ namespace T_Craft_Game_Launcher.Core
         /// <summary>
         /// A nested class for handling application data.
         /// </summary>
-        public static class AppData
+        public static class Tcl
         {
             /// <summary>
-            /// Gets the path of the application data directory.
+            /// The path of the TCL root directory
             /// </summary>
-            /// <returns>The path of the application data directory.</returns>
-            public static string GetPath()
+            public static readonly string RootPath = Path.Combine(FileSystem.AppDataPath, "TCL");
+            
+            /// <summary>
+            /// The path of the cache directory
+            /// </summary>
+            public static readonly string CachePath = Path.Combine(RootPath, "Cache");
+            
+            /// <summary>
+            /// The path of the instances directory
+            /// </summary>
+            public static readonly string InstancesPath = Path.Combine(RootPath, "Instances");
+            
+            /// <summary>
+            /// The path of the udata directory
+            /// </summary>
+            public static readonly string UdataPath = Path.Combine(RootPath, "Udata");
+
+
+            /// <summary>
+            /// Calculates the size of the directory at the specified path.
+            /// </summary>
+            /// <param name="path">The path of the directory. If null, the root path is used.</param>
+            /// <returns>The size of the directory in bytes.</returns>
+            public static double GetSize(string path = null)
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+                return Directory.GetSize(path ?? RootPath);
             }
 
             /// <summary>
-            /// Gets the size of the application data directory in GB.
+            /// Retrieves information about the drive where the specified directory is located.
             /// </summary>
-            /// <returns>The size of the application data directory in GB.</returns>
-            public static double GetSize()
+            /// <param name="path">The path of the directory. If null, the root path is used.</param>
+            /// <returns>A DriveInfo object that provides information about the drive.</returns>
+            public static DriveInfo GetDrive(string path = null)
             {
-                return Directory.GetSize(GetPath());
-            }
-
-            /// <summary>
-            /// Gets the drive TCL is installed on.
-            /// </summary>
-            /// <returns>The drive TCL is installed on.</returns>
-            public static DriveInfo GetDrive()
-            {
-                return new DriveInfo(GetPath());
+                return new DriveInfo(path ?? RootPath);
             }
         }
 
@@ -104,6 +118,8 @@ namespace T_Craft_Game_Launcher.Core
         /// </summary>
         public static class FileSystem
         {
+            public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
             /// <summary>
             /// Gets the total storage of the file system in GB.
             /// </summary>
@@ -118,12 +134,13 @@ namespace T_Craft_Game_Launcher.Core
             }
 
             /// <summary>
-            /// Gets the total storage of the file system in GB. (drive is installation drive.)
+            /// Gets the total storage of the file system in GB. (drive is installation drive)
             /// </summary>
+            /// <param name="path">The path of the directory. If null, the root path is used.</param>
             /// <returns>The total storage of the file system in GB.</returns>
-            public static double GetTotalStorageInGb()
+            public static double GetTotalStorageInGb(string path = null)
             {
-                return GetTotalStorageInGb(AppData.GetDrive());
+                return GetTotalStorageInGb(Tcl.GetDrive(path));
             }
 
             /// <summary>
@@ -140,12 +157,13 @@ namespace T_Craft_Game_Launcher.Core
             }
 
             /// <summary>
-            /// Gets the free storage of the file system in GB. (drive is installation drive.)
+            /// Gets the free storage of the file system in GB. (drive is installation drive)
             /// </summary>
+            /// <param name="path">The path of the directory. If null, the root path is used.</param>
             /// <returns>The free storage of the file system in GB.</returns>
-            public static double GetFreeStorageInGb()
+            public static double GetFreeStorageInGb(string path = null)
             {
-                return GetFreeStorageInGb(AppData.GetDrive());
+                return GetFreeStorageInGb(Tcl.GetDrive(path));
             }
         }
     }

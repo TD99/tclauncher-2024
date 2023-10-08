@@ -5,16 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using T_Craft_Game_Launcher.Core;
-using T_Craft_Game_Launcher.MVVM.Model;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
-using System.Windows.Media.Imaging;
-using System.Runtime.InteropServices;
-using System.Windows.Media.Effects;
-using System.IO.Ports;
 
 namespace T_Craft_Game_Launcher
 {
@@ -57,11 +51,13 @@ namespace T_Craft_Game_Launcher
             string instanceFolder = Path.Combine(tclFolder, "Instances");
             string runtimeFolder = Path.Combine(tclFolder, "Runtime");
             string udataFolder = Path.Combine(tclFolder, "UData");
+            string cacheFolder = Path.Combine(tclFolder, "Cache");
             try
             {
                 if (!Directory.Exists(tclFolder)) Directory.CreateDirectory(tclFolder);
                 if (!Directory.Exists(instanceFolder)) Directory.CreateDirectory(instanceFolder);
                 if (!Directory.Exists(udataFolder)) Directory.CreateDirectory(udataFolder);
+                if (!Directory.Exists(cacheFolder)) Directory.CreateDirectory(cacheFolder);
                 if (!Directory.Exists(runtimeFolder))
                 {
                     Directory.CreateDirectory(runtimeFolder);
@@ -350,7 +346,7 @@ namespace T_Craft_Game_Launcher
                 var rotateTransform = new RotateTransform(currentAngle, logo.ActualWidth / 2, logo.ActualHeight / 2);
                 logo.RenderTransform = rotateTransform;
 
-                var angle = e.ChangedButton == MouseButton.Right ? 360 : -360;
+                var angle = e.ChangedButton == MouseButton.Right ? -360 : 360;
 
                 var animation = new DoubleAnimation(currentAngle, currentAngle + angle, TimeSpan.FromMilliseconds(350));
                 rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
