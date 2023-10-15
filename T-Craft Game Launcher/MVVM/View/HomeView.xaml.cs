@@ -13,7 +13,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.Models;
+using T_Craft_Game_Launcher.MVVM.Windows;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -35,6 +36,8 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private async void loadWV()
         {
             await webView.EnsureCoreWebView2Async();
+            webView.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+            webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
         }
 
         private void checkInstanceListEmpty()
@@ -138,99 +141,99 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void playBtn_Click(object sender, RoutedEventArgs e)
         {
-            InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
+            //InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
 
-            try
-            {
-                string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-                string instanceFolder = Path.Combine(tclFolder, "Instances");
-                string runtimeFolder = Path.Combine(tclFolder, "Runtime");
-                string udataFolder = Path.Combine(tclFolder, "UData");
+            //try
+            //{
+            //    string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
+            //    string instanceFolder = Path.Combine(tclFolder, "Instances");
+            //    string runtimeFolder = Path.Combine(tclFolder, "Runtime");
+            //    string udataFolder = Path.Combine(tclFolder, "UData");
 
-                string selectedInstanceFolder = Path.Combine(instanceFolder, selectedInstance.Guid.ToString());
-                string instanceDataFolder = Path.Combine(selectedInstanceFolder, "data");
+            //    string selectedInstanceFolder = Path.Combine(instanceFolder, selectedInstance.Guid.ToString());
+            //    string instanceDataFolder = Path.Combine(selectedInstanceFolder, "data");
 
-                if (!Directory.Exists(selectedInstanceFolder))
-                {
-                    MessageBox.Show($"Die Instanz '{selectedInstance.Name}' konnte nicht gefunden werden!");
-                    return;
-                }
+            //    if (!Directory.Exists(selectedInstanceFolder))
+            //    {
+            //        MessageBox.Show($"Die Instanz '{selectedInstance.Name}' konnte nicht gefunden werden!");
+            //        return;
+            //    }
 
-                string udataLoginFile = Path.Combine(udataFolder, "launcher_accounts.json");
-                string targetLoginFile = Path.Combine(instanceDataFolder, "launcher_accounts.json");
+            //    string udataLoginFile = Path.Combine(udataFolder, "launcher_accounts.json");
+            //    string targetLoginFile = Path.Combine(instanceDataFolder, "launcher_accounts.json");
 
-                if (File.Exists(udataLoginFile))
-                {
-                    File.Copy(udataLoginFile, targetLoginFile, true);
-                }
+            //    if (File.Exists(udataLoginFile))
+            //    {
+            //        File.Copy(udataLoginFile, targetLoginFile, true);
+            //    }
 
-                string msaCredentialsFile = Path.Combine(udataFolder, "launcher_msa_credentials.bin");
-                string targetMsaCredentialsFile = Path.Combine(instanceDataFolder, "launcher_msa_credentials.bin");
+            //    string msaCredentialsFile = Path.Combine(udataFolder, "launcher_msa_credentials.bin");
+            //    string targetMsaCredentialsFile = Path.Combine(instanceDataFolder, "launcher_msa_credentials.bin");
 
-                if (File.Exists(msaCredentialsFile))
-                {
-                    File.Copy(msaCredentialsFile, targetMsaCredentialsFile, true);
-                }
+            //    if (File.Exists(msaCredentialsFile))
+            //    {
+            //        File.Copy(msaCredentialsFile, targetMsaCredentialsFile, true);
+            //    }
 
-                string exeFile = Path.Combine(runtimeFolder, "Minecraft.exe");
-                if (!File.Exists(exeFile))
-                {
-                    MessageBox.Show("Der MC Launcher existiert nicht!");
-                    return;
-                }
+            //    string exeFile = Path.Combine(runtimeFolder, "Minecraft.exe");
+            //    if (!File.Exists(exeFile))
+            //    {
+            //        MessageBox.Show("Der MC Launcher existiert nicht!");
+            //        return;
+            //    }
 
-                Process launcher = new Process();
-                launcher.StartInfo.FileName = exeFile;
-                launcher.StartInfo.Arguments = $"--workDir=\"{instanceDataFolder}\"";
-                launcher.EnableRaisingEvents = true;
+            //    Process launcher = new Process();
+            //    launcher.StartInfo.FileName = exeFile;
+            //    launcher.StartInfo.Arguments = $"--workDir=\"{instanceDataFolder}\"";
+            //    launcher.EnableRaisingEvents = true;
 
-                launcher.Exited += (sender1, e1) =>
-                {
-                    try
-                    {
-                        if (File.Exists(targetLoginFile) && new FileInfo(targetLoginFile).Length > 0)
-                        {
-                            File.Copy(targetLoginFile, udataLoginFile, true);
-                        }
-                        if (File.Exists(targetMsaCredentialsFile) && new FileInfo(targetMsaCredentialsFile).Length > 0)
-                        {
-                            File.Copy(targetMsaCredentialsFile, msaCredentialsFile, true);
-                        }
-                    }
-                    catch { }
-                };
+            //    launcher.Exited += (sender1, e1) =>
+            //    {
+            //        try
+            //        {
+            //            if (File.Exists(targetLoginFile) && new FileInfo(targetLoginFile).Length > 0)
+            //            {
+            //                File.Copy(targetLoginFile, udataLoginFile, true);
+            //            }
+            //            if (File.Exists(targetMsaCredentialsFile) && new FileInfo(targetMsaCredentialsFile).Length > 0)
+            //            {
+            //                File.Copy(targetMsaCredentialsFile, msaCredentialsFile, true);
+            //            }
+            //        }
+            //        catch { }
+            //    };
 
-                var action = new ActionWindow("Start vorbereiten...");
-                action.Owner = Application.Current.MainWindow;
-                action.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                action.Show();
+            //    var action = new ActionWindow("Start vorbereiten...");
+            //    action.Owner = Application.Current.MainWindow;
+            //    action.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //    action.Show();
 
-                launcher.Start();
+            //    launcher.Start();
 
-                Task.Delay(1000).ContinueWith(t =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        action.Hide();
-                    });
-                });
+            //    Task.Delay(1000).ContinueWith(t =>
+            //    {
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //        {
+            //            action.Hide();
+            //        });
+            //    });
 
-                switch (StartupBehaviourLevel)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        Application.Current.MainWindow.WindowState = WindowState.Minimized;
-                        break;
-                    case 2:
-                        Application.Current.Shutdown();
-                        break;
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Ein Startfehler ist aufgetreten!");
-            }
+            //    switch (StartupBehaviourLevel)
+            //    {
+            //        case 0:
+            //            break;
+            //        case 1:
+            //            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+            //            break;
+            //        case 2:
+            //            Application.Current.Shutdown();
+            //            break;
+            //    }
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("Ein Startfehler ist aufgetreten!");
+            //}
         }
 
         private void SetAppletViewState(bool val = true)

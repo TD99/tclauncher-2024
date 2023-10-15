@@ -6,9 +6,15 @@
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
+             xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="800">
+
+    <b:Interaction.Behaviors>
+        <animations:SlideInOutAnimation/>
+    </b:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>

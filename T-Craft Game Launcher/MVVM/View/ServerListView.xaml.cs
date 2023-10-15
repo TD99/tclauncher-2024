@@ -15,8 +15,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using T_Craft_Game_Launcher.Core;
-using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
+using T_Craft_Game_Launcher.MVVM.Windows;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {

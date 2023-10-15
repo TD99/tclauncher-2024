@@ -2,20 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using T_Craft_Game_Launcher.Core;
+using T_Craft_Game_Launcher.MVVM.Windows;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
-    /// <summary>
-    /// Interaction logic for SettingsView.xaml
-    /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsView
     {
         public SettingsView()
         {
@@ -35,21 +30,22 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show($"Möchtest du wirklich alle Einstellungen löschen?", "Einstellungen zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
         }
 
         private void resetDataBtn_Click(object sender, RoutedEventArgs e)
         {
-            string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-
-            MessageBoxResult result = MessageBox.Show($"Möchtest du wirklich alle Daten löschen?", "Daten zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show($"Möchtest du wirklich alle TCL Daten löschen?", "Daten zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 try
                 {
-                    Directory.Delete(tclFolder, true);
+                    Directory.Delete(IoUtils.Tcl.RootPath, true);
                     Properties.Settings.Default.Reset();
                     Properties.Settings.Default.Save();
 
@@ -99,32 +95,6 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
             Properties.Settings.Default.StartBehaviour = value;
             Properties.Settings.Default.Save();
-        }
-
-        private void resetRuntime_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-                string runtimeFolder = Path.Combine(tclFolder, "Runtime");
-
-                if (Directory.Exists(runtimeFolder))
-                {
-                    Directory.Delete(runtimeFolder, true);
-
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    Process.Start(appPath, $"--installSuccess runtime.core");
-                    Application.Current.Shutdown();
-                }
-                else
-                {
-                    MessageBox.Show("Die Runtime wurde nicht gefunden!");
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Während der Zurücksetzung der Runtime ist ein Fehler aufgetreten!");
-            }
         }
     }
 }

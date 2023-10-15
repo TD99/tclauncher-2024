@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows;
-using System.Windows.Input;
-using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.Models;
 
-namespace T_Craft_Game_Launcher.Controls
+namespace T_Craft_Game_Launcher.MVVM.Controls
 {
     public class StackedBarChart : UserControl
     {

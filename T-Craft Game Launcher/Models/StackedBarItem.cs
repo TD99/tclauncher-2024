@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace T_Craft_Game_Launcher.MVVM.Model
+namespace T_Craft_Game_Launcher.Models
 {
     public class StackedBarItem
     {

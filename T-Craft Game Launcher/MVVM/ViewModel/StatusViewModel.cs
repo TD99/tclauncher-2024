@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using T_Craft_Game_Launcher.Core;
-using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.Models;
 
 namespace T_Craft_Game_Launcher.MVVM.ViewModel
 {
@@ -20,6 +20,7 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
         private string _gpuInfo;
         private bool _isGpuReqirementMet;
         private List<StackedBarItem> _storageAnalyzerData;
+        private bool _isLoadng;
 
         private readonly string _cacheFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL\\Cache\\stats.txt");
 
@@ -73,6 +74,16 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
             }
         }
 
+        public bool IsLoading
+        {
+            get => _isLoadng;
+            set
+            {
+                _isLoadng = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -89,21 +100,29 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
 
         private async void LoadDataAsync(bool force = false)
         {
+            IsLoading = true;
             await Task.Run(() =>
             {
                 // Load cache if available
                 if (File.Exists(_cacheFilePath) && !force)
                 {
-                    var cachedData = File.ReadAllLines(_cacheFilePath);
-                    var cacheTime = DateTime.Parse(cachedData[0]);
-                    if ((DateTime.Now - cacheTime).TotalMinutes <= 30)
+                    try
                     {
-                        RamInfo = cachedData[1];
-                        IsRamReqirementMet = bool.Parse(cachedData[2]);
-                        GpuInfo = cachedData[3];
-                        IsGpuReqirementMet = bool.Parse(cachedData[4]);
-                        StorageAnalyzerData = JsonConvert.DeserializeObject<List<StackedBarItem>>(cachedData[5]);
-                        return;
+                        var cachedData = File.ReadAllLines(_cacheFilePath);
+                        var cacheTime = DateTime.Parse(cachedData[0]);
+                        if ((DateTime.Now - cacheTime).TotalMinutes <= 30)
+                        {
+                            RamInfo = cachedData[1];
+                            IsRamReqirementMet = bool.Parse(cachedData[2]);
+                            GpuInfo = cachedData[3];
+                            IsGpuReqirementMet = bool.Parse(cachedData[4]);
+                            StorageAnalyzerData = JsonConvert.DeserializeObject<List<StackedBarItem>>(cachedData[5]);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
                     }
                 }
 
@@ -164,6 +183,7 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
                 };
                 File.WriteAllLines(_cacheFilePath, dataToCache);
             });
+            IsLoading = false;
         }
     }
 }

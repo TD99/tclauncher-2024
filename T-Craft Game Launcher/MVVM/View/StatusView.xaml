@@ -5,14 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:controls="clr-namespace:T_Craft_Game_Launcher.Controls"
+             xmlns:converters="clr-namespace:T_Craft_Game_Launcher.MVVM.Converters"
              xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
+             xmlns:controls="clr-namespace:T_Craft_Game_Launcher.MVVM.Controls"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="800">
+
     <UserControl.DataContext>
         <viewModel:StatusViewModel/>
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+
+    <b:Interaction.Behaviors>
+        <animations:SlideInOutAnimation/>
+    </b:Interaction.Behaviors>
 
     <Grid>
         <StackPanel>
@@ -86,16 +98,16 @@
             <TextBlock Text="Speicher"
                        FontSize="20"
                        Margin="0, 20, 0, 0" />
-            <Border CornerRadius="20">
-                <controls:StackedBarChart ChartHeight="50"
-                                          Data="{Binding StorageAnalyzerData}"
-                                          DescriptionShown="True" />
-            </Border>
+            <controls:StackedBarChart ChartHeight="50"
+                                      Data="{Binding StorageAnalyzerData}"
+                                      DescriptionShown="True" />
         </StackPanel>
         <Button Click="RefreshBtn_OnClick"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Style="{StaticResource ModernButton}">
+                Padding="5"
+                Style="{StaticResource ModernButton}"
+                IsEnabled="{Binding Path=IsLoading, Converter={StaticResource InverseBooleanConverter}}">
             <Button.Content>
                 <controls:Icon FontFamily="{StaticResource FaSolid}"
                                Unicode="f021"

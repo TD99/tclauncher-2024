@@ -1,4 +1,4 @@
-﻿namespace T_Craft_Game_Launcher.MVVM.Model
+﻿namespace T_Craft_Game_Launcher.Models
 {
     public class Applet
     {
@@ -8,13 +8,7 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string ActionURL { get; set; }
-        public bool is_action
-        {
-            get
-            {
-                return ActionURL != null;
-            }
-        }
+        public bool is_action => ActionURL != null;
 
         public Applet(int weight, string name, string coverURL, string title, string description, string actionURL)
         {

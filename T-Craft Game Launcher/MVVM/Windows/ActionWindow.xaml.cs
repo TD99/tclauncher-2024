@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Windows;
-using System.Windows.Shell;
+﻿using System.Windows.Shell;
 
-namespace T_Craft_Game_Launcher
+namespace T_Craft_Game_Launcher.MVVM.Windows
 {
     /// <summary>
     /// Interaction logic for ActionWindow.xaml
     /// </summary>
-    public partial class ActionWindow : Window
+    public partial class ActionWindow
     {
         private TaskbarItemInfo taskbarInfo;
         private int _percent;

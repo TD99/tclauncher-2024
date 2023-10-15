@@ -4,9 +4,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="clr-namespace:T_Craft_Game_Launcher.MVVM.Converters"
-    xmlns:local="clr-namespace:T_Craft_Game_Launcher"
+    xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.Windows"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-    x:Class="T_Craft_Game_Launcher.EditorWindow"
+    x:Class="T_Craft_Game_Launcher.MVVM.Windows.EditorWindow"
     mc:Ignorable="d"
     Title="EditorWindow"
     Height="450"
@@ -48,7 +48,7 @@
                     </Style>
                 </TreeView.Resources>
                 <TreeViewItem x:Name="treeRoot"
-                              Header="File System"
+                              Header="TFile System"
                               IsExpanded="True" />
             </TreeView>
         </Border>
@@ -82,6 +82,7 @@
 
             <wv2:WebView2 x:Name="webView2Control"
                           Loaded="webView2Control_Loaded"
+                          DefaultBackgroundColor="#343b48"
                           Grid.Row="1" />
         </Grid>
     </Grid>

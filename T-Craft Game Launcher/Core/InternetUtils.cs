@@ -46,6 +46,12 @@ namespace T_Craft_Game_Launcher.Core
             return false;
         }
 
+        /// <summary>
+        /// Removes the protocol (e.g., "http://", "https://") from the start of the specified URL.
+        /// </summary>
+        /// <param name="url">The URL from which to remove the protocol.</param>
+        /// <param name="protocols">An optional array of protocols to remove from the URL. If not specified, the default protocols "http://" and "https://" are used.</param>
+        /// <returns>The URL with the protocol removed. If the URL does not start with any of the specified protocols, the original URL is returned.</returns>
         public static string RemoveProtocol(string url, string[] protocols = null)
         {
             if (protocols == null)

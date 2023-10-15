@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace T_Craft_Game_Launcher.Controls
+namespace T_Craft_Game_Launcher.MVVM.Controls
 {
     public partial class HorizontalSeparator
     {
@@ -9,7 +9,7 @@ namespace T_Craft_Game_Launcher.Controls
             nameof(Fill),
             typeof(Brush),
             typeof(HorizontalSeparator),
-            new PropertyMetadata(Brushes.Black));
+            new PropertyMetadata(new SolidColorBrush(Color.FromArgb(155, 255, 255, 255))));
 
         public Brush Fill
         {
@@ -21,7 +21,7 @@ namespace T_Craft_Game_Launcher.Controls
             nameof(Thickness),
             typeof(double),
             typeof(HorizontalSeparator),
-            new PropertyMetadata(1.0));
+            new PropertyMetadata(0.5));
 
         public double Thickness
         {

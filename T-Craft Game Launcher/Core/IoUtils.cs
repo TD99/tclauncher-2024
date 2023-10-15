@@ -12,7 +12,7 @@ namespace T_Craft_Game_Launcher.Core
         /// <summary>
         /// A nested class for handling specific file operations.
         /// </summary>
-        public static class File
+        public static class TclFile
         {
             /// <summary>
             /// Checks if a file is binary.
@@ -39,7 +39,7 @@ namespace T_Craft_Game_Launcher.Core
         /// <summary>
         /// A nested class for handling specific directory operations.
         /// </summary>
-        public static class Directory
+        public static class TclDirectory
         {
             /// <summary>
             /// Checks if a directory is empty.
@@ -91,7 +91,6 @@ namespace T_Craft_Game_Launcher.Core
             /// </summary>
             public static readonly string UdataPath = Path.Combine(RootPath, "Udata");
 
-
             /// <summary>
             /// Calculates the size of the directory at the specified path.
             /// </summary>
@@ -99,7 +98,7 @@ namespace T_Craft_Game_Launcher.Core
             /// <returns>The size of the directory in bytes.</returns>
             public static double GetSize(string path = null)
             {
-                return Directory.GetSize(path ?? RootPath);
+                return TclDirectory.GetSize(path ?? RootPath);
             }
 
             /// <summary>
@@ -110,6 +109,17 @@ namespace T_Craft_Game_Launcher.Core
             public static DriveInfo GetDrive(string path = null)
             {
                 return new DriveInfo(path ?? RootPath);
+            }
+
+            /// <summary>
+            /// Creates the TCL directory structure.
+            /// </summary>
+            public static void CreateDirectries()
+            {
+                if (!Directory.Exists(RootPath)) Directory.CreateDirectory(RootPath);
+                if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+                if (!Directory.Exists(InstancesPath)) Directory.CreateDirectory(InstancesPath);
+                if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
             }
         }
 

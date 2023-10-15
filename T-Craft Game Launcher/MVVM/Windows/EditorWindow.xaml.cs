@@ -10,7 +10,7 @@ using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using T_Craft_Game_Launcher.Core;
 
-namespace T_Craft_Game_Launcher
+namespace T_Craft_Game_Launcher.MVVM.Windows
 {
     public partial class EditorWindow : Window
     {
@@ -57,6 +57,9 @@ namespace T_Craft_Game_Launcher
         {
             if (e.IsSuccess)
             {
+                webView2Control.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+                webView2Control.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+                webView2Control.CoreWebView2.Settings.IsBuiltInErrorPageEnabled = false;
                 webView2Control.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
             }
             else
@@ -76,7 +79,7 @@ namespace T_Craft_Game_Launcher
             }
             else
             {
-                // Handle error
+                webView2Control.CoreWebView2.NavigateToString("<span style=\"color: #FFF\">Error while loading Plugin! Please retry later. (ENOTFOUND)</span>");
             }
         }
 
@@ -133,7 +136,7 @@ namespace T_Craft_Game_Launcher
             }
             catch (Exception ex)
             {
-                // Handle exceptions thrown by Directory.GetDirectories(RootPath)
+                // Handle exceptions thrown by TclDirectory.GetDirectories(RootPath)
                 MessageBox.Show("An error occurred while accessing the root directory: " + ex.Message);
             }
         }
@@ -206,7 +209,7 @@ namespace T_Craft_Game_Launcher
             if (String.IsNullOrEmpty(file)) return;
             if (Directory.Exists(file)) return;
             if (!File.Exists(file)) return;
-            if (IoUtils.File.IsBinary(file))
+            if (IoUtils.TclFile.IsBinary(file))
             {
                 MessageBox.Show("Binary files are not supported.");
                 return;

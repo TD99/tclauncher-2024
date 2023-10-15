@@ -1,16 +1,15 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using CmlLib.Core.Auth;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
 
-namespace T_Craft_Game_Launcher
+namespace T_Craft_Game_Launcher.MVVM.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,10 +26,6 @@ namespace T_Craft_Game_Launcher
             vm = (MainViewModel)this.DataContext;
             is_silent = silent;
 
-            UpdateNetSpeeds();
-
-            genericConfig();
-
             AppUtils.HandleUpdates();
 
             handleFirstTime();
@@ -38,64 +33,8 @@ namespace T_Craft_Game_Launcher
 
         private void handleFirstTime()
         {
-            if (Properties.Settings.Default.FirstTime)
-            {
-                newToolTip.PlacementTarget = serverBtn;
-                newToolTip.IsOpen = true;
-            }
-        }
-
-        private async void genericConfig()
-        {
-            string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-            string instanceFolder = Path.Combine(tclFolder, "Instances");
-            string runtimeFolder = Path.Combine(tclFolder, "Runtime");
-            string udataFolder = Path.Combine(tclFolder, "UData");
-            string cacheFolder = Path.Combine(tclFolder, "Cache");
-            try
-            {
-                if (!Directory.Exists(tclFolder)) Directory.CreateDirectory(tclFolder);
-                if (!Directory.Exists(instanceFolder)) Directory.CreateDirectory(instanceFolder);
-                if (!Directory.Exists(udataFolder)) Directory.CreateDirectory(udataFolder);
-                if (!Directory.Exists(cacheFolder)) Directory.CreateDirectory(cacheFolder);
-                if (!Directory.Exists(runtimeFolder))
-                {
-                    Directory.CreateDirectory(runtimeFolder);
-
-                    string runtimeURL = @"https://launcher.mojang.com/download/Minecraft.exe";
-                    string runtimeFile = Path.Combine(runtimeFolder, "Minecraft.exe");
-
-                    using (var client = new WebClient())
-                    {
-                        string fileSize = await GetFileSizeAsync(runtimeURL);
-
-                        ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.runtime'\nGrösse: {fileSize}");
-                        action.Show();
-                        action.Closed += (sender, e) =>
-                        {
-                            client.CancelAsync();
-                        };
-
-                        try
-                        {
-                            await client.DownloadFileTaskAsync(new Uri(runtimeURL), runtimeFile);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Download abgebrochen!");
-                            action.Close();
-                            return;
-                        }
-
-                        action.Close();
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Ein Initialisierungsfehler ist aufgetreten.");
-                return;
-            }
+            newToolTip.PlacementTarget = serverBtn;
+            newToolTip.IsOpen = true;
         }
 
         public async Task<string> GetFileSizeAsync(string url)
@@ -252,25 +191,25 @@ namespace T_Craft_Game_Launcher
 
 
 
-        private void UpdateNetSpeeds()
-        {
-            if (InternetUtils.ReachPage(remote_url))
-            {
-                connectionIndicator.Fill = Brushes.Green;
-                long ms = InternetUtils.PingPage("https://www.google.com");
-                connectionStatus.Text = (ms < 0) ? "Verbunden" : $"Verbunden ({ms} ms)";
-            }
-            else if (InternetUtils.ReachPage("google.com"))
-            {
-                connectionIndicator.Fill = Brushes.Yellow;
-                connectionStatus.Text = "Getrennt";
-            }
-            else
-            {
-                connectionIndicator.Fill = Brushes.Red;
-                connectionStatus.Text = "Kein Internet";
-            }
-        }
+        //private void UpdateNetSpeeds()
+        //{
+        //    if (InternetUtils.ReachPage(remote_url))
+        //    {
+        //        connectionIndicator.Fill = Brushes.Green;
+        //        long ms = InternetUtils.PingPage("https://www.google.com");
+        //        connectionStatus.Text = (ms < 0) ? "Verbunden" : $"Verbunden ({ms} ms)";
+        //    }
+        //    else if (InternetUtils.ReachPage("google.com"))
+        //    {
+        //        connectionIndicator.Fill = Brushes.Yellow;
+        //        connectionStatus.Text = "Getrennt";
+        //    }
+        //    else
+        //    {
+        //        connectionIndicator.Fill = Brushes.Red;
+        //        connectionStatus.Text = "Kein Internet";
+        //    }
+        //}
 
         private void FadeIn(double secs)
         {
@@ -304,13 +243,13 @@ namespace T_Craft_Game_Launcher
             }
         }
 
-        private async void connectionBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            connectionIndicator.Fill = Brushes.Gray;
-            connectionStatus.Text = "Bitte warten";
-            await Task.Delay(1000);
-            UpdateNetSpeeds();
-        }
+        //private async void connectionBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    connectionIndicator.Fill = Brushes.Gray;
+        //    connectionStatus.Text = "Bitte warten";
+        //    await Task.Delay(1000);
+        //    UpdateNetSpeeds();
+        //}
 
         public void navigateToHome()
         {
@@ -371,9 +310,21 @@ namespace T_Craft_Game_Launcher
                         ? WindowState.Normal
                         : WindowState.Maximized;
                     break;
-                default:
-                    break;
             }
+        }
+
+        private async void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var accountWindow = new AccountWindow(App.Session?.UUID)
+            {
+                Owner = this
+            };
+            accountWindow.Show();
+
+            var session = await accountWindow.LoginTask.Task;
+            if (session == null) return;
+            AccountManagerBtn.Content = session?.Username;
+            App.Session = session;
         }
     }
 }

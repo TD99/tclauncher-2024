@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace T_Craft_Game_Launcher.MVVM.Model
+﻿namespace T_Craft_Game_Launcher.Models
 {
     public class Server
     {

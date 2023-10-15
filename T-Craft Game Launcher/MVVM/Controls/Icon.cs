@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace T_Craft_Game_Launcher.Controls
+namespace T_Craft_Game_Launcher.MVVM.Controls
 {
     public class Icon : Label
     {

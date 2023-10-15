@@ -68,6 +68,36 @@
     <OutputPath>bin\x64\Release\</OutputPath>
     <Optimize>true</Optimize>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\T-Craft Game Launcher.xml</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\T-Craft Game Launcher.xml</DocumentationFile>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -93,24 +123,46 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\AnimationUtils.cs" />
+    <Compile Include="Core\XamlUtils.cs" />
+    <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
+    <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
+      <DependentUpon>AccountControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Controls\HorizontalSeparator.xaml.cs">
       <DependentUpon>HorizontalSeparator.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Controls\Icon.cs" />
+    <Compile Include="MVVM\Controls\SkeletonLoader.xaml.cs">
+      <DependentUpon>SkeletonLoader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Controls\Spoiler.cs" />
     <Compile Include="MVVM\Controls\StackedBarChart.cs" />
-    <Compile Include="MVVM\Model\StackedBarItem.cs" />
+    <Compile Include="MVVM\Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Models\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
-    <Compile Include="EditorWindow.xaml.cs">
+    <Compile Include="MVVM\Windows\AccountWindow.xaml.cs">
+      <DependentUpon>AccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Windows\EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Converters\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="MVVM\Model\Server.cs" />
+    <Compile Include="Models\Server.cs" />
     <Compile Include="MVVM\ViewModel\StatusViewModel.cs" />
     <Compile Include="MVVM\View\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
-    <Page Include="ActionWindow.xaml">
+    <Page Include="MVVM\Controls\AccountControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Windows\AccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Windows\ActionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,15 +170,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditorWindow.xaml">
+    <Page Include="MVVM\Windows\EditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="MVVM\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="ActionWindow.xaml.cs">
+    <Compile Include="MVVM\Windows\ActionWindow.xaml.cs">
       <DependentUpon>ActionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -138,10 +190,14 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
     <Compile Include="Core\SystemInfoUtils.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="MVVM\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\Controls\SkeletonLoader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\View\StatusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\GlobalTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -178,6 +238,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Theme\SelectableLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Theme\TextBoxTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -188,10 +252,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MVVM\Model\Applet.cs" />
-    <Compile Include="MVVM\Model\InstalledInstance.cs" />
-    <Compile Include="MVVM\Model\Instance.cs" />
-    <Compile Include="MVVM\Model\Patch.cs" />
+    <Compile Include="Models\Applet.cs" />
+    <Compile Include="Models\InstalledInstance.cs" />
+    <Compile Include="Models\Instance.cs" />
+    <Compile Include="Models\Patch.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\ServerListViewModel.cs" />
@@ -227,16 +291,9 @@
     <Resource Include="Assets\Fonts\RobotoFlex.ttf" />
     <Resource Include="Assets\Fonts\Barlow-Regular.ttf" />
     <Resource Include="Assets\Fonts\Tourney.ttf" />
-    <Resource Include="Plugins\Monaco\min\vs\base\browser\ui\codicons\codicon\codicon.ttf" />
-    <Content Include="Assets\Fonts\Font Awesome 6 Brands-Regular-400.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Fonts\Font Awesome 6 Free-Regular-400.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Fonts\Font Awesome 6 Free-Solid-900.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\Fonts\Font Awesome 6 Brands-Regular-400.otf" />
+    <Resource Include="Assets\Fonts\Font Awesome 6 Free-Regular-400.otf" />
+    <Resource Include="Assets\Fonts\Font Awesome 6 Free-Solid-900.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -257,6 +314,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.2045.28</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.39</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
@@ -297,11 +357,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Images\close.png" />
-    <Resource Include="Assets\Images\maximize.png" />
-    <Resource Include="Assets\Images\minimize.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Plugins\**">

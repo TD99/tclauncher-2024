@@ -5,7 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Windows;
 using T_Craft_Game_Launcher.Core;
-using T_Craft_Game_Launcher.MVVM.Model;
+using T_Craft_Game_Launcher.Models;
 
 namespace T_Craft_Game_Launcher.MVVM.ViewModel
 {

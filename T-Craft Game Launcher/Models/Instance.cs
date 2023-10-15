@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.IO;
 
-namespace T_Craft_Game_Launcher.MVVM.Model
+namespace T_Craft_Game_Launcher.Models
 {
     public class Instance
     {
