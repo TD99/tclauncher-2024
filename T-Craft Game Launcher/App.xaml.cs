@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using CmlLib.Core;
 using CmlLib.Core.Auth;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Windows;
@@ -20,6 +21,7 @@ namespace T_Craft_Game_Launcher
         private bool is_silent;
 
         public static MSession Session { get; set; }
+        public static CMLauncher Launcher { get; set; }
 
         public App()
         {
@@ -50,6 +52,8 @@ namespace T_Craft_Game_Launcher
                 var result = MessageBox.Show("Ein Fehler beim Erstellen der Ordnerstruktur ist aufgetreten!" + exception.Message, "Initialisierungsfehler", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel) Environment.Exit(1);
             }
+
+            Launcher = new CMLauncher(new MinecraftPath(IoUtils.Tcl.DefaultPath));
 
             ShowUI();
         }

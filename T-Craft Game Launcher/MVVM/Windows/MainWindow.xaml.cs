@@ -31,6 +31,7 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
             handleFirstTime();
         }
 
+        // TODO: CHECK IF FIRST TIME
         private void handleFirstTime()
         {
             newToolTip.PlacementTarget = serverBtn;

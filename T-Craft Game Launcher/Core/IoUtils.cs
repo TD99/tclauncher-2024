@@ -92,6 +92,11 @@ namespace T_Craft_Game_Launcher.Core
             public static readonly string UdataPath = Path.Combine(RootPath, "Udata");
 
             /// <summary>
+            /// The default path for the application, located within the TCL root directory.
+            /// </summary>
+            public static readonly string DefaultPath = Path.Combine(RootPath, "Default");
+
+            /// <summary>
             /// Calculates the size of the directory at the specified path.
             /// </summary>
             /// <param name="path">The path of the directory. If null, the root path is used.</param>
@@ -120,6 +125,7 @@ namespace T_Craft_Game_Launcher.Core
                 if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
                 if (!Directory.Exists(InstancesPath)) Directory.CreateDirectory(InstancesPath);
                 if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
+                if (!Directory.Exists(DefaultPath)) Directory.CreateDirectory(DefaultPath);
             }
         }
 

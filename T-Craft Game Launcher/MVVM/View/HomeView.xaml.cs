@@ -1,18 +1,17 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CmlLib.Core;
+using CmlLib.Utils;
+using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.Windows;
 
@@ -29,7 +28,6 @@ namespace T_Craft_Game_Launcher.MVVM.View
         public HomeView()
         {
             InitializeComponent();
-            loadAccount();
             checkInstanceListEmpty();
         }
 
@@ -40,91 +38,14 @@ namespace T_Craft_Game_Launcher.MVVM.View
             webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
         }
 
+        // TODO: IMPROVE CODE QUALITY
         private void checkInstanceListEmpty()
         {
+            // TODO: CHECK FOR N° OF INSTANCES INSTEAD
             if (Properties.Settings.Default.FirstTime)
             {
                 profileSelect.Visibility = Visibility.Collapsed;
                 profileNoneText.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void loadAccount()
-        {
-            try
-            {
-                string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-                string udataFolder = Path.Combine(tclFolder, "UData");
-                string avatarsFolder = Path.Combine(udataFolder, "Avatars");
-                string skinsFolder = Path.Combine(udataFolder, "Skins");
-                string accountFile = Path.Combine(udataFolder, "launcher_accounts.json");
-
-                string jsonText = File.ReadAllText(accountFile);
-                JObject json = JObject.Parse(jsonText);
-
-                string name = (string)json["accounts"][(string)json["activeAccountLocalId"]]["minecraftProfile"]["name"];
-                string id = (string)json["accounts"][(string)json["activeAccountLocalId"]]["minecraftProfile"]["id"];
-
-                string avatarSrc = $"https://mc-heads.net/avatar/{id}";
-                string avatarCacheFile = Path.Combine(avatarsFolder, $"{id}.png");
-
-                if (!Directory.Exists(avatarsFolder))
-                {
-                    Directory.CreateDirectory(avatarsFolder);
-                }
-
-                if (File.Exists(avatarCacheFile))
-                {
-                    avatarSrc = avatarCacheFile;
-                }
-                else
-                {
-                    var client = new WebClient();
-                    client.DownloadFile(avatarSrc, avatarCacheFile);
-                }
-
-                string skinSrc = $"https://mc-heads.net/body/{id}";
-                string skinCacheFile = Path.Combine(skinsFolder, $"{id}.png");
-
-                if (!Directory.Exists(skinsFolder))
-                {
-                    Directory.CreateDirectory(skinsFolder);
-                }
-
-                if (File.Exists(skinCacheFile))
-                {
-                    skinSrc = skinCacheFile;
-                }
-                else
-                {
-                    var client = new WebClient();
-                    client.DownloadFile(skinSrc, skinCacheFile);
-                }
-
-                BitmapImage avatarBitmap = new BitmapImage();
-                avatarBitmap.BeginInit();
-                avatarBitmap.UriSource = new Uri(avatarSrc);
-                avatarBitmap.EndInit();
-
-                BitmapImage skinBitmap = new BitmapImage();
-                skinBitmap.BeginInit();
-                skinBitmap.UriSource = new Uri(skinSrc);
-                skinBitmap.EndInit();
-
-                Dispatcher.Invoke(() =>
-                {
-                    textUserName.Text = name;
-                    imageUserPicture.Source = avatarBitmap;
-                    imageBodyPicture.Source = skinBitmap;
-                });
-            }
-            catch
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    textUserName.Text = "Anonym";
-                    imageUserPicture.Source = null;
-                });
             }
         }
 
@@ -139,10 +60,40 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
         }
 
-        private void playBtn_Click(object sender, RoutedEventArgs e)
+        private async void playBtn_Click(object sender, RoutedEventArgs e)
         {
-            //InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
+            var tclInstancesFolder = IoUtils.Tcl.InstancesPath;
+            if (!(profileSelect.SelectedItem is InstalledInstance instance))
+            {
+                MessageBox.Show("Bitte wähle eine Instanz aus!");
+                return;
+            }
 
+            if (App.Session == null || !App.Session.CheckIsValid())
+            {
+                MessageBox.Show("Bitte melde dich an!");
+                return;
+            }
+
+            var instanceFolder = Path.Combine(tclInstancesFolder, instance.Guid.ToString(), "data");
+
+            try
+            {
+                App.Launcher = new CMLauncher(new MinecraftPath(instanceFolder));
+                // TODO: Variable versions
+                var process = await App.Launcher.CreateProcessAsync("1.20.1", new MLaunchOption
+                {
+                    Session = App.Session
+                });
+
+                var processUtil = new ProcessUtil(process);
+                processUtil.OutputReceived += (sender1, e1) => { Console.WriteLine(e1); };
+                processUtil.StartWithEvents();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             //try
             //{
             //    string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
@@ -270,13 +221,12 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void profileSelect_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
-            if (selectedInstance != null)
+            if (profileSelect.SelectedItem is InstalledInstance selectedInstance)
             {
                 Properties.Settings.Default.LastSelected = selectedInstance.Guid;
                 Properties.Settings.Default.Save();
 
-                if (selectedInstance.Servers != null && selectedInstance.Servers.Count() >= 1)
+                if (selectedInstance.Servers != null && selectedInstance.Servers.Any())
                 {
                     servInfo.Visibility = Visibility.Visible;
                     serverSelect.SelectedIndex = 0;
