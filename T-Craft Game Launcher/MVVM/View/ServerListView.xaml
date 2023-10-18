@@ -1,22 +1,23 @@
-﻿<UserControl x:Class="T_Craft_Game_Launcher.MVVM.View.ServerListView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
-             xmlns:gif="http://wpfanimatedgif.codeplex.com"
-             xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
-             mc:Ignorable="d" 
-             d:DesignHeight="450"
-             d:DesignWidth="800">
+﻿<UserControl
+    x:Class="T_Craft_Game_Launcher.MVVM.View.ServerListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="http://wpfanimatedgif.codeplex.com"
+    xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <UserControl.DataContext>
         <vm:ServerListViewModel />
     </UserControl.DataContext>
 
     <b:Interaction.Behaviors>
-        <animations:SlideInOutAnimation/>
+        <animations:SlideInOutAnimation />
     </b:Interaction.Behaviors>
 
     <Grid>
@@ -24,17 +25,19 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid x:Name="itemFocus"
-              Visibility="Collapsed"
-              Panel.ZIndex="999"
-              Background="#1D2633">
+        <Grid
+            x:Name="itemFocus"
+            Panel.ZIndex="999"
+            Background="#1D2633"
+            Visibility="Collapsed">
             <Grid>
-                <Image x:Name="itemFocusBanner"
-                       Stretch="UniformToFill"
-                       Source="/Assets/Images/nothumb.png"
-                       RenderTransformOrigin="0.5,0.5"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center" />
+                <Image
+                    x:Name="itemFocusBanner"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    RenderTransformOrigin="0.5,0.5"
+                    Source="/Assets/Images/nothumb.png"
+                    Stretch="UniformToFill" />
 
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
@@ -46,126 +49,146 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="0">
-                        <TextBlock x:Name="itemFocusName"
-                                   Foreground="White" 
-                                   FontSize="40" />
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock
+                            x:Name="itemFocusName"
+                            FontSize="40"
+                            Foreground="White" />
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Patch: "
-                                       Foreground="White" 
-                                       FontSize="20" />
-                            <TextBlock x:Name="itemFocusPatch"
-                                       Foreground="White" 
-                                       FontSize="20" />
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Patch: " />
+                            <TextBlock
+                                x:Name="itemFocusPatch"
+                                FontSize="20"
+                                Foreground="White" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Paket: "
-                                       Foreground="White"
-                                       FontSize="20" />
-                            <TextBlock x:Name="itemFocusPackage"
-                                       Foreground="White" 
-                                       FontSize="20" />
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Paket: " />
+                            <TextBlock
+                                x:Name="itemFocusPackage"
+                                FontSize="20"
+                                Foreground="White" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Typ: "
-                                       Foreground="White" 
-                                       FontSize="20" />
-                            <TextBlock x:Name="itemFocusType"
-                                       Foreground="White" 
-                                       FontSize="20" />
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Typ: " />
+                            <TextBlock
+                                x:Name="itemFocusType"
+                                FontSize="20"
+                                Foreground="White" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Minecraft-Version: "
-                                       Foreground="White" 
-                                       FontSize="20" />
-                            <TextBlock x:Name="itemFocusMCVersion"
-                                       Foreground="White" 
-                                       FontSize="20" />
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Minecraft-Version: " />
+                            <TextBlock
+                                x:Name="itemFocusMCVersion"
+                                FontSize="20"
+                                Foreground="White" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="RAM: "
-                                       Foreground="White" 
-                                       FontSize="20" />
-                            <TextBlock x:Name="itemFocusRam"
-                                       Foreground="White" 
-                                       FontSize="20" />
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="RAM: " />
+                            <TextBlock
+                                x:Name="itemFocusRam"
+                                FontSize="20"
+                                Foreground="White" />
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="1"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top">
-                        <Button x:Name="closeFocusBtn"
-                                Content="Schliessen"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="closeFocusBtn_Click" />
-                        <Button x:Name="specialFocusBtn"
-                                Margin="0, 15, 0, 0"
-                                Content="Aktion"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="specialFocusBtn_Click" />
-                        <Button x:Name="openFolderBtn"
-                                Margin="0, 15, 0, 0"
-                                Content="Datenordner anzeigen"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="openFolderBtn_Click" />
-                        <Button x:Name="reconfigDef"
-                                Margin="0, 15, 0, 0"
-                                Content="Auto-Konfiguration"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="reconfigDef_Click" />
-                        <Button x:Name="editConfig"
-                                Margin="0, 15, 0, 0"
-                                Content="Konfigurationseditor"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="editConfig_Click" />
-                        <Button x:Name="forceUninstallBtn"
-                                Margin="0, 50, 0, 0"
-                                Content="Deinstallation erzwingen"
-                                FontSize="20"
-                                Style="{StaticResource ModernButton}"
-                                Click="forceUninstallBtn_Click" />
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <Button
+                            x:Name="closeFocusBtn"
+                            Click="closeFocusBtn_Click"
+                            Content="Schliessen"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="specialFocusBtn"
+                            Margin="0,15,0,0"
+                            Click="specialFocusBtn_Click"
+                            Content="Aktion"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="openFolderBtn"
+                            Margin="0,15,0,0"
+                            Click="openFolderBtn_Click"
+                            Content="Datenordner anzeigen"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="reconfigDef"
+                            Margin="0,15,0,0"
+                            Click="reconfigDef_Click"
+                            Content="Auto-Konfiguration"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="editConfig"
+                            Margin="0,15,0,0"
+                            Click="editConfig_Click"
+                            Content="Konfigurationseditor"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="forceUninstallBtn"
+                            Margin="0,50,0,0"
+                            Click="forceUninstallBtn_Click"
+                            Content="Deinstallation erzwingen"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
                     </StackPanel>
-                    
-                    <TextBlock Text="Weitere Eigenschaften: "
-                               Margin="0, 20, 0, 0"
-                               Foreground="White" 
-                               FontSize="25"
-                               Grid.Row="1"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="2" />
-                    <Border Background="#66000000"
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2">
-                        <ScrollViewer Margin="15"
-                                      VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Auto">
-                            <StackPanel x:Name="itemFocusMCWorkingDirDesc"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch" />
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,20,0,0"
+                        FontSize="25"
+                        Foreground="White"
+                        Text="Weitere Eigenschaften: " />
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Background="#66000000">
+                        <ScrollViewer
+                            Margin="15"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto">
+                            <StackPanel
+                                x:Name="itemFocusMCWorkingDirDesc"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" />
                         </ScrollViewer>
                     </Border>
                 </Grid>
-                
+
             </Grid>
         </Grid>
-        <StackPanel x:Name="serverList">
-            <TextBlock Text="Profile"
-                        Foreground="White"
-                        FontSize="28"
-                        HorizontalAlignment="Left"
-                        Margin="0, 0, 0, 20"
-                        Grid.Column="0" />
-            <Grid VerticalAlignment="Stretch"
-                  HorizontalAlignment="Stretch">
+        <StackPanel x:Name="serverList" Grid.Row="0">
+            <TextBlock
+                Margin="0,0,0,20"
+                HorizontalAlignment="Left"
+                FontSize="28"
+                Foreground="White"
+                Text="Profile" />
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -174,58 +197,61 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <StackPanel x:Name="serverInstances"
-                            Grid.Column="0"
-                            Grid.Row="0">
-                    <TextBlock Text="Verfügbar"
-                               Foreground="White"
-                               FontSize="20"/>
-                    <ListView ItemsSource="{Binding ServerList}"
-                                Background="Transparent"
-                                BorderThickness="0">
+                <StackPanel
+                    x:Name="serverInstances"
+                    Grid.Row="0"
+                    Grid.Column="0">
+                    <!--  TODO: Scrollbar  -->
+                    <ListView
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ItemsSource="{Binding ServerList}">
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0"
-                                        Height="250px"
-                                        Width="250px"
-                                        Background="#88000000"
-                                        MouseDown="ServerItem_Clicked">
+                                <Border
+                                    Width="200px"
+                                    Height="200px"
+                                    Margin="5"
+                                    Background="#88000000"
+                                    BorderThickness="0"
+                                    MouseDown="ServerItem_Clicked">
 
                                     <Border.Clip>
-                                        <RectangleGeometry RadiusX="10"
-                                                           RadiusY="10"
-                                                           Rect="0, 0, 250, 250" />
+                                        <RectangleGeometry
+                                            RadiusX="10"
+                                            RadiusY="10"
+                                            Rect="0, 0, 200, 200" />
                                     </Border.Clip>
 
                                     <Grid>
-                                        <Image Stretch="UniformToFill"
-                                               gif:ImageBehavior.AnimatedSource="{Binding ThumbnailURL}"
-                                               Source="{Binding ThumbnailURL}"
-                                               RenderTransformOrigin="0.5,0.5"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">
+                                        <Image
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            gif:ImageBehavior.AnimatedSource="{Binding ThumbnailURL}"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            Source="{Binding ThumbnailURL}"
+                                            Stretch="UniformToFill">
                                             <Image.OpacityMask>
-                                                <SolidColorBrush Color="Black" Opacity="0.5"/>
+                                                <SolidColorBrush Opacity="0.5" Color="Black" />
                                             </Image.OpacityMask>
                                         </Image>
 
-                                        <StackPanel Margin="20">
+                                        <StackPanel Margin="0,10" HorizontalAlignment="Center">
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock x:Name="DisplayName"
-                                                           Text="{Binding DisplayName}"
-                                                           HorizontalAlignment="Left"
-                                                           Foreground="White"
-                                                           FontWeight="Bold"
-                                                           FontSize="25"
-                                                           TextTrimming="CharacterEllipsis">
+                                                <TextBlock
+                                                    x:Name="DisplayName"
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="25"
+                                                    FontWeight="Bold"
+                                                    Foreground="White"
+                                                    Text="{Binding DisplayName}"
+                                                    TextTrimming="CharacterEllipsis">
                                                     <TextBlock.ToolTip>
-                                                        <ToolTip Style="{StaticResource ModernToolTip}"
-                                                             Content="{Binding DisplayName}" />
+                                                        <ToolTip Content="{Binding DisplayName}" Style="{StaticResource ModernToolTip}" />
                                                     </TextBlock.ToolTip>
                                                 </TextBlock>
-                                                <Image Source="/Assets/Images/cloud.png"
-                                                       Margin="15, 0, 0, 0">
+                                                <Image Margin="15,0,0,0" Source="/Assets/Images/cloud.png">
                                                     <Image.Style>
                                                         <Style TargetType="{x:Type Image}">
                                                             <Style.Triggers>
@@ -237,36 +263,41 @@
                                                     </Image.Style>
                                                 </Image>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal"
-                                                        HorizontalAlignment="Left">
-                                                <TextBlock Text="Typ:"
-                                                           Foreground="White"
-                                                           FontSize="20" />
-                                                <TextBlock Text="{Binding Type}"
-                                                           Margin="10, 0, 0, 0"
-                                                           Foreground="White"
-                                                           FontSize="20"
-                                                           TextTrimming="CharacterEllipsis" />
+                                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="Typ:" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="{Binding Type}"
+                                                    TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="MC Version:"
-                                                           Foreground="White"
-                                                           FontSize="20"/>
-                                                <TextBlock Text="{Binding McVersion}"
-                                                           Margin="10, 0, 0, 0"
-                                                           Foreground="White"
-                                                           FontSize="20"
-                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="MC Version:" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="{Binding McVersion}"
+                                                    TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Version:"
-                                                           Foreground="White"
-                                                           FontSize="20"/>
-                                                <TextBlock Text="{Binding Version}"
-                                                           Margin="10, 0, 0, 0"
-                                                           Foreground="White"
-                                                           FontSize="20"
-                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="Version:" />
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    FontSize="20"
+                                                    Foreground="White"
+                                                    Text="{Binding Version}"
+                                                    TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Grid>
@@ -276,7 +307,11 @@
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel />
+                                <WrapPanel
+                                    Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                                    ItemHeight="{Binding (ListView.View).(WrapPanel.ItemHeight), RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    ItemWidth="{Binding (ListView.View).(WrapPanel.ItemWidth), RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
 
@@ -288,24 +323,28 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListBoxItem">
-                                            <Border Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
-                                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            <Border
+                                                Name="Border"
+                                                Padding="2"
+                                                Background="Transparent"
+                                                SnapsToDevicePixels="true">
+                                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsEnabled" Value="False">
                                                     <Setter Property="OpacityMask">
                                                         <Setter.Value>
-                                                            <SolidColorBrush Color="Black" Opacity="0.3" />
+                                                            <SolidColorBrush Opacity="0.3" Color="Black" />
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="OpacityMask">
                                                         <Setter.Value>
-                                                            <SolidColorBrush Color="Black" Opacity="0.8" />
+                                                            <SolidColorBrush Opacity="0.8" Color="Black" />
                                                         </Setter.Value>
                                                     </Setter>
-                                                    <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                                    <Setter TargetName="Border" Property="Background" Value="Transparent" />
                                                     <Setter Property="Cursor" Value="Hand" />
                                                 </Trigger>
                                             </ControlTemplate.Triggers>

@@ -81,7 +81,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             {
                 App.Launcher = new CMLauncher(new MinecraftPath(instanceFolder));
                 // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync("1.20.1", new MLaunchOption
+                var process = await App.Launcher.CreateProcessAsync("1.7.10", new MLaunchOption
                 {
                     Session = App.Session
                 });
