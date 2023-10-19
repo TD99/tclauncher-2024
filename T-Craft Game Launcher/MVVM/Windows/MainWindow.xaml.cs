@@ -324,8 +324,13 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
 
             var session = await accountWindow.LoginTask.Task;
             if (session == null) return;
-            AccountManagerBtn.Content = session?.Username;
+            SetDisplayAccount(session?.Username);
             App.Session = session;
+        }
+
+        public void SetDisplayAccount(string username)
+        {
+            AccountManagerBtn.Content = username;
         }
     }
 }

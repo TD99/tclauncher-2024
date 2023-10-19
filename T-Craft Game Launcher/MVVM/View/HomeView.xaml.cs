@@ -14,6 +14,7 @@ using CmlLib.Utils;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.Windows;
+using CmlLib.Core.Auth.Microsoft;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -24,11 +25,15 @@ namespace T_Craft_Game_Launcher.MVVM.View
     {
         public ObservableCollection<Applet> Applets { get; set; }
         private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
+        private readonly JELoginHandler _loginHandler;
 
         public HomeView()
         {
             InitializeComponent();
             checkInstanceListEmpty();
+            _loginHandler = new JELoginHandlerBuilder()
+                .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
+                .Build();
         }
 
         private async void loadWV()
@@ -71,8 +76,22 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
             if (App.Session == null || !App.Session.CheckIsValid())
             {
-                MessageBox.Show("Bitte melde dich an!");
-                return;
+                if (_loginHandler.AccountManager.GetAccounts().Count != 1)
+                {
+                    MessageBox.Show("Bitte melde dich an!");
+                    return;
+                }
+
+                try
+                {
+                    App.Session = await _loginHandler.AuthenticateSilently();
+                    App.MainWin.SetDisplayAccount(App.Session?.Username);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
 
             var instanceFolder = Path.Combine(tclInstancesFolder, instance.Guid.ToString(), "data");
@@ -80,111 +99,55 @@ namespace T_Craft_Game_Launcher.MVVM.View
             try
             {
                 App.Launcher = new CMLauncher(new MinecraftPath(instanceFolder));
+
+                var actionWindow = new ActionWindow("Lade Spiel...");
+
+                App.Launcher.FileChanged += (e1) =>
+                {
+                    // TODO: Check for start event
+                    var progress = e1.ProgressedFileCount;
+                    var total = e1.TotalFileCount;
+                    var percent = progress / total * 100;
+
+                    actionWindow.percent = percent;
+                    actionWindow.text = $"[{e1.FileKind}] {e1.FileName}";
+                };
+
+                App.Launcher.ProgressChanged += (sender1, e1) =>
+                {
+                    // TODO: Add percent logic
+                };
+
+                actionWindow.Show();
+
                 // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync("1.7.10", new MLaunchOption
+                var process = await App.Launcher.CreateProcessAsync("1.16.4", new MLaunchOption
                 {
                     Session = App.Session
                 });
 
                 var processUtil = new ProcessUtil(process);
-                processUtil.OutputReceived += (sender1, e1) => { Console.WriteLine(e1); };
+                processUtil.Exited += (sender1, e1) =>
+                {
+                    // TODO: Add closed logic
+                };
                 processUtil.StartWithEvents();
+                switch (StartupBehaviourLevel)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        App.MainWin.WindowState = WindowState.Minimized;
+                        break;
+                    case 2:
+                        Application.Current.Shutdown();
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            //try
-            //{
-            //    string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-            //    string instanceFolder = Path.Combine(tclFolder, "Instances");
-            //    string runtimeFolder = Path.Combine(tclFolder, "Runtime");
-            //    string udataFolder = Path.Combine(tclFolder, "UData");
-
-            //    string selectedInstanceFolder = Path.Combine(instanceFolder, selectedInstance.Guid.ToString());
-            //    string instanceDataFolder = Path.Combine(selectedInstanceFolder, "data");
-
-            //    if (!Directory.Exists(selectedInstanceFolder))
-            //    {
-            //        MessageBox.Show($"Die Instanz '{selectedInstance.Name}' konnte nicht gefunden werden!");
-            //        return;
-            //    }
-
-            //    string udataLoginFile = Path.Combine(udataFolder, "launcher_accounts.json");
-            //    string targetLoginFile = Path.Combine(instanceDataFolder, "launcher_accounts.json");
-
-            //    if (File.Exists(udataLoginFile))
-            //    {
-            //        File.Copy(udataLoginFile, targetLoginFile, true);
-            //    }
-
-            //    string msaCredentialsFile = Path.Combine(udataFolder, "launcher_msa_credentials.bin");
-            //    string targetMsaCredentialsFile = Path.Combine(instanceDataFolder, "launcher_msa_credentials.bin");
-
-            //    if (File.Exists(msaCredentialsFile))
-            //    {
-            //        File.Copy(msaCredentialsFile, targetMsaCredentialsFile, true);
-            //    }
-
-            //    string exeFile = Path.Combine(runtimeFolder, "Minecraft.exe");
-            //    if (!File.Exists(exeFile))
-            //    {
-            //        MessageBox.Show("Der MC Launcher existiert nicht!");
-            //        return;
-            //    }
-
-            //    Process launcher = new Process();
-            //    launcher.StartInfo.FileName = exeFile;
-            //    launcher.StartInfo.Arguments = $"--workDir=\"{instanceDataFolder}\"";
-            //    launcher.EnableRaisingEvents = true;
-
-            //    launcher.Exited += (sender1, e1) =>
-            //    {
-            //        try
-            //        {
-            //            if (File.Exists(targetLoginFile) && new FileInfo(targetLoginFile).Length > 0)
-            //            {
-            //                File.Copy(targetLoginFile, udataLoginFile, true);
-            //            }
-            //            if (File.Exists(targetMsaCredentialsFile) && new FileInfo(targetMsaCredentialsFile).Length > 0)
-            //            {
-            //                File.Copy(targetMsaCredentialsFile, msaCredentialsFile, true);
-            //            }
-            //        }
-            //        catch { }
-            //    };
-
-            //    var action = new ActionWindow("Start vorbereiten...");
-            //    action.Owner = Application.Current.MainWindow;
-            //    action.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //    action.Show();
-
-            //    launcher.Start();
-
-            //    Task.Delay(1000).ContinueWith(t =>
-            //    {
-            //        Application.Current.Dispatcher.Invoke(() =>
-            //        {
-            //            action.Hide();
-            //        });
-            //    });
-
-            //    switch (StartupBehaviourLevel)
-            //    {
-            //        case 0:
-            //            break;
-            //        case 1:
-            //            Application.Current.MainWindow.WindowState = WindowState.Minimized;
-            //            break;
-            //        case 2:
-            //            Application.Current.Shutdown();
-            //            break;
-            //    }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Ein Startfehler ist aufgetreten!");
-            //}
         }
 
         private void SetAppletViewState(bool val = true)

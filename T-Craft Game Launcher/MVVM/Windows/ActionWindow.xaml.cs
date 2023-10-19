@@ -9,12 +9,10 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
     {
         private TaskbarItemInfo taskbarInfo;
         private int _percent;
+        private string _text;
         public int percent
         {
-            get
-            {
-                return _percent;
-            }
+            get => _percent;
             set
             {
                 _percent = value;
@@ -23,10 +21,20 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
             }
         }
 
-        public ActionWindow(string action)
+        public string text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                actionText.Text = value;
+            }
+        }
+
+        public ActionWindow(string action = null)
         {
             InitializeComponent();
-            actionText.Text = action;
+            text = action;
             taskbarInfo = new TaskbarItemInfo();
             taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
             taskbarInfo.ProgressValue = 0.0;

@@ -19,7 +19,6 @@
     <b:Interaction.Behaviors>
         <animations:SlideInOutAnimation />
     </b:Interaction.Behaviors>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -181,181 +180,174 @@
 
             </Grid>
         </Grid>
-        <StackPanel x:Name="serverList" Grid.Row="0">
+        <Grid x:Name="serverList" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <TextBlock
+                Grid.Row="0"
                 Margin="0,0,0,20"
                 HorizontalAlignment="Left"
                 FontSize="28"
                 Foreground="White"
                 Text="Profile" />
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
 
-                <StackPanel
-                    x:Name="serverInstances"
-                    Grid.Row="0"
-                    Grid.Column="0">
-                    <!--  TODO: Scrollbar  -->
-                    <ListView
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ItemsSource="{Binding ServerList}">
+            <!--  TODO: Scrollbar  -->
+            <ListView
+                Grid.Row="1"
+                Background="Transparent"
+                BorderThickness="0"
+                ItemsSource="{Binding ServerList}">
 
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    Width="200px"
-                                    Height="200px"
-                                    Margin="5"
-                                    Background="#88000000"
-                                    BorderThickness="0"
-                                    MouseDown="ServerItem_Clicked">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Width="190px"
+                            Height="190px"
+                            Margin="5"
+                            Background="#88000000"
+                            BorderThickness="0"
+                            MouseDown="ServerItem_Clicked">
 
-                                    <Border.Clip>
-                                        <RectangleGeometry
-                                            RadiusX="10"
-                                            RadiusY="10"
-                                            Rect="0, 0, 200, 200" />
-                                    </Border.Clip>
+                            <Border.Clip>
+                                <RectangleGeometry
+                                    RadiusX="10"
+                                    RadiusY="10"
+                                    Rect="0, 0, 190, 190" />
+                            </Border.Clip>
 
-                                    <Grid>
-                                        <Image
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            gif:ImageBehavior.AnimatedSource="{Binding ThumbnailURL}"
-                                            RenderTransformOrigin="0.5,0.5"
-                                            Source="{Binding ThumbnailURL}"
-                                            Stretch="UniformToFill">
-                                            <Image.OpacityMask>
-                                                <SolidColorBrush Opacity="0.5" Color="Black" />
-                                            </Image.OpacityMask>
+                            <Grid>
+                                <Image
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    gif:ImageBehavior.AnimatedSource="{Binding ThumbnailURL}"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    Source="{Binding ThumbnailURL}"
+                                    Stretch="UniformToFill">
+                                    <Image.OpacityMask>
+                                        <SolidColorBrush Opacity="0.5" Color="Black" />
+                                    </Image.OpacityMask>
+                                </Image>
+
+                                <StackPanel Margin="0,10" HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            x:Name="DisplayName"
+                                            HorizontalAlignment="Left"
+                                            FontSize="25"
+                                            FontWeight="Bold"
+                                            Foreground="White"
+                                            Text="{Binding DisplayName}"
+                                            TextTrimming="CharacterEllipsis">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip Content="{Binding DisplayName}" Style="{StaticResource ModernToolTip}" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                        <Image Margin="15,0,0,0" Source="/Assets/Images/cloud.png">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Is_Installed}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
                                         </Image>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="Typ:" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="{Binding Type}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="MC Version:" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="{Binding McVersion}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="Version:" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            FontSize="20"
+                                            Foreground="White"
+                                            Text="{Binding Version}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
 
-                                        <StackPanel Margin="0,10" HorizontalAlignment="Center">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    x:Name="DisplayName"
-                                                    HorizontalAlignment="Left"
-                                                    FontSize="25"
-                                                    FontWeight="Bold"
-                                                    Foreground="White"
-                                                    Text="{Binding DisplayName}"
-                                                    TextTrimming="CharacterEllipsis">
-                                                    <TextBlock.ToolTip>
-                                                        <ToolTip Content="{Binding DisplayName}" Style="{StaticResource ModernToolTip}" />
-                                                    </TextBlock.ToolTip>
-                                                </TextBlock>
-                                                <Image Margin="15,0,0,0" Source="/Assets/Images/cloud.png">
-                                                    <Image.Style>
-                                                        <Style TargetType="{x:Type Image}">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Is_Installed}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Image.Style>
-                                                </Image>
-                                            </StackPanel>
-                                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                                                <TextBlock
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="Typ:" />
-                                                <TextBlock
-                                                    Margin="10,0,0,0"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding Type}"
-                                                    TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="MC Version:" />
-                                                <TextBlock
-                                                    Margin="10,0,0,0"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding McVersion}"
-                                                    TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="Version:" />
-                                                <TextBlock
-                                                    Margin="10,0,0,0"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding Version}"
-                                                    TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                            ItemHeight="{Binding (ListView.View).(WrapPanel.ItemHeight), RelativeSource={RelativeSource AncestorType=ListView}}"
+                            ItemWidth="{Binding (ListView.View).(WrapPanel.ItemWidth), RelativeSource={RelativeSource AncestorType=ListView}}"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
 
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel
-                                    Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
-                                    ItemHeight="{Binding (ListView.View).(WrapPanel.ItemHeight), RelativeSource={RelativeSource AncestorType=ListView}}"
-                                    ItemWidth="{Binding (ListView.View).(WrapPanel.ItemWidth), RelativeSource={RelativeSource AncestorType=ListView}}"
-                                    Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="SnapsToDevicePixels" Value="True" />
-                                <Setter Property="OverridesDefaultStyle" Value="True" />
-                                <Setter Property="Focusable" Value="False" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
-                                            <Border
-                                                Name="Border"
-                                                Padding="2"
-                                                Background="Transparent"
-                                                SnapsToDevicePixels="true">
-                                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="OpacityMask">
-                                                        <Setter.Value>
-                                                            <SolidColorBrush Opacity="0.3" Color="Black" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Trigger>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="OpacityMask">
-                                                        <Setter.Value>
-                                                            <SolidColorBrush Opacity="0.8" Color="Black" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter TargetName="Border" Property="Background" Value="Transparent" />
-                                                    <Setter Property="Cursor" Value="Hand" />
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border
+                                        Name="Border"
+                                        Padding="2"
+                                        Background="Transparent"
+                                        SnapsToDevicePixels="true">
+                                        <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="OpacityMask">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Opacity="0.3" Color="Black" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="OpacityMask">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Opacity="0.8" Color="Black" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter TargetName="Border" Property="Background" Value="Transparent" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
     </Grid>
 </UserControl>

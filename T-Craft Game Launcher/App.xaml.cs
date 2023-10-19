@@ -22,6 +22,7 @@ namespace T_Craft_Game_Launcher
 
         public static MSession Session { get; set; }
         public static CMLauncher Launcher { get; set; }
+        public static MainWindow MainWin { get; set; }
 
         public App()
         {
@@ -177,8 +178,8 @@ namespace T_Craft_Game_Launcher
         }
         private void ShowUI()
         {
-            MainWindow mainWindow = new MainWindow(is_silent);
-            mainWindow.Show();
+            MainWin = new MainWindow(is_silent);
+            MainWin.Show();
         }
     }
 }
