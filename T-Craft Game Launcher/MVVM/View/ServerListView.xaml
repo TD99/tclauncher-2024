@@ -192,7 +192,7 @@
                 HorizontalAlignment="Left"
                 FontSize="28"
                 Foreground="White"
-                Text="Profile" />
+                Text="Spiele" />
 
             <!--  TODO: Scrollbar  -->
             <ListView

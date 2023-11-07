@@ -142,6 +142,7 @@
     <Compile Include="Models\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
+    <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
     <Compile Include="MVVM\Windows\AccountWindow.xaml.cs">
       <DependentUpon>AccountWindow.xaml</DependentUpon>
     </Compile>

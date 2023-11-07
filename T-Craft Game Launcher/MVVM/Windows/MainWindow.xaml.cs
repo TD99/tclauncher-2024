@@ -254,25 +254,25 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
 
         public void navigateToHome()
         {
-            homeBtn.IsChecked = true;
+            //homeBtn.IsChecked = true;
             vm.HomeViewCommand.Execute(null);
         }
 
         public void navigateToServer()
         {
-            serverBtn.IsChecked = true;
+            //serverBtn.IsChecked = true;
             vm.ServerListViewCommand.Execute(null);
         }
 
-        public void navigateToSettings()
-        {
-            settingsBtn.IsChecked = true;
-            vm.SettingsViewCommand.Execute(null);
-        }
+        //public void navigateToSettings()
+        //{
+        //    settingsBtn.IsChecked = true;
+        //    vm.SettingsViewCommand.Execute(null);
+        //}
 
         public void navigateToStatus()
         {
-            statusBtn.IsChecked = true;
+            //statusBtn.IsChecked = true;
             vm.StatusViewCommand.Execute(null);
         }
 

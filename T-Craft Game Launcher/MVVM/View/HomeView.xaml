@@ -23,138 +23,76 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel x:Name="homeOverview" Grid.Row="0">
+        <Grid
+            x:Name="homeOverview"
+            Grid.Row="0"
+            Margin="0,0,0,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
                 Margin="0,0,0,20"
                 HorizontalAlignment="Left"
                 FontSize="28"
                 Foreground="White"
                 Text="Home" />
 
-            <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
-                <Border
-                    x:Name="discoverBorder"
-                    Width="400"
-                    Height="180"
-                    Background="#88000000"
-                    BorderThickness="0"
-                    MouseDown="discoverEvent">
+            <Border
+                x:Name="discoverBorder"
+                Grid.Row="1"
+                Grid.Column="0"
+                Height="180"
+                BorderThickness="0"
+                CornerRadius="10"
+                MouseDown="discoverEvent">
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="20,10,20,0"
+                            FontSize="32"
+                            Text="Öffentliche Spiele" />
+                        <TextBlock
+                            Margin="20,10,20,0"
+                            FontSize="21"
+                            Text="Spiele entdecken und herunterladen" />
+                    </StackPanel>
+                </Grid>
 
-                    <Border.Clip>
-                        <RectangleGeometry
-                            RadiusX="10"
-                            RadiusY="10"
-                            Rect="0, 0, 400, 180" />
-                    </Border.Clip>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush
+                                            ImageSource="/Assets/Images/banner1.png"
+                                            Opacity="0.4"
+                                            Stretch="UniformToFill" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush
+                                            ImageSource="/Assets/Images/banner1.png"
+                                            Opacity="0.5"
+                                            Stretch="UniformToFill" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
 
-                    <Grid>
-                        <Image
-                            RenderTransformOrigin="0.5,0.5"
-                            Source="/Assets/Images/banner1.png"
-                            Stretch="UniformToFill">
-                            <Image.OpacityMask>
-                                <SolidColorBrush Opacity="0.5" Color="Black" />
-                            </Image.OpacityMask>
-                        </Image>
 
-                        <StackPanel>
-                            <TextBlock
-                                Margin="20,10,20,0"
-                                FontSize="28"
-                                Foreground="White"
-                                Text="Öffentliche Spiele" />
-                            <TextBlock
-                                Margin="20,10,20,0"
-                                FontSize="18"
-                                Foreground="White"
-                                Text="Spiele entdecken und herunterladen" />
-                        </StackPanel>
-                    </Grid>
-
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Cursor" Value="Hand" />
-                                    <Setter Property="OpacityMask">
-                                        <Setter.Value>
-                                            <SolidColorBrush Opacity="0.8" Color="Black" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                </Border>
-                <Border
-                    x:Name="servInfo"
-                    Width="235"
-                    Height="180"
-                    Margin="10,0,0,0"
-                    BorderThickness="0"
-                    Visibility="Collapsed">
-
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
-                            <GradientStop Offset="0" Color="#5BC3FF" />
-                            <GradientStop Offset="1" Color="#2E80CC" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-
-                    <Border.Clip>
-                        <RectangleGeometry
-                            RadiusX="10"
-                            RadiusY="10"
-                            Rect="0, 0, 235, 180" />
-                    </Border.Clip>
-
-                    <Grid>
-                        <Image
-                            x:Name="currentServerImg"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            RenderTransformOrigin="0.5,0.5"
-                            Stretch="UniformToFill">
-                            <Image.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="1.1" ScaleY="1.1" />
-                                </TransformGroup>
-                            </Image.RenderTransform>
-                        </Image>
-
-                        <StackPanel>
-                            <TextBlock
-                                Margin="20,10,20,0"
-                                FontSize="28"
-                                Foreground="White"
-                                Text="Server" />
-                            <ComboBox
-                                x:Name="serverSelect"
-                                Margin="20,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                DisplayMemberPath="Name"
-                                ItemsSource="{Binding Path=LastSelected.Servers}"
-                                SelectedIndex="0"
-                                SelectedValuePath="IP"
-                                SelectionChanged="serverSelect_SelectionChanged" />
-                            <StackPanel Margin="20,0" Orientation="Horizontal">
-                                <TextBlock
-                                    x:Name="ServerMinPlayers"
-                                    Foreground="White"
-                                    Text="?" />
-                                <TextBlock Foreground="White" Text=" / " />
-                                <TextBlock
-                                    x:Name="ServerMaxPlayers"
-                                    Foreground="White"
-                                    Text="?" />
-                                <TextBlock Foreground="White" Text=" Spieler" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </StackPanel>
+        </Grid>
 
         <Grid
             x:Name="appletView"
@@ -191,8 +129,8 @@
                 <DataTemplate>
                     <Border
                         x:Name="AppletItem"
-                        Width="250px"
-                        Height="150px"
+                        Width="312"
+                        Height="150"
                         Background="#88000000"
                         BorderThickness="0"
                         MouseDown="AppletItem_MouseDown">
@@ -200,7 +138,7 @@
                             <RectangleGeometry
                                 RadiusX="10"
                                 RadiusY="10"
-                                Rect="0, 0, 250, 150" />
+                                Rect="0, 0, 312, 150" />
                         </Border.Clip>
 
                         <Grid>
