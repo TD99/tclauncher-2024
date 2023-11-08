@@ -9,6 +9,7 @@
     xmlns:local="clr-namespace:T_Craft_Game_Launcher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
+    d:Background="#1d2633"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">

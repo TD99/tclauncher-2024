@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using CmlLib.Core.Auth;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.ViewModel;
@@ -314,23 +315,26 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
             }
         }
 
-        private async void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
+        private /*async*/ void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            var accountWindow = new AccountWindow(App.Session?.UUID)
-            {
-                Owner = this
-            };
-            accountWindow.Show();
+            //var accountWindow = new AccountWindow(App.Session?.UUID)
+            //{
+            //    Owner = this
+            //};
+            //accountWindow.Show();
 
-            var session = await accountWindow.LoginTask.Task;
-            if (session == null) return;
-            SetDisplayAccount(session?.Username);
-            App.Session = session;
+            //var session = await accountWindow.LoginTask.Task;
+            //if (session == null) return;
+            //SetDisplayAccount(session?.Username);
+            //App.Session = session;
+
+            vm.AccountViewCommand.Execute(null);
         }
 
         public void SetDisplayAccount(string username)
         {
-            AccountManagerBtn.Content = username;
+            AccountManagerBtnName.Text = username;
+            AccountManagerBtnPicture.Source = new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
         }
     }
 }

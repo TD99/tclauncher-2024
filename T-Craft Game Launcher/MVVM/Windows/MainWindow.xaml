@@ -104,7 +104,8 @@
                     <RadioButton
                         x:Name="homeBtn"
                         Command="{Binding HomeViewCommand}"
-                        Content="Home">
+                        Content="Home"
+                        Margin="0, 0, 0, 10">
                         <RadioButton.Style>
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
@@ -119,7 +120,8 @@
                         x:Name="serverBtn"
                         Command="{Binding ServerListViewCommand}"
                         Content="Spiele"
-                        ToolTipService.IsEnabled="False">
+                        ToolTipService.IsEnabled="False"
+                        Margin="0, 0, 0, 10">
                         <RadioButton.ToolTip>
                             <ToolTip
                                 x:Name="newToolTip"
@@ -178,10 +180,39 @@
                             x:Name="AccountManagerBtn"
                             Padding="15,0"
                             HorizontalAlignment="Left"
-                            Background="#171e29"
-                            Click="AccountManagerBtn_OnClick"
-                            Content="Account"
-                            Style="{StaticResource ModernButton}" />
+                            Click="AccountManagerBtn_OnClick">
+                            <Button.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image
+                                        x:Name="AccountManagerBtnPicture"
+                                        Grid.Column="0"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,10,0"
+                                        Source="https://mc-heads.net/avatar/" />
+                                    <TextBlock
+                                        x:Name="AccountManagerBtnName"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Text="Nicht eingeloggt" />
+                                </Grid>
+                            </Button.Content>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:AccountViewModel}}" Value="True">
+                                            <Setter Property="Background" Value="#171e29" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                         <Border
                             Width="1"
                             Height="30"
@@ -200,10 +231,10 @@
                             </Button.Content>
                             <Button.Style>
                                 <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
-                                    <Setter Property="Background" Value="#171e29" />
+                                    <Setter Property="Background" Value="Transparent" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:SettingsViewModel}}" Value="True">
-                                            <Setter Property="Background" Value="#0e1218" />
+                                            <Setter Property="Background" Value="#171e29" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

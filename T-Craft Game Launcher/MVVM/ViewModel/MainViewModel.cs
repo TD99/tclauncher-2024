@@ -8,11 +8,13 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
         public RelayCommand ServerListViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
         public RelayCommand StatusViewCommand { get; set; }
+        public RelayCommand AccountViewCommand { get; set; }
 
         private HomeViewModel HomeViewModel { get; set; }
         private ServerListViewModel ServerListViewModel { get; set; }
         private SettingsViewModel SettingsViewModel { get; set; }
         private StatusViewModel StatusViewModel { get; set; }
+        private AccountViewModel AccountViewModel { get; set; }
 
 
         private object _currentView;
@@ -33,6 +35,7 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
             ServerListViewModel = new ServerListViewModel();
             SettingsViewModel = new SettingsViewModel();
             StatusViewModel = new StatusViewModel();
+            AccountViewModel = new AccountViewModel();
 
             CurrentView = HomeViewModel;
 
@@ -51,6 +54,10 @@ namespace T_Craft_Game_Launcher.MVVM.ViewModel
             StatusViewCommand = new RelayCommand(o =>
             {
                 CurrentView = StatusViewModel;
+            });
+            AccountViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = AccountViewModel;
             });
         }
     }

@@ -1,64 +1,70 @@
-﻿<UserControl x:Class="T_Craft_Game_Launcher.MVVM.View.SettingsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
-             xmlns:controls="clr-namespace:T_Craft_Game_Launcher.MVVM.Controls"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
-             mc:Ignorable="d" 
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             d:Background="#171e29">
+﻿<UserControl
+    x:Class="T_Craft_Game_Launcher.MVVM.View.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="clr-namespace:T_Craft_Game_Launcher.MVVM.Animations"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:controls="clr-namespace:T_Craft_Game_Launcher.MVVM.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:T_Craft_Game_Launcher.MVVM.ViewModel"
+    d:Background="#1d2633"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <UserControl.DataContext>
         <viewModel:SettingsViewModel />
     </UserControl.DataContext>
 
     <b:Interaction.Behaviors>
-        <animations:SlideInOutAnimation/>
+        <animations:SlideInOutAnimation />
     </b:Interaction.Behaviors>
 
     <StackPanel>
-        <TextBlock Text="Einstellungen"
-                   FontSize="28"
-                   HorizontalAlignment="Left"
-                   Margin="0, 0, 0, 20" />
+        <TextBlock
+            Margin="0,0,0,20"
+            HorizontalAlignment="Left"
+            FontSize="28"
+            Text="Einstellungen" />
         <Label Content="Startverhalten" />
-        <ComboBox x:Name="Behaviour"
-                  SelectionChanged="Behaviour_SelectionChanged">
+        <ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged">
             <ComboBoxItem Tag="0">Geöffnet lassen</ComboBoxItem>
             <ComboBoxItem Tag="1">Minimieren (empfohlen)</ComboBoxItem>
             <ComboBoxItem Tag="2">Schliessen (nicht empfohlen)</ComboBoxItem>
         </ComboBox>
-        <controls:HorizontalSeparator Margin="0, 10, 0, 0" />
-        <Button x:Name="updateBtn"
-                Content="Nach Updates suchen"
-                Click="updateBtn_Click"
-                Padding="7.5"
-                Margin="0,7.5, 0, 0"
-                Style="{StaticResource ModernButton}" />
-        <Button x:Name="codeBtn"
-                Content="Code-Editor öffnen"
-                Click="codeBtn_Click"
-                Padding="5"
-                Margin="0, 7.5, 0, 0"
-                Style="{StaticResource ModernButton}" />
-        <controls:HorizontalSeparator Margin="0, 10, 0, 0" />
-        <Button x:Name="resetSettBtn"
-                Content="Lokale Einstellungen zurücksetzen"
-                Click="resetSettBtn_Click"
-                Padding="5"
-                Margin="0, 7.5, 0, 0"
-                Style="{StaticResource ModernButton}" />
-        <Button x:Name="resetDataBtn"
-                Content="TCL-Daten zurücksetzen"
-                Click="resetDataBtn_Click"
-                Padding="5"
-                Margin="0, 7.5, 0, 0"
-                Style="{StaticResource ModernButton}" />
-        <TextBlock x:Name="assemblyVersion"
-                   Margin="0, 10, 0, 0"
-                   Text="Version: 0.0.0" />
+        <controls:HorizontalSeparator Margin="0,10,0,0" />
+        <Button
+            x:Name="updateBtn"
+            Margin="0,7.5,0,0"
+            Padding="7.5"
+            Click="updateBtn_Click"
+            Content="Nach Updates suchen"
+            Style="{StaticResource ModernButton}" />
+        <Button
+            x:Name="codeBtn"
+            Margin="0,7.5,0,0"
+            Padding="5"
+            Click="codeBtn_Click"
+            Content="Code-Editor öffnen"
+            Style="{StaticResource ModernButton}" />
+        <controls:HorizontalSeparator Margin="0,10,0,0" />
+        <Button
+            x:Name="resetSettBtn"
+            Margin="0,7.5,0,0"
+            Padding="5"
+            Click="resetSettBtn_Click"
+            Content="Lokale Einstellungen zurücksetzen"
+            Style="{StaticResource ModernButton}" />
+        <Button
+            x:Name="resetDataBtn"
+            Margin="0,7.5,0,0"
+            Padding="5"
+            Click="resetDataBtn_Click"
+            Content="TCL-Daten zurücksetzen"
+            Style="{StaticResource ModernButton}" />
+        <TextBlock
+            x:Name="assemblyVersion"
+            Margin="0,10,0,0"
+            Text="Version: 0.0.0" />
     </StackPanel>
 </UserControl>
