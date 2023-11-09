@@ -194,7 +194,7 @@
                                         Width="24"
                                         Height="24"
                                         Margin="0,0,10,0"
-                                        Source="https://mc-heads.net/avatar/" />
+                                        Source="/Assets/Images/steve.png" />
                                     <TextBlock
                                         x:Name="AccountManagerBtnName"
                                         Grid.Column="1"
