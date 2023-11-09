@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using T_Craft_Game_Launcher.Core;
+using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.Windows;
 
 namespace T_Craft_Game_Launcher.MVVM.View
@@ -96,5 +98,17 @@ namespace T_Craft_Game_Launcher.MVVM.View
             Properties.Settings.Default.StartBehaviour = value;
             Properties.Settings.Default.Save();
         }
+
+        //private void HostBtn_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    var server = new SimpleHttpServer(SendResponse, "http://localhost:4535/");
+        //    Process.Start("http://localhost:4535/");
+        //    server.Run();
+        //}
+
+        //public string SendResponse(HttpListenerRequest request)
+        //{
+        //    return "Hello World!";
+        //}
     }
 }

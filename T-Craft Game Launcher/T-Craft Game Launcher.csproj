@@ -125,6 +125,7 @@
     </ApplicationDefinition>
     <Compile Include="Core\AnimationUtils.cs" />
     <Compile Include="Core\XamlUtils.cs" />
+    <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
