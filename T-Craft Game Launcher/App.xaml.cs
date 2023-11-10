@@ -1,26 +1,47 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Windows;
+using CmlLib.Core.Auth.Microsoft;
+using CmlLib.Core.Auth.Microsoft.Sessions;
+using XboxAuthNet.Game.Accounts;
 
 namespace T_Craft_Game_Launcher
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private const string URI_SCHEME = "tcl";
         private const string FRIENDLY_NAME = "TCLauncher";
+        private static Mutex mutex = null;
 
         private bool is_silent;
+        private bool kill_old;
 
-        public static MSession Session { get; set; }
+        private static MSession _session;
+
+        public static MSession Session
+        {
+            get => _session;
+            set
+            {
+                _session = value;
+                if (value == null) return;
+                T_Craft_Game_Launcher.Properties.Settings.Default.LastAccountUUID = value?.UUID;
+                T_Craft_Game_Launcher.Properties.Settings.Default.Save();
+            }
+        }
+
+        public static JELoginHandler LoginHandler;
+
         public static CMLauncher Launcher { get; set; }
         public static MainWindow MainWin { get; set; }
 
@@ -31,6 +52,22 @@ namespace T_Craft_Game_Launcher
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            bool createdNew;
+            mutex = new Mutex(true, FRIENDLY_NAME, out createdNew);
+            if (!createdNew)
+            {
+                byte multiInstances = T_Craft_Game_Launcher.Properties.Settings.Default.MultiInstances;
+                if (multiInstances == 0)
+                {
+                    kill_old = true;
+                    is_silent = true;
+                }
+                else if (multiInstances == 1)
+                {
+                    Environment.Exit(0);
+                }
+            }
+
             Uri uri = Get_AppURI(e.Args);
 
             if (uri == null)
@@ -56,7 +93,35 @@ namespace T_Craft_Game_Launcher
 
             Launcher = new CMLauncher(new MinecraftPath(IoUtils.Tcl.DefaultPath));
 
+            LoginHandler = new JELoginHandlerBuilder()
+                .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
+                .Build();
             ShowUI();
+            TryAutoLogin();
+        }
+
+        private async void TryAutoLogin()
+        {
+            var accounts = LoginHandler.AccountManager.GetAccounts();
+            foreach (var account in accounts)
+            {
+                if (!(account is JEGameAccount jeGameAccount)) continue;
+                if (jeGameAccount?.Profile?.UUID != T_Craft_Game_Launcher.Properties.Settings.Default.LastAccountUUID) continue;
+
+                try
+                {
+                    var session = await LoginHandler.Authenticate(jeGameAccount);
+
+                    MainWin.SetDisplayAccount(session?.Username);
+                    Session = session;
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
+                break;
+            }
         }
 
         private Uri Get_AppURI(string[] args)
@@ -179,7 +244,26 @@ namespace T_Craft_Game_Launcher
         private void ShowUI()
         {
             MainWin = new MainWindow(is_silent);
+            if (kill_old)
+            {
+                MainWin.ContentRendered += KillOldProcesses;
+                MainWin.Opacity = 0;
+            }
             MainWin.Show();
+        }
+
+        private void KillOldProcesses(object sender, EventArgs e)
+        {
+            Process current = Process.GetCurrentProcess();
+            foreach (Process process in Process.GetProcessesByName(current.ProcessName))
+            {
+                if (process.Id != current.Id)
+                {
+                    process.Kill();
+                    break;
+                }
+            }
+            MainWin.Opacity = 1;
         }
     }
 }

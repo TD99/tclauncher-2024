@@ -315,26 +315,23 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
             }
         }
 
-        private /*async*/ void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
+        private void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            //var accountWindow = new AccountWindow(App.Session?.UUID)
-            //{
-            //    Owner = this
-            //};
-            //accountWindow.Show();
-
-            //var session = await accountWindow.LoginTask.Task;
-            //if (session == null) return;
-            //SetDisplayAccount(session?.Username);
-            //App.Session = session;
-
             vm.AccountViewCommand.Execute(null);
         }
 
         public void SetDisplayAccount(string username)
         {
-            AccountManagerBtnName.Text = username;
-            AccountManagerBtnPicture.Source = new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
+            if (username != null)
+            {
+                AccountManagerBtnName.Text = username;
+                AccountManagerBtnPicture.Source = new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
+            }
+            else
+            {
+                AccountManagerBtnName.Text = "Nicht eingeloggt";
+                AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/steve.png"));
+            }
         }
     }
 }

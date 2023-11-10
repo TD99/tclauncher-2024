@@ -19,12 +19,22 @@ namespace T_Craft_Game_Launcher.MVVM.View
             InitializeComponent();
             assemblyVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            string tagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
+            string behaviourTagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)
             {
-                if ((string) item.Tag == tagToSelect)
+                if ((string) item.Tag == behaviourTagToSelect)
                 {
                     Behaviour.SelectedItem = item;
+                    break;
+                }
+            }
+
+            string multiInstancesTagToSelect = Properties.Settings.Default.MultiInstances.ToString();
+            foreach (ComboBoxItem item in MultiInstances.Items)
+            {
+                if ((string)item.Tag == multiInstancesTagToSelect)
+                {
+                    MultiInstances.SelectedItem = item;
                     break;
                 }
             }
@@ -99,16 +109,37 @@ namespace T_Craft_Game_Launcher.MVVM.View
             Properties.Settings.Default.Save();
         }
 
-        //private void HostBtn_OnClick(object sender, RoutedEventArgs e)
-        //{
-        //    var server = new SimpleHttpServer(SendResponse, "http://localhost:4535/");
-        //    Process.Start("http://localhost:4535/");
-        //    server.Run();
-        //}
+        private void HostBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var server = new SimpleHttpServer(SendResponse, "http://localhost:4535/");
+            Process.Start("http://localhost:4535/");
+            server.Run();
+        }
 
-        //public string SendResponse(HttpListenerRequest request)
-        //{
-        //    return "Hello World!";
-        //}
+        public string SendResponse(HttpListenerRequest request)
+        {
+            return "Hello World!";
+        }
+
+        private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            string tag = (string)selectedItem.Tag;
+            byte value;
+
+            try
+            {
+                value = Byte.Parse(tag);
+            }
+            catch
+            {
+                MessageBox.Show("Die Multiinstanzen können nicht gesetzt werden.");
+                return;
+            }
+
+            Properties.Settings.Default.MultiInstances = value;
+            Properties.Settings.Default.Save();
+        }
     }
 }

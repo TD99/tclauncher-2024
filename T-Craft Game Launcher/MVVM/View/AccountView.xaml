@@ -12,7 +12,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="AccountView_OnLoaded"
-    Unloaded="AccountView_OnUnloaded"
     mc:Ignorable="d">
 
     <b:Interaction.Behaviors>

@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using CmlLib.Core;
 using CmlLib.Utils;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.Windows;
-using CmlLib.Core.Auth.Microsoft;
 
 namespace T_Craft_Game_Launcher.MVVM.View
 {
@@ -25,15 +23,11 @@ namespace T_Craft_Game_Launcher.MVVM.View
     {
         public ObservableCollection<Applet> Applets { get; set; }
         private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
-        private readonly JELoginHandler _loginHandler;
 
         public HomeView()
         {
             InitializeComponent();
             checkInstanceListEmpty();
-            _loginHandler = new JELoginHandlerBuilder()
-                .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
-                .Build();
         }
 
         private async void loadWV()
@@ -76,7 +70,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
             if (App.Session == null || !App.Session.CheckIsValid())
             {
-                if (_loginHandler.AccountManager.GetAccounts().Count != 1)
+                if (App.LoginHandler.AccountManager.GetAccounts().Count != 1)
                 {
                     MessageBox.Show("Bitte melde dich an!");
                     return;
@@ -84,7 +78,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 try
                 {
-                    App.Session = await _loginHandler.AuthenticateSilently();
+                    App.Session = await App.LoginHandler.AuthenticateSilently();
                     App.MainWin.SetDisplayAccount(App.Session?.Username);
                 }
                 catch (Exception ex)
