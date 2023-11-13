@@ -73,8 +73,9 @@
             Margin="0,7.5,0,0"
             Padding="5"
             Click="HostBtn_OnClick"
-            Content="Host :::v6"
-            Style="{StaticResource ModernButton}" />
+            Content="Debug-Server starten"
+            Style="{StaticResource ModernButton}"
+            Tag="0" />
         <TextBlock
             x:Name="assemblyVersion"
             Margin="0,10,0,0"

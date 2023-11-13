@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Windows;
+using T_Craft_Game_Launcher.Models;
+using static T_Craft_Game_Launcher.Core.IoUtils.Tcl;
 
 namespace T_Craft_Game_Launcher.Core
 {
@@ -63,6 +66,41 @@ namespace T_Craft_Game_Launcher.Core
         {
             Process.Start("msiexec", $"/i {msiurl}");
             Application.Current.Shutdown();
+        }
+
+        public static DebugObject GetDebugObject()
+        {
+            return new DebugObject
+            {
+                Launcher = App.Launcher,
+                PathRegistry = new[]
+                {
+                    RootPath,
+                    CachePath,
+                    DefaultPath,
+                    UdataPath,
+                    InstancesPath
+                },
+                Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                NewestVersion = null, // TODO: Implement NewestVersion
+                IsUpgradeable = null, // TODO: Implement IsUpgradeable
+                Args = App.AppArgs,
+                FriendlyName = App.FRIENDLY_NAME,
+                UriScheme = App.URI_SCHEME,
+                UriArgs = App.UriArgs,
+                IsSilent = App.is_silent,
+                KillOld = App.kill_old,
+                IsInternetAvailable = InternetUtils.ReachPage("https://www.google.com/"),
+                IsTcraftReacheable = InternetUtils.ReachPage("https://tcraft.link/tclauncher/api"),
+                TotalAdapterMemoryInGb = SystemInfoUtils.GetTotalAdapterMemoryInGb(),
+                TotalPhysicalMemoryInGb = SystemInfoUtils.GetTotalPhysicalMemoryInGb(),
+                LoadedFonts = null, // TODO: Implement LoadedFonts
+                LoadedPlugins = new []
+                {
+                    "AppletLoader",
+                    "SimpleEdit"
+                }
+            };
         }
     }
 }

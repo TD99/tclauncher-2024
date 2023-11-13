@@ -125,6 +125,7 @@
     </ApplicationDefinition>
     <Compile Include="Core\AnimationUtils.cs" />
     <Compile Include="Core\XamlUtils.cs" />
+    <Compile Include="Models\DebugObject.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
@@ -148,6 +149,9 @@
     <Compile Include="MVVM\View\AccountView.xaml.cs">
       <DependentUpon>AccountView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\Windows\CustomInputDialog.xaml.cs">
+      <DependentUpon>CustomInputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Windows\EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
@@ -170,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\Controls\HorizontalSeparator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Windows\CustomInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

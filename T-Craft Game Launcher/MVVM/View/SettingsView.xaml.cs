@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.Models;
 using T_Craft_Game_Launcher.MVVM.Windows;
@@ -38,6 +39,8 @@ namespace T_Craft_Game_Launcher.MVVM.View
                     break;
                 }
             }
+
+            hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -111,14 +114,42 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void HostBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            var server = new SimpleHttpServer(SendResponse, "http://localhost:4535/");
-            Process.Start("http://localhost:4535/");
-            server.Run();
+            if (App.DbgHttpServer == null)
+            {
+                var dialog = new CustomInputDialog("Bitte gib die gewünschte Debug-Server-URL ein.")
+                {
+                    Owner = App.MainWin,
+                    ResponseText = "http://localhost:4535/"
+                };
+
+                dialog.Closed += (o, args) =>
+                {
+                    try
+                    {
+                        App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
+                        App.DbgHttpServer.Run();
+                        hostBtn.Content = "Debug-Server stoppen";
+                        Process.Start(dialog.ResponseText);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                    }
+                };
+
+                dialog.Show();
+            }
+            else
+            {
+                App.DbgHttpServer.Stop();
+                App.DbgHttpServer = null;
+                hostBtn.Content = "Debug-Server starten";
+            }
         }
 
         public string SendResponse(HttpListenerRequest request)
         {
-            return "Hello World!";
+            return JsonConvert.SerializeObject(AppUtils.GetDebugObject());
         }
 
         private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

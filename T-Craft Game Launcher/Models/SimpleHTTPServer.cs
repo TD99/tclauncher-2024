@@ -65,6 +65,7 @@ namespace T_Craft_Game_Launcher.Models
                                 var rstr = _responderMethod(ctx.Request);
                                 var buf = System.Text.Encoding.UTF8.GetBytes(rstr);
                                 ctx.Response.ContentLength64 = buf.Length;
+                                ctx.Response.ContentType = "application/json";
                                 ctx.Response.OutputStream.Write(buf, 0, buf.Length);
                             }
                             catch

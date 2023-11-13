@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
@@ -13,20 +12,23 @@ using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.MVVM.Windows;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Sessions;
-using XboxAuthNet.Game.Accounts;
+using T_Craft_Game_Launcher.Models;
 
 namespace T_Craft_Game_Launcher
 {
     public partial class App
     {
-        private const string URI_SCHEME = "tcl";
-        private const string FRIENDLY_NAME = "TCLauncher";
-        private static Mutex mutex = null;
+        public const string URI_SCHEME = "tcl";
+        public const string FRIENDLY_NAME = "TCLauncher";
+        private static Mutex mutex;
 
-        private bool is_silent;
-        private bool kill_old;
+        public static bool is_silent;
+        public static bool kill_old;
 
         private static MSession _session;
+
+        public static string AppArgs;
+        public static Uri UriArgs;
 
         public static MSession Session
         {
@@ -40,6 +42,8 @@ namespace T_Craft_Game_Launcher
             }
         }
 
+        public static SimpleHttpServer DbgHttpServer;
+
         public static JELoginHandler LoginHandler;
 
         public static CMLauncher Launcher { get; set; }
@@ -52,31 +56,33 @@ namespace T_Craft_Game_Launcher
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            bool createdNew;
-            mutex = new Mutex(true, FRIENDLY_NAME, out createdNew);
-            if (!createdNew)
-            {
-                byte multiInstances = T_Craft_Game_Launcher.Properties.Settings.Default.MultiInstances;
-                if (multiInstances == 0)
-                {
-                    kill_old = true;
-                    is_silent = true;
-                }
-                else if (multiInstances == 1)
-                {
-                    Environment.Exit(0);
-                }
-            }
+            UriArgs = Get_AppURI(e.Args);
+            AppArgs = string.Join(" ", e.Args);
 
-            Uri uri = Get_AppURI(e.Args);
-
-            if (uri == null)
+            if (UriArgs == null)
             {
                 ProcessAppArgs(e);
             }
             else
             {
-                ProcessAppURI(uri);
+                ProcessAppURI(UriArgs);
+            }
+
+            bool createdNew;
+            mutex = new Mutex(true, FRIENDLY_NAME, out createdNew);
+            if (!createdNew)
+            {
+                var multiInstances = T_Craft_Game_Launcher.Properties.Settings.Default.MultiInstances;
+                switch (multiInstances)
+                {
+                    case 0:
+                        kill_old = true;
+                        is_silent = true;
+                        break;
+                    case 1:
+                        Environment.Exit(0);
+                        break;
+                }
             }
 
             RegisterURIScheme();
@@ -199,16 +205,7 @@ namespace T_Craft_Game_Launcher
 
                 foreach (string arg in URIArgs.Keys)
                 {
-                    MessageBox.Show(arg + "//" + URIArgs[arg]);
-
-                    switch (arg)
-                    {
-                        case "message":
-                            MessageBox.Show(URIArgs[arg], "Nachricht");
-                            break;
-                        default:
-                            break;
-                    }
+                    // TODO: Handle App URI Args
                 }
             }
             catch {}
