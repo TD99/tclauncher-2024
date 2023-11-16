@@ -105,7 +105,7 @@
                         x:Name="homeBtn"
                         Command="{Binding HomeViewCommand}"
                         Content="Home"
-                        Margin="0, 0, 0, 10">
+                        Margin="0, 0, 0, 5">
                         <RadioButton.Style>
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
@@ -121,7 +121,7 @@
                         Command="{Binding ServerListViewCommand}"
                         Content="Spiele"
                         ToolTipService.IsEnabled="False"
-                        Margin="0, 0, 0, 10">
+                        Margin="0, 0, 0, 5">
                         <RadioButton.ToolTip>
                             <ToolTip
                                 x:Name="newToolTip"

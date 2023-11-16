@@ -124,6 +124,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 dialog.Closed += (o, args) =>
                 {
+                    if (!dialog.Result) return;
                     try
                     {
                         App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
