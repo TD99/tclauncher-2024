@@ -21,10 +21,9 @@ namespace T_Craft_Game_Launcher.Models
         public bool? IsTcraftReacheable { get; set; }
         public Dictionary<string, double> TotalAdapterMemoryInGb { get; set; }
         public double? TotalPhysicalMemoryInGb { get; set; }
-        public string[] LoadedFonts { get; set; }
         public string[] LoadedPlugins { get; set; }
 
-        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, string[] loadedFonts, string[] loadedPlugins)
+        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, string[] loadedPlugins)
         {
             Launcher = launcher;
             PathRegistry = pathRegistry;
@@ -41,7 +40,6 @@ namespace T_Craft_Game_Launcher.Models
             IsTcraftReacheable = isTcraftReacheable;
             TotalAdapterMemoryInGb = totalAdapterMemoryInGb;
             TotalPhysicalMemoryInGb = totalPhysicalMemoryInGb;
-            LoadedFonts = loadedFonts;
             LoadedPlugins = loadedPlugins;
         }
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -148,9 +149,9 @@ namespace T_Craft_Game_Launcher.MVVM.View
             }
         }
 
-        public string SendResponse(HttpListenerRequest request)
+        private string SendResponse(HttpListenerRequest request)
         {
-            return JsonConvert.SerializeObject(AppUtils.GetDebugObject());
+            return JsonConvert.SerializeObject(AppUtils.GetDebugObject().Result);
         }
 
         private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

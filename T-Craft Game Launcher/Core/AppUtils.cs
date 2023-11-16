@@ -2,11 +2,14 @@
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Windows;
 using T_Craft_Game_Launcher.Models;
 using static T_Craft_Game_Launcher.Core.IoUtils.Tcl;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace T_Craft_Game_Launcher.Core
 {
@@ -16,6 +19,91 @@ namespace T_Craft_Game_Launcher.Core
     public static class AppUtils
     {
         /// <summary>
+        /// Checks for a new version of the application.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a boolean value indicating whether a new version is available.
+        /// </returns>
+        public static async Task<bool> CheckForNewVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var compilationDate = File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
+            var updateApiUrl = $"https://tcraft.link/tclauncher/api/plugins/version-checker/?version={version}&date={compilationDate:yyyy-MM-dd}";
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(updateApiUrl);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var obj = JObject.Parse(content);
+            var isNew = (bool)obj["new"];
+
+            return isNew;
+        }
+
+        /// <summary>
+        /// Retrieves the name of the newest version of the application.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a string representing the name of the newest version.
+        /// </returns>
+        public static async Task<string> GetNewestVersionName()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var compilationDate = File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
+            var updateApiUrl = $"https://tcraft.link/tclauncher/api/plugins/version-checker/?version={version}&date={compilationDate:yyyy-MM-dd}";
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(updateApiUrl);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var obj = JObject.Parse(content);
+            var newVersion = (string)obj["version"];
+
+            return newVersion;
+        }
+
+        /// <summary>
+        /// Retrieves the URL of the MSI installer for the newest version of the application.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a string representing the URL of the MSI installer.
+        /// </returns>
+        public static async Task<string> GetMsiUrl()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var compilationDate = File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
+            var updateApiUrl = $"https://tcraft.link/tclauncher/api/plugins/version-checker/?version={version}&date={compilationDate:yyyy-MM-dd}";
+
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(updateApiUrl);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var obj = JObject.Parse(content);
+            var msi = (string)obj["msi"];
+
+            return msi;
+        }
+
+        /// <summary>
+        /// Retrieves the current version of the application.
+        /// </summary>
+        /// <returns>
+        /// A string representing the current version of the application.
+        /// </returns>
+        public static string GetCurrentVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            return version;
+        }
+
+
+        /// <summary>
         /// Checks for updates and prompts the user to install if a new version is available.
         /// </summary>
         /// <param name="userInitiated">Indicates whether the update check was initiated by the user.</param>
@@ -23,21 +111,10 @@ namespace T_Craft_Game_Launcher.Core
         {
             try
             {
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                var compilationDate = File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
-                // TODO: Replace with variable URL
-                var updateApiUrl = $"https://tcraft.link/tclauncher/api/plugins/version-checker/?version={version}&date={compilationDate:yyyy-MM-dd}";
-
-                var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(updateApiUrl);
-                if (!response.IsSuccessStatusCode) return;
-                
-                var content = await response.Content.ReadAsStringAsync();
-
-                var obj = JObject.Parse(content);
-                var isNew = (bool)obj["new"];
-                var newVersion = (string)obj["version"];
-                var msi = (string)obj["msi"];
+                var isNew = await CheckForNewVersion();
+                var newVersion = await GetNewestVersionName();
+                var version = GetCurrentVersion();
+                var msi = await GetMsiUrl();
 
                 if (isNew)
                 {
@@ -58,6 +135,7 @@ namespace T_Craft_Game_Launcher.Core
             }
         }
 
+
         /// <summary>
         /// Installs updates from a specified URL and shuts down the current application.
         /// </summary>
@@ -68,7 +146,25 @@ namespace T_Craft_Game_Launcher.Core
             Application.Current.Shutdown();
         }
 
-        public static DebugObject GetDebugObject()
+        /// <summary>
+        /// Retrieves all loaded system fonts.
+        /// </summary>
+        /// <returns>
+        /// A list of strings, where each string represents the source name of a loaded system font.
+        /// </returns>
+        public static string[] GetAllLoadedFonts()
+        {
+            return Fonts.SystemFontFamilies.Select(fontFamily => fontFamily.Source).ToArray();
+        }
+
+
+        /// <summary>
+        /// Asynchronously retrieves a DebugObject containing various application and system information.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a DebugObject with the current state of the application and system.
+        /// </returns>
+        public static async Task<DebugObject> GetDebugObject()
         {
             return new DebugObject
             {
@@ -81,9 +177,9 @@ namespace T_Craft_Game_Launcher.Core
                     UdataPath,
                     InstancesPath
                 },
-                Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(),
-                NewestVersion = null, // TODO: Implement NewestVersion
-                IsUpgradeable = null, // TODO: Implement IsUpgradeable
+                Version = GetCurrentVersion(),
+                NewestVersion = await GetNewestVersionName(),
+                IsUpgradeable = await CheckForNewVersion(),
                 Args = App.AppArgs,
                 FriendlyName = App.FRIENDLY_NAME,
                 UriScheme = App.URI_SCHEME,
@@ -94,7 +190,6 @@ namespace T_Craft_Game_Launcher.Core
                 IsTcraftReacheable = InternetUtils.ReachPage("https://tcraft.link/tclauncher/api"),
                 TotalAdapterMemoryInGb = SystemInfoUtils.GetTotalAdapterMemoryInGb(),
                 TotalPhysicalMemoryInGb = SystemInfoUtils.GetTotalPhysicalMemoryInGb(),
-                LoadedFonts = null, // TODO: Implement LoadedFonts
                 LoadedPlugins = new []
                 {
                     "AppletLoader",
