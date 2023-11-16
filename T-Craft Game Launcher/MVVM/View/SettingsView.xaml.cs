@@ -113,7 +113,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
             Properties.Settings.Default.Save();
         }
 
-        private void HostBtn_OnClick(object sender, RoutedEventArgs e)
+        private async void HostBtn_OnClick(object sender, RoutedEventArgs e)
         {
             if (App.DbgHttpServer == null)
             {
@@ -123,23 +123,21 @@ namespace T_Craft_Game_Launcher.MVVM.View
                     ResponseText = "http://localhost:4535/"
                 };
 
-                dialog.Closed += (o, args) =>
-                {
-                    if (!dialog.Result) return;
-                    try
-                    {
-                        App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
-                        App.DbgHttpServer.Run();
-                        hostBtn.Content = "Debug-Server stoppen";
-                        Process.Start(dialog.ResponseText);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message);
-                    }
-                };
-
                 dialog.Show();
+
+                if (!await dialog.Result) return;
+                try
+                {
+                    App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
+                    App.DbgHttpServer.Run();
+                    hostBtn.Content = "Debug-Server stoppen";
+                    Process.Start(dialog.ResponseText);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+
             }
             else
             {

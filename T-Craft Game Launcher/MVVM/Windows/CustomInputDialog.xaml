@@ -12,6 +12,7 @@
     MaxHeight="120"
     ResizeMode="NoResize"
     AllowsTransparency="True"
+    Closing="CustomInputDialog_OnClosing"
     Background="Transparent"
     MouseDown="CustomInputDialog_OnMouseDown"
     Topmost="True"

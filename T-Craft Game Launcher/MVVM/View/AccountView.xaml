@@ -24,12 +24,33 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Label
             Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             Margin="0,0,0,10"
             Content="Accounts"
             FontSize="28" />
-        <ScrollViewer Grid.Row="1">
+        <Button
+            x:Name="LogoutBtn"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,7.5,00"
+            Padding="10,7.5"
+            VerticalAlignment="Center"
+            Background="#55ff0000"
+            Click="LogoutBtn_OnClick"
+            Content="Ausloggen"
+            Style="{StaticResource ModernButton}"
+            Visibility="Collapsed" />
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
             <StackPanel>
                 <ItemsControl x:Name="Accounts">
                     <ItemsControl.ItemTemplate>
@@ -47,6 +68,8 @@
         </ScrollViewer>
         <Button
             Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             Padding="7.5"
             HorizontalAlignment="Center"
             Click="NewAccountBtn_OnClick"

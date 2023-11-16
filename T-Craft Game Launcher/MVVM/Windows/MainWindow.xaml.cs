@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,12 +30,14 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
 
             AppUtils.HandleUpdates();
 
-            handleFirstTime();
+            HandleFirstTime();
         }
 
         // TODO: CHECK IF FIRST TIME
-        private void handleFirstTime()
+        private void HandleFirstTime()
         {
+            if (!Properties.Settings.Default.FirstTime && !IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath)) return;
+            Properties.Settings.Default.FirstTime = false;
             newToolTip.PlacementTarget = serverBtn;
             newToolTip.IsOpen = true;
         }
@@ -263,6 +266,11 @@ namespace T_Craft_Game_Launcher.MVVM.Windows
         {
             //serverBtn.IsChecked = true;
             vm.ServerListViewCommand.Execute(null);
+        }
+
+        public void navigateToLogin()
+        {
+            vm.AccountViewCommand.Execute(null);
         }
 
         //public void navigateToSettings()

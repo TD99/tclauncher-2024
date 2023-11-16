@@ -36,8 +36,7 @@ namespace T_Craft_Game_Launcher
             set
             {
                 _session = value;
-                if (value == null) return;
-                T_Craft_Game_Launcher.Properties.Settings.Default.LastAccountUUID = value?.UUID;
+                T_Craft_Game_Launcher.Properties.Settings.Default.LastAccountUUID = value?.UUID ?? "";
                 T_Craft_Game_Launcher.Properties.Settings.Default.Save();
             }
         }
@@ -235,7 +234,7 @@ namespace T_Craft_Game_Launcher
             }
             catch (Exception e)
             {
-                MessageBox.Show("An Error occured while registering URI Schemes: " + e.Message);
+                MessageBox.Show("An error occured while registering URI Schemes: " + e.Message);
             }
         }
         private void ShowUI()

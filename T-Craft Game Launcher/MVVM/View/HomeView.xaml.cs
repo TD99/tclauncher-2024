@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CmlLib.Core;
+using CmlLib.Core.Auth;
 using CmlLib.Utils;
 using T_Craft_Game_Launcher.Core;
 using T_Craft_Game_Launcher.Models;
@@ -19,7 +20,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class HomeView
     {
         public ObservableCollection<Applet> Applets { get; set; }
         private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
@@ -41,11 +42,9 @@ namespace T_Craft_Game_Launcher.MVVM.View
         private void checkInstanceListEmpty()
         {
             // TODO: CHECK FOR N° OF INSTANCES INSTEAD
-            if (Properties.Settings.Default.FirstTime)
-            {
-                profileSelect.Visibility = Visibility.Collapsed;
-                profileNoneText.Visibility = Visibility.Visible;
-            }
+            if (!IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath)) return;
+            profileSelect.Visibility = Visibility.Collapsed;
+            profileNoneText.Visibility = Visibility.Visible;
         }
 
         private void discoverEvent(object sender, MouseButtonEventArgs e)
@@ -72,20 +71,42 @@ namespace T_Craft_Game_Launcher.MVVM.View
             {
                 if (App.LoginHandler.AccountManager.GetAccounts().Count != 1)
                 {
-                    MessageBox.Show("Bitte melde dich an!");
-                    return;
+                    var result =
+                        MessageBox.Show(
+                            "Möchtest du dich mit einem Benutzerkonto anmelden? Klicke auf 'Nein' für ein Offline-Konto.",
+                            "Login", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        App.MainWin.navigateToLogin();
+                        return;
+                    }
+
+                    var dialog = new CustomInputDialog("Bitte gib den gewünschten Offline-Benutzernamen ein.")
+                    {
+                        Owner = App.MainWin
+                    };
+
+                    dialog.Show();
+
+                    if (!await dialog.Result) return;
+
+                    App.Session = MSession.GetOfflineSession(dialog.ResponseText);
+                    App.MainWin.SetDisplayAccount(dialog.ResponseText + " (Offline)");
+                }
+                else
+                {
+                    try
+                    {
+                        App.Session = await App.LoginHandler.AuthenticateSilently();
+                        App.MainWin.SetDisplayAccount(App.Session?.Username);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        return;
+                    }
                 }
 
-                try
-                {
-                    App.Session = await App.LoginHandler.AuthenticateSilently();
-                    App.MainWin.SetDisplayAccount(App.Session?.Username);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return;
-                }
             }
 
             var instanceFolder = Path.Combine(tclInstancesFolder, instance.Guid.ToString(), "data");

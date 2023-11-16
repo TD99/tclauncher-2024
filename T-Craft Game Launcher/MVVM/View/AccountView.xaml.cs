@@ -22,6 +22,7 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
         private void ListAccounts()
         {
+            LogoutBtn.Visibility = Visibility.Collapsed;
             Accounts.Items.Clear();
             var accounts = App.LoginHandler.AccountManager.GetAccounts();
             foreach (var account in accounts)
@@ -41,6 +42,8 @@ namespace T_Craft_Game_Launcher.MVVM.View
 
                 Accounts.Items.Add(control);
             }
+            if (App.Session != null)
+                LogoutBtn.Visibility = Visibility.Visible;
         }
 
         private async void NewAccountBtn_OnClick(object sender, RoutedEventArgs e)
@@ -94,6 +97,11 @@ namespace T_Craft_Game_Launcher.MVVM.View
             App.MainWin.SetDisplayAccount(session?.Username);
             App.Session = session;
             ListAccounts();
+        }
+
+        private void LogoutBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            SetSession(null);
         }
     }
 }
