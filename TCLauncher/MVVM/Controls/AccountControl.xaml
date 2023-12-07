@@ -1,0 +1,116 @@
+﻿<UserControl
+    x:Class="TCLauncher.MVVM.Controls.AccountControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TCLauncher.MVVM.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:Background="#1d2633"
+    d:DesignHeight="100"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image
+            Name="Avatar"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Width="75"
+            Height="75"
+            Margin="0,0,10,0" />
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            VerticalAlignment="Center">
+            <TextBox
+                Name="Username"
+                FontSize="18"
+                Style="{StaticResource SelectableLabel}"
+                Text="Benutzername" />
+            <TextBox
+                Name="GamerTag"
+                FontSize="16"
+                Style="{StaticResource SelectableLabel}"
+                Text="GamerTag" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox
+                    FontSize="12"
+                    Style="{StaticResource SelectableLabel}"
+                    Text="Geheime ID:" />
+                <Rectangle
+                    Width="35"
+                    Height="15"
+                    Margin="5,0,0,0"
+                    Fill="Black"
+                    RadiusX="5"
+                    RadiusY="5">
+                    <Rectangle.ToolTip>
+                        <ToolTip Style="{StaticResource ModernToolTip}">
+                            <ToolTip.Content>
+                                <TextBox
+                                    Name="Identifier"
+                                    FontSize="12"
+                                    Style="{StaticResource SelectableLabel}"
+                                    Text="ID" />
+                            </ToolTip.Content>
+                        </ToolTip>
+                    </Rectangle.ToolTip>
+                    <Rectangle.Triggers>
+                        <EventTrigger RoutedEvent="Rectangle.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation
+                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                        To="LightSlateGray"
+                                        Duration="0:0:5" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Rectangle.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation
+                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                        To="Black"
+                                        Duration="0:0:1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Rectangle.Triggers>
+                </Rectangle>
+            </StackPanel>
+        </StackPanel>
+
+        <Button
+            Name="LoginBtn"
+            Grid.Row="0"
+            Grid.Column="2"
+            Width="75"
+            Height="23"
+            VerticalAlignment="Stretch"
+            Content="Login"
+            Style="{StaticResource ModernButton}" />
+
+        <Button
+            Name="RemoveBtn"
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="75"
+            Height="23"
+            VerticalAlignment="Stretch"
+            Content="Entfernen"
+            Style="{StaticResource ModernButton}" />
+    </Grid>
+</UserControl>
