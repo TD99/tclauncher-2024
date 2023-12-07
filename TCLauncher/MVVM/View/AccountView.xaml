@@ -1,0 +1,79 @@
+﻿<UserControl
+    x:Class="TCLauncher.MVVM.View.AccountView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TCLauncher.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:Background="#1d2633"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="AccountView_OnLoaded"
+    mc:Ignorable="d">
+
+    <b:Interaction.Behaviors>
+        <animations:SlideInOutAnimation />
+    </b:Interaction.Behaviors>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,10"
+            Content="Accounts"
+            FontSize="28" />
+        <Button
+            x:Name="LogoutBtn"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,7.5,00"
+            Padding="10,7.5"
+            VerticalAlignment="Center"
+            Background="#55ff0000"
+            Click="LogoutBtn_OnClick"
+            Content="Ausloggen"
+            Style="{StaticResource ModernButton}"
+            Visibility="Collapsed" />
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <StackPanel>
+                <ItemsControl x:Name="Accounts">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:AccountControl />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="FrameworkElement.Margin" Value="0,0,0,15" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Padding="7.5"
+            HorizontalAlignment="Center"
+            Click="NewAccountBtn_OnClick"
+            Content="Account hinzufügen"
+            Style="{StaticResource ModernButton}" />
+    </Grid>
+</UserControl>
