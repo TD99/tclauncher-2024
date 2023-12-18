@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -145,18 +144,6 @@ namespace TCLauncher.Core
             Process.Start("msiexec", $"/i {msiurl}");
             Application.Current.Shutdown();
         }
-
-        /// <summary>
-        /// Retrieves all loaded system fonts.
-        /// </summary>
-        /// <returns>
-        /// A list of strings, where each string represents the source name of a loaded system font.
-        /// </returns>
-        public static string[] GetAllLoadedFonts()
-        {
-            return Fonts.SystemFontFamilies.Select(fontFamily => fontFamily.Source).ToArray();
-        }
-
 
         /// <summary>
         /// Asynchronously retrieves a DebugObject containing various application and system information.

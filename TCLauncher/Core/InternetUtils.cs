@@ -56,7 +56,7 @@ namespace TCLauncher.Core
         {
             if (protocols == null)
             {
-                protocols = new string[] { "http://", "https://" };
+                protocols = new[] { "http://", "https://" };
             }
 
             foreach (var i in protocols)

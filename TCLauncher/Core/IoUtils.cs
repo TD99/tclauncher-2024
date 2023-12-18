@@ -48,7 +48,7 @@ namespace TCLauncher.Core
             /// <returns>true if the directory is empty; otherwise, false.</returns>
             public static bool IsEmpty(string path)
             {
-                return System.IO.Directory.GetFiles(path).Length == 0;
+                return Directory.GetFiles(path).Length == 0;
             }
 
             /// <summary>
@@ -58,7 +58,7 @@ namespace TCLauncher.Core
             /// <returns>Size of directory in GB.</returns>
             public static double GetSize(string path)
             {
-                var files = System.IO.Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
                 var bytes = files.Select(name => new FileInfo(name)).Select(info => info.Length).Sum();
                 var megabytes = (bytes / 1024f) / 1024f;
                 var gigabytes = (megabytes / 1024f);
