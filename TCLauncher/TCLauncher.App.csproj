@@ -185,6 +185,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MVVM\Windows\FullScreenActionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -201,6 +205,9 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
     <Compile Include="Core\SystemInfoUtils.cs" />
+    <Compile Include="MVVM\Windows\FullScreenActionWindow.xaml.cs">
+      <DependentUpon>FullScreenActionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -305,6 +312,7 @@
     <Resource Include="Assets\Fonts\Font Awesome 6 Brands-Regular-400.otf" />
     <Resource Include="Assets\Fonts\Font Awesome 6 Free-Regular-400.otf" />
     <Resource Include="Assets\Fonts\Font Awesome 6 Free-Solid-900.otf" />
+    <Resource Include="Assets\Fonts\PixelifySans-VariableFont_wght.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -371,6 +379,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\steve.png" />
+    <Resource Include="Assets\Images\escapebutton.png" />
     <Content Include="Plugins\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

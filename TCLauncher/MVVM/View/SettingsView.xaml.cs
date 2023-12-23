@@ -172,5 +172,10 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.MultiInstances = value;
             Properties.Settings.Default.Save();
         }
+
+        private void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            new FullScreenActionWindow().Show();
+        }
     }
 }

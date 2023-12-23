@@ -76,6 +76,14 @@
             Content="Debug-Server starten"
             Style="{StaticResource ModernButton}"
             Tag="0" />
+        <Button
+            x:Name="fScreenBtn"
+            Margin="0,7.5,0,0"
+            Padding="5"
+            Click="FScreenBtn_OnClick"
+            Content="fScreen starten"
+            Style="{StaticResource ModernButton}"
+            Tag="0" />
         <TextBlock
             x:Name="assemblyVersion"
             Margin="0,10,0,0"

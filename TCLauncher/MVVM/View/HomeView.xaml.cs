@@ -14,6 +14,8 @@ using CmlLib.Utils;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace TCLauncher.MVVM.View
 {
