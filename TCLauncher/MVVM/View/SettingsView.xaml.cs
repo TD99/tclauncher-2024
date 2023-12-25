@@ -175,7 +175,15 @@ namespace TCLauncher.MVVM.View
 
         private void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            new FullScreenActionWindow().Show();
+            var fsaWin = new FullScreenActionWindow
+            {
+                InstanceName = "T-Craft Server",
+                InstanceVersion = "1.19.0",
+                InstanceType = "Fabric",
+                InstanceStatus = "Wird gestartet...",
+                InstanceProgress = 50
+            };
+            fsaWin.Show();
         }
     }
 }

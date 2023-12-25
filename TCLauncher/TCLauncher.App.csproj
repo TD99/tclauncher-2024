@@ -124,6 +124,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\AnimationUtils.cs" />
+    <Compile Include="Core\LoopStream.cs" />
+    <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\XamlUtils.cs" />
     <Compile Include="Models\DebugObject.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
@@ -322,20 +324,26 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BusyIndicators">
+      <Version>2.1.2</Version>
+    </PackageReference>
     <PackageReference Include="CmlLib.Core">
-      <Version>3.3.7</Version>
+      <Version>3.3.8</Version>
     </PackageReference>
     <PackageReference Include="CmlLib.Core.Auth.Microsoft">
-      <Version>3.0.1</Version>
+      <Version>3.0.2</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.2045.28</Version>
+      <Version>1.0.2210.55</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
-      <Version>1.1.39</Version>
+      <Version>1.1.77</Version>
+    </PackageReference>
+    <PackageReference Include="NAudio">
+      <Version>2.2.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
@@ -378,6 +386,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\load0.wmv" />
+    <None Include="Resources\load0.wav" />
     <Resource Include="Assets\Images\steve.png" />
     <Resource Include="Assets\Images\escapebutton.png" />
     <Content Include="Plugins\**">

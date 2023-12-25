@@ -127,6 +127,23 @@ namespace TCLauncher.Core
                 if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
                 if (!Directory.Exists(DefaultPath)) Directory.CreateDirectory(DefaultPath);
             }
+
+            /// <summary>
+            /// Generates a temporary file name with an optional file type.
+            /// </summary>
+            /// <param name="fileType">The file type (e.g., ".txt"). Optional.</param>
+            /// <returns>A string representing the full path of the temporary file.</returns>
+            public static string GetTempFileName(string fileType = null)
+            {
+                string fileName = Path.GetRandomFileName();
+
+                if (!string.IsNullOrEmpty(fileType))
+                {
+                    fileName = Path.ChangeExtension(fileName, fileType);
+                }
+
+                return Path.Combine(CachePath, fileName);
+            }
         }
 
         /// <summary>
