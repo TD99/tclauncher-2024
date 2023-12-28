@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -74,7 +75,7 @@ namespace TCLauncher.MVVM.Controls
 
             foreach (var rectangle in Data.Select(item => new Rectangle()
                      {
-                         Width = (item.Value / total) * ActualWidth,
+                         Width = Math.Max(0, (item.Value / total) * ActualWidth), // Ensure width is not negative
                          Height = ChartHeight,
                          Fill = new SolidColorBrush(item.Color ?? Colors.Blue),
                          ToolTip = new ToolTip { Content = $"{item.Name}: {item.Value} {item.Unit}", Style = (Style)FindResource("ModernToolTip") }

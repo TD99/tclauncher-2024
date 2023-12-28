@@ -46,7 +46,7 @@
                 x:Name="discoverBorder"
                 Grid.Row="1"
                 Grid.Column="0"
-                Height="180"
+                Height="176"
                 BorderThickness="0"
                 CornerRadius="10"
                 MouseDown="discoverEvent">
@@ -300,7 +300,7 @@
                         VerticalAlignment="Center"
                         FontSize="15"
                         Foreground="White"
-                        Text="Anonym" />
+                        Text="\{VersionSelector\}" />
                 </StackPanel>
             </Grid>
         </Border>

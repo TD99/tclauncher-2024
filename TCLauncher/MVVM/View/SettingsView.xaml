@@ -20,73 +20,75 @@
         <animations:SlideInOutAnimation />
     </b:Interaction.Behaviors>
 
-    <StackPanel>
-        <TextBlock
-            Margin="0,0,0,20"
-            HorizontalAlignment="Left"
-            FontSize="28"
-            Text="Einstellungen" />
-        <Label Content="Startverhalten" />
-        <ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged">
-            <ComboBoxItem Tag="0">Geöffnet lassen</ComboBoxItem>
-            <ComboBoxItem Tag="1">Minimieren (empfohlen)</ComboBoxItem>
-            <ComboBoxItem Tag="2">Schliessen (nicht empfohlen)</ComboBoxItem>
-        </ComboBox>
-        <Label Content="Multi-Instanzen" />
-        <ComboBox x:Name="MultiInstances" SelectionChanged="MultiInstances_OnSelectionChanged">
-            <ComboBoxItem Tag="0">Automatisch erkennen (empfohlen)</ComboBoxItem>
-            <ComboBoxItem Tag="1">Verbieten</ComboBoxItem>
-            <ComboBoxItem Tag="2">Erlauben</ComboBoxItem>
-        </ComboBox>
-        <controls:HorizontalSeparator Margin="0,10,0,0" />
-        <Button
-            x:Name="updateBtn"
-            Margin="0,7.5,0,0"
-            Padding="7.5"
-            Click="updateBtn_Click"
-            Content="Nach Updates suchen"
-            Style="{StaticResource ModernButton}" />
-        <Button
-            x:Name="codeBtn"
-            Margin="0,7.5,0,0"
-            Padding="5"
-            Click="codeBtn_Click"
-            Content="Code-Editor öffnen"
-            Style="{StaticResource ModernButton}" />
-        <controls:HorizontalSeparator Margin="0,10,0,0" />
-        <Button
-            x:Name="resetSettBtn"
-            Margin="0,7.5,0,0"
-            Padding="5"
-            Click="resetSettBtn_Click"
-            Content="Lokale Einstellungen zurücksetzen"
-            Style="{StaticResource ModernButton}" />
-        <Button
-            x:Name="resetDataBtn"
-            Margin="0,7.5,0,0"
-            Padding="5"
-            Click="resetDataBtn_Click"
-            Content="TCL-Daten zurücksetzen"
-            Style="{StaticResource ModernButton}" />
-        <Button
-            x:Name="hostBtn"
-            Margin="0,7.5,0,0"
-            Padding="5"
-            Click="HostBtn_OnClick"
-            Content="Debug-Server starten"
-            Style="{StaticResource ModernButton}"
-            Tag="0" />
-        <Button
-            x:Name="fScreenBtn"
-            Margin="0,7.5,0,0"
-            Padding="5"
-            Click="FScreenBtn_OnClick"
-            Content="fScreen starten"
-            Style="{StaticResource ModernButton}"
-            Tag="0" />
-        <TextBlock
-            x:Name="assemblyVersion"
-            Margin="0,10,0,0"
-            Text="Version: 0.0.0" />
-    </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,20"
+                HorizontalAlignment="Left"
+                FontSize="28"
+                Text="Einstellungen" />
+            <Label Content="Startverhalten" />
+            <ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged">
+                <ComboBoxItem Tag="0">Geöffnet lassen</ComboBoxItem>
+                <ComboBoxItem Tag="1">Minimieren (empfohlen)</ComboBoxItem>
+                <ComboBoxItem Tag="2">Schliessen (nicht empfohlen)</ComboBoxItem>
+            </ComboBox>
+            <Label Content="Multi-Instanzen" />
+            <ComboBox x:Name="MultiInstances" SelectionChanged="MultiInstances_OnSelectionChanged">
+                <ComboBoxItem Tag="0">Automatisch erkennen (empfohlen)</ComboBoxItem>
+                <ComboBoxItem Tag="1">Verbieten</ComboBoxItem>
+                <ComboBoxItem Tag="2">Erlauben</ComboBoxItem>
+            </ComboBox>
+            <controls:HorizontalSeparator Margin="0,10,0,0" />
+            <Button
+                x:Name="updateBtn"
+                Margin="0,7.5,0,0"
+                Padding="7.5"
+                Click="updateBtn_Click"
+                Content="Nach Updates suchen"
+                Style="{StaticResource ModernButton}" />
+            <Button
+                x:Name="codeBtn"
+                Margin="0,7.5,0,0"
+                Padding="5"
+                Click="codeBtn_Click"
+                Content="Code-Editor öffnen"
+                Style="{StaticResource ModernButton}" />
+            <controls:HorizontalSeparator Margin="0,10,0,0" />
+            <Button
+                x:Name="resetSettBtn"
+                Margin="0,7.5,0,0"
+                Padding="5"
+                Click="resetSettBtn_Click"
+                Content="Lokale Einstellungen zurücksetzen"
+                Style="{StaticResource ModernButton}" />
+            <Button
+                x:Name="resetDataBtn"
+                Margin="0,7.5,0,0"
+                Padding="5"
+                Click="resetDataBtn_Click"
+                Content="TCL-Daten zurücksetzen"
+                Style="{StaticResource ModernButton}" />
+            <Button
+                x:Name="hostBtn"
+                Margin="0,7.5,0,0"
+                Padding="5"
+                Click="HostBtn_OnClick"
+                Content="Debug-Server starten"
+                Style="{StaticResource ModernButton}"
+                Tag="0" />
+            <Button
+                x:Name="fScreenBtn"
+                Margin="0,7.5,0,0"
+                Padding="5"
+                Click="FScreenBtn_OnClick"
+                Content="fScreen starten"
+                Style="{StaticResource ModernButton}"
+                Tag="0" />
+            <TextBlock
+                x:Name="assemblyVersion"
+                Margin="0,10,0,0"
+                Text="Version: 0.0.0" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -69,5 +69,30 @@ namespace TCLauncher.Core
 
             return url;
         }
+
+        /// <summary>
+        /// Checks if the provided URL starts with any of the given protocols.
+        /// </summary>
+        /// <param name="url">The URL to check.</param>
+        /// <param name="protocols">An array of protocols to check against. Defaults to http:// and https:// if not provided.</param>
+        /// <returns>Returns true if the URL starts with any of the provided protocols, false otherwise.</returns>
+        public static bool HasProtocol(string url, string[] protocols = null)
+        {
+            if (protocols == null)
+            {
+                protocols = new[] { "http://", "https://" };
+            }
+
+            foreach (var i in protocols)
+            {
+                if (url.StartsWith(i))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 }

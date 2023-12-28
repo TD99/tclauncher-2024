@@ -177,10 +177,13 @@ namespace TCLauncher.Core
                 IsTcraftReacheable = InternetUtils.ReachPage("https://tcraft.link/tclauncher/api"),
                 TotalAdapterMemoryInGb = SystemInfoUtils.GetTotalAdapterMemoryInGb(),
                 TotalPhysicalMemoryInGb = SystemInfoUtils.GetTotalPhysicalMemoryInGb(),
+                DefaultConnectionLimit = System.Net.ServicePointManager.DefaultConnectionLimit,
                 LoadedPlugins = new []
                 {
                     "AppletLoader",
-                    "SimpleEdit"
+                    "SimpleEdit",
+                    "server-tool",
+                    "version-checker"
                 }
             };
         }

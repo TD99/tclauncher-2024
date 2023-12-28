@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +17,8 @@ using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using System.Runtime.InteropServices;
 using System.Text;
+using CmlLib.Core.Version;
+using CmlLib.Core.VersionMetadata;
 
 namespace TCLauncher.MVVM.View
 {
@@ -99,7 +102,7 @@ namespace TCLauncher.MVVM.View
 
                     if (!await dialog.Result) return;
 
-                    App.Session = MSession.GetOfflineSession(dialog.ResponseText);
+                    App.Session = MSession.CreateOfflineSession(dialog.ResponseText);
                     App.MainWin.SetDisplayAccount(dialog.ResponseText + " (Offline)");
                 }
                 else
@@ -122,7 +125,31 @@ namespace TCLauncher.MVVM.View
 
             try
             {
-                App.Launcher = new CMLauncher(new MinecraftPath(instanceFolder));
+                System.Net.ServicePointManager.DefaultConnectionLimit = 256;
+
+                App.MinecraftPath = new MinecraftPath(instanceFolder);
+
+                App.Launcher = new CMLauncher(App.MinecraftPath);
+
+                App.LaunchOption = new MLaunchOption
+                {
+                    StartVersion = null,
+                    Session = App.Session,
+
+                    Path = App.MinecraftPath,
+                    //MinimumRamMb = 0,
+                    //MaximumRamMb = 4096, // TODO: Implement RAM selection
+                    //JVMArguments = new string[] {}, // TODO: Implement JVM arguments
+
+                    //ServerIp = null, // TODO: Implement server selection
+                    //ServerPort = 0,
+
+                    VersionType = "\u00a7b@TCLauncher",
+                    //GameLauncherName = "tcl",
+                    //GameLauncherVersion = AppUtils.GetCurrentVersion(),
+
+                    //DockName = "Minecraft on TCL"
+                };
 
                 var actionWindow = new ActionWindow("Lade Spiel...");
 
@@ -145,10 +172,17 @@ namespace TCLauncher.MVVM.View
                 actionWindow.Show();
 
                 // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync("1.16.4", new MLaunchOption
+
+
+                MVersionCollection versions = await App.Launcher.GetAllVersionsAsync(); // shortcut
+
+                // show all versions
+                foreach (MVersionMetadata ver in versions)
                 {
-                    Session = App.Session
-                });
+                    Console.WriteLine(ver.Type + " : " + ver.Name);
+                }
+
+                var process = await App.Launcher.CreateProcessAsync("1.12.2", App.LaunchOption);
 
                 var processUtil = new ProcessUtil(process);
                 processUtil.Exited += (sender1, e1) =>
@@ -197,13 +231,29 @@ namespace TCLauncher.MVVM.View
             Border border = (Border)sender;
             Applet applet = (Applet)border.DataContext;
 
-            if (applet.ActionURL is null) return;
-            
-            SetAppletViewState(true);
+            if (!applet.is_action) return;
+            if (applet.OpenExternal)
+            {
+                if (InternetUtils.HasProtocol(applet.ActionURL))
+                {
+                    Process.Start(applet.ActionURL);
+                    return;
+                }
 
+                var result = MessageBox.Show($"Die Aktion ist möglicherweise gefährlich! Soll sie in der TCLauncher-Sandbox ausgeführt werden?\n\nACTION='{applet.ActionURL}'", "TCLauncher Sicherheit", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.Cancel) return;
+            }
+
+            SetAppletViewState();
             await Task.Delay(2000);
-
-            webView.Source = new System.Uri(applet.ActionURL);
+            try
+            {
+                webView.Source = new Uri(applet.ActionURL);
+            }
+            catch
+            {
+                webView.Source = new Uri("data:text/plain;base64,RGllIFJlc3NvdXJjZSBrb25udGUgbmljaHQgZ2VsYWRlbiB3ZXJkZW4uIE1vZWdsaWNoZSBHcnVlbmRlIHNpbmQ6Ci0gSW50ZXJuZXRwcm9ibGVtZQotIE5pY2h0IGV4aXN0aWVyZW5kZSBSZXNzb3VyY2UKLSBVbmd1ZWx0aWdlcyBSZXNzb3VyY2VuZm9ybWF0Ci0gQmxvY2tpZXJ1bmcgZHVyY2ggVENMYXVuY2hlci1TaWNoZXJoZWl0");
+            }
         }
 
         private void profileSelect_SelectionChanged(object sender, RoutedEventArgs e)

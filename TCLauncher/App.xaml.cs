@@ -46,7 +46,9 @@ namespace TCLauncher
 
         public static JELoginHandler LoginHandler;
 
+        public static MinecraftPath MinecraftPath { get; set; }
         public static CMLauncher Launcher { get; set; }
+        public static MLaunchOption LaunchOption { get; set; }
         public static MainWindow MainWin { get; set; }
 
         public App()

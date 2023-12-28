@@ -34,6 +34,11 @@ namespace TCLauncher.Core
             }
         }
 
+        public float GetVolume()
+        {
+            return _waveOutDevice.Volume;
+        }
+
         public void Dispose()
         {
             _waveOutDevice?.Dispose();

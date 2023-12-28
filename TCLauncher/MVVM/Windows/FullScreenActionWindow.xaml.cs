@@ -76,6 +76,7 @@ namespace TCLauncher.MVVM.Windows
 
             Stream load0Sound = Properties.Resources.load0s;
             _player = new MusicPlayer(load0Sound);
+            _player.SetVolume(1f);
 
             byte[] load0Video = Properties.Resources.load0v;
             _tempFile = Path.Combine(IoUtils.Tcl.CachePath, "anyo0.wmv");
@@ -87,6 +88,7 @@ namespace TCLauncher.MVVM.Windows
             MediaElement.Source = new Uri(_tempFile);
         }
 
+        // TODO: optimize -> Quit()
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _player.Stop();
@@ -122,13 +124,13 @@ namespace TCLauncher.MVVM.Windows
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
-                Close();
+                Quit();
             }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            Quit();
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -147,6 +149,31 @@ namespace TCLauncher.MVVM.Windows
             double prevWindowWidth = e.PreviousSize.Width;
 
             LoadingProgressRect.Width = (_instanceProgress / 100) * newWindowWidth; // TODO FIX
+        }
+
+        private async void Quit()
+        {
+            var animation = new DoubleAnimation
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(1)
+            };
+            MediaElement.BeginAnimation(OpacityProperty, animation);
+            for (var i = _player.GetVolume(); i >= 0 ; i -= 0.01f)
+            {
+                _player.SetVolume(i);
+                await Task.Delay(10);
+            }
+            _player.Stop();
+            await Task.Delay(200);
+            _player.SetVolume(1f);
+            Close();
+        }
+
+        private void FullScreenActionWindow_OnClosed(object sender, EventArgs e)
+        {
+            _player.Dispose();
         }
     }
 }

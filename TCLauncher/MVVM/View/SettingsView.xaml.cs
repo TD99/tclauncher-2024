@@ -173,8 +173,18 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.Save();
         }
 
-        private void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
+        private async void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
         {
+            var dialog = new CustomButtonDialog(DialogButtons.OkCancel, "This will launch a mock instance. It will never load.")
+            {
+                Owner = App.MainWin,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            dialog.ShowDialog();
+
+            var result = await dialog.Result;
+            if (result != DialogButton.Ok) return;
+
             var fsaWin = new FullScreenActionWindow
             {
                 InstanceName = "T-Craft Server",
