@@ -11,7 +11,7 @@ namespace TCLauncher.Models
         public Guid Guid { get; set; }
         public string Version { get; set; }
         public bool Upgradeable { get; set; }
-        public string ThumbnailURL { get; set; }
+        public string ThumbnailURL { get; set; } = "/Images/nothumb.png";
         public string Type { get; set; }
         public string McVersion { get; set; }
         public string WorkingDirZipURL { get; set; }
@@ -23,37 +23,40 @@ namespace TCLauncher.Models
         public Dictionary<string, object> Requirements { get; set; }
         public List<Server> Servers { get; set; }
 
+        public int? MinimumRamMb { get; set; }
+        public int? MaximumRamMb { get; set; }
+        public string[] JVMArguments { get; set; }
+        
+
         public Instance()
         {
-            ThumbnailURL = "/Images/nothumb.png";
-            Is_Installed = false;
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailURL, string type, string mcVersion, string workingDirZipURL, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, bool is_Installed, string appletURL, Dictionary<string, object> requirements, List<Server> servers)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, string workingDirZipUrl, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
         {
             Name = name;
             DisplayName = displayName;
             Guid = guid;
             Version = version;
             Upgradeable = upgradeable;
-            ThumbnailURL = thumbnailURL;
+            ThumbnailURL = thumbnailUrl;
             Type = type;
             McVersion = mcVersion;
-            WorkingDirZipURL = workingDirZipURL;
+            WorkingDirZipURL = workingDirZipUrl;
             Patches = patches;
             UsePatch = usePatch;
             WorkingDirDesc = workingDirDesc;
-            Is_Installed = is_Installed;
-            AppletURL = appletURL;
+            AppletURL = appletUrl;
             Requirements = requirements;
             Servers = servers;
+            MinimumRamMb = minimumRamMb;
+            MaximumRamMb = maximumRamMb;
+            JVMArguments = jvmArguments;
         }
 
         public Patch GetCurrentPatch()
         {
-            if (Patches == null) return null;
-
-            return Patches.OrderByDescending(p => p.ID).FirstOrDefault();
+            return Patches?.OrderByDescending(p => p.ID).FirstOrDefault();
         }
     }
 }

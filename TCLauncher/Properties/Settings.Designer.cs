@@ -94,5 +94,17 @@ namespace TCLauncher.Properties {
                 this["LastAccountUUID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte SandboxLevel {
+            get {
+                return ((byte)(this["SandboxLevel"]));
+            }
+            set {
+                this["SandboxLevel"] = value;
+            }
+        }
     }
 }

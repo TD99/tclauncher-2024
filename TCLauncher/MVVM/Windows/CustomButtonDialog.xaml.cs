@@ -14,11 +14,18 @@ namespace TCLauncher.MVVM.Windows
         private readonly TaskCompletionSource<DialogButton> _tcs;
         public Task<DialogButton> Result => _tcs.Task;
 
-        public CustomButtonDialog(IEnumerable<DialogButton> buttons, string title = "")
+        public CustomButtonDialog(IEnumerable<DialogButton> buttons, string title = "", string message = "")
         {
             InitializeComponent();
 
             TitleLabel.Content = title;
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                BodyTextBlock.Text = message;
+                BodyTextBlock.Visibility = Visibility.Visible;
+            }
+
             _tcs = new TaskCompletionSource<DialogButton>();
 
             foreach (var dialogButton in buttons)

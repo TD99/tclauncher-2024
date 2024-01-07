@@ -183,7 +183,14 @@ namespace TCLauncher.MVVM.ViewModel
                     IsGpuReqirementMet.ToString(),
                     JsonConvert.SerializeObject(StorageAnalyzerData)
                 };
-                File.WriteAllLines(_cacheFilePath, dataToCache);
+                try
+                {
+                    File.WriteAllLines(_cacheFilePath, dataToCache);
+                }
+                catch
+                {
+                    // ignored
+                }
             });
             IsLoading = false;
         }

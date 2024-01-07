@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CmlLib.Core.Version;
 using CmlLib.Core.VersionMetadata;
+using TCLauncher.MVVM.ViewModel;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.View
 {
@@ -29,11 +32,13 @@ namespace TCLauncher.MVVM.View
     {
         public ObservableCollection<Applet> Applets { get; set; }
         private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
+        private HomeViewModel _vm;
+        private bool _isServerListLoading = false;
 
         public HomeView()
         {
             InitializeComponent();
-            checkInstanceListEmpty();
+            _vm = (HomeViewModel)DataContext;
         }
 
         private async void loadWV()
@@ -41,22 +46,6 @@ namespace TCLauncher.MVVM.View
             await webView.EnsureCoreWebView2Async();
             webView.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
             webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-        }
-
-        // TODO: IMPROVE CODE QUALITY
-        private void checkInstanceListEmpty()
-        {
-            // TODO: CHECK FOR N° OF INSTANCES INSTEAD
-            if (IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath))
-            {
-                profileSelect.Visibility = Visibility.Collapsed;
-                profileNoneText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                profileSelect.Visibility = Visibility.Visible;
-                profileNoneText.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void discoverEvent(object sender, MouseButtonEventArgs e)
@@ -127,22 +116,33 @@ namespace TCLauncher.MVVM.View
             {
                 System.Net.ServicePointManager.DefaultConnectionLimit = 256;
 
-                App.MinecraftPath = new MinecraftPath(instanceFolder);
+                switch (Settings.Default.SandboxLevel)
+                {
+                    case 0:
+                        App.MinecraftPath = AppUtils.GetMinecraftPathShared(instance.Guid);
+                        break;
+                    case 1:
+                        App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                        break;
+                }
 
                 App.Launcher = new CMLauncher(App.MinecraftPath);
 
+                var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
+                var mcServerAddress = InternetUtils.GetMcServerAddress(serverAddressString);
+
                 App.LaunchOption = new MLaunchOption
                 {
-                    StartVersion = null,
+                    StartVersion = null, // Fix
                     Session = App.Session,
 
                     Path = App.MinecraftPath,
-                    //MinimumRamMb = 0,
-                    //MaximumRamMb = 4096, // TODO: Implement RAM selection
-                    //JVMArguments = new string[] {}, // TODO: Implement JVM arguments
+                    MinimumRamMb = instance.MinimumRamMb ?? 0,
+                    MaximumRamMb = instance.MaximumRamMb ?? 1024,
+                    JVMArguments = instance.JVMArguments,
 
-                    //ServerIp = null, // TODO: Implement server selection
-                    //ServerPort = 0,
+                    ServerIp = mcServerAddress.IP,
+                    ServerPort = mcServerAddress.Port ?? 25565,
 
                     VersionType = "\u00a7b@TCLauncher",
                     //GameLauncherName = "tcl",
@@ -182,7 +182,7 @@ namespace TCLauncher.MVVM.View
                     Console.WriteLine(ver.Type + " : " + ver.Name);
                 }
 
-                var process = await App.Launcher.CreateProcessAsync("1.12.2", App.LaunchOption);
+                var process = await App.Launcher.CreateProcessAsync(instance.McVersion, App.LaunchOption);
 
                 var processUtil = new ProcessUtil(process);
                 processUtil.Exited += (sender1, e1) =>
@@ -260,21 +260,27 @@ namespace TCLauncher.MVVM.View
         {
             if (profileSelect.SelectedItem is InstalledInstance selectedInstance)
             {
-                Properties.Settings.Default.LastSelected = selectedInstance.Guid;
-                Properties.Settings.Default.Save();
+                Settings.Default.LastSelected = selectedInstance.Guid;
+                Settings.Default.Save();
 
-                //if (selectedInstance.Servers != null && selectedInstance.Servers.Any())
-                //{
-                //    servInfo.Visibility = Visibility.Visible;
-                //    serverSelect.SelectedIndex = 0;
-                //}
-                //else
-                //{
-                //    servInfo.Visibility = Visibility.Collapsed;
-                //}
+                // Set server list
+                {
+                    _isServerListLoading = true;
+
+                    var serverList = new List<Server>(selectedInstance.Servers);
+                    serverList.Insert(0, new Server("No server", null, null));
+
+                    ServerSelect.ItemsSource = serverList;
+
+                    ServerSelect.SelectedItem = serverList.FirstOrDefault(s => s.Address == selectedInstance.LastServer) ?? serverList[0];
+
+                    _isServerListLoading = false;
+                }
             }
             RefreshApplets();
         }
+
+        
 
         private async void RefreshApplets()
         {
@@ -310,11 +316,14 @@ namespace TCLauncher.MVVM.View
             SetAppletViewState(false);
         }
 
-        //private void serverSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (serverSelect.SelectedItem == null) return;
-        //    Server server = (Server)serverSelect.SelectedItem;
-        //    currentServerImg.Source = new BitmapImage(new Uri(@"https://tcraft.link/tclauncher/api/plugins/server-tool/GetAccent.php?literal&url=" + server.IP));
-        //}
+        private void ServerSelect_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isServerListLoading) return;
+
+            if (!(profileSelect.SelectedItem is InstalledInstance selectedInstance)) return;
+            
+            selectedInstance.LastServer = ((Server)ServerSelect.SelectedItem).Address;
+            IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
+        }
     }
 }

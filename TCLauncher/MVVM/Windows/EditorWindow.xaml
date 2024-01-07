@@ -15,7 +15,7 @@
     
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"  />
+        <converters:DeprecatedInverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"  />
     </Window.Resources>
 
     <Grid Background="#343b48">

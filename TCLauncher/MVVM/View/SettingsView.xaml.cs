@@ -41,6 +41,16 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
+            string sandboxLevelTagToSelect = Properties.Settings.Default.SandboxLevel.ToString();
+            foreach (ComboBoxItem item in SandboxLevel.Items)
+            {
+                if ((string)item.Tag == sandboxLevelTagToSelect)
+                {
+                    SandboxLevel.SelectedItem = item;
+                    break;
+                }
+            }
+
             hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
         }
 
@@ -194,6 +204,27 @@ namespace TCLauncher.MVVM.View
                 InstanceProgress = 50
             };
             fsaWin.Show();
+        }
+
+        private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            string tag = (string)selectedItem.Tag;
+            byte value;
+
+            try
+            {
+                value = byte.Parse(tag);
+            }
+            catch
+            {
+                MessageBox.Show("Der Sandboxlevel kann nicht gesetzt werden.");
+                return;
+            }
+
+            Properties.Settings.Default.SandboxLevel = value;
+            Properties.Settings.Default.Save();
         }
     }
 }

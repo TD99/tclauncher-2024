@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,10 @@ using static TCLauncher.Core.IoUtils.Tcl;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using TCLauncher.Models;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Management.Instrumentation;
+using CmlLib.Core;
 
 namespace TCLauncher.Core
 {
@@ -146,6 +151,37 @@ namespace TCLauncher.Core
         }
 
         /// <summary>
+        /// Gets all settings from Properties.Settings.Default and returns them as a dictionary.
+        /// </summary>
+        /// <returns>A dictionary containing the settings keys and their corresponding values.</returns>
+        public static Dictionary<string, object> GetAllSettings()
+        {
+            var settings = new Dictionary<string, object>();
+
+            foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
+            {
+                string key = currentProperty.Name;
+                var value = Properties.Settings.Default[key];
+                settings.Add(key, value);
+            }
+
+            return settings;
+        }
+
+        public static MinecraftPath GetMinecraftPathShared(Guid instanceGuid)
+        {
+            var path = GetMinecraftPathIsolated(instanceGuid);
+            path.Versions = Path.Combine(SharedPath, "versions");
+            path.Library = Path.Combine(SharedPath, "libraries");
+            return path;
+        }
+
+        public static MinecraftPath GetMinecraftPathIsolated(Guid instanceGuid)
+        {
+            return new MinecraftPath(GetInstanceDataPath(instanceGuid));
+        }
+
+        /// <summary>
         /// Asynchronously retrieves a DebugObject containing various application and system information.
         /// </summary>
         /// <returns>
@@ -184,7 +220,8 @@ namespace TCLauncher.Core
                     "SimpleEdit",
                     "server-tool",
                     "version-checker"
-                }
+                },
+                Settings = GetAllSettings()
             };
         }
     }

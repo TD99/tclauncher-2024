@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
+using TCLauncher.Models;
 
 namespace TCLauncher.Core
 {
@@ -92,6 +93,32 @@ namespace TCLauncher.Core
             }
 
             return false;
+        }
+
+        public static McServerAddress GetMcServerAddress(string ipPortPair)
+        {
+            var mcServerAddress = new McServerAddress();
+
+            if (ipPortPair == null) return mcServerAddress;
+
+            var split = ipPortPair.Split(':');
+
+            switch (split.Length)
+            {
+                case 1:
+                {
+                    mcServerAddress.IP = split[0];
+                    break;
+                }
+                case 2:
+                {
+                    mcServerAddress.IP = split[0];
+                    mcServerAddress.Port = int.Parse(split[1]);
+                    break;
+                }
+            }
+
+            return mcServerAddress;
         }
 
     }

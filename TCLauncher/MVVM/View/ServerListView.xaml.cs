@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,7 +16,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Models;
-using TCLauncher.MVVM.ViewModel;
 using TCLauncher.MVVM.Windows;
 
 namespace TCLauncher.MVVM.View
@@ -24,7 +23,7 @@ namespace TCLauncher.MVVM.View
     /// <summary>
     /// Interaction logic for ServerListView.xaml
     /// </summary>
-    public partial class ServerListView : UserControl
+    public partial class ServerListView
     {
         private Instance current { get; set; }
 
@@ -56,32 +55,32 @@ namespace TCLauncher.MVVM.View
 
             current = instance;
 
+            // TODO: Fix bug where installed instances don't show up
             if (instance.WorkingDirDesc != null)
             {
-                foreach (string key in instance.WorkingDirDesc.Keys)
+                foreach (KeyValuePair<string, List<string>> entry in instance.WorkingDirDesc)
                 {
-                    TextBlock keyTextBlock = new TextBlock
-                    {
-                        Text = key,
-                        Foreground = Brushes.White,
-                        FontSize = 25
-                    };
-                    itemFocusMCWorkingDirDesc.Children.Add(keyTextBlock);
+                    AddTextBlock(itemFocusMCWorkingDirDesc, entry.Key, 25);
 
-                    foreach (string description in instance.WorkingDirDesc[key])
+                    foreach (string description in entry.Value)
                     {
-                        TextBlock descTextBlock = new TextBlock
-                        {
-                            Text = description,
-                            Foreground = Brushes.White,
-                            FontSize = 16
-                        };
-                        itemFocusMCWorkingDirDesc.Children.Add(descTextBlock);
+                        AddTextBlock(itemFocusMCWorkingDirDesc, description, 16);
                     }
                 }
             }
 
             itemFocus.Visibility = Visibility.Visible;
+        }
+
+        private void AddTextBlock(Panel panel, string text, int fontSize)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Text = text,
+                Foreground = Brushes.White,
+                FontSize = fontSize
+            };
+            panel.Children.Add(textBlock);
         }
 
         private void closeFocusBtn_Click(object sender, RoutedEventArgs e)
@@ -95,8 +94,6 @@ namespace TCLauncher.MVVM.View
             itemFocusMCVersion.Text = "";
             specialFocusBtn.Content = "Aktion";
             itemFocusMCWorkingDirDesc.Children.Clear();
-
-            this.DataContext = new ServerListViewModel();
 
             current = null;
         }
@@ -120,7 +117,6 @@ namespace TCLauncher.MVVM.View
                 if (force)
                 {
                     Directory.Delete(instanceFolder, true);
-                    instance.Is_Installed = false;
                     return;
                 }
 
@@ -128,7 +124,6 @@ namespace TCLauncher.MVVM.View
                 if (result == MessageBoxResult.Yes)
                 {
                     Directory.Delete(instanceFolder, true);
-                    instance.Is_Installed = false;
 
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     Process.Start(appPath, $"--uninstallSuccess {instance.DisplayName}");
@@ -292,7 +287,7 @@ namespace TCLauncher.MVVM.View
                 MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
             }
 
-            reconfigure(instanceFolder, instance);
+            reconfigure(instance);
 
             if (Properties.Settings.Default.FirstTime)
             {
@@ -361,16 +356,13 @@ namespace TCLauncher.MVVM.View
             specialFocusBtn.Content = (current.Is_Installed) ? "Deinstallieren" : "Installieren";
         }
 
-        private void reconfigure(string instanceFolder, Instance instance)
+        private void reconfigure(Instance instance)
         {
+            var installedInstance = new InstalledInstance(instance);
             try
             {
-                instance.Is_Installed = true;
-
-                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
-
-                var json = JsonConvert.SerializeObject(instance);
-                File.WriteAllText(configFile, json);
+                var json = JsonConvert.SerializeObject(installedInstance);
+                File.WriteAllText(installedInstance.ConfigFile, json);
             }
             catch
             {
@@ -397,7 +389,7 @@ namespace TCLauncher.MVVM.View
                     var content = await response.Content.ReadAsStringAsync();
                     var instance = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content)[0];
 
-                    reconfigure(instanceFolder, instance);
+                    reconfigure(instance);
 
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     Process.Start(appPath, $"--updateSuccess {instance.DisplayName}");

@@ -130,6 +130,7 @@
     <Compile Include="Models\DebugObject.cs" />
     <Compile Include="Models\DialogButtons.cs" />
     <Compile Include="Models\DialogButton.cs" />
+    <Compile Include="Models\McServerAddress.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
@@ -148,6 +149,7 @@
     <Compile Include="Models\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
+    <Compile Include="MVVM\Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
     <Compile Include="MVVM\ViewModel\AccountViewModel.cs" />
     <Compile Include="MVVM\View\AccountView.xaml.cs">
@@ -162,7 +164,7 @@
     <Compile Include="MVVM\Windows\EditorWindow.xaml.cs">
       <DependentUpon>EditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Converters\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="MVVM\Converters\DeprecatedInverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="MVVM\ViewModel\StatusViewModel.cs" />
     <Compile Include="MVVM\View\StatusView.xaml.cs">

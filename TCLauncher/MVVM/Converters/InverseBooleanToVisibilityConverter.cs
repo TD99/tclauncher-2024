@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using System.Windows.Data;
 using System.Windows;
 using System;
+using System.Windows.Data;
 
 namespace TCLauncher.MVVM.Converters
 {
@@ -9,16 +9,26 @@ namespace TCLauncher.MVVM.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double width && parameter is string thresholdString && double.TryParse(thresholdString, out double threshold))
+            if (value is bool booleanValue)
             {
-                return width < threshold ? Visibility.Visible : Visibility.Collapsed;
+                return booleanValue ? Visibility.Collapsed : Visibility.Visible;
             }
-            return Visibility.Collapsed;
+            else
+            {
+                return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException();
+            if (value is Visibility visibilityValue)
+            {
+                return visibilityValue != Visibility.Visible;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

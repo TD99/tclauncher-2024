@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using TCLauncher.Models;
 
 namespace TCLauncher.Core
 {
@@ -48,7 +50,14 @@ namespace TCLauncher.Core
             /// <returns>true if the directory is empty; otherwise, false.</returns>
             public static bool IsEmpty(string path)
             {
-                return Directory.GetFiles(path).Length == 0;
+                try
+                {
+                    return Directory.GetFiles(path).Length == 0;
+                }
+                catch
+                {
+                    return true;
+                }
             }
 
             /// <summary>
@@ -97,6 +106,11 @@ namespace TCLauncher.Core
             public static readonly string DefaultPath = Path.Combine(RootPath, "Default");
 
             /// <summary>
+            /// The shared path for the application, located within the TCL root directory.
+            /// </summary>
+            public static readonly string SharedPath = Path.Combine(RootPath, "Shared");
+
+            /// <summary>
             /// Calculates the size of the directory at the specified path.
             /// </summary>
             /// <param name="path">The path of the directory. If null, the root path is used.</param>
@@ -126,6 +140,7 @@ namespace TCLauncher.Core
                 if (!Directory.Exists(InstancesPath)) Directory.CreateDirectory(InstancesPath);
                 if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
                 if (!Directory.Exists(DefaultPath)) Directory.CreateDirectory(DefaultPath);
+                if (!Directory.Exists(SharedPath)) Directory.CreateDirectory(SharedPath);
             }
 
             /// <summary>
@@ -143,6 +158,41 @@ namespace TCLauncher.Core
                 }
 
                 return Path.Combine(CachePath, fileName);
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance.
+            /// </summary>
+            public static string GetInstancePath(Guid instanceGuid)
+            {
+                return Path.Combine(InstancesPath, instanceGuid.ToString());
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance's data directory.
+            /// </summary>
+            public static string GetInstanceDataPath(Guid instanceGuid)
+            {
+                return Path.Combine(GetInstancePath(instanceGuid), "data");
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance's config file.
+            /// </summary>
+            public static string GetInstanceConfigPath(Guid instanceGuid)
+            {
+                return Path.Combine(GetInstancePath(instanceGuid), "config.json");
+            }
+
+            /// <summary>
+            /// Saves the specified instance's config file.
+            /// </summary>
+            public static string SaveInstalledInstanceConfig(InstalledInstance instance, string configFileOverride = null)
+            {
+                var path = configFileOverride ?? instance.ConfigFile;
+                var json = JsonConvert.SerializeObject(instance);
+                File.WriteAllText(path, json);
+                return path;
             }
         }
 

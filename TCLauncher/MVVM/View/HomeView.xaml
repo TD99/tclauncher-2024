@@ -241,7 +241,18 @@
                     ItemsSource="{Binding LocalList}"
                     SelectedItem="{Binding LastSelected}"
                     SelectedValuePath="Guid"
-                    SelectionChanged="profileSelect_SelectionChanged" />
+                    SelectionChanged="profileSelect_SelectionChanged">
+                    <ComboBox.Style>
+                        <Style BasedOn="{StaticResource ModernComboBox}" TargetType="ComboBox">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LocalList.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
 
                 <TextBlock
                     x:Name="profileNoneText"
@@ -251,8 +262,18 @@
                     Foreground="#5b8dc1"
                     MouseDown="discoverEvent"
                     Text="Instanzen installieren"
-                    TextDecorations="Underline"
-                    Visibility="Collapsed" />
+                    TextDecorations="Underline">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LocalList.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <Button
                     x:Name="playBtn"
@@ -262,46 +283,16 @@
                     FontSize="20"
                     FontWeight="Medium"
                     Style="{StaticResource ModernButton}" />
-                <StackPanel
+
+                <ComboBox
+                    x:Name="ServerSelect"
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <StackPanel.ToolTip>
-                        <ToolTip Background="Transparent" Placement="Top">
-                            <Border
-                                Padding="10"
-                                Background="#BB0E1218"
-                                CornerRadius="20">
-                                <Image
-                                    x:Name="imageBodyPicture"
-                                    Width="100"
-                                    Height="200" />
-                            </Border>
-                            <ToolTip.Style>
-                                <Style BasedOn="{StaticResource ModernToolTip}" TargetType="{x:Type ToolTip}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Source={x:Reference imageBodyPicture}, Path=Source}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ToolTip.Style>
-                        </ToolTip>
-                    </StackPanel.ToolTip>
-                    <Image
-                        x:Name="imageUserPicture"
-                        Width="16"
-                        Height="16"
-                        VerticalAlignment="Center" />
-                    <TextBlock
-                        x:Name="textUserName"
-                        Margin="5,0,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="15"
-                        Foreground="White"
-                        Text="\{VersionSelector\}" />
-                </StackPanel>
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="Address"
+                    SelectionChanged="ServerSelect_OnSelectionChanged"
+                    Style="{StaticResource ModernComboBox}" />
             </Grid>
         </Border>
     </Grid>

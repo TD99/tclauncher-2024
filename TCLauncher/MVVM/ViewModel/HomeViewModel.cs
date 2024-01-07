@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -56,8 +57,9 @@ namespace TCLauncher.MVVM.ViewModel
 
                         if (instance.Is_Installed)
                         {
-                            InstalledInstance installed = new InstalledInstance(instance.Name, instance.DisplayName, instance.Guid, instance.AppletURL, instance.Servers);
+                            InstalledInstance installed = new InstalledInstance(instance);
                             LocalList.Add(installed);
+                            Console.WriteLine($@"***Loaded {instance.Name}");
                         }
                     }
                 }
@@ -84,16 +86,14 @@ namespace TCLauncher.MVVM.ViewModel
         {
             Guid guidLastPlayed = Properties.Settings.Default.LastSelected;
             InstalledInstance instance = LocalList.FirstOrDefault(x => x.Guid == guidLastPlayed);
-
             if (instance == null)
             {
-                if (LocalList.Count() >= 1)
+                if (LocalList.Any())
                 {
                     LastSelected = LocalList[0];
                 }
                 return;
             }
-
             LastSelected = instance;
         }
     }
