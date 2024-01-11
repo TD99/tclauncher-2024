@@ -1,4 +1,6 @@
-﻿namespace TCLauncher.Models
+﻿using TCLauncher.Core;
+
+namespace TCLauncher.Models
 {
     public class Server
     {
@@ -24,5 +26,18 @@
         {
             ThumbnailURL = "/Images/nothumb.png";
         }
+
+        public bool IsSameAs(object compare)
+        {
+            if (compare == null) return false;
+            if (compare.GetType() != GetType()) return false;
+            
+            var server = (Server) compare;
+
+            return Name == server.Name &&
+                   Address == server.Address &&
+                   ThumbnailURL == server.ThumbnailURL;
+        }
+
     }
 }

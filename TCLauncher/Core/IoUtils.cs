@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Newtonsoft.Json;
 using TCLauncher.Models;
 
@@ -36,8 +37,58 @@ namespace TCLauncher.Core
                 }
                 return false;
             }
+
+            public static bool CompareImages(string urlOrPath1, string urlOrPath2)
+            {
+                var image1 = GetImageBytes(urlOrPath1);
+                var image2 = GetImageBytes(urlOrPath2);
+
+                if (image1 == null || image2 == null)
+                {
+                    return false;
+                }
+
+                return image1.SequenceEqual(image2);
+            }
+
+            public static byte[] GetImageBytes(string urlOrPath)
+            {
+                if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
+                    return File.Exists(urlOrPath) ? File.ReadAllBytes(urlOrPath) : null;
+
+                using (var webClient = new WebClient())
+                {
+                    try
+                    {
+                        return webClient.DownloadData(urlOrPath);
+                    }
+                    catch (WebException)
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            public static bool DoesFileExistByUrlOrPath(string urlOrPath)
+            {
+                if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
+                    return File.Exists(urlOrPath);
+
+                using (var webClient = new WebClient())
+                {
+                    try
+                    {
+                        webClient.DownloadData(urlOrPath);
+                        return true;
+                    }
+                    catch (WebException)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
-        
+
         /// <summary>
         /// A nested class for handling specific directory operations.
         /// </summary>

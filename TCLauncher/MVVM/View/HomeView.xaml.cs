@@ -264,6 +264,7 @@ namespace TCLauncher.MVVM.View
                 Settings.Default.Save();
 
                 // Set server list
+                try
                 {
                     _isServerListLoading = true;
 
@@ -272,7 +273,21 @@ namespace TCLauncher.MVVM.View
 
                     ServerSelect.ItemsSource = serverList;
 
-                    ServerSelect.SelectedItem = serverList.FirstOrDefault(s => s.Address == selectedInstance.LastServer) ?? serverList[0];
+                    ServerSelect.SelectedItem =
+                        serverList.FirstOrDefault(s => s.Address == selectedInstance.LastServer) ?? serverList[0];
+
+                    _isServerListLoading = false;
+                }
+                catch
+                {
+                    _isServerListLoading = true;
+
+                    var serverList = new List<Server>();
+                    serverList.Insert(0, new Server("No server", null, null));
+
+                    ServerSelect.ItemsSource = serverList;
+
+                    ServerSelect.SelectedItem = serverList[0];
 
                     _isServerListLoading = false;
                 }

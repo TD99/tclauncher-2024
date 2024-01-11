@@ -202,6 +202,30 @@
                 Foreground="White"
                 Text="Spiele" />
 
+            <StackPanel
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+                <Button
+                    x:Name="addServerBtn"
+                    FontSize="18"
+                    Style="{StaticResource ModernButton}"
+                    Width="40px"
+                    Click="AddServerBtn_OnClick">
+                    🔨
+                </Button>
+                <Separator Width="10px" Background="Transparent" />
+                <Button
+                    x:Name="importServerBtn"
+                    FontSize="28"
+                    Style="{StaticResource ModernButton}"
+                    Width="40px"
+                    Click="ImportServerBtn_OnClick">
+                    +
+                </Button>
+            </StackPanel>
+
             <ListView
                 Grid.Row="1"
                 Background="Transparent"
@@ -275,6 +299,25 @@
                                             <Style TargetType="{x:Type Image}">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Is_Installed}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Is_LocalSource}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <Image
+                                        Grid.Column="1"
+                                        Width="32px"
+                                        Margin="15,0,0,0"
+                                        HorizontalAlignment="Right"
+                                        Source="/Assets/Images/harddrive.png">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Is_LocalSource}" Value="False">
                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -391,17 +434,20 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <fa:ImageAwesome
+            <StackPanel
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}"
                 Grid.Row="1"
-                Width="60"
-                Height="60"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Cursor="Wait"
-                Foreground="White"
-                Icon="SquareOutline"
-                Spin="True"
-                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}" />
+                VerticalAlignment="Top">
+                <fa:ImageAwesome
+                    Width="60"
+                    Height="60"
+                    Cursor="Wait"
+                    Foreground="White"
+                    Icon="SquareOutline"
+                    Spin="True" />
+                <Label Margin="0, 10, 0, 0" Content="{Binding LoadingText}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

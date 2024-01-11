@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,13 +38,27 @@ namespace TCLauncher.MVVM.ViewModel
             }
         }
 
+        private string _loadingText;
+
+        public string LoadingText
+        {
+            get => _loadingText;
+            set
+            {
+                _loadingText = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ServerListViewModel()
         {
             Task.Run(async () =>
             {
                 IsLoading = true;
-                await Task.Delay(200);
+                LoadingText = "Bereite vor ...";
+                await Task.Delay(400);
                 await LoadServers();
+                LoadingText = "Stelle fertig ...";
                 IsLoading = false;
             });
         }
@@ -51,13 +66,15 @@ namespace TCLauncher.MVVM.ViewModel
         private async Task LoadServers()
         {
             var cacheFilePath = Path.Combine(IoUtils.Tcl.CachePath, "ServerListCache.json");
-            ObservableCollection<Instance> tempServerList = File.Exists(cacheFilePath) ? LoadFromCache(cacheFilePath) : null;
+            var tempServerList = File.Exists(cacheFilePath) ? LoadFromCache(cacheFilePath) : null;
             tempServerList = await FetchServerList(tempServerList, cacheFilePath);
+            tempServerList = LoadLocalInstances(tempServerList);
             if (tempServerList != null) LoadInstances(tempServerList);
         }
 
         private ObservableCollection<Instance> LoadFromCache(string cacheFilePath)
         {
+            LoadingText = "Lade Cache ...";
             try
             {
                 var cacheContent = File.ReadAllText(cacheFilePath);
@@ -71,36 +88,142 @@ namespace TCLauncher.MVVM.ViewModel
 
         private async Task<ObservableCollection<Instance>> FetchServerList(ObservableCollection<Instance> tempServerList, string cacheFilePath)
         {
+            LoadingText = "Fetche Daten ...";
+            ObservableCollection<Instance> internetData = null;
             try
             {
                 var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    if (tempServerList == null || content != JsonConvert.SerializeObject(tempServerList))
-                    {
-                        tempServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
-                        File.WriteAllText(cacheFilePath, content);
-                    }
+                    internetData = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
+                }
+                else
+                {
+                    return tempServerList;
                 }
             }
             catch
             {
-                if (tempServerList == null)
+                return tempServerList;
+            }
+
+            var isCacheUpToDate = tempServerList?.Count == internetData?.Count;
+            if (isCacheUpToDate)
+            {
+                foreach (var i in internetData)
                 {
-                    MessageBox.Show("Die Profilliste kann nicht geladen werden!", "Fehler");
+                    var guid = i.Guid;
+                    var cacheInstance = tempServerList.FirstOrDefault(x => x.Guid == guid);
+                    if (cacheInstance != null)
+                    {
+                        if (cacheInstance.IsSameAs(i)) continue;
+                    }
+
+                    isCacheUpToDate = false;
+                    break;
                 }
             }
+
+            if (isCacheUpToDate) return tempServerList;
+
+            {
+                tempServerList = internetData;
+                if (tempServerList != null)
+                {
+                    var thumbsDir = Path.Combine(IoUtils.Tcl.CachePath, "thumbs");
+                    try
+                    {
+                        if (Directory.Exists(thumbsDir))
+                            Directory.Delete(thumbsDir, true);
+
+                        Directory.CreateDirectory(thumbsDir);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    foreach (var i in tempServerList)
+                    {
+                        var path = Path.Combine(thumbsDir, i.Guid + Path.GetExtension(i.ThumbnailURL));
+                        var oldThumbnailUrl = i.ThumbnailURL;
+                        try
+                        {
+                            var thumbResponse = await _httpClient.GetAsync(i.ThumbnailURL);
+                            if (thumbResponse.IsSuccessStatusCode)
+                            {
+                                var thumbContent = await thumbResponse.Content.ReadAsByteArrayAsync();
+                                File.WriteAllBytes(path, thumbContent);
+                                i.ThumbnailURL = path;
+                            }
+                        }
+                        catch
+                        {
+                            i.ThumbnailURL = oldThumbnailUrl;
+                        }
+                    }
+                    try
+                    {
+                        File.WriteAllText(cacheFilePath, JsonConvert.SerializeObject(tempServerList));
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Failed to write server list to cache file: {e.Message}", "Error");
+                    }
+                }
+            }
+
+            return tempServerList;
+        }
+
+        private ObservableCollection<Instance> LoadLocalInstances(ObservableCollection<Instance> tempServerList)
+        {
+            LoadingText = "Lade lokale Instanzen...";
+            try
+            {
+                var instancesFolder = IoUtils.Tcl.InstancesPath;
+
+                // Durchlaufen Sie jede Instanz (config.json-Datei im Instanzordner im Instanzenordner)
+                foreach (var directory in Directory.GetDirectories(instancesFolder))
+                {
+                    var configPath = Path.Combine(directory, "config.json");
+                    if (!File.Exists(configPath)) continue;
+                    var config = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(configPath));
+
+                    // Überprüfen Sie, ob die Instanz in tempServerList vorhanden ist, indem Sie instance.IsSameAs() überprüfen
+                    if (tempServerList.Any(instance => instance.IsSameAs(config))) continue;
+
+                    config = new InstalledInstance(config);
+                    config.Is_LocalSource = true;
+
+                    // Wenn nicht, fügen Sie die Instanz zu tempServerList hinzu
+                    tempServerList.Add(config);
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            // Rückgabe von tempServerList
             return tempServerList;
         }
 
         private void LoadInstances(ObservableCollection<Instance> tempServerList)
         {
+            LoadingText = "Lade Instanzen ...";
             try
             {
                 var finalServerList = new ObservableCollection<Instance>();
                 foreach (var instance in tempServerList)
                 {
+                    if (instance.Is_Installed)
+                    {
+                        finalServerList.Add(instance);
+                        continue;
+                    }
+
                     string instanceFolder = IoUtils.Tcl.GetInstancePath(instance.Guid);
                     string installFolder = IoUtils.Tcl.GetInstanceDataPath(instance.Guid);
                     string configFile = IoUtils.Tcl.GetInstanceConfigPath(instance.Guid);
@@ -122,78 +245,5 @@ namespace TCLauncher.MVVM.ViewModel
                 MessageBox.Show("Ein Fehler beim Laden der installierten Instanzen ist aufgetreten.");
             }
         }
-
-
-        //private async void LoadServers()
-        //{
-        //    bool error = false;
-        //    var cacheFilePath = Path.Combine(IoUtils.Tcl.CachePath, "ServerListCache.json");
-
-        //    try
-        //    {
-        //        if (File.Exists(cacheFilePath))
-        //        {
-        //            var cacheContent = File.ReadAllText(cacheFilePath);
-        //            ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(cacheContent);
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        error = true;
-        //    }
-
-        //    try {
-        //        var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var content = await response.Content.ReadAsStringAsync();
-
-        //            if (ServerList == null || content != JsonConvert.SerializeObject(ServerList))
-        //            {
-        //                ServerList = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
-        //                File.WriteAllText(cacheFilePath, content);
-        //            }
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        if (error)
-        //        {
-        //            MessageBox.Show("Die Profilliste kann nicht geladen werden!", "Fehler");
-        //        }
-        //    }
-
-        //    CheckInstalled();
-        //}
-
-        //private void CheckInstalled()
-        //{
-        //    try
-        //    {
-        //        var tempServerList = new ObservableCollection<Instance>();
-        //        foreach (var instance in ServerList)
-        //        {
-        //            string instanceFolder = IoUtils.Tcl.GetInstancePath(instance.Guid);
-        //            string installFolder = IoUtils.Tcl.GetInstanceDataPath(instance.Guid);
-        //            string configFile = IoUtils.Tcl.GetInstanceConfigPath(instance.Guid);
-
-        //            if (Directory.Exists(instanceFolder) && Directory.Exists(installFolder) && File.Exists(configFile))
-        //            {
-        //                var installedinstance = new InstalledInstance(instance);
-        //                tempServerList.Add(installedinstance);
-        //            }
-        //            else
-        //            {
-        //                tempServerList.Add(instance);
-        //            }
-        //        }
-        //        ServerList = tempServerList;
-        //    }
-        //    catch
-        //    {
-        //        MessageBox.Show("Ein Fehler beim Laden der installierten Instanzen ist aufgetreten.");
-        //    }
-        //}
     }
 }

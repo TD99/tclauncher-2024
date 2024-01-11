@@ -11,7 +11,6 @@ namespace TCLauncher.Models
         public string ConfigFile{ get; set; }
         public string LastServer { get; set; }
 
-
         public InstalledInstance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, string workingDirZipUrl, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int minimumRamMb, int maximumRamMb, string[] jvmArguments)
             : base(name, displayName, guid, version, upgradeable, thumbnailUrl, type, mcVersion, workingDirZipUrl, patches, usePatch, workingDirDesc, appletUrl, requirements, servers, minimumRamMb, maximumRamMb, jvmArguments)
         {

@@ -14,6 +14,7 @@ namespace TCLauncher.MVVM.Windows
             InitializeComponent();
             TitleLabel.Content = title;
             tcs = new TaskCompletionSource<bool>();
+            ResponseTextBox.Focus();
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

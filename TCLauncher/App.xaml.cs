@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
@@ -53,17 +54,17 @@ namespace TCLauncher
 
         public App()
         {
-            this.Startup += App_Startup;
+            Startup += App_Startup;
         }
 
-        private void App_Startup(object sender, StartupEventArgs e)
+        private async void App_Startup(object sender, StartupEventArgs e)
         {
             UriArgs = Get_AppURI(e.Args);
             AppArgs = string.Join(" ", e.Args);
 
             if (UriArgs == null)
             {
-                ProcessAppArgs(e);
+                await ProcessAppArgs(e);
             }
             else
             {
@@ -146,7 +147,7 @@ namespace TCLauncher
             return null;
         }
 
-        private void ProcessAppArgs(StartupEventArgs e)
+        private async Task ProcessAppArgs(StartupEventArgs e)
         {
             for (int i = 0; i != e.Args.Length; ++i)
             {
@@ -185,10 +186,35 @@ namespace TCLauncher
                             MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
                         }
                         break;
+                    case "--installPackage":
+                        try
+                        {
+                            var filePath = e.Args[i + 1];
+                            if (!File.Exists(filePath)) throw new FileNotFoundException();
+                            var fileName = Path.GetFileName(filePath);
+                            var dialog = new CustomButtonDialog(DialogButtons.YesNo, $"Möchtest du das Paket '{fileName}' installieren?");
+                            dialog.ShowDialog();
+
+                            var result = await dialog.Result;
+                            if (result != DialogButton.Yes) break;
+                            if (Path.GetExtension(filePath) != ".tcl") throw new FileFormatException();
+
+                            try
+                            {
+                                AppUtils.ImportInstance(filePath);
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBoxUtils.ShowToVoid($"Das Paket '{fileName}' konnte nicht installiert werden: {exception}");
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBoxUtils.ShowToVoid($"Das Paket konnte nicht geladen werden: {exception}");
+                        }
+                        break;
                     case "--silent":
                         is_silent = true;
-                        break;
-                    default:
                         break;
                 }
             }

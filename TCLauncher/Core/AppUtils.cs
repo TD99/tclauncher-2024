@@ -2,18 +2,18 @@
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Windows;
 using static TCLauncher.Core.IoUtils.Tcl;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using TCLauncher.Models;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Management.Instrumentation;
+using System.IO.Compression;
 using CmlLib.Core;
+using Newtonsoft.Json;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.Core
 {
@@ -224,5 +224,155 @@ namespace TCLauncher.Core
                 Settings = GetAllSettings()
             };
         }
+
+        public static bool ImportInstance(string zipPath)
+        {
+            var cachePath = CachePath;
+            var zipName = Path.GetFileNameWithoutExtension(zipPath);
+            var importerDir = Path.Combine(cachePath, "importer_" + zipName);
+
+            ZipFile.ExtractToDirectory(zipPath, importerDir);
+
+            var configPath = Path.Combine(importerDir, "config.json");
+            var config = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(configPath));
+
+            var guid = config.Guid;
+
+            var instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, guid.ToString());
+            if (Directory.Exists(instanceFolder))
+            {
+                MessageBox.Show("Diese Instanz ist bereits installiert.");
+                return false;
+            }
+
+            Directory.CreateDirectory(instanceFolder);
+
+            var payloadPath = Path.Combine(importerDir, "payload.zip");
+            ZipFile.ExtractToDirectory(payloadPath, Path.Combine(instanceFolder, "data"));
+
+            var thumbExt = Path.GetExtension(config.ThumbnailURL);
+            var thumbFile = Path.Combine(importerDir, "thumb" + thumbExt);
+
+            if (File.Exists(thumbFile))
+            {
+                File.Copy(thumbFile, Path.Combine(instanceFolder, "thumb" + thumbExt));
+                config.ThumbnailURL = Path.Combine(instanceFolder, "thumb" + thumbExt);
+            }
+
+            var installedInstance = new InstalledInstance(config);
+            var jsonOut = JsonConvert.SerializeObject(installedInstance);
+            File.WriteAllText(Path.Combine(instanceFolder, "config.json"), jsonOut);
+
+            Directory.Delete(importerDir, true);
+
+            var processModule = Process.GetCurrentProcess().MainModule;
+            if (processModule != null)
+            {
+                string appPath = processModule.FileName;
+                Process.Start(appPath, $"--installSuccess {config.DisplayName}");
+            }
+
+            Application.Current.Shutdown();
+
+            return true;
+        }
+
+        // TODO: needs rework, better code quality
+        public static void LoadInstanceImporter()
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".tcl",
+                Filter = "TCL Package (*.tcl)|*.tcl"
+            };
+
+            var result = dlg.ShowDialog();
+
+            if (result != true) return;
+
+            var zipPath = dlg.FileName;
+            
+            ImportInstance(zipPath);
+        }
+
+        // TODO: needs rework, better code quality
+        public static async Task<Instance> LoadInstanceBuilder()
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".zip", Filter = "Zip Files (*.zip)|*.zip" };
+            var result = dlg.ShowDialog();
+            if (result != true) return null;
+
+            var cachePath = CachePath;
+            var zipPath = dlg.FileName;
+            var zipName = Path.GetFileNameWithoutExtension(zipPath);
+            var creatorDir = Path.Combine(cachePath, "creator_" + zipName);
+            if (!Directory.Exists(creatorDir)) Directory.CreateDirectory(creatorDir);
+
+            var extractPath = Path.Combine(creatorDir, "payload");
+            ZipFile.ExtractToDirectory(zipPath, extractPath);
+
+            string thumbLoc = null;
+            var result2 = MessageBox.Show("Möchtest du ein Thumbnail für das Paket setzen?", "Paket erstellen", MessageBoxButton.YesNo);
+            if (result2 == MessageBoxResult.Yes)
+            {
+                var dlg2 = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".png", Filter = "Image Files (*.png, *.jpg)|*.png;*.jpg" };
+                var result3 = dlg2.ShowDialog();
+                if (result3 == true)
+                {
+                    var thumbnailPath = Path.Combine(creatorDir, "thumb" + Path.GetExtension(dlg2.FileName));
+                    File.Copy(dlg2.FileName, thumbnailPath);
+                    thumbLoc = "[baseURL]/thumb" + Path.GetExtension(dlg2.FileName);
+                }
+            }
+
+            var i = new Instance
+            {
+                Guid = Guid.NewGuid(),
+                Name = await AskForString("Bitte geben Sie den Namen ein"),
+                DisplayName = await AskForString("Bitte geben Sie den Anzeigenamen ein"),
+                Version = await AskForString("Bitte geben Sie die Version ein"),
+                Upgradeable = await AskForBool("Ist es aktualisierbar? (true/false)") ?? false,
+                Type = await AskForString("Bitte geben Sie den Typ ein"),
+                McVersion = await AskForString("Bitte geben Sie die McVersion ein"),
+                UsePatch = await AskForBool("Verwenden Sie Patch? (true/false)", true) ?? false,
+                WorkingDirDesc = await AskForJson<Dictionary<string, List<string>>>("Bitte geben Sie den Beschreibungsbaum als rohen JSON-Text ein", true),
+                Requirements = await AskForJson<Dictionary<string, object>>("Bitte geben Sie die Anforderungen als rohen JSON-Text ein", true),
+                Servers = await AskForJson<List<Server>>("Bitte geben Sie die Server als rohen JSON-Text ein", true),
+                MinimumRamMb = await AskForInt("Bitte geben Sie die minimale RAM-Menge in MB ein", true),
+                MaximumRamMb = await AskForInt("Bitte geben Sie die maximale RAM-Menge in MB ein", true),
+                JVMArguments = await AskForJson<string[]>("Bitte geben Sie die JVMArguments als rohen JSON-Text ein", true),
+                ThumbnailURL = thumbLoc,
+                WorkingDirZipURL = "[baseURL]/payload.zip",
+            };
+
+            var json = JsonConvert.SerializeObject(i);
+            var jsonPath = Path.Combine(creatorDir, "config.json");
+            File.WriteAllText(jsonPath, json);
+
+            var result4 = MessageBox.Show("Möchtest du das Paket jetzt erstellen?", "Paket erstellen", MessageBoxButton.YesNo);
+            if (result4 != MessageBoxResult.Yes)
+            {
+                Process.Start(creatorDir);
+                return null;
+            }
+
+            ZipFile.CreateFromDirectory(extractPath, Path.Combine(creatorDir, "payload.zip"));
+            Directory.Delete(extractPath, true);
+            ZipFile.CreateFromDirectory(creatorDir, Path.Combine(cachePath, i.Name + ".zip"));
+            Directory.Delete(creatorDir, true);
+
+            var dlg3 = new Microsoft.Win32.SaveFileDialog { FileName = i.Name, DefaultExt = ".tcl", Filter = "TCL Package (*.tcl)|*.tcl" };
+            var result5 = dlg3.ShowDialog();
+            if (result5 != true) return null;
+
+            File.Copy(Path.Combine(cachePath, i.Name + ".zip"), dlg3.FileName);
+            File.Delete(Path.Combine(cachePath, i.Name + ".zip"));
+
+            MessageBox.Show("Das Paket wurde erfolgreich erstellt.", "Paket erstellen");
+
+            return i;
+        }
+
+
     }
 }

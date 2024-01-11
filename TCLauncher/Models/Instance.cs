@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using TCLauncher.Core;
 
 namespace TCLauncher.Models
 {
@@ -26,6 +28,7 @@ namespace TCLauncher.Models
         public int? MinimumRamMb { get; set; }
         public int? MaximumRamMb { get; set; }
         public string[] JVMArguments { get; set; }
+        public bool Is_LocalSource { get; set; }
         
 
         public Instance()
@@ -57,6 +60,70 @@ namespace TCLauncher.Models
         public Patch GetCurrentPatch()
         {
             return Patches?.OrderByDescending(p => p.ID).FirstOrDefault();
+        }
+
+        public bool IsSameAs(object compare)
+        {
+            if (compare == null) return false;
+            if (compare.GetType() != GetType()) return false;
+
+            var instance = (Instance)compare;
+
+            // ReSharper disable once ReplaceWithSingleAssignment.True
+            var areThumbnailsSame = true; // IoUtils.TclFile.CompareImages(ThumbnailURL, instance.ThumbnailURL); // TODO: Fix -> too intensive
+            if (!IoUtils.TclFile.DoesFileExistByUrlOrPath(ThumbnailURL)) areThumbnailsSame = false;
+            
+            var arePatchesSame = !(Patches == null && instance.Patches != null || Patches != null && instance.Patches == null);
+            if (Patches != null && instance.Patches != null && Patches.Count == instance.Patches.Count)
+            {
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var patch in Patches)
+                {
+                    var comparePatch = instance.Patches.FirstOrDefault(p => p.ID == patch.ID);
+                    if (comparePatch != null && patch.IsSameAs(comparePatch)) continue;
+                    arePatchesSame = false;
+                    break;
+                }
+            }
+
+            var areWorkingDirDescSame = WorkingDirDesc == null && instance.WorkingDirDesc == null || WorkingDirDesc != null && instance.WorkingDirDesc != null && WorkingDirDesc.Keys.All(k => instance.WorkingDirDesc.ContainsKey(k) && instance.WorkingDirDesc[k].SequenceEqual(WorkingDirDesc[k]));
+            
+            var areRequirementsSame = Requirements == null && instance.Requirements == null || Requirements != null && instance.Requirements != null && Requirements.Keys.All(k => instance.Requirements.ContainsKey(k) && instance.Requirements[k].Equals(Requirements[k]));
+            
+            var areServersSame = !(Servers == null && instance.Servers != null || Servers != null && instance.Servers == null);
+            if (Servers != null && instance.Servers != null && Servers.Count == instance.Servers.Count)
+            {
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var server in Servers)
+                {
+                    var compareServer = instance.Servers.FirstOrDefault(s => s.Name == server.Name);
+                    var isServerSame = server.IsSameAs(compareServer);
+                    if (compareServer != null && server.IsSameAs(compareServer)) continue;
+                    areServersSame = false;
+                    break;
+                }
+            }
+
+            var areJVMArgumentsSame = JVMArguments == null && instance.JVMArguments == null || JVMArguments != null && instance.JVMArguments != null && JVMArguments.SequenceEqual(instance.JVMArguments);
+
+            return Name == instance.Name &&
+                   DisplayName == instance.DisplayName &&
+                   Guid == instance.Guid &&
+                   Version == instance.Version &&
+                   Upgradeable == instance.Upgradeable &&
+                   Type == instance.Type &&
+                   McVersion == instance.McVersion &&
+                   WorkingDirZipURL == instance.WorkingDirZipURL &&
+                   UsePatch == instance.UsePatch &&
+                   AppletURL == instance.AppletURL &&
+                   MinimumRamMb == instance.MinimumRamMb &&
+                   MaximumRamMb == instance.MaximumRamMb &&
+                   areThumbnailsSame &&
+                   arePatchesSame &&
+                   areRequirementsSame &&
+                   areServersSame &&
+                   areJVMArgumentsSame &&
+                   areWorkingDirDescSame;
         }
     }
 }

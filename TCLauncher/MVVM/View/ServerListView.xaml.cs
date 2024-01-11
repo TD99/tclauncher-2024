@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.MVVM.View
 {
@@ -36,7 +37,14 @@ namespace TCLauncher.MVVM.View
         {
             Border border = (Border)sender;
             Instance instance = (Instance)border.DataContext;
-            itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+            try
+            {
+                itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+            }
+            catch
+            {
+                // TODO: Add default image
+            }
             itemFocusName.Text = instance.DisplayName;
             itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name}@{instance.Version}";
             itemFocusPackage.Text = "ch.tcraft." + instance.Name;
@@ -49,7 +57,7 @@ namespace TCLauncher.MVVM.View
 
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
-            reconfigDef.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
+            reconfigDef.Visibility = (instance.Is_Installed && !instance.Is_LocalSource) ? Visibility.Visible : Visibility.Collapsed;
             editConfig.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
 
@@ -107,7 +115,9 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+                string instanceFolder = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances",
+                    current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
                     MessageBox.Show("Es wurden keine Daten gefunden!", "Instanz löschen");
@@ -120,7 +130,8 @@ namespace TCLauncher.MVVM.View
                     return;
                 }
 
-                MessageBoxResult result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                MessageBoxResult result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
                     Directory.Delete(instanceFolder, true);
@@ -130,9 +141,9 @@ namespace TCLauncher.MVVM.View
                     Application.Current.Shutdown();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten.");
+                MessageBox.Show($"Ein Fehler ist aufgetreten: {ex.Message}", "Instanz löschen");
             }
         }
 
@@ -420,6 +431,30 @@ namespace TCLauncher.MVVM.View
             catch
             {
                 MessageBox.Show($"Die Konfiguration von '{current.Name}' ist fehlgeschlagen.");
+            }
+        }
+
+        private async void AddServerBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await AppUtils.LoadInstanceBuilder();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket erstellen");
+            }
+        }
+
+        private void ImportServerBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AppUtils.LoadInstanceImporter();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket importieren");
             }
         }
     }
