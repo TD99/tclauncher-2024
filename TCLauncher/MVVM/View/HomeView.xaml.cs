@@ -18,6 +18,7 @@ using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using System.Runtime.InteropServices;
 using System.Text;
+using CmlLib.Core.Installer.FabricMC;
 using CmlLib.Core.Version;
 using CmlLib.Core.VersionMetadata;
 using TCLauncher.MVVM.ViewModel;
@@ -116,17 +117,36 @@ namespace TCLauncher.MVVM.View
             {
                 System.Net.ServicePointManager.DefaultConnectionLimit = 256;
 
-                switch (Settings.Default.SandboxLevel)
+                if (instance.UseIsolation != true)
                 {
-                    case 0:
-                        App.MinecraftPath = AppUtils.GetMinecraftPathShared(instance.Guid);
-                        break;
-                    case 1:
-                        App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
-                        break;
+                    switch (Settings.Default.SandboxLevel)
+                    {
+                        case 0:
+                            App.MinecraftPath = AppUtils.GetMinecraftPathShared(instance.Guid);
+                            break;
+                        case 1:
+                            App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                            break;
+                    }
+                }
+                else
+                {
+                    App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
                 }
 
                 App.Launcher = new CMLauncher(App.MinecraftPath);
+
+                if (instance.UseFabric == true)
+                {
+                    var fabricLoader = new FabricVersionLoader();
+                    var fabricVersions = await fabricLoader.GetVersionMetadatasAsync();
+
+                    var fabric = fabricVersions.GetVersionMetadata(instance.McVersion);
+                    await fabric.SaveAsync(App.MinecraftPath);
+
+                    // update version list
+                    await App.Launcher.GetAllVersionsAsync();
+                }
 
                 var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
                 var mcServerAddress = InternetUtils.GetMcServerAddress(serverAddressString);
@@ -172,16 +192,6 @@ namespace TCLauncher.MVVM.View
                 actionWindow.Show();
 
                 // TODO: Variable versions
-
-
-                MVersionCollection versions = await App.Launcher.GetAllVersionsAsync(); // shortcut
-
-                // show all versions
-                foreach (MVersionMetadata ver in versions)
-                {
-                    Console.WriteLine(ver.Type + " : " + ver.Name);
-                }
-
                 var process = await App.Launcher.CreateProcessAsync(instance.McVersion, App.LaunchOption);
 
                 var processUtil = new ProcessUtil(process);

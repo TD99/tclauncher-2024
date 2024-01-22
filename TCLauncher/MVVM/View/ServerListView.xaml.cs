@@ -39,21 +39,29 @@ namespace TCLauncher.MVVM.View
             Instance instance = (Instance)border.DataContext;
             try
             {
-                itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(instance.ThumbnailURL);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+
+                itemFocusBanner.Source = bitmap;
             }
             catch
             {
                 // TODO: Add default image
             }
             itemFocusName.Text = instance.DisplayName;
-            itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name}@{instance.Version}";
+            itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name ?? "local"}@{instance.Version}";
             itemFocusPackage.Text = "ch.tcraft." + instance.Name;
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
 
-            string requiredRam = (instance.Requirements == null) ? "?" : instance.Requirements["ram"].ToString() ?? "?";
+            string minRam = (instance.MinimumRamMb / 1000 ?? 0).ToString();
+            string maxRam = (instance.MaximumRamMb / 1000 ?? 0).ToString();
             string totalPhysicalMemory = SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString();
-            itemFocusRam.Text = $"{requiredRam} GB / {totalPhysicalMemory} GB";
+            itemFocusRamMin.Text = $"{minRam} GB / {totalPhysicalMemory} GB";
+            itemFocusRamMax.Text = $"{maxRam} GB / {totalPhysicalMemory} GB";
 
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
@@ -68,13 +76,17 @@ namespace TCLauncher.MVVM.View
             {
                 foreach (KeyValuePair<string, List<string>> entry in instance.WorkingDirDesc)
                 {
-                    AddTextBlock(itemFocusMCWorkingDirDesc, entry.Key, 25);
+                    AddTextBlock(itemFocusMCWorkingDirDesc, entry.Key, 20);
 
                     foreach (string description in entry.Value)
                     {
                         AddTextBlock(itemFocusMCWorkingDirDesc, description, 16);
                     }
                 }
+            }
+            else
+            {
+                propsText.Visibility = Visibility.Collapsed;
             }
 
             itemFocus.Visibility = Visibility.Visible;
@@ -102,6 +114,7 @@ namespace TCLauncher.MVVM.View
             itemFocusMCVersion.Text = "";
             specialFocusBtn.Content = "Aktion";
             itemFocusMCWorkingDirDesc.Children.Clear();
+            propsText.Visibility = Visibility.Visible;
 
             current = null;
         }
@@ -115,7 +128,7 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = System.IO.Path.Combine(
+                var instanceFolder = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances",
                     current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
@@ -124,22 +137,16 @@ namespace TCLauncher.MVVM.View
                     return;
                 }
 
-                if (force)
-                {
-                    Directory.Delete(instanceFolder, true);
-                    return;
-                }
-
-                MessageBoxResult result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen",
+                var result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                {
-                    Directory.Delete(instanceFolder, true);
 
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    Process.Start(appPath, $"--uninstallSuccess {instance.DisplayName}");
-                    Application.Current.Shutdown();
-                }
+                if (result != MessageBoxResult.Yes) return;
+                
+                Directory.Delete(instanceFolder, true);
+
+                var appPath = Process.GetCurrentProcess().MainModule?.FileName;
+                Process.Start(appPath, $"--uninstallCheck {instanceFolder} --uninstallSuccess {instance.DisplayName}");
+                Application.Current.Shutdown();
             }
             catch (Exception ex)
             {
@@ -456,6 +463,11 @@ namespace TCLauncher.MVVM.View
             {
                 MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket importieren");
             }
+        }
+
+        private void CreateBlankBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            AppUtils.CreateTemplateInstance();
         }
     }
 }

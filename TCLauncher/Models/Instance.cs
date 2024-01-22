@@ -16,9 +16,11 @@ namespace TCLauncher.Models
         public string ThumbnailURL { get; set; } = "/Images/nothumb.png";
         public string Type { get; set; }
         public string McVersion { get; set; }
+        public bool? UseFabric { get; set; }
         public string WorkingDirZipURL { get; set; }
         public List<Patch> Patches { get; set; }
         public bool UsePatch { get; set; }
+        public bool? UseIsolation { get; set; }
         public Dictionary<string, List<string>> WorkingDirDesc { get; set; }
         public bool Is_Installed { get; set; }
         public string AppletURL { get; set; }
@@ -29,13 +31,14 @@ namespace TCLauncher.Models
         public int? MaximumRamMb { get; set; }
         public string[] JVMArguments { get; set; }
         public bool Is_LocalSource { get; set; }
+
         
 
         public Instance()
         {
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, string workingDirZipUrl, List<Patch> patches, bool usePatch, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
         {
             Name = name;
             DisplayName = displayName;
@@ -45,9 +48,11 @@ namespace TCLauncher.Models
             ThumbnailURL = thumbnailUrl;
             Type = type;
             McVersion = mcVersion;
+            UseFabric = useFabric;
             WorkingDirZipURL = workingDirZipUrl;
             Patches = patches;
             UsePatch = usePatch;
+            UseIsolation = useIsolation;
             WorkingDirDesc = workingDirDesc;
             AppletURL = appletUrl;
             Requirements = requirements;
@@ -113,6 +118,8 @@ namespace TCLauncher.Models
                    Upgradeable == instance.Upgradeable &&
                    Type == instance.Type &&
                    McVersion == instance.McVersion &&
+                   UseFabric == instance.UseFabric &&
+                   UseIsolation == instance.UseIsolation &&
                    WorkingDirZipURL == instance.WorkingDirZipURL &&
                    UsePatch == instance.UsePatch &&
                    AppletURL == instance.AppletURL &&

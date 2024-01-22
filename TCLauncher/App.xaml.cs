@@ -11,10 +11,13 @@ using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Sessions;
+using CmlLib.Core.Installer.FabricMC;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
+using static System.String;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher
 {
@@ -60,7 +63,7 @@ namespace TCLauncher
         private async void App_Startup(object sender, StartupEventArgs e)
         {
             UriArgs = Get_AppURI(e.Args);
-            AppArgs = string.Join(" ", e.Args);
+            AppArgs = Join(" ", e.Args);
 
             if (UriArgs == null)
             {
@@ -138,7 +141,7 @@ namespace TCLauncher
             if (args.Length > 0)
             {
                 if (Uri.TryCreate(args[0], UriKind.Absolute, out var uri) &&
-                    string.Equals(uri.Scheme, URI_SCHEME, StringComparison.OrdinalIgnoreCase))
+                    String.Equals(uri.Scheme, URI_SCHEME, StringComparison.OrdinalIgnoreCase))
                 {
                     return uri;
                 }
@@ -149,41 +152,54 @@ namespace TCLauncher
 
         private async Task ProcessAppArgs(StartupEventArgs e)
         {
-            for (int i = 0; i != e.Args.Length; ++i)
+            for (var i = 0; i != e.Args.Length; ++i)
             {
                 switch (e.Args[i])
                 {
+                    case "--uninstallCheck":
+                        try
+                        {
+                            var targetDir = e.Args[i + 1] ?? throw new ArgumentNullException();
+                            var instancesDir = IoUtils.Tcl.InstancesPath;
+                            if (!targetDir.StartsWith(instancesDir)) throw new DirectoryNotFoundException("Target directory is not in instances directory.");
+                            if (Directory.Exists(targetDir)) Directory.Delete(targetDir);
+                        }
+                        catch (Exception err)
+                        {
+                            ShowToVoid($"Ein Fehler ist beim Bereinigen aufgetreten. Bitte lösche die Instanz manuell. Fehlermeldung:\n" + err.Message);
+                        }
+                        break;
                     case "--installSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich installiert.");
+                            ShowToVoid($"Das Paket wurde erfolgreich installiert.");
                         }
                         break;
                     case "--updateSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
+                            ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
+                            ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
                         }
                         break;
                     case "--uninstallSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
+                            ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
                         }
                         break;
                     case "--installPackage":
@@ -205,12 +221,12 @@ namespace TCLauncher
                             }
                             catch (Exception exception)
                             {
-                                MessageBoxUtils.ShowToVoid($"Das Paket '{fileName}' konnte nicht installiert werden: {exception}");
+                                ShowToVoid($"Das Paket '{fileName}' konnte nicht installiert werden: {exception}");
                             }
                         }
                         catch (Exception exception)
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket konnte nicht geladen werden: {exception}");
+                            ShowToVoid($"Das Paket konnte nicht geladen werden: {exception}");
                         }
                         break;
                     case "--silent":

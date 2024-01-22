@@ -34,15 +34,17 @@
         </Grid.RowDefinitions>
         <Grid
             x:Name="itemFocus"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             Panel.ZIndex="999"
-            Background="#1D2633"
+            Background="Black"
             Visibility="Collapsed">
             <Grid>
                 <Image
                     x:Name="itemFocusBanner"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    RenderTransformOrigin="0.5,0.5"
+                    Opacity="0.5"
                     Source="/Assets/Images/nothumb.png"
                     Stretch="UniformToFill" />
 
@@ -50,11 +52,10 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <TextBlock
@@ -105,9 +106,19 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="RAM: " />
+                                Text="Min RAM: " />
                             <TextBlock
-                                x:Name="itemFocusRam"
+                                x:Name="itemFocusRamMin"
+                                FontSize="20"
+                                Foreground="White" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="20"
+                                Foreground="White"
+                                Text="Max RAM: " />
+                            <TextBlock
+                                x:Name="itemFocusRamMax"
                                 FontSize="20"
                                 Foreground="White" />
                         </StackPanel>
@@ -115,6 +126,7 @@
 
                     <StackPanel
                         Grid.Row="0"
+                        Grid.RowSpan="2"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top">
@@ -161,29 +173,22 @@
                             Style="{StaticResource ModernButton}" />
                     </StackPanel>
 
-                    <TextBlock
+                    <StackPanel
                         Grid.Row="1"
                         Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Margin="0,20,0,0"
-                        FontSize="25"
-                        Foreground="White"
-                        Text="Weitere Eigenschaften: " />
-                    <Border
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Background="#66000000">
-                        <ScrollViewer
-                            Margin="15"
-                            HorizontalScrollBarVisibility="Auto"
-                            VerticalScrollBarVisibility="Auto">
+                        Margin="0,35,35,0">
+                        <TextBlock
+                            x:Name="propsText"
+                            FontSize="25"
+                            Foreground="White"
+                            Text="Eigenschaften: " />
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <StackPanel
                                 x:Name="itemFocusMCWorkingDirDesc"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch" />
                         </ScrollViewer>
-                    </Border>
+                    </StackPanel>
                 </Grid>
 
             </Grid>
@@ -203,25 +208,34 @@
                 Text="Spiele" />
 
             <StackPanel
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Right"
-                    Grid.Row="0"
-                    Orientation="Horizontal">
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="createBlankBtn"
+                    Width="40px"
+                    Click="CreateBlankBtn_OnClick"
+                    FontSize="18"
+                    Style="{StaticResource ModernButton}">
+                    🗎
+                </Button>
+                <Separator Width="10px" Background="Transparent" />
                 <Button
                     x:Name="addServerBtn"
-                    FontSize="18"
-                    Style="{StaticResource ModernButton}"
                     Width="40px"
-                    Click="AddServerBtn_OnClick">
+                    Click="AddServerBtn_OnClick"
+                    FontSize="18"
+                    Style="{StaticResource ModernButton}">
                     🔨
                 </Button>
                 <Separator Width="10px" Background="Transparent" />
                 <Button
                     x:Name="importServerBtn"
-                    FontSize="28"
-                    Style="{StaticResource ModernButton}"
                     Width="40px"
-                    Click="ImportServerBtn_OnClick">
+                    Click="ImportServerBtn_OnClick"
+                    FontSize="28"
+                    Style="{StaticResource ModernButton}">
                     +
                 </Button>
             </StackPanel>
@@ -435,10 +449,10 @@
             </ListView>
 
             <StackPanel
-                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}"
                 Grid.Row="1"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}">
                 <fa:ImageAwesome
                     Width="60"
                     Height="60"
@@ -446,7 +460,7 @@
                     Foreground="White"
                     Icon="SquareOutline"
                     Spin="True" />
-                <Label Margin="0, 10, 0, 0" Content="{Binding LoadingText}" />
+                <Label Margin="0,10,0,0" Content="{Binding LoadingText}" />
             </StackPanel>
         </Grid>
     </Grid>

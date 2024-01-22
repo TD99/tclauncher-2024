@@ -38,8 +38,8 @@ namespace TCLauncher.MVVM.Windows
         {
             if (!Properties.Settings.Default.FirstTime && !IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath)) return;
             Properties.Settings.Default.FirstTime = false;
-            newToolTip.PlacementTarget = serverBtn;
-            newToolTip.IsOpen = true;
+            //newToolTip.PlacementTarget = serverBtn;
+            //newToolTip.IsOpen = true;
         }
 
         public async Task<string> GetFileSizeAsync(string url)

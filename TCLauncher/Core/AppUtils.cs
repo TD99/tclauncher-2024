@@ -225,11 +225,47 @@ namespace TCLauncher.Core
             };
         }
 
+        public static void CreateTemplateInstance()
+        {
+            var randGuid = Guid.NewGuid();
+
+            var instanceFolder = Path.Combine(InstancesPath, randGuid.ToString());
+            Directory.CreateDirectory(instanceFolder);
+            var installedInstance = new InstalledInstance
+            {
+                Guid = randGuid,
+                Name = "template-" + randGuid,
+                DisplayName = "Template " + randGuid.ToString().Substring(0, 4),
+                Version = "1.0.0",
+                Type = "Template",
+                McVersion = "<Insert McVersion>",
+                UseFabric = false,
+                UseIsolation = false,
+                MinimumRamMb = 1024,
+                MaximumRamMb = 8024
+            };
+            var jsonOut = JsonConvert.SerializeObject(installedInstance);
+            File.WriteAllText(Path.Combine(instanceFolder, "config.json"), jsonOut);
+
+            Directory.CreateDirectory(Path.Combine(instanceFolder, "data"));
+
+            var processModule = Process.GetCurrentProcess().MainModule;
+            if (processModule != null)
+            {
+                string appPath = processModule.FileName;
+                Process.Start(appPath, $"--installSuccess {installedInstance.DisplayName}");
+            }
+
+            Application.Current.Shutdown();
+        }
+
         public static bool ImportInstance(string zipPath)
         {
             var cachePath = CachePath;
             var zipName = Path.GetFileNameWithoutExtension(zipPath);
             var importerDir = Path.Combine(cachePath, "importer_" + zipName);
+
+            if (Directory.Exists(importerDir)) Directory.Delete(importerDir, true);
 
             ZipFile.ExtractToDirectory(zipPath, importerDir);
 
@@ -238,11 +274,18 @@ namespace TCLauncher.Core
 
             var guid = config.Guid;
 
-            var instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, guid.ToString());
+            var instanceFolder = Path.Combine(InstancesPath, guid.ToString());
             if (Directory.Exists(instanceFolder))
             {
-                MessageBox.Show("Diese Instanz ist bereits installiert.");
-                return false;
+                var result = MessageBox.Show("Diese Instanz ist bereits installiert. Überschreiben?", null, MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Directory.Delete(instanceFolder, true);
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             Directory.CreateDirectory(instanceFolder);
@@ -306,7 +349,9 @@ namespace TCLauncher.Core
             var zipPath = dlg.FileName;
             var zipName = Path.GetFileNameWithoutExtension(zipPath);
             var creatorDir = Path.Combine(cachePath, "creator_" + zipName);
-            if (!Directory.Exists(creatorDir)) Directory.CreateDirectory(creatorDir);
+            if (Directory.Exists(creatorDir)) Directory.Delete(creatorDir, true);
+
+            Directory.CreateDirectory(creatorDir);
 
             var extractPath = Path.Combine(creatorDir, "payload");
             ZipFile.ExtractToDirectory(zipPath, extractPath);
@@ -334,7 +379,9 @@ namespace TCLauncher.Core
                 Upgradeable = await AskForBool("Ist es aktualisierbar? (true/false)") ?? false,
                 Type = await AskForString("Bitte geben Sie den Typ ein"),
                 McVersion = await AskForString("Bitte geben Sie die McVersion ein"),
+                UseFabric = await AskForBool("Verwenden Sie Fabric? (true/false)", true),
                 UsePatch = await AskForBool("Verwenden Sie Patch? (true/false)", true) ?? false,
+                UseIsolation = await AskForBool("Verwenden Sie Isolation? (true/false)", true),
                 WorkingDirDesc = await AskForJson<Dictionary<string, List<string>>>("Bitte geben Sie den Beschreibungsbaum als rohen JSON-Text ein", true),
                 Requirements = await AskForJson<Dictionary<string, object>>("Bitte geben Sie die Anforderungen als rohen JSON-Text ein", true),
                 Servers = await AskForJson<List<Server>>("Bitte geben Sie die Server als rohen JSON-Text ein", true),
