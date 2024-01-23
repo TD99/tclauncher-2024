@@ -357,7 +357,7 @@
       <Version>1.1.77</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>2.2.10</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="NAudio">
       <Version>2.2.1</Version>
@@ -369,7 +369,7 @@
       <Version>2.0.2</Version>
     </PackageReference>
     <PackageReference Include="XamlAnimatedGif">
-      <Version>2.2.0</Version>
+      <Version>2.2.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

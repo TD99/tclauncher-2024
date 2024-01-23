@@ -114,25 +114,31 @@ namespace TCLauncher
 
         private async void TryAutoLogin()
         {
-            var accounts = LoginHandler.AccountManager.GetAccounts();
-            foreach (var account in accounts)
+            try
             {
-                if (!(account is JEGameAccount jeGameAccount)) continue;
-                if (jeGameAccount?.Profile?.UUID != Settings.Default.LastAccountUUID) continue;
-
-                try
+                var accounts = LoginHandler.AccountManager.GetAccounts();
+                foreach (var account in accounts)
                 {
-                    var session = await LoginHandler.Authenticate(jeGameAccount);
+                    if (!(account is JEGameAccount jeGameAccount)) continue;
+                    if (jeGameAccount?.Profile?.UUID != Settings.Default.LastAccountUUID) continue;
 
-                    MainWin.SetDisplayAccount(session?.Username);
-                    Session = session;
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
+                    try
+                    {
+                        var session = await LoginHandler.Authenticate(jeGameAccount);
 
-                break;
+                        MainWin.SetDisplayAccount(session?.Username);
+                        Session = session;
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                }
+            } catch (Exception e)
+            {
+                MessageBox.Show("Ein Fehler beim automatischen Anmelden ist aufgetreten: " + e.Message);
             }
         }
 

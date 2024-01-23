@@ -9,7 +9,7 @@ namespace TCLauncher.MVVM.Controls
         public static readonly DependencyProperty RotationProperty =
             DependencyProperty.Register(nameof(Rotation), typeof(double), typeof(SkeletonLoader), new PropertyMetadata(0.0));
 
-        public static readonly DependencyProperty BackgroundProperty =
+        public static readonly new DependencyProperty BackgroundProperty =
             DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(SkeletonLoader), new PropertyMetadata(Brushes.LightGray));
 
         public static readonly DependencyProperty BorderRadiusProperty =
@@ -24,7 +24,7 @@ namespace TCLauncher.MVVM.Controls
             set => SetValue(RotationProperty, value);
         }
 
-        public Brush Background
+        public new Brush Background
         {
             get => (Brush)GetValue(BackgroundProperty);
             set => SetValue(BackgroundProperty, value);
