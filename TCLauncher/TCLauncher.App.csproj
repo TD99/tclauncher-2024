@@ -127,6 +127,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\AnimationUtils.cs" />
+    <Compile Include="Core\InstanceAssetsUtils.cs" />
     <Compile Include="Core\LoopStream.cs" />
     <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\XamlUtils.cs" />
@@ -134,6 +135,8 @@
     <Compile Include="Models\DialogButtons.cs" />
     <Compile Include="Models\DialogButton.cs" />
     <Compile Include="Models\McServerAddress.cs" />
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\AssetFragment.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
