@@ -10,7 +10,7 @@ namespace TCLauncher.Core
     {
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public static bool GetAssets(string id, string installationPath, string url = "https://tcraft.link/tclauncher/api/assets/")
+        public static bool GetAssets(string id, string installationPath, string url = "https://tcraft.link/tclauncher/api/mcassets/")
         {
             // Get file without downloading from url + id + ".json" and parse as json
             var assetsJson = _httpClient.GetStringAsync(url + "index.php").Result;
