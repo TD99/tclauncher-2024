@@ -239,9 +239,11 @@ namespace TCLauncher.Core
                 Version = "1.0.0",
                 Type = "Template",
                 McVersion = "<Insert McVersion>",
+                ForgeVersion = "",
                 UseFabric = false,
+                UseForge = false,
                 UseIsolation = false,
-                MinimumRamMb = 1024,
+                MinimumRamMb = 0,
                 MaximumRamMb = 8024
             };
             var jsonOut = JsonConvert.SerializeObject(installedInstance);
@@ -379,7 +381,9 @@ namespace TCLauncher.Core
                 Upgradeable = await AskForBool("Ist es aktualisierbar? (true/false)") ?? false,
                 Type = await AskForString("Bitte geben Sie den Typ ein"),
                 McVersion = await AskForString("Bitte geben Sie die McVersion ein"),
+                ForgeVersion = await AskForString("Bitte geben Sie die ForgeVersion ein"),
                 UseFabric = await AskForBool("Verwenden Sie Fabric? (true/false)", true),
+                UseForge = await AskForBool("Verwenden Sie Forge? (true/false)", true),
                 UsePatch = await AskForBool("Verwenden Sie Patch? (true/false)", true) ?? false,
                 UseIsolation = await AskForBool("Verwenden Sie Isolation? (true/false)", true),
                 WorkingDirDesc = await AskForJson<Dictionary<string, List<string>>>("Bitte geben Sie den Beschreibungsbaum als rohen JSON-Text ein", true),

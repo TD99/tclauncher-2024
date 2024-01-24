@@ -11,8 +11,8 @@ namespace TCLauncher.Models
         public string ConfigFile{ get; set; }
         public string LastServer { get; set; }
 
-        public InstalledInstance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int minimumRamMb, int maximumRamMb, string[] jvmArguments)
-            : base(name, displayName, guid, version, upgradeable, thumbnailUrl, type, mcVersion, useFabric, workingDirZipUrl, patches, usePatch, useIsolation, workingDirDesc, appletUrl, requirements, servers, minimumRamMb, maximumRamMb, jvmArguments)
+        public InstalledInstance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, string forgeVersion, bool? useFabric, bool? useForge, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int minimumRamMb, int maximumRamMb, string[] jvmArguments)
+            : base(name, displayName, guid, version, upgradeable, thumbnailUrl, type, mcVersion, forgeVersion, useFabric, useForge, workingDirZipUrl, patches, usePatch, useIsolation, workingDirDesc, appletUrl, requirements, servers, minimumRamMb, maximumRamMb, jvmArguments)
         {
             InstallationDir = IoUtils.Tcl.GetInstancePath(guid);
             DataDir = IoUtils.Tcl.GetInstanceDataPath(guid);
@@ -22,7 +22,7 @@ namespace TCLauncher.Models
         
         public InstalledInstance(Instance instance)
             : base(instance.Name, instance.DisplayName, instance.Guid, instance.Version,
-                   instance.Upgradeable, instance.ThumbnailURL, instance.Type, instance.McVersion, instance.UseFabric, instance.WorkingDirZipURL,
+                   instance.Upgradeable, instance.ThumbnailURL, instance.Type, instance.McVersion, instance.ForgeVersion, instance.UseFabric, instance.UseFabric, instance.WorkingDirZipURL,
                    instance.Patches, instance.UsePatch, instance.UseIsolation, instance.WorkingDirDesc, instance.AppletURL, instance.Requirements,
                    instance.Servers, instance.MinimumRamMb, instance.MaximumRamMb, instance.JVMArguments)
         {

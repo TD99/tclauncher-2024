@@ -1524,7 +1524,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1555,7 +1555,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -2175,7 +2175,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -2288,7 +2288,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -2350,7 +2350,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -2588,15 +2588,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TCLauncher"
-        "ProductCode" = "8:{A1401321-1FCF-42AF-9CD6-B2C54FA70B47}"
-        "PackageCode" = "8:{9BBB356C-6104-412E-AA00-C0345188374F}"
+        "ProductCode" = "8:{740FEE5C-68BC-45E1-9E6D-BCAB8EBBEF1E}"
+        "PackageCode" = "8:{38AFFB8E-33F1-4FBF-89F2-1296F10DBBA5}"
         "UpgradeCode" = "8:{6BE44004-C883-457B-8E2A-8046034FEF4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.3.0"
+        "ProductVersion" = "8:0.3.1"
         "Manufacturer" = "8:TCraft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -3166,7 +3166,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CC3C17D8C7A3420A8E9C22215CD0B354"
             {
-            "SourcePath" = "8:..\\TCLauncher\\obj\\x64\\Release\\TCLauncher.exe"
+            "SourcePath" = "8:..\\TCLauncher\\obj\\x64\\Debug\\TCLauncher.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5759CF534040443D8A3E5F614C658496"

@@ -16,7 +16,9 @@ namespace TCLauncher.Models
         public string ThumbnailURL { get; set; } = "/Images/nothumb.png";
         public string Type { get; set; }
         public string McVersion { get; set; }
+        public string ForgeVersion { get; set; }
         public bool? UseFabric { get; set; }
+        public bool? UseForge { get; set; }
         public string WorkingDirZipURL { get; set; }
         public List<Patch> Patches { get; set; }
         public bool UsePatch { get; set; }
@@ -38,7 +40,7 @@ namespace TCLauncher.Models
         {
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, string forgeVersion, bool? useFabric, bool? useForge, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
         {
             Name = name;
             DisplayName = displayName;
@@ -48,10 +50,12 @@ namespace TCLauncher.Models
             ThumbnailURL = thumbnailUrl;
             Type = type;
             McVersion = mcVersion;
+            ForgeVersion = forgeVersion;
             UseFabric = useFabric;
             WorkingDirZipURL = workingDirZipUrl;
             Patches = patches;
             UsePatch = usePatch;
+            UseForge = useForge;
             UseIsolation = useIsolation;
             WorkingDirDesc = workingDirDesc;
             AppletURL = appletUrl;
@@ -65,6 +69,16 @@ namespace TCLauncher.Models
         public Patch GetCurrentPatch()
         {
             return Patches?.OrderByDescending(p => p.ID).FirstOrDefault();
+        }
+
+        public bool IsSameAsDecent(object compare)
+        {
+            if (compare == null) return false;
+            if (compare.GetType() != GetType()) return false;
+
+            var instance = (Instance)compare;
+
+            return Guid == instance.Guid;
         }
 
         public bool IsSameAs(object compare)
@@ -118,7 +132,9 @@ namespace TCLauncher.Models
                    Upgradeable == instance.Upgradeable &&
                    Type == instance.Type &&
                    McVersion == instance.McVersion &&
+                   ForgeVersion == instance.ForgeVersion &&
                    UseFabric == instance.UseFabric &&
+                   UseForge == instance.UseForge &&
                    UseIsolation == instance.UseIsolation &&
                    WorkingDirZipURL == instance.WorkingDirZipURL &&
                    UsePatch == instance.UsePatch &&

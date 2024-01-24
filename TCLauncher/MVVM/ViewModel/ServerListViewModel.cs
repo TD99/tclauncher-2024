@@ -191,11 +191,13 @@ namespace TCLauncher.MVVM.ViewModel
                     if (!File.Exists(configPath)) continue;
                     var config = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(configPath));
 
-                    // Überprüfen Sie, ob die Instanz in tempServerList vorhanden ist, indem Sie instance.IsSameAs() überprüfen
-                    if (tempServerList.Any(instance => instance.IsSameAs(config))) continue;
+                    // Überprüfen Sie, ob die Instanz in tempServerList vorhanden ist, indem Sie instance.IsSameAsDecent() überprüfen
+                    if (tempServerList.Any(instance => instance.IsSameAsDecent(config))) continue;
 
-                    config = new InstalledInstance(config);
-                    config.Is_LocalSource = true;
+                    config = new InstalledInstance(config)
+                    {
+                        Is_LocalSource = true
+                    };
 
                     // Wenn nicht, fügen Sie die Instanz zu tempServerList hinzu
                     tempServerList.Add(config);

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CmlLib.Core;
+using CmlLib.Core.Installer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +19,7 @@ using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using TCLauncher.Properties;
 using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.MVVM.View

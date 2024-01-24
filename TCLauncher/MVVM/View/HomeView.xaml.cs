@@ -16,13 +16,12 @@ using CmlLib.Utils;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
-using System.Runtime.InteropServices;
-using System.Text;
 using CmlLib.Core.Installer.FabricMC;
-using CmlLib.Core.Version;
-using CmlLib.Core.VersionMetadata;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
+using CmlLib.Core.Installer;
+using CmlLib.Core.Downloader;
+using CmlLib.Core.Version;
 
 namespace TCLauncher.MVVM.View
 {
@@ -146,6 +145,19 @@ namespace TCLauncher.MVVM.View
 
                     // update version list
                     await App.Launcher.GetAllVersionsAsync();
+                }
+
+                if (true && !string.IsNullOrEmpty(instance.McVersion) && !string.IsNullOrEmpty(instance.ForgeVersion))
+                {
+                    var vanillaVersion = await App.Launcher.GetVersionAsync(instance.McVersion);
+
+                    var actionWin = new ActionWindow("Bitte warten ...");
+                    actionWin.Show();
+                    await App.Launcher.CheckAndDownloadAsync(vanillaVersion);
+                    actionWin.Close();
+
+                    var forge = new MForge(App.MinecraftPath, "C:\\Program Files\\Java\\jdk-17\\bin\\java.exe");
+                    var versionName = forge.InstallForge(instance.McVersion, instance.ForgeVersion);
                 }
 
                 var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
