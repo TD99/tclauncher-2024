@@ -116,26 +116,31 @@ namespace TCLauncher.MVVM.View
             {
                 System.Net.ServicePointManager.DefaultConnectionLimit = 256;
 
+                var path = new MinecraftPath();
+                var isIsolated = true;
                 if (instance.UseIsolation != true)
                 {
                     switch (Settings.Default.SandboxLevel)
                     {
                         case 0:
-                            App.MinecraftPath = AppUtils.GetMinecraftPathShared(instance.Guid);
+                            path = AppUtils.GetMinecraftPathShared(instance.Guid);
+                            isIsolated = false;
                             break;
                         case 1:
-                            App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                            path = AppUtils.GetMinecraftPathIsolated(instance.Guid);
                             break;
                     }
                 }
                 else
                 {
-                    App.MinecraftPath = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                    path = AppUtils.GetMinecraftPathIsolated(instance.Guid);
                 }
+
+                App.MinecraftPath = path;
 
                 App.Launcher = new CMLauncher(App.MinecraftPath);
 
-                if (instance.UseFabric == true)
+                if (instance.UseFabric == true && !string.IsNullOrEmpty(instance.McVersion))
                 {
                     var fabricLoader = new FabricVersionLoader();
                     var fabricVersions = await fabricLoader.GetVersionMetadatasAsync();
@@ -147,17 +152,14 @@ namespace TCLauncher.MVVM.View
                     await App.Launcher.GetAllVersionsAsync();
                 }
 
-                if (true && !string.IsNullOrEmpty(instance.McVersion) && !string.IsNullOrEmpty(instance.ForgeVersion))
+                if (instance.UseForge == true && !string.IsNullOrEmpty(instance.McVersion))
                 {
-                    var vanillaVersion = await App.Launcher.GetVersionAsync(instance.McVersion);
+                    var names = new List<string>
+                    {
+                        instance.McVersion
+                    };
 
-                    var actionWin = new ActionWindow("Bitte warten ...");
-                    actionWin.Show();
-                    await App.Launcher.CheckAndDownloadAsync(vanillaVersion);
-                    actionWin.Close();
-
-                    var forge = new MForge(App.MinecraftPath, "C:\\Program Files\\Java\\jdk-17\\bin\\java.exe");
-                    var versionName = forge.InstallForge(instance.McVersion, instance.ForgeVersion);
+                    await InstanceAssetsUtils.GetAssets(names, isIsolated);
                 }
 
                 var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;

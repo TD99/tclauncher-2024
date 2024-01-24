@@ -162,6 +162,17 @@ namespace TCLauncher
             {
                 switch (e.Args[i])
                 {
+                    case "--forgeAd":
+                        var trials = 100;
+                        for (var j = 0; j < trials; j++)
+                        {
+                            var result = MessageBox.Show("TCLauncher unterstützt Forge. Bitte schau Forge's Werbung und klicke auf 'Skip', um fortzufahren.",
+                                "AD-Manager", MessageBoxButton.OKCancel);
+                            if (result == MessageBoxResult.Cancel) Environment.Exit(0);
+                            if (j == trials - 1) Environment.Exit(0);
+                        }
+                        Environment.Exit(0);
+                        break;
                     case "--uninstallCheck":
                         try
                         {
