@@ -30,7 +30,6 @@ namespace TCLauncher.MVVM.View
     public partial class ServerListView
     {
         private Instance current { get; set; }
-        private readonly string adUrl = "https://adfoc.us/serve/sitelinks/?id=271228&url=https://tcraft.link/tclauncher/api/plugins/start-tcl?forgeAdValidationKey=";
 
         public ServerListView()
         {
@@ -304,8 +303,13 @@ namespace TCLauncher.MVVM.View
 
                 var guid = Guid.NewGuid();
 
-                Process.Start(adUrl + guid);
-                Process.Start(appPath, $"--forgeAd --installSuccess {instance.DisplayName}");
+                if (instance.UseForge == true)
+                {             
+                    var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                    File.WriteAllText(forgeAdFile, guid.ToString());
+                }
+
+                Process.Start(appPath, $"--installSuccess {instance.DisplayName}");
                 Application.Current.Shutdown();
             }
             catch

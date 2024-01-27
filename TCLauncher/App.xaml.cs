@@ -93,6 +93,53 @@ namespace TCLauncher
 
             RegisterURIScheme();
 
+            // check if forge ad
+            try
+            {
+                var adUrl = "https://adfoc.us/serve/sitelinks/?id=271228&url=https://tcraft.link/tclauncher/api/plugins/start-tcl?forgeAdValidationKey=";
+
+                var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                if (File.Exists(forgeAdFile))
+                {
+                    var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
+                    if (guid != Guid.Empty)
+                    {
+                        ShowToVoidLegacy("TCLauncher unterstützt Forge. Bitte schau Forge's Werbung und klicke auf 'Skip', um fortzufahren.");
+                        Thread.Sleep(1000);
+                        Process.Start(adUrl + guid);
+
+                        var trials = 100;
+                        for (var j = 0; j < trials; j++)
+                        {
+                            if (File.Exists(forgeAdFile))
+                            {
+                                var content = File.ReadAllText(forgeAdFile);
+                                if (Guid.TryParse(content, out var guidResult) && guidResult == Guid.Empty)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                            Thread.Sleep(600);
+                        }
+
+                        if (File.Exists(forgeAdFile))
+                        {
+                            File.Delete(forgeAdFile);
+                        }
+
+                        if (trials > 0)
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
+                }
+            } catch { }
+
             try
             {
                 IoUtils.Tcl.CreateDirectries();
@@ -162,17 +209,6 @@ namespace TCLauncher
             {
                 switch (e.Args[i])
                 {
-                    case "--forgeAd":
-                        var trials = 100;
-                        for (var j = 0; j < trials; j++)
-                        {
-                            var result = MessageBox.Show("TCLauncher unterstützt Forge. Bitte schau Forge's Werbung und klicke auf 'Skip', um fortzufahren.",
-                                "AD-Manager", MessageBoxButton.OKCancel);
-                            if (result == MessageBoxResult.Cancel) Environment.Exit(0);
-                            if (j == trials - 1) Environment.Exit(0);
-                        }
-                        Environment.Exit(0);
-                        break;
                     case "--uninstallCheck":
                         try
                         {
@@ -266,7 +302,20 @@ namespace TCLauncher
 
                 foreach (string arg in URIArgs.Keys)
                 {
-                    // TODO: Handle App URI Args
+                    switch (arg)
+                    {
+                        case "forgeAdValidationKey":
+                            var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                            if (File.Exists(forgeAdFile))
+                            {
+                                var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
+                                if (guid != Guid.Empty && guid == Guid.Parse(URIArgs[arg]))
+                                {
+                                    File.Delete(forgeAdFile);
+                                }
+                            }
+                            break;
+                    }
                 }
             }
             catch {}
