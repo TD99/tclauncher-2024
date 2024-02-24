@@ -10,7 +10,7 @@
         public string ActionURL { get; set; }
         public bool OpenExternal { get; set; }
         public bool is_action => ActionURL != null;
-
+        
         public Applet(int weight, string name, string coverUrl, string title, string description, string actionUrl, bool openExternal=false)
         {
             Weight = weight;

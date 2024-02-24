@@ -52,6 +52,11 @@ namespace TCLauncher.MVVM.View
             }
 
             hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
+
+            if (Properties.Settings.Default.UseSocial)
+            {
+                Social.IsChecked = true;
+            }
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -225,6 +230,20 @@ namespace TCLauncher.MVVM.View
 
             Properties.Settings.Default.SandboxLevel = value;
             Properties.Settings.Default.Save();
+        }
+
+        private void Social_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.UseSocial = true;
+            Properties.Settings.Default.Save();
+            App.MainWin.ReloadNavPolicies();
+        }
+
+        private void Social_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.UseSocial = false;
+            Properties.Settings.Default.Save();
+            App.MainWin.ReloadNavPolicies();
         }
     }
 }

@@ -103,9 +103,9 @@
                 <StackPanel Grid.Row="2" Grid.Column="1">
                     <RadioButton
                         x:Name="homeBtn"
+                        Margin="0,0,0,5"
                         Command="{Binding HomeViewCommand}"
-                        Content="Home"
-                        Margin="0, 0, 0, 5">
+                        Content="Home">
                         <RadioButton.Style>
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
@@ -118,10 +118,10 @@
                     </RadioButton>
                     <RadioButton
                         x:Name="serverBtn"
+                        Margin="0,0,0,5"
                         Command="{Binding ServerListViewCommand}"
                         Content="Spiele"
-                        ToolTipService.IsEnabled="False"
-                        Margin="0, 0, 0, 5">
+                        ToolTipService.IsEnabled="False">
                         <RadioButton.ToolTip>
                             <ToolTip
                                 x:Name="newToolTip"
@@ -146,6 +146,24 @@
                             </Style>
                         </RadioButton.Style>
                     </RadioButton>
+
+                    <RadioButton
+                        x:Name="socBtn"
+                        Margin="0,0,0,5"
+                        Command="{Binding SocialViewCommand}"
+                        Content="Sozial"
+                        Visibility="Collapsed">
+                        <RadioButton.Style>
+                            <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:SocialViewModel}}" Value="True">
+                                        <Setter Property="IsChecked" Value="True" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+
                     <!--<RadioButton
                         x:Name="settingsBtn"
                         Command="{Binding SettingsViewCommand}"

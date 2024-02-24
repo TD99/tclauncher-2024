@@ -364,5 +364,11 @@ namespace TCLauncher.MVVM.View
             selectedInstance.LastServer = ((Server)ServerSelect.SelectedItem).Address;
             IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
         }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            webView.Stop();
+            webView.Dispose();
+        }
     }
 }
