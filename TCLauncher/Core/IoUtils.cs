@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
+using Newtonsoft.Json;
+using TCLauncher.Models;
 
 namespace TCLauncher.Core
 {
@@ -34,8 +37,58 @@ namespace TCLauncher.Core
                 }
                 return false;
             }
+
+            public static bool CompareImages(string urlOrPath1, string urlOrPath2)
+            {
+                var image1 = GetImageBytes(urlOrPath1);
+                var image2 = GetImageBytes(urlOrPath2);
+
+                if (image1 == null || image2 == null)
+                {
+                    return false;
+                }
+
+                return image1.SequenceEqual(image2);
+            }
+
+            public static byte[] GetImageBytes(string urlOrPath)
+            {
+                if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
+                    return File.Exists(urlOrPath) ? File.ReadAllBytes(urlOrPath) : null;
+
+                using (var webClient = new WebClient())
+                {
+                    try
+                    {
+                        return webClient.DownloadData(urlOrPath);
+                    }
+                    catch (WebException)
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            public static bool DoesFileExistByUrlOrPath(string urlOrPath)
+            {
+                if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
+                    return File.Exists(urlOrPath);
+
+                using (var webClient = new WebClient())
+                {
+                    try
+                    {
+                        webClient.DownloadData(urlOrPath);
+                        return true;
+                    }
+                    catch (WebException)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
-        
+
         /// <summary>
         /// A nested class for handling specific directory operations.
         /// </summary>
@@ -48,7 +101,14 @@ namespace TCLauncher.Core
             /// <returns>true if the directory is empty; otherwise, false.</returns>
             public static bool IsEmpty(string path)
             {
-                return System.IO.Directory.GetFiles(path).Length == 0;
+                try
+                {
+                    return Directory.GetFiles(path).Length == 0;
+                }
+                catch
+                {
+                    return true;
+                }
             }
 
             /// <summary>
@@ -58,7 +118,7 @@ namespace TCLauncher.Core
             /// <returns>Size of directory in GB.</returns>
             public static double GetSize(string path)
             {
-                var files = System.IO.Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
                 var bytes = files.Select(name => new FileInfo(name)).Select(info => info.Length).Sum();
                 var megabytes = (bytes / 1024f) / 1024f;
                 var gigabytes = (megabytes / 1024f);
@@ -97,6 +157,11 @@ namespace TCLauncher.Core
             public static readonly string DefaultPath = Path.Combine(RootPath, "Default");
 
             /// <summary>
+            /// The shared path for the application, located within the TCL root directory.
+            /// </summary>
+            public static readonly string SharedPath = Path.Combine(RootPath, "Shared");
+
+            /// <summary>
             /// Calculates the size of the directory at the specified path.
             /// </summary>
             /// <param name="path">The path of the directory. If null, the root path is used.</param>
@@ -126,6 +191,59 @@ namespace TCLauncher.Core
                 if (!Directory.Exists(InstancesPath)) Directory.CreateDirectory(InstancesPath);
                 if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
                 if (!Directory.Exists(DefaultPath)) Directory.CreateDirectory(DefaultPath);
+                if (!Directory.Exists(SharedPath)) Directory.CreateDirectory(SharedPath);
+            }
+
+            /// <summary>
+            /// Generates a temporary file name with an optional file type.
+            /// </summary>
+            /// <param name="fileType">The file type (e.g., ".txt"). Optional.</param>
+            /// <returns>A string representing the full path of the temporary file.</returns>
+            public static string GetTempFileName(string fileType = null)
+            {
+                string fileName = Path.GetRandomFileName();
+
+                if (!string.IsNullOrEmpty(fileType))
+                {
+                    fileName = Path.ChangeExtension(fileName, fileType);
+                }
+
+                return Path.Combine(CachePath, fileName);
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance.
+            /// </summary>
+            public static string GetInstancePath(Guid instanceGuid)
+            {
+                return Path.Combine(InstancesPath, instanceGuid.ToString());
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance's data directory.
+            /// </summary>
+            public static string GetInstanceDataPath(Guid instanceGuid)
+            {
+                return Path.Combine(GetInstancePath(instanceGuid), "data");
+            }
+
+            /// <summary>
+            /// Gets the path of the specified instance's config file.
+            /// </summary>
+            public static string GetInstanceConfigPath(Guid instanceGuid)
+            {
+                return Path.Combine(GetInstancePath(instanceGuid), "config.json");
+            }
+
+            /// <summary>
+            /// Saves the specified instance's config file.
+            /// </summary>
+            public static string SaveInstalledInstanceConfig(InstalledInstance instance, string configFileOverride = null)
+            {
+                var path = configFileOverride ?? instance.ConfigFile;
+                var json = JsonConvert.SerializeObject(instance);
+                File.WriteAllText(path, json);
+                return path;
             }
         }
 

@@ -21,9 +21,11 @@ namespace TCLauncher.Models
         public bool? IsTcraftReacheable { get; set; }
         public Dictionary<string, double> TotalAdapterMemoryInGb { get; set; }
         public double? TotalPhysicalMemoryInGb { get; set; }
+        public int? DefaultConnectionLimit { get; set; }
         public string[] LoadedPlugins { get; set; }
+        public Dictionary<string, object> Settings { get; set; }
 
-        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, string[] loadedPlugins)
+        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, int? defaultConnectionLimit, string[] loadedPlugins, Dictionary<string, object> settings)
         {
             Launcher = launcher;
             PathRegistry = pathRegistry;
@@ -40,7 +42,9 @@ namespace TCLauncher.Models
             IsTcraftReacheable = isTcraftReacheable;
             TotalAdapterMemoryInGb = totalAdapterMemoryInGb;
             TotalPhysicalMemoryInGb = totalPhysicalMemoryInGb;
+            DefaultConnectionLimit = defaultConnectionLimit;
             LoadedPlugins = loadedPlugins;
+            Settings = settings;
         }
 
         public DebugObject()

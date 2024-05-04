@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
+using TCLauncher.Models;
 
 namespace TCLauncher.Core
 {
@@ -56,7 +57,7 @@ namespace TCLauncher.Core
         {
             if (protocols == null)
             {
-                protocols = new string[] { "http://", "https://" };
+                protocols = new[] { "http://", "https://" };
             }
 
             foreach (var i in protocols)
@@ -69,5 +70,56 @@ namespace TCLauncher.Core
 
             return url;
         }
+
+        /// <summary>
+        /// Checks if the provided URL starts with any of the given protocols.
+        /// </summary>
+        /// <param name="url">The URL to check.</param>
+        /// <param name="protocols">An array of protocols to check against. Defaults to http:// and https:// if not provided.</param>
+        /// <returns>Returns true if the URL starts with any of the provided protocols, false otherwise.</returns>
+        public static bool HasProtocol(string url, string[] protocols = null)
+        {
+            if (protocols == null)
+            {
+                protocols = new[] { "http://", "https://" };
+            }
+
+            foreach (var i in protocols)
+            {
+                if (url.StartsWith(i))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static McServerAddress GetMcServerAddress(string ipPortPair)
+        {
+            var mcServerAddress = new McServerAddress();
+
+            if (ipPortPair == null) return mcServerAddress;
+
+            var split = ipPortPair.Split(':');
+
+            switch (split.Length)
+            {
+                case 1:
+                {
+                    mcServerAddress.IP = split[0];
+                    break;
+                }
+                case 2:
+                {
+                    mcServerAddress.IP = split[0];
+                    mcServerAddress.Port = int.Parse(split[1]);
+                    break;
+                }
+            }
+
+            return mcServerAddress;
+        }
+
     }
 }

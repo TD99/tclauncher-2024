@@ -8,16 +8,22 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string ActionURL { get; set; }
+        public bool OpenExternal { get; set; }
         public bool is_action => ActionURL != null;
-
-        public Applet(int weight, string name, string coverURL, string title, string description, string actionURL)
+        
+        public Applet(int weight, string name, string coverUrl, string title, string description, string actionUrl, bool openExternal=false)
         {
             Weight = weight;
             Name = name;
-            CoverURL = coverURL;
+            CoverURL = coverUrl;
             Title = title;
             Description = description;
-            ActionURL = actionURL;
+            ActionURL = actionUrl;
+            OpenExternal = openExternal;
+        }
+
+        public Applet()
+        {
         }
     }
 }

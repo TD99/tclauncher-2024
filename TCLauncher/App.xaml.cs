@@ -5,15 +5,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Sessions;
+using CmlLib.Core.Installer.FabricMC;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
+using static System.String;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher
 {
@@ -46,22 +50,24 @@ namespace TCLauncher
 
         public static JELoginHandler LoginHandler;
 
+        public static MinecraftPath MinecraftPath { get; set; }
         public static CMLauncher Launcher { get; set; }
+        public static MLaunchOption LaunchOption { get; set; }
         public static MainWindow MainWin { get; set; }
 
         public App()
         {
-            this.Startup += App_Startup;
+            Startup += App_Startup;
         }
 
-        private void App_Startup(object sender, StartupEventArgs e)
+        private async void App_Startup(object sender, StartupEventArgs e)
         {
             UriArgs = Get_AppURI(e.Args);
-            AppArgs = string.Join(" ", e.Args);
+            AppArgs = Join(" ", e.Args);
 
             if (UriArgs == null)
             {
-                ProcessAppArgs(e);
+                await ProcessAppArgs(e);
             }
             else
             {
@@ -87,6 +93,53 @@ namespace TCLauncher
 
             RegisterURIScheme();
 
+            // check if forge ad
+            try
+            {
+                var adUrl = "https://adfoc.us/serve/sitelinks/?id=271228&url=https://tcraft.link/tclauncher/api/plugins/start-tcl?forgeAdValidationKey=";
+
+                var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                if (File.Exists(forgeAdFile))
+                {
+                    var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
+                    if (guid != Guid.Empty)
+                    {
+                        ShowToVoidLegacy("TCLauncher unterstützt Forge. Bitte schau Forge's Werbung und klicke auf 'Skip', um fortzufahren.");
+                        Thread.Sleep(1000);
+                        Process.Start(adUrl + guid);
+
+                        var trials = 100;
+                        for (var j = 0; j < trials; j++)
+                        {
+                            if (File.Exists(forgeAdFile))
+                            {
+                                var content = File.ReadAllText(forgeAdFile);
+                                if (Guid.TryParse(content, out var guidResult) && guidResult == Guid.Empty)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                            Thread.Sleep(600);
+                        }
+
+                        if (File.Exists(forgeAdFile))
+                        {
+                            File.Delete(forgeAdFile);
+                        }
+
+                        if (trials > 0)
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
+                }
+            } catch { }
+
             try
             {
                 IoUtils.Tcl.CreateDirectries();
@@ -108,25 +161,31 @@ namespace TCLauncher
 
         private async void TryAutoLogin()
         {
-            var accounts = LoginHandler.AccountManager.GetAccounts();
-            foreach (var account in accounts)
+            try
             {
-                if (!(account is JEGameAccount jeGameAccount)) continue;
-                if (jeGameAccount?.Profile?.UUID != Settings.Default.LastAccountUUID) continue;
-
-                try
+                var accounts = LoginHandler.AccountManager.GetAccounts();
+                foreach (var account in accounts)
                 {
-                    var session = await LoginHandler.Authenticate(jeGameAccount);
+                    if (!(account is JEGameAccount jeGameAccount)) continue;
+                    if (jeGameAccount?.Profile?.UUID != Settings.Default.LastAccountUUID) continue;
 
-                    MainWin.SetDisplayAccount(session?.Username);
-                    Session = session;
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
+                    try
+                    {
+                        var session = await LoginHandler.Authenticate(jeGameAccount);
 
-                break;
+                        MainWin.SetDisplayAccount(session?.Username);
+                        Session = session;
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                }
+            } catch (Exception e)
+            {
+                MessageBox.Show("Ein Fehler beim automatischen Anmelden ist aufgetreten: " + e.Message);
             }
         }
 
@@ -135,7 +194,7 @@ namespace TCLauncher
             if (args.Length > 0)
             {
                 if (Uri.TryCreate(args[0], UriKind.Absolute, out var uri) &&
-                    string.Equals(uri.Scheme, URI_SCHEME, StringComparison.OrdinalIgnoreCase))
+                    String.Equals(uri.Scheme, URI_SCHEME, StringComparison.OrdinalIgnoreCase))
                 {
                     return uri;
                 }
@@ -144,49 +203,87 @@ namespace TCLauncher
             return null;
         }
 
-        private void ProcessAppArgs(StartupEventArgs e)
+        private async Task ProcessAppArgs(StartupEventArgs e)
         {
-            for (int i = 0; i != e.Args.Length; ++i)
+            for (var i = 0; i != e.Args.Length; ++i)
             {
                 switch (e.Args[i])
                 {
+                    case "--uninstallCheck":
+                        try
+                        {
+                            var targetDir = e.Args[i + 1] ?? throw new ArgumentNullException();
+                            var instancesDir = IoUtils.Tcl.InstancesPath;
+                            if (!targetDir.StartsWith(instancesDir)) throw new DirectoryNotFoundException("Target directory is not in instances directory.");
+                            if (Directory.Exists(targetDir)) Directory.Delete(targetDir);
+                        }
+                        catch (Exception err)
+                        {
+                            ShowToVoid($"Ein Fehler ist beim Bereinigen aufgetreten. Bitte lösche die Instanz manuell. Fehlermeldung:\n" + err.Message);
+                        }
+                        break;
                     case "--installSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich installiert.");
+                            ShowToVoid($"Das Paket wurde erfolgreich installiert.");
                         }
                         break;
                     case "--updateSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
+                            ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
+                            ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
                         }
                         break;
                     case "--uninstallSuccess":
                         is_silent = true;
                         try
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
                         }
                         catch
                         {
-                            MessageBoxUtils.ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
+                            ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
+                        }
+                        break;
+                    case "--installPackage":
+                        try
+                        {
+                            var filePath = e.Args[i + 1];
+                            if (!File.Exists(filePath)) throw new FileNotFoundException();
+                            var fileName = Path.GetFileName(filePath);
+                            var dialog = new CustomButtonDialog(DialogButtons.YesNo, $"Möchtest du das Paket '{fileName}' installieren?");
+                            dialog.ShowDialog();
+
+                            var result = await dialog.Result;
+                            if (result != DialogButton.Yes) break;
+                            if (Path.GetExtension(filePath) != ".tcl") throw new FileFormatException();
+
+                            try
+                            {
+                                AppUtils.ImportInstance(filePath);
+                            }
+                            catch (Exception exception)
+                            {
+                                ShowToVoid($"Das Paket '{fileName}' konnte nicht installiert werden: {exception}");
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            ShowToVoid($"Das Paket konnte nicht geladen werden: {exception}");
                         }
                         break;
                     case "--silent":
                         is_silent = true;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -205,7 +302,20 @@ namespace TCLauncher
 
                 foreach (string arg in URIArgs.Keys)
                 {
-                    // TODO: Handle App URI Args
+                    switch (arg)
+                    {
+                        case "forgeAdValidationKey":
+                            var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                            if (File.Exists(forgeAdFile))
+                            {
+                                var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
+                                if (guid != Guid.Empty && guid == Guid.Parse(URIArgs[arg]))
+                                {
+                                    File.Delete(forgeAdFile);
+                                }
+                            }
+                            break;
+                    }
                 }
             }
             catch {}

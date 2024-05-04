@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using CmlLib.Core;
+using CmlLib.Core.Installer;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +11,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,15 +18,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Models;
-using TCLauncher.MVVM.ViewModel;
 using TCLauncher.MVVM.Windows;
+using TCLauncher.Properties;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.MVVM.View
 {
     /// <summary>
     /// Interaction logic for ServerListView.xaml
     /// </summary>
-    public partial class ServerListView : UserControl
+    public partial class ServerListView
     {
         private Instance current { get; set; }
 
@@ -37,51 +40,70 @@ namespace TCLauncher.MVVM.View
         {
             Border border = (Border)sender;
             Instance instance = (Instance)border.DataContext;
-            itemFocusBanner.Source = new BitmapImage(new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute));
+            try
+            {
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(instance.ThumbnailURL);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+
+                itemFocusBanner.Source = bitmap;
+            }
+            catch
+            {
+                // TODO: Add default image
+            }
             itemFocusName.Text = instance.DisplayName;
-            itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name}@{instance.Version}";
+            itemFocusPatch.Text = $"{instance.GetCurrentPatch()?.Name ?? "local"}@{instance.Version}";
             itemFocusPackage.Text = "ch.tcraft." + instance.Name;
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
 
-            string requiredRam = (instance.Requirements == null) ? "?" : instance.Requirements["ram"].ToString() ?? "?";
+            string minRam = (instance.MinimumRamMb / 1000 ?? 0).ToString();
+            string maxRam = (instance.MaximumRamMb / 1000 ?? 0).ToString();
             string totalPhysicalMemory = SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString();
-            itemFocusRam.Text = $"{requiredRam} GB / {totalPhysicalMemory} GB";
+            itemFocusRamMin.Text = $"{minRam} GB / {totalPhysicalMemory} GB";
+            itemFocusRamMax.Text = $"{maxRam} GB / {totalPhysicalMemory} GB";
 
             specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
-            reconfigDef.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
+            reconfigDef.Visibility = (instance.Is_Installed && !instance.Is_LocalSource) ? Visibility.Visible : Visibility.Collapsed;
             editConfig.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
 
             current = instance;
 
+            // TODO: Fix bug where installed instances don't show up
             if (instance.WorkingDirDesc != null)
             {
-                foreach (string key in instance.WorkingDirDesc.Keys)
+                foreach (KeyValuePair<string, List<string>> entry in instance.WorkingDirDesc)
                 {
-                    TextBlock keyTextBlock = new TextBlock
-                    {
-                        Text = key,
-                        Foreground = Brushes.White,
-                        FontSize = 25
-                    };
-                    itemFocusMCWorkingDirDesc.Children.Add(keyTextBlock);
+                    AddTextBlock(itemFocusMCWorkingDirDesc, entry.Key, 20);
 
-                    foreach (string description in instance.WorkingDirDesc[key])
+                    foreach (string description in entry.Value)
                     {
-                        TextBlock descTextBlock = new TextBlock
-                        {
-                            Text = description,
-                            Foreground = Brushes.White,
-                            FontSize = 16
-                        };
-                        itemFocusMCWorkingDirDesc.Children.Add(descTextBlock);
+                        AddTextBlock(itemFocusMCWorkingDirDesc, description, 16);
                     }
                 }
             }
+            else
+            {
+                propsText.Visibility = Visibility.Collapsed;
+            }
 
             itemFocus.Visibility = Visibility.Visible;
+        }
+
+        private void AddTextBlock(Panel panel, string text, int fontSize)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Text = text,
+                Foreground = Brushes.White,
+                FontSize = fontSize
+            };
+            panel.Children.Add(textBlock);
         }
 
         private void closeFocusBtn_Click(object sender, RoutedEventArgs e)
@@ -95,8 +117,7 @@ namespace TCLauncher.MVVM.View
             itemFocusMCVersion.Text = "";
             specialFocusBtn.Content = "Aktion";
             itemFocusMCWorkingDirDesc.Children.Clear();
-
-            this.DataContext = new ServerListViewModel();
+            propsText.Visibility = Visibility.Visible;
 
             current = null;
         }
@@ -110,34 +131,29 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+                var instanceFolder = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances",
+                    current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
                     MessageBox.Show("Es wurden keine Daten gefunden!", "Instanz löschen");
                     return;
                 }
 
-                if (force)
-                {
-                    Directory.Delete(instanceFolder, true);
-                    instance.Is_Installed = false;
-                    return;
-                }
+                var result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                MessageBoxResult result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                {
-                    Directory.Delete(instanceFolder, true);
-                    instance.Is_Installed = false;
+                if (result != MessageBoxResult.Yes) return;
+                
+                Directory.Delete(instanceFolder, true);
 
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    Process.Start(appPath, $"--uninstallSuccess {instance.DisplayName}");
-                    Application.Current.Shutdown();
-                }
+                var appPath = Process.GetCurrentProcess().MainModule?.FileName;
+                Process.Start(appPath, $"--uninstallCheck {instanceFolder} --uninstallSuccess {instance.DisplayName}");
+                Application.Current.Shutdown();
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten.");
+                MessageBox.Show($"Ein Fehler ist aufgetreten: {ex.Message}", "Instanz löschen");
             }
         }
 
@@ -284,6 +300,15 @@ namespace TCLauncher.MVVM.View
                 }
 
                 string appPath = Process.GetCurrentProcess().MainModule.FileName;
+
+                var guid = Guid.NewGuid();
+
+                if (instance.UseForge == true)
+                {             
+                    var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
+                    File.WriteAllText(forgeAdFile, guid.ToString());
+                }
+
                 Process.Start(appPath, $"--installSuccess {instance.DisplayName}");
                 Application.Current.Shutdown();
             }
@@ -292,7 +317,7 @@ namespace TCLauncher.MVVM.View
                 MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
             }
 
-            reconfigure(instanceFolder, instance);
+            reconfigure(instance);
 
             if (Properties.Settings.Default.FirstTime)
             {
@@ -361,16 +386,13 @@ namespace TCLauncher.MVVM.View
             specialFocusBtn.Content = (current.Is_Installed) ? "Deinstallieren" : "Installieren";
         }
 
-        private void reconfigure(string instanceFolder, Instance instance)
+        private void reconfigure(Instance instance)
         {
+            var installedInstance = new InstalledInstance(instance);
             try
             {
-                instance.Is_Installed = true;
-
-                string configFile = System.IO.Path.Combine(instanceFolder, "config.json");
-
-                var json = JsonConvert.SerializeObject(instance);
-                File.WriteAllText(configFile, json);
+                var json = JsonConvert.SerializeObject(installedInstance);
+                File.WriteAllText(installedInstance.ConfigFile, json);
             }
             catch
             {
@@ -397,7 +419,7 @@ namespace TCLauncher.MVVM.View
                     var content = await response.Content.ReadAsStringAsync();
                     var instance = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content)[0];
 
-                    reconfigure(instanceFolder, instance);
+                    reconfigure(instance);
 
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     Process.Start(appPath, $"--updateSuccess {instance.DisplayName}");
@@ -429,6 +451,35 @@ namespace TCLauncher.MVVM.View
             {
                 MessageBox.Show($"Die Konfiguration von '{current.Name}' ist fehlgeschlagen.");
             }
+        }
+
+        private async void AddServerBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await AppUtils.LoadInstanceBuilder();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket erstellen");
+            }
+        }
+
+        private void ImportServerBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AppUtils.LoadInstanceImporter();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket importieren");
+            }
+        }
+
+        private void CreateBlankBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            AppUtils.CreateTemplateInstance();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace TCLauncher.MVVM.Windows
             InitializeComponent();
             TitleLabel.Content = title;
             tcs = new TaskCompletionSource<bool>();
+            ResponseTextBox.Focus();
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -36,7 +37,7 @@ namespace TCLauncher.MVVM.Windows
 
         public Task<bool> Result => tcs.Task;
 
-        private void CustomInputDialog_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private void CustomInputDialog_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }

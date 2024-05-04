@@ -33,13 +33,11 @@ namespace TCLauncher.MVVM.Controls
             {
                 var codePoint = int.Parse(Unicode, System.Globalization.NumberStyles.HexNumber);
                 Content = char.ConvertFromUtf32(codePoint);
-            } else if (e.Property == ColorProperty)
+            }
+            else if (e.Property == ColorProperty)
             {
                 Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString(Color);
             }
-
-            Foreground = Brushes.White;
         }
-
     }
 }

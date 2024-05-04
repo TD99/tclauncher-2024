@@ -117,6 +117,8 @@ namespace TCLauncher.MVVM.ViewModel
                             GpuInfo = cachedData[3];
                             IsGpuReqirementMet = bool.Parse(cachedData[4]);
                             StorageAnalyzerData = JsonConvert.DeserializeObject<List<StackedBarItem>>(cachedData[5]);
+                            if (StorageAnalyzerData.Any(item => item.Value < 0))
+                                throw new Exception("Invalid cache");
                             return;
                         }
                     }
@@ -181,7 +183,14 @@ namespace TCLauncher.MVVM.ViewModel
                     IsGpuReqirementMet.ToString(),
                     JsonConvert.SerializeObject(StorageAnalyzerData)
                 };
-                File.WriteAllLines(_cacheFilePath, dataToCache);
+                try
+                {
+                    File.WriteAllLines(_cacheFilePath, dataToCache);
+                }
+                catch
+                {
+                    // ignored
+                }
             });
             IsLoading = false;
         }

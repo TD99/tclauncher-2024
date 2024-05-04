@@ -36,7 +36,7 @@
             Focusable="False" />
     </ControlTemplate>
 
-    <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+    <Style x:Key="ModernComboBox" TargetType="{x:Type ComboBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
@@ -123,7 +123,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers />
     </Style>
 
     <!--  SimpleStyles: ComboBoxItem  -->

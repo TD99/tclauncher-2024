@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +16,12 @@ using CmlLib.Utils;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using CmlLib.Core.Installer.FabricMC;
+using TCLauncher.MVVM.ViewModel;
+using TCLauncher.Properties;
+using CmlLib.Core.Installer;
+using CmlLib.Core.Downloader;
+using CmlLib.Core.Version;
 
 namespace TCLauncher.MVVM.View
 {
@@ -24,11 +32,13 @@ namespace TCLauncher.MVVM.View
     {
         public ObservableCollection<Applet> Applets { get; set; }
         private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
+        private HomeViewModel _vm;
+        private bool _isServerListLoading = false;
 
         public HomeView()
         {
             InitializeComponent();
-            checkInstanceListEmpty();
+            _vm = (HomeViewModel)DataContext;
         }
 
         private async void loadWV()
@@ -36,22 +46,6 @@ namespace TCLauncher.MVVM.View
             await webView.EnsureCoreWebView2Async();
             webView.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
             webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-        }
-
-        // TODO: IMPROVE CODE QUALITY
-        private void checkInstanceListEmpty()
-        {
-            // TODO: CHECK FOR N° OF INSTANCES INSTEAD
-            if (IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath))
-            {
-                profileSelect.Visibility = Visibility.Collapsed;
-                profileNoneText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                profileSelect.Visibility = Visibility.Visible;
-                profileNoneText.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void discoverEvent(object sender, MouseButtonEventArgs e)
@@ -97,7 +91,7 @@ namespace TCLauncher.MVVM.View
 
                     if (!await dialog.Result) return;
 
-                    App.Session = MSession.GetOfflineSession(dialog.ResponseText);
+                    App.Session = MSession.CreateOfflineSession(dialog.ResponseText);
                     App.MainWin.SetDisplayAccount(dialog.ResponseText + " (Offline)");
                 }
                 else
@@ -120,7 +114,76 @@ namespace TCLauncher.MVVM.View
 
             try
             {
-                App.Launcher = new CMLauncher(new MinecraftPath(instanceFolder));
+                System.Net.ServicePointManager.DefaultConnectionLimit = 256;
+
+                var path = new MinecraftPath();
+                var isIsolated = true;
+                if (instance.UseIsolation != true)
+                {
+                    switch (Settings.Default.SandboxLevel)
+                    {
+                        case 0:
+                            path = AppUtils.GetMinecraftPathShared(instance.Guid);
+                            isIsolated = false;
+                            break;
+                        case 1:
+                            path = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                            break;
+                    }
+                }
+                else
+                {
+                    path = AppUtils.GetMinecraftPathIsolated(instance.Guid);
+                }
+
+                App.MinecraftPath = path;
+
+                App.Launcher = new CMLauncher(App.MinecraftPath);
+
+                if (instance.UseFabric == true && !string.IsNullOrEmpty(instance.McVersion))
+                {
+                    var fabricLoader = new FabricVersionLoader();
+                    var fabricVersions = await fabricLoader.GetVersionMetadatasAsync();
+
+                    var fabric = fabricVersions.GetVersionMetadata(instance.McVersion);
+                    await fabric.SaveAsync(App.MinecraftPath);
+
+                    // update version list
+                    await App.Launcher.GetAllVersionsAsync();
+                }
+
+                if (instance.UseForge == true && !string.IsNullOrEmpty(instance.McVersion))
+                {
+                    var names = new List<string>
+                    {
+                        instance.McVersion
+                    };
+
+                    await InstanceAssetsUtils.GetAssets(names, isIsolated);
+                }
+
+                var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
+                var mcServerAddress = InternetUtils.GetMcServerAddress(serverAddressString);
+
+                App.LaunchOption = new MLaunchOption
+                {
+                    StartVersion = null, // Fix
+                    Session = App.Session,
+
+                    Path = App.MinecraftPath,
+                    MinimumRamMb = instance.MinimumRamMb ?? 0,
+                    MaximumRamMb = instance.MaximumRamMb ?? 1024,
+                    JVMArguments = instance.JVMArguments,
+
+                    ServerIp = mcServerAddress.IP,
+                    ServerPort = mcServerAddress.Port ?? 25565,
+
+                    VersionType = "\u00a7b@TCLauncher",
+                    //GameLauncherName = "tcl",
+                    //GameLauncherVersion = AppUtils.GetCurrentVersion(),
+
+                    //DockName = "Minecraft on TCL"
+                };
 
                 var actionWindow = new ActionWindow("Lade Spiel...");
 
@@ -143,10 +206,7 @@ namespace TCLauncher.MVVM.View
                 actionWindow.Show();
 
                 // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync("1.16.4", new MLaunchOption
-                {
-                    Session = App.Session
-                });
+                var process = await App.Launcher.CreateProcessAsync(instance.McVersion, App.LaunchOption);
 
                 var processUtil = new ProcessUtil(process);
                 processUtil.Exited += (sender1, e1) =>
@@ -195,34 +255,71 @@ namespace TCLauncher.MVVM.View
             Border border = (Border)sender;
             Applet applet = (Applet)border.DataContext;
 
-            if (applet.ActionURL is null) return;
-            
-            SetAppletViewState(true);
+            if (!applet.is_action) return;
+            if (applet.OpenExternal)
+            {
+                if (InternetUtils.HasProtocol(applet.ActionURL))
+                {
+                    Process.Start(applet.ActionURL);
+                    return;
+                }
 
+                var result = MessageBox.Show($"Die Aktion ist möglicherweise gefährlich! Soll sie in der TCLauncher-Sandbox ausgeführt werden?\n\nACTION='{applet.ActionURL}'", "TCLauncher Sicherheit", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.Cancel) return;
+            }
+
+            SetAppletViewState();
             await Task.Delay(2000);
-
-            webView.Source = new System.Uri(applet.ActionURL);
+            try
+            {
+                webView.Source = new Uri(applet.ActionURL);
+            }
+            catch
+            {
+                webView.Source = new Uri("data:text/plain;base64,RGllIFJlc3NvdXJjZSBrb25udGUgbmljaHQgZ2VsYWRlbiB3ZXJkZW4uIE1vZWdsaWNoZSBHcnVlbmRlIHNpbmQ6Ci0gSW50ZXJuZXRwcm9ibGVtZQotIE5pY2h0IGV4aXN0aWVyZW5kZSBSZXNzb3VyY2UKLSBVbmd1ZWx0aWdlcyBSZXNzb3VyY2VuZm9ybWF0Ci0gQmxvY2tpZXJ1bmcgZHVyY2ggVENMYXVuY2hlci1TaWNoZXJoZWl0");
+            }
         }
 
         private void profileSelect_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (profileSelect.SelectedItem is InstalledInstance selectedInstance)
             {
-                Properties.Settings.Default.LastSelected = selectedInstance.Guid;
-                Properties.Settings.Default.Save();
+                Settings.Default.LastSelected = selectedInstance.Guid;
+                Settings.Default.Save();
 
-                //if (selectedInstance.Servers != null && selectedInstance.Servers.Any())
-                //{
-                //    servInfo.Visibility = Visibility.Visible;
-                //    serverSelect.SelectedIndex = 0;
-                //}
-                //else
-                //{
-                //    servInfo.Visibility = Visibility.Collapsed;
-                //}
+                // Set server list
+                try
+                {
+                    _isServerListLoading = true;
+
+                    var serverList = new List<Server>(selectedInstance.Servers);
+                    serverList.Insert(0, new Server("No server", null, null));
+
+                    ServerSelect.ItemsSource = serverList;
+
+                    ServerSelect.SelectedItem =
+                        serverList.FirstOrDefault(s => s.Address == selectedInstance.LastServer) ?? serverList[0];
+
+                    _isServerListLoading = false;
+                }
+                catch
+                {
+                    _isServerListLoading = true;
+
+                    var serverList = new List<Server>();
+                    serverList.Insert(0, new Server("No server", null, null));
+
+                    ServerSelect.ItemsSource = serverList;
+
+                    ServerSelect.SelectedItem = serverList[0];
+
+                    _isServerListLoading = false;
+                }
             }
             RefreshApplets();
         }
+
+        
 
         private async void RefreshApplets()
         {
@@ -258,11 +355,20 @@ namespace TCLauncher.MVVM.View
             SetAppletViewState(false);
         }
 
-        //private void serverSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (serverSelect.SelectedItem == null) return;
-        //    Server server = (Server)serverSelect.SelectedItem;
-        //    currentServerImg.Source = new BitmapImage(new Uri(@"https://tcraft.link/tclauncher/api/plugins/server-tool/GetAccent.php?literal&url=" + server.IP));
-        //}
+        private void ServerSelect_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isServerListLoading) return;
+
+            if (!(profileSelect.SelectedItem is InstalledInstance selectedInstance)) return;
+            
+            selectedInstance.LastServer = ((Server)ServerSelect.SelectedItem).Address;
+            IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            webView.Stop();
+            webView.Dispose();
+        }
     }
 }

@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="Theme/ModernComboBoxTheme.xaml" />
                 <ResourceDictionary Source="Theme/SelectableLabel.xaml" />
                 <ResourceDictionary Source="Theme/GlobalTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BusyIndicator;component/Theme/Default.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
@@ -29,6 +30,9 @@
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:SocialViewModel}">
+                <view:SocialView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:StatusViewModel}">
                 <view:StatusView />
             </DataTemplate>
@@ -39,6 +43,7 @@
             <FontFamily x:Key="FaRegular">Assets/Fonts/#Font Awesome 6 Free Regular</FontFamily>
             <FontFamily x:Key="FaSolid">Assets/Fonts/#Font Awesome 6 Free Solid</FontFamily>
             <FontFamily x:Key="FaBrands">Assets/Fonts/#Font Awesome 6 Brands Regular</FontFamily>
+            <FontFamily x:Key="PixelifySans">Assets/Fonts/#Pixelify Sans Regular</FontFamily>
             <!--<FontFamily x:Key="Rubik">Fonts/#Rubik</FontFamily>
             <FontFamily x:Key="OpenSans">Fonts/#Open Sans</FontFamily>
             <FontFamily x:Key="Barlow">Fonts/#Barlow</FontFamily>

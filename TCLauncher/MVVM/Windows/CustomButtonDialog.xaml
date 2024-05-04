@@ -1,0 +1,55 @@
+﻿<Window
+    x:Class="TCLauncher.MVVM.Windows.CustomButtonDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ButtonDialog"
+    Width="400"
+    Height="180"
+    MaxWidth="400"
+    MaxHeight="180"
+    AllowsTransparency="True"
+    Background="Transparent"
+    Closing="CustomButtonDialog_OnClosing"
+    MouseLeftButtonDown="CustomButtonDialog_OnMouseLeftButtonDown"
+    ResizeMode="NoResize"
+    Topmost="True"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Border
+        VerticalAlignment="Top"
+        Background="#1d2633"
+        BorderBrush="#d3dbf2"
+        BorderThickness="0.5"
+        CornerRadius="10">
+        <Grid Margin="10" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label
+                x:Name="TitleLabel"
+                Grid.Row="0"
+                Content="Titel"
+                FontSize="13"
+                FontWeight="Medium"
+                Foreground="#d3dbf2" />
+            <TextBlock
+                x:Name="BodyTextBlock"
+                Grid.Row="1"
+                Foreground="#d3dbf2"
+                TextWrapping="Wrap"
+                Visibility="Collapsed" />
+            <StackPanel
+                x:Name="ButtonStackPanel"
+                Grid.Row="2"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal" />
+        </Grid>
+    </Border>
+</Window>

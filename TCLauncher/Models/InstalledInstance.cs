@@ -1,23 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using TCLauncher.Core;
 
 namespace TCLauncher.Models
 {
-    class InstalledInstance
+    public class InstalledInstance : Instance
     {
-        public string Name { get; set; }
-        public string DisplayName { get; set; }
-        public Guid Guid { get; set; }
-        public string AppletURL { get; set; }
-        public List<Server> Servers { get; set; }
+        public string InstallationDir { get; set; }
+        public string DataDir { get; set; }
+        public string ConfigFile{ get; set; }
+        public string LastServer { get; set; }
 
-        public InstalledInstance(string name, string displayName, Guid guid, string appletURL, List<Server> servers)
+        public InstalledInstance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, bool? useForge, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int minimumRamMb, int maximumRamMb, string[] jvmArguments)
+            : base(name, displayName, guid, version, upgradeable, thumbnailUrl, type, mcVersion, useFabric, useForge, workingDirZipUrl, patches, usePatch, useIsolation, workingDirDesc, appletUrl, requirements, servers, minimumRamMb, maximumRamMb, jvmArguments)
         {
-            Name = name;
-            DisplayName = displayName;
-            Guid = guid;
-            AppletURL = appletURL;
-            Servers = servers;
+            InstallationDir = IoUtils.Tcl.GetInstancePath(guid);
+            DataDir = IoUtils.Tcl.GetInstanceDataPath(guid);
+            ConfigFile = IoUtils.Tcl.GetInstanceConfigPath(guid);
+            Is_Installed = true;
+        }
+        
+        public InstalledInstance(Instance instance)
+            : base(instance.Name, instance.DisplayName, instance.Guid, instance.Version,
+                   instance.Upgradeable, instance.ThumbnailURL, instance.Type, instance.McVersion, instance.UseFabric, instance.UseForge, instance.WorkingDirZipURL,
+                   instance.Patches, instance.UsePatch, instance.UseIsolation, instance.WorkingDirDesc, instance.AppletURL, instance.Requirements,
+                   instance.Servers, instance.MinimumRamMb, instance.MaximumRamMb, instance.JVMArguments)
+        {
+            InstallationDir = IoUtils.Tcl.GetInstancePath(instance.Guid);
+            DataDir = IoUtils.Tcl.GetInstanceDataPath(instance.Guid);
+            ConfigFile = IoUtils.Tcl.GetInstanceConfigPath(instance.Guid);
+            Is_Installed = true;
+        }
+
+        public InstalledInstance()
+        {
+            Is_Installed = true;
         }
     }
 }

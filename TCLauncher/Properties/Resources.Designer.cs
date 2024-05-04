@@ -59,5 +59,24 @@ namespace TCLauncher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream load0s {
+            get {
+                return ResourceManager.GetStream("load0s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] load0v {
+            get {
+                object obj = ResourceManager.GetObject("load0v", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

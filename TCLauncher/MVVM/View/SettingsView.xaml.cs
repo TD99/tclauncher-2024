@@ -41,7 +41,22 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
+            string sandboxLevelTagToSelect = Properties.Settings.Default.SandboxLevel.ToString();
+            foreach (ComboBoxItem item in SandboxLevel.Items)
+            {
+                if ((string)item.Tag == sandboxLevelTagToSelect)
+                {
+                    SandboxLevel.SelectedItem = item;
+                    break;
+                }
+            }
+
             hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
+
+            if (Properties.Settings.Default.UseSocial)
+            {
+                Social.IsChecked = true;
+            }
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -171,6 +186,64 @@ namespace TCLauncher.MVVM.View
 
             Properties.Settings.Default.MultiInstances = value;
             Properties.Settings.Default.Save();
+        }
+
+        private async void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new CustomButtonDialog(DialogButtons.OkCancel, "This will launch a mock instance. It will never load.")
+            {
+                Owner = App.MainWin,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            dialog.ShowDialog();
+
+            var result = await dialog.Result;
+            if (result != DialogButton.Ok) return;
+
+            var fsaWin = new FullScreenActionWindow
+            {
+                InstanceName = "T-Craft Server",
+                InstanceVersion = "1.19.0",
+                InstanceType = "Fabric",
+                InstanceStatus = "Wird gestartet...",
+                InstanceProgress = 50
+            };
+            fsaWin.Show();
+        }
+
+        private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            string tag = (string)selectedItem.Tag;
+            byte value;
+
+            try
+            {
+                value = byte.Parse(tag);
+            }
+            catch
+            {
+                MessageBox.Show("Der Sandboxlevel kann nicht gesetzt werden.");
+                return;
+            }
+
+            Properties.Settings.Default.SandboxLevel = value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void Social_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.UseSocial = true;
+            Properties.Settings.Default.Save();
+            App.MainWin.ReloadNavPolicies();
+        }
+
+        private void Social_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.UseSocial = false;
+            Properties.Settings.Default.Save();
+            App.MainWin.ReloadNavPolicies();
         }
     }
 }
