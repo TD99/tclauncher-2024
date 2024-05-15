@@ -3,10 +3,13 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using CmlLib.Core.Auth;
 using TCLauncher.Core;
 using TCLauncher.MVVM.ViewModel;
@@ -27,6 +30,10 @@ namespace TCLauncher.MVVM.Windows
             InitializeComponent();
             vm = (MainViewModel)this.DataContext;
             is_silent = silent;
+
+            ResetBgMedia();
+            loadingGrid.Visibility = Visibility.Visible;
+            mainBorder.Visibility = Visibility.Collapsed;
 
             AppUtils.HandleUpdates();
 
@@ -74,72 +81,44 @@ namespace TCLauncher.MVVM.Windows
             return "Unbekannt";
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (!is_silent)
             {
                 loadingAnim();
             } else
             {
-                loadingImg.Visibility = Visibility.Collapsed;
+                loadingGrid.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void loadingAnim()
+        public void loadingAnim()
         {
-            mainBorder.Visibility = Visibility.Collapsed;
-            mainBorder.Opacity = 0;
-            DoubleAnimation inAnim = new DoubleAnimation
-            {
-                From = 0,
-                To = 200,
-                Duration = new Duration(TimeSpan.FromSeconds(2)),
-                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
-            };
-
             DoubleAnimation pageAnim = new DoubleAnimation
             {
                 From = 0,
                 To = 100,
-                Duration = new Duration(TimeSpan.FromSeconds(2)),
+                Duration = new Duration(TimeSpan.FromSeconds(4)),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
             };
+            
+            Storyboard pageStoryboard = new Storyboard();
+            pageStoryboard.Children.Add(pageAnim);
 
-            Storyboard inStoryboard = new Storyboard();
-            inStoryboard.Children.Add(inAnim);
+            Storyboard.SetTarget(pageAnim, mainBorder);
+            Storyboard.SetTargetProperty(pageAnim, new PropertyPath(FrameworkElement.OpacityProperty));
 
-            Storyboard.SetTarget(inAnim, loadingImg);
-            Storyboard.SetTargetProperty(inAnim, new PropertyPath(FrameworkElement.WidthProperty));
-
-            Storyboard.SetTarget(inAnim, loadingImg);
-            Storyboard.SetTargetProperty(inAnim, new PropertyPath(FrameworkElement.HeightProperty));
-
-            inStoryboard.Completed += (s, e) =>
+            pageStoryboard.Completed += (s2, e2) =>
             {
-                Storyboard pageStoryboard = new Storyboard();
-                pageStoryboard.Children.Add(pageAnim);
-
-                Storyboard.SetTarget(pageAnim, mainBorder);
-                Storyboard.SetTargetProperty(pageAnim, new PropertyPath(FrameworkElement.OpacityProperty));
+                pageAnim = null;
+                pageStoryboard = null;
+                loadingGrid.Visibility = Visibility.Collapsed;
 
                 mainBorder.Visibility = Visibility.Visible;
-
-                pageStoryboard.Completed += (s2, e2) =>
-                {
-                    inAnim = null;
-                    inStoryboard = null;
-                    pageAnim = null;
-                    pageStoryboard = null;
-                    loadingImg.Visibility = Visibility.Collapsed;
-
-                    mainBorder.Visibility = Visibility.Visible;
-                    mainBorder.Opacity = 100;
-                };
-
-                pageStoryboard.Begin();
+                mainBorder.Opacity = 100;
             };
 
-            inStoryboard.Begin();
+            pageStoryboard.Begin();
         }
 
         private void closeBtn_Click(object sender, RoutedEventArgs e)
@@ -150,18 +129,7 @@ namespace TCLauncher.MVVM.Windows
         private async void minimizeBtn_Click(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Minimized) return;
-
-            minimizeBtn.IsEnabled = false;
-            
-            FadeOut(0.15);
-
-            await Task.Delay(150);
-            
             WindowState = WindowState.Minimized;
-
-            FadeIn(0);
-
-            minimizeBtn.IsEnabled = true;
         }
 
         private async void maximizeBtn_Click(object sender, RoutedEventArgs e)
@@ -172,8 +140,6 @@ namespace TCLauncher.MVVM.Windows
             }
             else
             {
-                FadeOut(0.2);
-                await Task.Delay(300);
                 this.WindowState = WindowState.Maximized;
             }
         }
@@ -234,25 +200,25 @@ namespace TCLauncher.MVVM.Windows
             BeginAnimation(Window.OpacityProperty, fadeOutAnimation);
         }
 
-        private void Window_StateChanged(object sender, System.EventArgs e)
-        {
-            switch (this.WindowState)
-            {
-                case WindowState.Normal:
-                    mainBorder.CornerRadius = new CornerRadius(20);
-                    mainBorder.BorderThickness = new Thickness(2);
-                    break;
-                case WindowState.Maximized:
-                    FadeIn(0.2);
-                    mainBorder.CornerRadius = new CornerRadius(0);
-                    mainBorder.BorderThickness = new Thickness(0);
-                    break;
-                case WindowState.Minimized:
-                    break;
-                default:
-                    break;
-            }
-        }
+        //private void Window_StateChanged(object sender, System.EventArgs e)
+        //{
+        //    switch (this.WindowState)
+        //    {
+        //        case WindowState.Normal:
+        //            mainBorder.CornerRadius = new CornerRadius(20);
+        //            mainBorder.BorderThickness = new Thickness(2);
+        //            break;
+        //        case WindowState.Maximized:
+        //            FadeIn(0.2);
+        //            mainBorder.CornerRadius = new CornerRadius(0);
+        //            mainBorder.BorderThickness = new Thickness(0);
+        //            break;
+        //        case WindowState.Minimized:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         //private async void connectionBorder_MouseDown(object sender, MouseButtonEventArgs e)
         //{
@@ -319,14 +285,10 @@ namespace TCLauncher.MVVM.Windows
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
-            {
-                case Key.F11:
-                    this.WindowState = (this.WindowState == WindowState.Maximized)
-                        ? WindowState.Normal
-                        : WindowState.Maximized;
-                    break;
-            }
+            if (e.Key == Key.F11)
+                this.WindowState = (this.WindowState == WindowState.Maximized)
+                    ? WindowState.Normal
+                    : WindowState.Maximized;
         }
 
         private void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
@@ -346,6 +308,26 @@ namespace TCLauncher.MVVM.Windows
                 AccountManagerBtnName.Text = "Nicht eingeloggt";
                 AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/steve.png"));
             }
+        }
+
+        private async void MainWindow_OnStateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Topmost = true;
+                Topmost = false;
+            }
+        }
+
+        private void BgMediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
+        {
+            ResetBgMedia();
+        }
+
+        private void ResetBgMedia()
+        {
+            BgMediaElement.Position = TimeSpan.Zero;
+            BgMediaElement.Play();
         }
     }
 }

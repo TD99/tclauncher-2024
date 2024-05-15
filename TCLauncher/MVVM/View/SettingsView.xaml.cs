@@ -245,5 +245,13 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.Save();
             App.MainWin.ReloadNavPolicies();
         }
+
+        private void HotReloadBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.MainWin.loadingGrid.Visibility = Visibility.Visible;
+            App.MainWin.mainBorder.Visibility = Visibility.Collapsed;
+            App.MainWin.loadingAnim();
+            App.MainWin.navigateToHome();
+        }
     }
 }
