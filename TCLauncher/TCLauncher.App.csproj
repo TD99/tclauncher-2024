@@ -143,6 +143,9 @@
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\Controls\FormInput.xaml.cs">
+      <DependentUpon>FormInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Controls\HorizontalSeparator.xaml.cs">
       <DependentUpon>HorizontalSeparator.xaml</DependentUpon>
     </Compile>
@@ -152,12 +155,15 @@
     </Compile>
     <Compile Include="MVVM\Controls\Spoiler.cs" />
     <Compile Include="MVVM\Controls\StackedBarChart.cs" />
+    <Compile Include="MVVM\Converters\GreaterThanZeroConverter.cs" />
     <Compile Include="MVVM\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Models\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
     <Compile Include="MVVM\Converters\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="MVVM\Converters\InvertibleBooleanToVisibilityConverter.cs" />
     <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
+    <Compile Include="MVVM\Converters\RequiredFieldTextConverter.cs" />
     <Compile Include="MVVM\ViewModel\AccountViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SocialViewModel.cs" />
     <Compile Include="MVVM\View\AccountView.xaml.cs">
@@ -184,6 +190,10 @@
     <Page Include="MVVM\Controls\AccountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\Controls\FormInput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\AccountView.xaml">
       <SubType>Designer</SubType>
@@ -400,7 +410,9 @@
     <Resource Include="Assets\Images\cloud.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo.ico" />
+    <Resource Include="logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
@@ -415,6 +427,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="tcl_instance_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <None Include="Resources\load0.wmv" />
     <None Include="Resources\load0.wav" />
     <Resource Include="Assets\Images\steve.png" />

@@ -297,8 +297,7 @@ namespace TCLauncher.MVVM.Windows
             } catch
             {
                 IsRecovery = true;
-                currentItem.IsSelected = true;
-                return;
+                selectedItem.IsSelected = false;
             }
         }
 
