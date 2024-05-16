@@ -47,8 +47,7 @@ namespace TCLauncher.MVVM.ViewModel
         {
             try
             {
-                string instancesFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances");
-                foreach (string file in Directory.GetFiles(instancesFolder, "config.json", SearchOption.AllDirectories))
+                foreach (string file in Directory.GetFiles(IoUtils.Tcl.InstancesPath, "config.json", SearchOption.AllDirectories))
                 {
                     using (StreamReader reader = new StreamReader(file))
                     {

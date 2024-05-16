@@ -138,7 +138,6 @@
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\AssetFragment.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
-    <Compile Include="Models\SocialProfile.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
@@ -165,12 +164,8 @@
     <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
     <Compile Include="MVVM\Converters\RequiredFieldTextConverter.cs" />
     <Compile Include="MVVM\ViewModel\AccountViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\SocialViewModel.cs" />
     <Compile Include="MVVM\View\AccountView.xaml.cs">
       <DependentUpon>AccountView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVVM\View\SocialView.xaml.cs">
-      <DependentUpon>SocialView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Windows\CustomButtonDialog.xaml.cs">
       <DependentUpon>CustomButtonDialog.xaml</DependentUpon>
@@ -196,10 +191,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\AccountView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVVM\View\SocialView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

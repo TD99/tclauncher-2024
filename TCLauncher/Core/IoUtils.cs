@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using Newtonsoft.Json;
 using TCLauncher.Models;
 
@@ -252,7 +254,12 @@ namespace TCLauncher.Core
         /// </summary>
         public static class FileSystem
         {
-            public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            public static string RealAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            public static string AppDataPath = 
+                Properties.Settings.Default.VirtualAppDataPath == ""
+                    ? RealAppDataPath
+                    : Properties.Settings.Default.VirtualAppDataPath;
 
             /// <summary>
             /// Gets the total storage of the file system in GB.
@@ -298,6 +305,40 @@ namespace TCLauncher.Core
             public static double GetFreeStorageInGb(string path = null)
             {
                 return GetFreeStorageInGb(Tcl.GetDrive(path));
+            }
+
+            /// <summary>
+            /// Checks if the current user has full access to a specified folder.
+            /// </summary>
+            /// <param name="folderPath">The path of the folder to check access for.</param>
+            /// <returns>Returns true if the user has full access, false otherwise.</returns>
+            public static bool HasFullAccess(string folderPath)
+            {
+                try
+                {
+                    var security = Directory.GetAccessControl(folderPath);
+                    var accessRules = security.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                    foreach (FileSystemAccessRule rule in accessRules)
+                    {
+                        var rights = rule.FileSystemRights;
+
+                        if ((rights & FileSystemRights.Read) != FileSystemRights.Read)
+                            continue;
+
+                        if ((rights & FileSystemRights.ExecuteFile) != FileSystemRights.ExecuteFile)
+                            continue;
+
+                        if (rule.AccessControlType == AccessControlType.Allow)
+                            return true;
+                    }
+                }
+                catch
+                {
+                    // Exception handling here if needed
+                }
+
+                return false;
             }
         }
     }

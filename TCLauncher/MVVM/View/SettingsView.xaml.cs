@@ -53,10 +53,7 @@ namespace TCLauncher.MVVM.View
 
             hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
 
-            if (Properties.Settings.Default.UseSocial)
-            {
-                Social.IsChecked = true;
-            }
+            AppDataPath.Text = Properties.Settings.Default.VirtualAppDataPath;
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -99,11 +96,8 @@ namespace TCLauncher.MVVM.View
 
         private void codeBtn_Click(object sender, RoutedEventArgs e)
         {
-            string tclFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL");
-            string instanceFolder = Path.Combine(tclFolder, "Instances");
-
             this.Cursor = Cursors.Wait;
-            EditorWindow editorWindow = new EditorWindow(instanceFolder, true);
+            EditorWindow editorWindow = new EditorWindow(IoUtils.Tcl.InstancesPath, true);
             editorWindow.Show();
             this.Cursor = null;
         }
@@ -232,26 +226,51 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.Save();
         }
 
-        private void Social_OnChecked(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.UseSocial = true;
-            Properties.Settings.Default.Save();
-            App.MainWin.ReloadNavPolicies();
-        }
-
-        private void Social_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.UseSocial = false;
-            Properties.Settings.Default.Save();
-            App.MainWin.ReloadNavPolicies();
-        }
-
         private void HotReloadBtn_OnClick(object sender, RoutedEventArgs e)
         {
             App.MainWin.loadingGrid.Visibility = Visibility.Visible;
             App.MainWin.mainBorder.Visibility = Visibility.Collapsed;
             App.MainWin.loadingAnim();
             App.MainWin.navigateToHome();
+        }
+
+        private void AppDataPathBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var oldPath = IoUtils.Tcl.RootPath;
+            var newPath = AppDataPath.Text == "" ? IoUtils.FileSystem.RealAppDataPath : AppDataPath.Text;
+
+            if (!IoUtils.FileSystem.HasFullAccess(newPath))
+            {
+                MessageBox.Show("Der angegebene Pfad kann nicht genutzt werden. Bitte wähle einen anderen Pfad.");
+                return;
+            }
+
+            newPath = Path.Combine(newPath, "TCL");
+
+            Properties.Settings.Default.VirtualAppDataPath = AppDataPath.Text;
+            Properties.Settings.Default.Save();
+
+            var result = MessageBox.Show("Der Pfad wurde erfolgreich gespeichert. Möchtest du die Launcher-Dateien migrieren und den Ordner überschreiben?", "Pfad gespeichert", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            
+            if (result == MessageBoxResult.Yes)
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        Directory.Move(oldPath, newPath);
+                        MessageBox.Show("Die Dateien wurden erfolgreich migriert.");
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ein Fehler beim Kopieren ist aufgetreten. Bitte stelle sicher, dass die Dateien nicht verwendet werden.");
+                    }
+                });
+            }
+
+            var appPath = Process.GetCurrentProcess().MainModule.FileName;
+            Process.Start(appPath);
+            Application.Current.Shutdown();
         }
     }
 }

@@ -52,33 +52,7 @@ namespace TCLauncher.MVVM.Windows
 
         public void ReloadNavPolicies()
         {
-            socBtn.Visibility = Properties.Settings.Default.UseSocial ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public async Task<string> GetFileSizeAsync(string url)
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-                    {
-                        response.EnsureSuccessStatusCode();
-                        long fileSize = response.Content.Headers.ContentLength ?? 0;
-                        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
-                        int order = 0;
-                        while (fileSize >= 1024 && order < sizes.Length - 1)
-                        {
-                            fileSize = fileSize / 1024;
-                            order++;
-                        }
-                        return string.Format("{0:0.##} {1}", fileSize, sizes[order]);
-                    }
-                }
-            }
-            catch { }
-
-            return "Unbekannt";
+            // used to reload the navigation policies like previews
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -100,7 +74,7 @@ namespace TCLauncher.MVVM.Windows
             {
                 From = 0,
                 To = 100,
-                Duration = new Duration(TimeSpan.FromSeconds(4)),
+                Duration = new Duration(TimeSpan.FromSeconds(3)),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
             };
             
@@ -114,8 +88,10 @@ namespace TCLauncher.MVVM.Windows
             {
                 pageAnim = null;
                 pageStoryboard = null;
-                loadingGrid.Visibility = Visibility.Collapsed;
 
+                loadingGrid.Visibility = Visibility.Collapsed;
+                MainFrame.Children.Remove(loadingGrid);
+                
                 mainBorder.Visibility = Visibility.Visible;
                 mainBorder.Opacity = 100;
             };
@@ -331,5 +307,28 @@ namespace TCLauncher.MVVM.Windows
             BgMediaElement.Position = TimeSpan.Zero;
             BgMediaElement.Play();
         }
+
+        private void MainWindow_OnActivated(object sender, EventArgs e)
+        {
+            var animation = new ColorAnimation
+            {
+                From = ((SolidColorBrush)Background).Color,
+                To = Color.FromRgb(102, 111, 123),
+                Duration = new Duration(TimeSpan.FromMilliseconds(100))
+            };
+            Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+        }
+
+        private void MainWindow_OnDeactivated(object sender, EventArgs e)
+        {
+            var animation = new ColorAnimation
+            {
+                From = ((SolidColorBrush)Background).Color,
+                To = Color.FromRgb(71, 77, 85),
+                Duration = new Duration(TimeSpan.FromMilliseconds(100))
+            };
+            Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+        }
+
     }
 }

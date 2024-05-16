@@ -132,7 +132,7 @@ namespace TCLauncher.MVVM.View
             try
             {
                 var instanceFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances",
+                    IoUtils.Tcl.InstancesPath,
                     current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
@@ -159,7 +159,7 @@ namespace TCLauncher.MVVM.View
 
         private async void installInstance(Instance instance)
         {
-            string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", instance.Guid.ToString());
+            string instanceFolder = System.IO.Path.Combine(IoUtils.Tcl.InstancesPath, instance.Guid.ToString());
             string installFolder = System.IO.Path.Combine(instanceFolder, "data");
             string payloadFile = System.IO.Path.Combine(instanceFolder, "base.zip");
 
@@ -402,7 +402,7 @@ namespace TCLauncher.MVVM.View
 
         private void openFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            string dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString(), "data");
+            string dataFolder = Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString(), "data");
             Process.Start("explorer.exe", dataFolder);
         }
 
@@ -410,7 +410,7 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+                string instanceFolder = System.IO.Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
 
                 HttpClient _httpClient = new HttpClient();
                 var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror + "?guid=" + current.Guid.ToString());
@@ -439,7 +439,7 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL", "Instances", current.Guid.ToString());
+                string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
                 string configFile = Path.Combine(instanceFolder, @"config.json");
 
                 this.Cursor = Cursors.Wait;

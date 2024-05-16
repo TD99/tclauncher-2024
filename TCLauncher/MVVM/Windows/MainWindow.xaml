@@ -14,12 +14,15 @@
     Height="600"
     MinWidth="920"
     MinHeight="600"
+    Activated="MainWindow_OnActivated"
     Background="#737c88"
+    Deactivated="MainWindow_OnDeactivated"
     Foreground="White"
     Icon="/Assets/Images/logo.png"
     KeyDown="MainWindow_OnKeyDown"
     Loaded="Window_Loaded"
     StateChanged="MainWindow_OnStateChanged"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -39,9 +42,25 @@
             ResizeBorderThickness="4" />
     </WindowChrome.WindowChrome>
 
-    <Grid>
+    <Grid x:Name="MainFrame">
+        <Grid x:Name="FallbackGrid" ZIndex="-1">
+            <busyIndicator:BusyMask
+                x:Name="BusyIndicator"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BusyContent="Lade Interface..."
+                FontSize="20"
+                IndicatorType="Escalade"
+                IsBusy="True"
+                IsBusyAtStartup="True" />
+        </Grid>
+
         <Grid
             x:Name="loadingGrid"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="#1d2633"
             MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown"
             MouseLeftButtonUp="TopDrag_OnMouseLeftButtonUp"
             Visibility="Collapsed">
@@ -187,23 +206,6 @@
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:ServerListViewModel}}" Value="True">
-                                        <Setter Property="IsChecked" Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
-
-                    <RadioButton
-                        x:Name="socBtn"
-                        Margin="0,0,0,5"
-                        Command="{Binding SocialViewCommand}"
-                        Content="Sozial"
-                        Visibility="Collapsed">
-                        <RadioButton.Style>
-                            <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:SocialViewModel}}" Value="True">
                                         <Setter Property="IsChecked" Value="True" />
                                     </DataTrigger>
                                 </Style.Triggers>

@@ -11,7 +11,6 @@
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         Background="#AA000000"
                         CornerRadius="10">
-
                         <Grid>
                             <Rectangle StrokeThickness="1" />
                             <TextBox
@@ -52,5 +51,22 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="ModernTextBoxV2" TargetType="{x:Type TextBox}">
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="#d3dbf2" />
+        <Setter Property="CaretBrush" Value="#d3dbf2" />
+        <Setter Property="BorderBrush" Value="#788193" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="0,5" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="FontSize" Value="13" />
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="#4e545f" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

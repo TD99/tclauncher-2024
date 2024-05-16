@@ -22,7 +22,7 @@ namespace TCLauncher.MVVM.ViewModel
         private List<StackedBarItem> _storageAnalyzerData;
         private bool _isLoadng;
 
-        private readonly string _cacheFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TCL\\Cache\\stats.txt");
+        private readonly string _cacheFilePath = Path.Combine(IoUtils.Tcl.CachePath, "stats.txt");
 
         public string RamInfo
         {

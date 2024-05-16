@@ -53,14 +53,21 @@
                 <ComboBoxItem Tag="0">Standard: Bibliotheken werden geteilt (empfohlen)</ComboBoxItem>
                 <ComboBoxItem Tag="1">Strikt: Instanzen werden vollständig getrennt (benötigt evtl. mehr Speicherplatz)</ComboBoxItem>
             </ComboBox>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="(Beta) Social aktivieren" />
-                <CheckBox
-                    x:Name="Social"
-                    VerticalAlignment="Center"
-                    Checked="Social_OnChecked"
-                    Unchecked="Social_OnUnchecked" />
-            </StackPanel>
+            <controls:HorizontalSeparator Margin="0,10,0,0" />
+            <Label Content="Custom AppData Path (BETA, NOT RECOMMENDED FOR NOW, DONT USE DIRS THAT REQUIRE ADMIN)" />
+            <TextBox
+                x:Name="AppDataPath"
+                MinWidth="100"
+                HorizontalAlignment="Stretch"
+                Style="{StaticResource ModernTextBoxV2}" />
+            <Button
+                x:Name="AppDataPathBtn"
+                Margin="0,7.5,0,0"
+                Padding="7.5"
+                Click="AppDataPathBtn_OnClick"
+                Content="Anwenden"
+                Style="{StaticResource ModernButton}" />
+
             <controls:HorizontalSeparator Margin="0,10,0,0" />
             <Button
                 x:Name="updateBtn"
