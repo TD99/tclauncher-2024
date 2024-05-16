@@ -54,6 +54,8 @@ namespace TCLauncher.MVVM.View
             hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
 
             AppDataPath.Text = Properties.Settings.Default.VirtualAppDataPath;
+
+            frameworkVersion.Text = "WPF on " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
