@@ -14,13 +14,12 @@
     Height="600"
     MinWidth="920"
     MinHeight="600"
-    Background="#1d2633"
+    Background="#737c88"
     Foreground="White"
     Icon="/Assets/Images/logo.png"
     KeyDown="MainWindow_OnKeyDown"
     Loaded="Window_Loaded"
     StateChanged="MainWindow_OnStateChanged"
-    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -33,8 +32,9 @@
 
     <WindowChrome.WindowChrome>
         <WindowChrome
+            x:Name="WindowChrome"
             CaptionHeight="0"
-            CornerRadius="40"
+            CornerRadius="15"
             GlassFrameThickness="0"
             ResizeBorderThickness="4" />
     </WindowChrome.WindowChrome>
@@ -71,7 +71,12 @@
                 UnloadedBehavior="Manual" />
         </Grid>
 
-        <Border x:Name="mainBorder" Background="#1d2633">
+        <Border
+            x:Name="mainBorder"
+            Background="#1d2633"
+            BorderBrush="Transparent"
+            BorderThickness="1"
+            CornerRadius="8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="23" />

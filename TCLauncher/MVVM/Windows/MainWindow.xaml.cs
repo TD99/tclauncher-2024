@@ -81,7 +81,7 @@ namespace TCLauncher.MVVM.Windows
             return "Unbekannt";
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (!is_silent)
             {
@@ -89,6 +89,8 @@ namespace TCLauncher.MVVM.Windows
             } else
             {
                 loadingGrid.Visibility = Visibility.Collapsed;
+                mainBorder.Visibility = Visibility.Visible;
+                mainBorder.Opacity = 100;
             }
         }
 
