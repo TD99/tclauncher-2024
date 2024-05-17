@@ -214,10 +214,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Windows\FullScreenActionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVVM\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -234,9 +230,6 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
     <Compile Include="Core\SystemInfoUtils.cs" />
-    <Compile Include="MVVM\Windows\FullScreenActionWindow.xaml.cs">
-      <DependentUpon>FullScreenActionWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MVVM\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
