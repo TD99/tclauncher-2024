@@ -104,13 +104,13 @@ namespace TCLauncher.MVVM.Windows
             this.Close();
         }
 
-        private async void minimizeBtn_Click(object sender, RoutedEventArgs e)
+        private void minimizeBtn_Click(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Minimized) return;
             WindowState = WindowState.Minimized;
         }
 
-        private async void maximizeBtn_Click(object sender, RoutedEventArgs e)
+        private void maximizeBtn_Click(object sender, RoutedEventArgs e)
         {
             if (this.WindowState == WindowState.Maximized)
             {
@@ -288,7 +288,7 @@ namespace TCLauncher.MVVM.Windows
             }
         }
 
-        private async void MainWindow_OnStateChanged(object sender, EventArgs e)
+        private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
             {
