@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="Theme/ModernToolTipTheme.xaml" />
                 <ResourceDictionary Source="Theme/ModernScrollbarTheme.xaml" />
                 <ResourceDictionary Source="Theme/ModernComboBoxTheme.xaml" />
+                <ResourceDictionary Source="Theme/ButtonComboBoxTheme.xaml" />
                 <ResourceDictionary Source="Theme/SelectableLabel.xaml" />
                 <ResourceDictionary Source="Theme/GlobalTheme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/BusyIndicator;component/Theme/Default.xaml" />

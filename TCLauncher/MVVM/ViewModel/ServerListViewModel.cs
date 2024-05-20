@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TCLauncher.Core;
 using TCLauncher.Models;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.ViewModel
 {
@@ -55,10 +56,10 @@ namespace TCLauncher.MVVM.ViewModel
             Task.Run(async () =>
             {
                 IsLoading = true;
-                LoadingText = "Bereite vor ...";
+                LoadingText = Languages.preparing_text;
                 await Task.Delay(400);
                 await LoadServers();
-                LoadingText = "Stelle fertig ...";
+                LoadingText = Languages.finishing_text;
                 IsLoading = false;
             });
         }
@@ -74,7 +75,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         private ObservableCollection<Instance> LoadFromCache(string cacheFilePath)
         {
-            LoadingText = "Lade Cache ...";
+            LoadingText = Languages.cache_loading_text;
             try
             {
                 var cacheContent = File.ReadAllText(cacheFilePath);
@@ -88,7 +89,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         private async Task<ObservableCollection<Instance>> FetchServerList(ObservableCollection<Instance> tempServerList, string cacheFilePath)
         {
-            LoadingText = "Fetche Daten ...";
+            LoadingText = Languages.data_fetching_text;
             ObservableCollection<Instance> internetData = null;
             try
             {
@@ -169,7 +170,7 @@ namespace TCLauncher.MVVM.ViewModel
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"Failed to write server list to cache file: {e.Message}", "Error");
+                        MessageBox.Show(string.Format(Languages.cache_write_error_message, e.Message), Languages.error);
                     }
                 }
             }
@@ -179,7 +180,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         private ObservableCollection<Instance> LoadLocalInstances(ObservableCollection<Instance> tempServerList)
         {
-            LoadingText = "Lade lokale Instanzen...";
+            LoadingText = Languages.local_instances_loading_text;
             try
             {
                 var instancesFolder = IoUtils.Tcl.InstancesPath;
@@ -214,7 +215,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         private void LoadInstances(ObservableCollection<Instance> tempServerList)
         {
-            LoadingText = "Lade Instanzen ...";
+            LoadingText = Languages.instances_loading_text;
             try
             {
                 var finalServerList = new ObservableCollection<Instance>();
@@ -244,7 +245,7 @@ namespace TCLauncher.MVVM.ViewModel
             }
             catch
             {
-                MessageBox.Show("Ein Fehler beim Laden der installierten Instanzen ist aufgetreten.");
+                MessageBox.Show(Languages.installed_instances_load_error_message);
             }
         }
     }

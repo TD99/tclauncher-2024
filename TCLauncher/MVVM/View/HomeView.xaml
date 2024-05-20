@@ -8,6 +8,7 @@
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
     xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     d:Background="#1d2633"
     d:DesignHeight="450"
@@ -41,7 +42,7 @@
                 HorizontalAlignment="Left"
                 FontSize="28"
                 Foreground="White"
-                Text="Home" />
+                Text="{x:Static p:Languages.home_text}" />
 
             <Border
                 x:Name="discoverBorder"
@@ -56,11 +57,11 @@
                         <TextBlock
                             Margin="20,10,20,0"
                             FontSize="32"
-                            Text="Öffentliche Spiele" />
+                            Text="{x:Static p:Languages.public_games_text}" />
                         <TextBlock
                             Margin="20,10,20,0"
                             FontSize="21"
-                            Text="Spiele entdecken und herunterladen" />
+                            Text="{x:Static p:Languages.discover_and_download_games_text}" />
                     </StackPanel>
                 </Grid>
 
@@ -110,7 +111,7 @@
                 Grid.Row="0"
                 Height="30"
                 Click="webViewBackButton_Click"
-                Content="Back"
+                Content="{x:Static p:Languages.back_button_text}"
                 Style="{StaticResource ModernButton}" />
             <wv2:WebView2
                 Name="webView"
@@ -262,7 +263,7 @@
                     FontSize="15"
                     Foreground="#5b8dc1"
                     MouseDown="discoverEvent"
-                    Text="Instanzen installieren"
+                    Text="{x:Static p:Languages.install_instances}"
                     TextDecorations="Underline">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -280,7 +281,7 @@
                     x:Name="playBtn"
                     Grid.Column="1"
                     Click="playBtn_Click"
-                    Content="Spielen"
+                    Content="{x:Static p:Languages.play_button_text}"
                     FontSize="20"
                     FontWeight="Medium"
                     Style="{StaticResource ModernButton}" />

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using TCLauncher.Core;
 using TCLauncher.Models;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.ViewModel
 {
@@ -65,7 +66,8 @@ namespace TCLauncher.MVVM.ViewModel
             }
             catch
             {
-                if (!Properties.Settings.Default.FirstTime) MessageBox.Show("Die lokalen Instanzen konnten nicht geladen werden!");
+                if (!Properties.Settings.Default.FirstTime)
+                    MessageBox.Show(Languages.local_instances_load_error_message);
             }
 
             //if ((LocalList.Count < 1 && !Properties.Settings.Default.FirstTime) ||

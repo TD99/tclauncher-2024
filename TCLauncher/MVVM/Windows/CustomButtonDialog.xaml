@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     Title="ButtonDialog"
     Width="400"
     Height="180"
@@ -34,7 +35,7 @@
             <Label
                 x:Name="TitleLabel"
                 Grid.Row="0"
-                Content="Titel"
+                Content="{x:Static p:Languages.title_text}"
                 FontSize="13"
                 FontWeight="Medium"
                 Foreground="#d3dbf2" />

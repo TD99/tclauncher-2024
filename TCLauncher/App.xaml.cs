@@ -18,6 +18,8 @@ using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 using static System.String;
 using static TCLauncher.Core.MessageBoxUtils;
+using System.Globalization;
+using System.Reflection;
 
 namespace TCLauncher
 {
@@ -34,6 +36,8 @@ namespace TCLauncher
 
         public static string AppArgs;
         public static Uri UriArgs;
+
+        public static bool IsCoreLoaded = false;
 
         public static MSession Session
         {
@@ -57,6 +61,7 @@ namespace TCLauncher
 
         public App()
         {
+            SetLanguage(Settings.Default.Language);
             Startup += App_Startup;
         }
 
@@ -104,7 +109,9 @@ namespace TCLauncher
                     var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
                     if (guid != Guid.Empty)
                     {
-                        ShowToVoidLegacy("TCLauncher unterstützt Forge. Bitte schau Forge's Werbung und klicke auf 'Skip', um fortzufahren.");
+                        // get string "test" from Properties/Languages.resx
+
+                        ShowToVoidLegacy(Languages.tclauncher_supports_forge_skip_ad);
                         Thread.Sleep(1000);
                         Process.Start(adUrl + guid);
 
@@ -146,7 +153,7 @@ namespace TCLauncher
             }
             catch (Exception exception)
             {
-                var result = MessageBox.Show("Ein Fehler beim Erstellen der Ordnerstruktur ist aufgetreten!" + exception.Message, "Initialisierungsfehler", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(Languages.error_creating_folder_structure + exception.Message, Languages.initialization_error, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel) Environment.Exit(1);
             }
 
@@ -155,8 +162,42 @@ namespace TCLauncher
             LoginHandler = new JELoginHandlerBuilder()
                 .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
                 .Build();
+
             ShowUI();
             TryAutoLogin();
+
+            IsCoreLoaded = true;
+        }
+
+        public static void SetLanguage(string language, bool isHotReload = false)
+        {
+            var newCulture = new CultureInfo(language);
+            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
+            CultureInfo.DefaultThreadCurrentCulture = newCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = newCulture;
+
+            if (isHotReload)
+            {
+                HotReload();
+            }
+        }
+
+        public static void HotReload()
+        {
+            var oldWin = MainWin;
+            MainWin = new MainWindow
+            {
+                Top = oldWin.Top,
+                Left = oldWin.Left,
+                Width = oldWin.Width,
+                Height = oldWin.Height,
+                WindowState = oldWin.WindowState,
+                WindowStartupLocation = WindowStartupLocation.Manual
+            };
+            Current.MainWindow = MainWin;
+            MainWin.Show();
+            oldWin.Close();
         }
 
         private async void TryAutoLogin()
@@ -185,7 +226,7 @@ namespace TCLauncher
                 }
             } catch (Exception e)
             {
-                MessageBox.Show("Ein Fehler beim automatischen Anmelden ist aufgetreten: " + e.Message);
+                MessageBox.Show(Languages.error_automatic_sign_in + e.Message);
             }
         }
 
@@ -214,45 +255,45 @@ namespace TCLauncher
                         {
                             var targetDir = e.Args[i + 1] ?? throw new ArgumentNullException();
                             var instancesDir = IoUtils.Tcl.InstancesPath;
-                            if (!targetDir.StartsWith(instancesDir)) throw new DirectoryNotFoundException("Target directory is not in instances directory.");
+                            if (!targetDir.StartsWith(instancesDir)) throw new DirectoryNotFoundException(Languages.target_dir_not_instances_dir);
                             if (Directory.Exists(targetDir)) Directory.Delete(targetDir);
                         }
                         catch (Exception err)
                         {
-                            ShowToVoid($"Ein Fehler ist beim Bereinigen aufgetreten. Bitte lösche die Instanz manuell. Fehlermeldung:\n" + err.Message);
+                            ShowToVoid(Languages.error_cleanup + err.Message);
                         }
                         break;
                     case "--installSuccess":
                         is_silent = true;
                         try
                         {
-                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich installiert.");
+                            ShowToVoid(string.Format(Languages.package_installed_named, e.Args[i + 1]));
                         }
                         catch
                         {
-                            ShowToVoid($"Das Paket wurde erfolgreich installiert.");
+                            ShowToVoid(Languages.package_installed);
                         }
                         break;
                     case "--updateSuccess":
                         is_silent = true;
                         try
                         {
-                            ShowToVoid($"Die Konfiguration des Pakets '{e.Args[i + 1]}' wurde erfolgreich aktualisiert.");
+                            ShowToVoid(string.Format(Languages.package_config_updated_named, e.Args[i + 1]));
                         }
                         catch
                         {
-                            ShowToVoid($"Die Konfiguration wurde erfolgreich aktualisiert.");
+                            ShowToVoid(Languages.config_updated);
                         }
                         break;
                     case "--uninstallSuccess":
                         is_silent = true;
                         try
                         {
-                            ShowToVoid($"Das Paket '{e.Args[i + 1]}' wurde erfolgreich deinstalliert.");
+                            ShowToVoid(string.Format(Languages.package_uninstalled_named, e.Args[i + 1]));
                         }
                         catch
                         {
-                            ShowToVoid($"Das Paket wurde erfolgreich deinstalliert.");
+                            ShowToVoid(Languages.package_uninstalled);
                         }
                         break;
                     case "--installPackage":
@@ -261,7 +302,7 @@ namespace TCLauncher
                             var filePath = e.Args[i + 1];
                             if (!File.Exists(filePath)) throw new FileNotFoundException();
                             var fileName = Path.GetFileName(filePath);
-                            var dialog = new CustomButtonDialog(DialogButtons.YesNo, $"Möchtest du das Paket '{fileName}' installieren?");
+                            var dialog = new CustomButtonDialog(DialogButtons.YesNo, string.Format(Languages.prompt_install_package, fileName));
                             dialog.ShowDialog();
 
                             var result = await dialog.Result;
@@ -274,12 +315,12 @@ namespace TCLauncher
                             }
                             catch (Exception exception)
                             {
-                                ShowToVoid($"Das Paket '{fileName}' konnte nicht installiert werden: {exception}");
+                                ShowToVoid(string.Format(Languages.package_install_failed_named, fileName, exception));
                             }
                         }
                         catch (Exception exception)
                         {
-                            ShowToVoid($"Das Paket konnte nicht geladen werden: {exception}");
+                            ShowToVoid(string.Format(Languages.package_load_failed, exception));
                         }
                         break;
                     case "--silent":
@@ -345,7 +386,7 @@ namespace TCLauncher
             }
             catch (Exception e)
             {
-                MessageBox.Show("An error occured while registering URI Schemes: " + e.Message);
+                MessageBox.Show(string.Format(Languages.error_registering_uri_schemes, e.Message));
             }
         }
         private void ShowUI()

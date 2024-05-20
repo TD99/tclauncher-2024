@@ -7,7 +7,6 @@ namespace TCLauncher.MVVM.ViewModel
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ServerListViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
-        public RelayCommand SocialViewCommand { get; set; }
         public RelayCommand StatusViewCommand { get; set; }
         public RelayCommand AccountViewCommand { get; set; }
 

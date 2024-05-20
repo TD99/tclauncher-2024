@@ -10,6 +10,7 @@
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
     d:Background="#1d2633"
     d:DesignHeight="450"
@@ -33,8 +34,8 @@
             <TextBlock
                 Margin="0,0,0,20"
                 FontSize="28"
-                Text="Statistiken" />
-            <TextBlock FontSize="20" Text="Komponenten" />
+                Text="{x:Static p:Languages.statistics_text}" />
+            <TextBlock FontSize="20" Text="{x:Static p:Languages.components_header_text}" />
             <StackPanel Orientation="Horizontal">
                 <controls:Icon
                     FontFamily="{StaticResource FaSolid}"
@@ -118,7 +119,7 @@
             <TextBlock
                 Margin="0,20,0,0"
                 FontSize="20"
-                Text="Speicher" />
+                Text="{x:Static p:Languages.memory_text}" />
             <controls:StackedBarChart
                 ChartHeight="50"
                 Data="{Binding StorageAnalyzerData}"

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core
 {
@@ -43,7 +44,7 @@ namespace TCLauncher.Core
         {
             while (true)
             {
-                var dialog = new CustomInputDialog(message + (isOptional ? " (optional)" : ""))
+                var dialog = new CustomInputDialog(message + (isOptional ? Languages.optional_annotation : ""))
                 {
                     Owner = App.MainWin
                 };
@@ -54,7 +55,7 @@ namespace TCLauncher.Core
                 {
                     return input;
                 }
-                MessageBox.Show("Ungültige Eingabe. Bitte versuchen Sie es erneut.", "Fehler", MessageBoxButton.OK);
+                MessageBox.Show(Languages.invalid_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
 
@@ -62,7 +63,7 @@ namespace TCLauncher.Core
         {
             while (true)
             {
-                var dialog = new CustomInputDialog(message + (isOptional ? " (optional)" : ""))
+                var dialog = new CustomInputDialog(message + (isOptional ? Languages.optional_annotation : ""))
                 {
                     Owner = App.MainWin
                 };
@@ -73,7 +74,7 @@ namespace TCLauncher.Core
                 {
                     return result;
                 }
-                MessageBox.Show("Ungültige Eingabe. Bitte geben Sie 'true' oder 'false' ein.", "Fehler", MessageBoxButton.OK);
+                MessageBox.Show(Languages.invalid_boolean_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
 
@@ -81,7 +82,7 @@ namespace TCLauncher.Core
         {
             while (true)
             {
-                var dialog = new CustomInputDialog(message + (isOptional ? " (optional)" : ""))
+                var dialog = new CustomInputDialog(message + (isOptional ? Languages.optional_annotation : ""))
                 {
                     Owner = App.MainWin
                 };
@@ -92,7 +93,7 @@ namespace TCLauncher.Core
                 {
                     return result;
                 }
-                MessageBox.Show("Ungültige Eingabe. Bitte geben Sie eine ganze Zahl ein.", "Fehler", MessageBoxButton.OK);
+                MessageBox.Show(Languages.invalid_integer_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
 
@@ -100,7 +101,7 @@ namespace TCLauncher.Core
         {
             while (true)
             {
-                var dialog = new CustomInputDialog(message + (isOptional ? " (optional)" : ""))
+                var dialog = new CustomInputDialog(message + (isOptional ? Languages.optional_annotation : ""))
                 {
                     Owner = App.MainWin
                 };
@@ -117,7 +118,7 @@ namespace TCLauncher.Core
                     {
                         return default(T);
                     }
-                    MessageBox.Show("Ungültige Eingabe. Bitte geben Sie gültigen JSON-Text ein.", "Fehler", MessageBoxButton.OK);
+                    MessageBox.Show(Languages.invalid_json_input_message, Languages.error, MessageBoxButton.OK);
                 }
             }
         }

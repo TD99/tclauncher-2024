@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     d:Background="#1d2633"
     d:DesignHeight="100"
     d:DesignWidth="400"
@@ -38,17 +39,17 @@
                 Name="Username"
                 FontSize="18"
                 Style="{StaticResource SelectableLabel}"
-                Text="Benutzername" />
+                Text="{x:Static p:Languages.username_text}" />
             <TextBox
                 Name="GamerTag"
                 FontSize="16"
                 Style="{StaticResource SelectableLabel}"
-                Text="GamerTag" />
+                Text="{x:Static p:Languages.gamertag_text}" />
             <StackPanel Orientation="Horizontal">
                 <TextBox
                     FontSize="12"
                     Style="{StaticResource SelectableLabel}"
-                    Text="Geheime ID:" />
+                    Text="{x:Static p:Languages.secret_id_text}" />
                 <Rectangle
                     Width="35"
                     Height="15"
@@ -63,7 +64,7 @@
                                     Name="Identifier"
                                     FontSize="12"
                                     Style="{StaticResource SelectableLabel}"
-                                    Text="ID" />
+                                    Text="{x:Static p:Languages.id_text}" />
                             </ToolTip.Content>
                         </ToolTip>
                     </Rectangle.ToolTip>
@@ -100,7 +101,7 @@
             Width="75"
             Height="23"
             VerticalAlignment="Stretch"
-            Content="Login"
+            Content="{x:Static p:Languages.login}"
             Style="{StaticResource ModernButton}" />
 
         <Button
@@ -110,7 +111,7 @@
             Width="75"
             Height="23"
             VerticalAlignment="Stretch"
-            Content="Entfernen"
+            Content="{x:Static p:Languages.remove_button_text}"
             Style="{StaticResource ModernButton}" />
     </Grid>
 </UserControl>

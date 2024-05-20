@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     Title="EditorWindow"
     Width="800"
@@ -51,7 +52,7 @@
                 </TreeView.Resources>
                 <TreeViewItem
                     x:Name="treeRoot"
-                    Header="TFile System"
+                    Header="TCLauncher"
                     IsExpanded="True" />
             </TreeView>
         </Border>
@@ -69,18 +70,18 @@
             </Grid.RowDefinitions>
 
             <Menu Background="#343b48" Foreground="White">
-                <MenuItem Click="Save_Click" Header="Save">
+                <MenuItem Click="Save_Click" Header="{x:Static p:Languages.save_menu_item_text}">
                     <MenuItem.ToolTip>
                         <ToolTip Content="Ctrl+S" Style="{StaticResource ModernToolTip}" />
                     </MenuItem.ToolTip>
                 </MenuItem>
-                <MenuItem Click="Format_Click" Header="Format" />
-                <MenuItem Click="Close_Click" Header="Close">
+                <MenuItem Click="Format_Click" Header="{x:Static p:Languages.format_menu_item_text}" />
+                <MenuItem Click="Close_Click" Header="{x:Static p:Languages.close_menu_item_text}">
                     <MenuItem.ToolTip>
                         <ToolTip Content="Ctrl+W" Style="{StaticResource ModernToolTip}" />
                     </MenuItem.ToolTip>
                 </MenuItem>
-                <MenuItem Click="About_Click" Header="About 'TCL Editor'" />
+                <MenuItem Click="About_Click" Header="{x:Static p:Languages.about_tcl_editor_menu_text}" />
             </Menu>
 
             <wv2:WebView2

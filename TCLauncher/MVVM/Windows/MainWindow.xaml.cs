@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using CmlLib.Core.Auth;
 using TCLauncher.Core;
 using TCLauncher.MVVM.ViewModel;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.Windows
 {
@@ -59,6 +60,10 @@ namespace TCLauncher.MVVM.Windows
         {
             if (!is_silent)
             {
+                if (App.IsCoreLoaded)
+                {
+                    loadingGrid.Visibility = Visibility.Collapsed;
+                }
                 loadingAnim();
             } else
             {
@@ -283,7 +288,7 @@ namespace TCLauncher.MVVM.Windows
             }
             else
             {
-                AccountManagerBtnName.Text = "Nicht eingeloggt";
+                AccountManagerBtnName.Text = Languages.not_logged_button_text;
                 AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/steve.png"));
             }
         }

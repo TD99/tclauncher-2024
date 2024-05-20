@@ -66,7 +66,7 @@ namespace TCLauncher.MVVM.View
             itemFocusRamMin.Text = $"{minRam} GB / {totalPhysicalMemory} GB";
             itemFocusRamMax.Text = $"{maxRam} GB / {totalPhysicalMemory} GB";
 
-            specialFocusBtn.Content = (instance.Is_Installed) ? "Deinstallieren" : "Installieren";
+            specialFocusBtn.Content = (instance.Is_Installed) ? Languages.uninstall : Languages.install;
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             reconfigDef.Visibility = (instance.Is_Installed && !instance.Is_LocalSource) ? Visibility.Visible : Visibility.Collapsed;
             editConfig.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
@@ -115,7 +115,7 @@ namespace TCLauncher.MVVM.View
             itemFocusPackage.Text = "";
             itemFocusType.Text = "";
             itemFocusMCVersion.Text = "";
-            specialFocusBtn.Content = "Aktion";
+            specialFocusBtn.Content = Languages.action;
             itemFocusMCWorkingDirDesc.Children.Clear();
             propsText.Visibility = Visibility.Visible;
 
@@ -136,11 +136,11 @@ namespace TCLauncher.MVVM.View
                     current.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
-                    MessageBox.Show("Es wurden keine Daten gefunden!", "Instanz löschen");
+                    MessageBox.Show(Languages.no_data_found_message_delete_instance, Languages.delete_instance);
                     return;
                 }
 
-                var result = MessageBox.Show("Willst du die Instanz wirklich löschen?", "Instanz löschen",
+                var result = MessageBox.Show(Languages.confirm_delete_instance_message, Languages.delete_instance,
                     MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result != MessageBoxResult.Yes) return;
@@ -153,7 +153,7 @@ namespace TCLauncher.MVVM.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ein Fehler ist aufgetreten: {ex.Message}", "Instanz löschen");
+                MessageBox.Show(string.Format(Languages.error_occurred_delete_instance_message, ex.Message), Languages.delete_instance);
             }
         }
 
@@ -169,14 +169,14 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show("Fehler beim Erstellen der Instanz!");
+                MessageBox.Show(Languages.instance_creation_failure_message);
             }
 
             try
             {
                 if (!URLExists(instance.WorkingDirZipURL))
                 {
-                    MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
+                    MessageBox.Show(Languages.dependency_fetch_error_message);
                     return;
                 }
 
@@ -188,7 +188,7 @@ namespace TCLauncher.MVVM.View
                     {
                         string fileSize = await GetFileSizeAsync(instance.WorkingDirZipURL);
 
-                        ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
+                        ActionWindow action = new ActionWindow(string.Format(Languages.installing_package_action, current.Name, fileSize));
                         action.Show();
 
                         client.DownloadProgressChanged += (sender, e) =>
@@ -207,7 +207,7 @@ namespace TCLauncher.MVVM.View
                         }
                         catch
                         {
-                            MessageBox.Show("Download abgebrochen!");
+                            MessageBox.Show(Languages.download_cancelled_message);
                             uninstallInstance(current, true);
                             action.Close();
                             return;
@@ -216,14 +216,14 @@ namespace TCLauncher.MVVM.View
                         action.Close();
                     }
 
-                    ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}'");
+                    ActionWindow action2 = new ActionWindow(string.Format(Languages.configuring_package_action, current.Name));
                     action2.Show();
 
                     await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
 
                     action2.Close();
 
-                    ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}'");
+                    ActionWindow action3 = new ActionWindow(string.Format(Languages.cleaning_package_action, current.Name));
                     action3.Show();
 
                     try
@@ -245,7 +245,7 @@ namespace TCLauncher.MVVM.View
                         {
                             string fileSize = await GetFileSizeAsync(patch.URL);
 
-                            ActionWindow action = new ActionWindow($"Installieren des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'\nGrösse: {fileSize}\nInfo: Dies kann einige Zeit in Anspruch nehmen!");
+                            ActionWindow action = new ActionWindow(string.Format(Languages.installing_package_with_patch_action, current.Name, patch.Name, patch.ID, fileSize));
                             action.Show();
 
                             client.DownloadProgressChanged += (sender, e) =>
@@ -266,7 +266,7 @@ namespace TCLauncher.MVVM.View
                             }
                             catch
                             {
-                                MessageBox.Show("Paketfehler, die Installation ist beschädigt!");
+                                MessageBox.Show(Languages.package_error_installation_corrupted_message);
                                 err = true;
                             }
 
@@ -274,14 +274,14 @@ namespace TCLauncher.MVVM.View
                             {
                                 action.Close();
 
-                                ActionWindow action2 = new ActionWindow($"Konfigurieren des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'");
+                                ActionWindow action2 = new ActionWindow(string.Format(Languages.configuring_package_with_patch_action, current.Name, patch.Name, patch.ID));
                                 action2.Show();
 
                                 await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
 
                                 action2.Close();
 
-                                ActionWindow action3 = new ActionWindow($"Aufräumen des Pakets 'ch.tcraft.{current.Name}@{patch.Name}:{patch.ID}'");
+                                ActionWindow action3 = new ActionWindow(string.Format(Languages.cleaning_package_with_patch_action, current.Name, patch.Name, patch.ID));
                                 action3.Show();
 
                                 try
@@ -314,7 +314,7 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show("Ein Fehler beim Holen der Abhängigkeiten ist aufgetreten.");
+                MessageBox.Show(Languages.dependency_fetch_error_message);
             }
 
             reconfigure(instance);
@@ -349,7 +349,7 @@ namespace TCLauncher.MVVM.View
             }
             catch { }
 
-            return "Unbekannt";
+            return Languages.unknown;
         }
 
         private bool URLExists(string url)
@@ -383,7 +383,7 @@ namespace TCLauncher.MVVM.View
                 installInstance(current);
             }
 
-            specialFocusBtn.Content = (current.Is_Installed) ? "Deinstallieren" : "Installieren";
+            specialFocusBtn.Content = (current.Is_Installed) ? Languages.uninstall : Languages.install;
         }
 
         private void reconfigure(Instance instance)
@@ -396,7 +396,7 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show("Ein Fehler bei der Neukonfiguration ist aufgetreten.");
+                MessageBox.Show(Languages.reconfiguration_error_message);
             }
         }
 
@@ -427,11 +427,11 @@ namespace TCLauncher.MVVM.View
 
                     return;
                 }
-                MessageBox.Show($"Die Neukonfiguration von '{current.Name}' ist fehlgeschlagen.");
+                MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
             }
             catch
             {
-                MessageBox.Show($"Die Neukonfiguration von '{current.Name}' ist fehlgeschlagen.");
+                MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
             }
         }
 
@@ -449,11 +449,11 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show($"Die Konfiguration von '{current.Name}' ist fehlgeschlagen.");
+                MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
             }
         }
 
-        private async void AddServerBtn_OnClick(object sender, RoutedEventArgs e)
+        private async void ExportServerBtn_OnClick()
         {
             try
             {
@@ -461,11 +461,11 @@ namespace TCLauncher.MVVM.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket erstellen");
+                MessageBox.Show(string.Format(Languages.cache_error_package_create_message, ex.Message), Languages.package_create);
             }
         }
 
-        private void ImportServerBtn_OnClick(object sender, RoutedEventArgs e)
+        private void ImportServerBtn_OnClick()
         {
             try
             {
@@ -473,13 +473,31 @@ namespace TCLauncher.MVVM.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ein Fehler ist aufgetreten (Cache leeren kann helfen): " + ex.Message, "Paket importieren");
+                MessageBox.Show(string.Format(Languages.cache_error_package_create_message, ex.Message), Languages.package_import);
             }
         }
 
-        private void CreateBlankBtn_OnClick(object sender, RoutedEventArgs e)
+        private void CreateBlankBtn_OnClick()
         {
             AppUtils.CreateTemplateInstance();
+        }
+
+        private void ActionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (((ComboBoxItem) ActionComboBox.SelectedItem).Tag)
+            {
+                case "CreateBlankBtn":
+                    CreateBlankBtn_OnClick();
+                    break;
+                case "ExportBtn":
+                    ExportServerBtn_OnClick();
+                    break;
+                case "ImportBtn":
+                    ImportServerBtn_OnClick();
+                    break;
+            }
+
+            ActionComboBox.SelectedItem = ActionDefaultLabel;
         }
     }
 }

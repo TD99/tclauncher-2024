@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
     Title="TCLauncher"
     Width="920"
@@ -49,7 +50,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Background="Transparent"
-                BusyContent="Lade Interface..."
+                BusyContent="{x:Static p:Languages.busy_interface_loading_text}"
                 FontSize="20"
                 IndicatorType="Escalade"
                 IsBusy="True"
@@ -76,7 +77,7 @@
                 <Label
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"
-                    Content="Starting ..."
+                    Content="{x:Static p:Languages.starting_text}"
                     FontFamily="{StaticResource PixelifySans}"
                     FontSize="25"
                     Foreground="#b2b9cc" />
@@ -126,12 +127,13 @@
                             HorizontalOffset="0"
                             Placement="MousePoint"
                             VerticalOffset="0">
-                            <MenuItem Click="minimizeBtn_Click" Header="Minimieren" />
-                            <MenuItem Click="maximizeBtn_Click" Header="Maximieren" />
+                            <MenuItem Click="minimizeBtn_Click" Header="{x:Static p:Languages.minimize_menu_item_text}" />
+                            <MenuItem Click="maximizeBtn_Click" Header="{x:Static p:Languages.maximize_menu_item_text}" />
                             <MenuItem
                                 Click="closeBtn_Click"
-                                Header="Schließen"
+                                Header="{x:Static p:Languages.close_menu_item_text}"
                                 InputGestureText="ALT + F4" />
+
                         </ContextMenu>
                     </Border.ContextMenu>
                 </Border>
@@ -171,7 +173,7 @@
                         x:Name="homeBtn"
                         Margin="0,0,0,5"
                         Command="{Binding HomeViewCommand}"
-                        Content="Home">
+                        Content="{x:Static p:Languages.home_text}">
                         <RadioButton.Style>
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
@@ -186,7 +188,7 @@
                         x:Name="serverBtn"
                         Margin="0,0,0,5"
                         Command="{Binding ServerListViewCommand}"
-                        Content="Spiele"
+                        Content="{x:Static p:Languages.games_label_text}"
                         ToolTipService.IsEnabled="False">
                         <RadioButton.ToolTip>
                             <ToolTip
@@ -197,7 +199,7 @@
                                 Style="{StaticResource ModernToolTip}">
                                 <ToolTip.Content>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Foreground="Black" Text="← Hier kannst du Instanzen installieren" />
+                                        <TextBlock Foreground="Black" Text="{x:Static p:Languages.install_instances_text}" />
                                     </StackPanel>
                                 </ToolTip.Content>
                             </ToolTip>
@@ -221,7 +223,7 @@
                     <RadioButton
                         x:Name="statusBtn"
                         Command="{Binding StatusViewCommand}"
-                        Content="Info">
+                        Content="{x:Static p:Languages.info_content_text}">
                         <RadioButton.Style>
                             <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
                                 <Style.Triggers>
@@ -266,7 +268,7 @@
                                         x:Name="AccountManagerBtnName"
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
-                                        Text="Nicht eingeloggt" />
+                                        Text="{x:Static p:Languages.not_logged_text}" />
                                 </Grid>
                             </Button.Content>
                             <Button.Style>

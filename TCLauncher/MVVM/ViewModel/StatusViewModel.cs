@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using TCLauncher.Core;
 using TCLauncher.Models;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.ViewModel
 {
@@ -159,14 +160,14 @@ namespace TCLauncher.MVVM.ViewModel
                     },
                     new StackedBarItem
                     {
-                        Name = "Sonstige",
+                        Name = Languages.other_instance_name,
                         Value = othersSize,
                         Unit = "GB",
                         Color = Color.FromRgb(157, 166, 180)
                     },
                     new StackedBarItem
                     {
-                        Name = "Frei",
+                        Name = Languages.free_instance_name,
                         Value = freeSize,
                         Unit = "GB",
                         Color = Color.FromRgb(180, 180, 180)

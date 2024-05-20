@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     Title="Input"
     Width="400"
     Height="120"
@@ -53,7 +54,7 @@
             <Label
                 x:Name="TitleLabel"
                 Grid.Row="0"
-                Content="Titel"
+                Content="{x:Static p:Languages.title_text}"
                 FontSize="13"
                 FontWeight="Medium"
                 Foreground="#d3dbf2" />
@@ -70,7 +71,7 @@
                     x:Name="OKButton"
                     Padding="15,5"
                     Click="OKButton_Click"
-                    Content="OK"
+                    Content="{x:Static p:Languages.button_ok}"
                     IsDefault="True"
                     Style="{StaticResource ModernButton}" />
                 <Button
@@ -78,7 +79,7 @@
                     Margin="5,0,0,0"
                     Padding="15,5"
                     Click="CancelButton_Click"
-                    Content="Abbrechen"
+                    Content="{x:Static p:Languages.button_cancel}"
                     IsCancel="True"
                     Style="{StaticResource ModernButton}" />
             </StackPanel>

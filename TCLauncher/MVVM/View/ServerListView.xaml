@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:converters="clr-namespace:TCLauncher.MVVM.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
     xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:vm="clr-namespace:TCLauncher.MVVM.ViewModel"
     d:Background="#1d2633"
     d:DesignHeight="450"
@@ -66,7 +68,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Patch: " />
+                                Text="{x:Static p:Languages.patch_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusPatch"
                                 FontSize="20"
@@ -76,7 +78,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Paket: " />
+                                Text="{x:Static p:Languages.package_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusPackage"
                                 FontSize="20"
@@ -86,7 +88,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Typ: " />
+                                Text="{x:Static p:Languages.type_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusType"
                                 FontSize="20"
@@ -96,7 +98,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Minecraft-Version: " />
+                                Text="{x:Static p:Languages.minecraft_version_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusMCVersion"
                                 FontSize="20"
@@ -106,7 +108,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Min RAM: " />
+                                Text="{x:Static p:Languages.min_ram_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusRamMin"
                                 FontSize="20"
@@ -116,7 +118,7 @@
                             <TextBlock
                                 FontSize="20"
                                 Foreground="White"
-                                Text="Max RAM: " />
+                                Text="{x:Static p:Languages.max_ram_label_text}" />
                             <TextBlock
                                 x:Name="itemFocusRamMax"
                                 FontSize="20"
@@ -133,42 +135,42 @@
                         <Button
                             x:Name="closeFocusBtn"
                             Click="closeFocusBtn_Click"
-                            Content="Schliessen"
+                            Content="{x:Static p:Languages.close_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
                             x:Name="specialFocusBtn"
                             Margin="0,15,0,0"
                             Click="specialFocusBtn_Click"
-                            Content="Aktion"
+                            Content="{x:Static p:Languages.action_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
                             x:Name="openFolderBtn"
                             Margin="0,15,0,0"
                             Click="openFolderBtn_Click"
-                            Content="Datenordner anzeigen"
+                            Content="{x:Static p:Languages.show_data_folder_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
                             x:Name="reconfigDef"
                             Margin="0,15,0,0"
                             Click="reconfigDef_Click"
-                            Content="Auto-Konfiguration"
+                            Content="{x:Static p:Languages.auto_configuration_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
                             x:Name="editConfig"
                             Margin="0,15,0,0"
                             Click="editConfig_Click"
-                            Content="Konfigurationseditor"
+                            Content="{x:Static p:Languages.configuration_editor_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
                             x:Name="forceUninstallBtn"
                             Margin="0,50,0,0"
                             Click="forceUninstallBtn_Click"
-                            Content="Deinstallation erzwingen"
+                            Content="{x:Static p:Languages.force_uninstall_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                     </StackPanel>
@@ -181,7 +183,7 @@
                             x:Name="propsText"
                             FontSize="25"
                             Foreground="White"
-                            Text="Eigenschaften: " />
+                            Text="{x:Static p:Languages.properties_label_text}" />
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <StackPanel
                                 x:Name="itemFocusMCWorkingDirDesc"
@@ -205,40 +207,34 @@
                 HorizontalAlignment="Left"
                 FontSize="28"
                 Foreground="White"
-                Text="Spiele" />
+                Text="{x:Static p:Languages.games_label_text}" />
 
-            <StackPanel
+            <ComboBox
+                x:Name="ActionComboBox"
                 Grid.Row="0"
+                Width="30"
+                Height="30"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Orientation="Horizontal">
-                <Button
-                    x:Name="createBlankBtn"
-                    Width="40px"
-                    Click="CreateBlankBtn_OnClick"
-                    FontSize="18"
-                    Style="{StaticResource ModernButton}">
-                    🗎
-                </Button>
-                <Separator Width="10px" Background="Transparent" />
-                <Button
-                    x:Name="addServerBtn"
-                    Width="40px"
-                    Click="AddServerBtn_OnClick"
-                    FontSize="18"
-                    Style="{StaticResource ModernButton}">
-                    🔨
-                </Button>
-                <Separator Width="10px" Background="Transparent" />
-                <Button
-                    x:Name="importServerBtn"
-                    Width="40px"
-                    Click="ImportServerBtn_OnClick"
-                    FontSize="28"
-                    Style="{StaticResource ModernButton}">
-                    +
-                </Button>
-            </StackPanel>
+                SelectionChanged="ActionComboBox_OnSelectionChanged"
+                Style="{StaticResource ButtonComboBox}">
+                <ComboBoxItem
+                    x:Name="ActionDefaultLabel"
+                    IsSelected="True"
+                    Visibility="Collapsed">
+                    <ComboBoxItem.Content>
+                        <controls:Icon
+                            FontFamily="{StaticResource FaSolid}"
+                            FontSize="14"
+                            Identifier="bars"
+                            Unicode="f0c9"
+                            Color="White" />
+                    </ComboBoxItem.Content>
+                </ComboBoxItem>
+                <ComboBoxItem Content="{x:Static p:Languages.action_create_game}" Tag="CreateBlankBtn" />
+                <ComboBoxItem Content="{x:Static p:Languages.action_export_game}" Tag="ExportBtn" />
+                <ComboBoxItem Content="{x:Static p:Languages.action_import_game}" Tag="ImportBtn" />
+            </ComboBox>
 
             <ListView
                 Grid.Row="1"
@@ -355,7 +351,7 @@
                                         Grid.Column="0"
                                         FontSize="20"
                                         Foreground="White"
-                                        Text="Typ" />
+                                        Text="{x:Static p:Languages.type_label_text}" />
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="1"
@@ -369,7 +365,7 @@
                                         Grid.Column="0"
                                         FontSize="20"
                                         Foreground="White"
-                                        Text="Minecraft" />
+                                        Text="{x:Static p:Languages.minecraft_text}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="1"
@@ -383,7 +379,7 @@
                                         Grid.Column="0"
                                         FontSize="20"
                                         Foreground="White"
-                                        Text="Version" />
+                                        Text="{x:Static p:Languages.version_text1}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="1"

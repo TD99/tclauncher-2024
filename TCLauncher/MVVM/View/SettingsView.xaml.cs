@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.View
 {
@@ -19,8 +21,7 @@ namespace TCLauncher.MVVM.View
         public SettingsView()
         {
             InitializeComponent();
-            assemblyVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
+            assemblyVersion.Text = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version.ToString());
             string behaviourTagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)
             {
@@ -51,16 +52,26 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
-            hostBtn.Content = "Debug-Server " + (App.DbgHttpServer == null ? "starten" : "stoppen");
+            hostBtn.Content = App.DbgHttpServer == null ? Languages.debug_server_start_text : Languages.debug_server_stop_text;
 
             AppDataPath.Text = Properties.Settings.Default.VirtualAppDataPath;
 
-            frameworkVersion.Text = "WPF on " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+            frameworkVersion.Text = string.Format(Languages.framework_version_text, System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+
+            string languageTagToSelect = Properties.Settings.Default.Language;
+            foreach (ComboBoxItem item in LanguageSelector.Items)
+            {
+                if ((string)item.Tag == languageTagToSelect)
+                {
+                    LanguageSelector.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show($"Möchtest du wirklich alle Einstellungen löschen?", "Einstellungen zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(Languages.reset_settings_message, Languages.reset_settings_caption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result != MessageBoxResult.Yes) return;
             Properties.Settings.Default.Reset();
@@ -69,7 +80,7 @@ namespace TCLauncher.MVVM.View
 
         private void resetDataBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show($"Möchtest du wirklich alle TCL Daten löschen?", "Daten zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show(Languages.reset_data_message, Languages.reset_data_caption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -79,14 +90,14 @@ namespace TCLauncher.MVVM.View
                     Properties.Settings.Default.Reset();
                     Properties.Settings.Default.Save();
 
-                    MessageBox.Show("Die Daten wurden erfolgreich zurückgesetzt.");
+                    MessageBox.Show(Languages.reset_data_success_message);
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     Process.Start(appPath);
                     Application.Current.Shutdown();
                 }
                 catch
                 {
-                    MessageBox.Show("Ein Fehler beim Löschen ist aufgetreten. Bitte starte den Launcher und seine Prozesse neu und stelle sicher, dass die Daten nicht verwendet werden.");
+                    MessageBox.Show(Languages.reset_data_error_message);
                 }
             }
         }
@@ -116,7 +127,7 @@ namespace TCLauncher.MVVM.View
                 value = Byte.Parse(tag);
             } catch
             {
-                MessageBox.Show("Das Startverhalten konnte nicht gesetzt werden.");
+                MessageBox.Show(Languages.startup_behavior_error_message);
                 return;
             }
 
@@ -128,7 +139,7 @@ namespace TCLauncher.MVVM.View
         {
             if (App.DbgHttpServer == null)
             {
-                var dialog = new CustomInputDialog("Bitte gib die gewünschte Debug-Server-URL ein.")
+                var dialog = new CustomInputDialog(Languages.debug_server_url_prompt)
                 {
                     Owner = App.MainWin,
                     ResponseText = "http://localhost:4535/"
@@ -141,7 +152,7 @@ namespace TCLauncher.MVVM.View
                 {
                     App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
                     App.DbgHttpServer.Run();
-                    hostBtn.Content = "Debug-Server stoppen";
+                    hostBtn.Content = Languages.debug_server_stop_text;
                     Process.Start(dialog.ResponseText);
                 }
                 catch (Exception exception)
@@ -154,7 +165,7 @@ namespace TCLauncher.MVVM.View
             {
                 App.DbgHttpServer.Stop();
                 App.DbgHttpServer = null;
-                hostBtn.Content = "Debug-Server starten";
+                hostBtn.Content = Languages.debug_server_start_text;
             }
         }
 
@@ -176,36 +187,13 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show("Die Multiinstanzen können nicht gesetzt werden.");
+                MessageBox.Show(Languages.multi_instance_setting_error_message);
                 return;
             }
 
             Properties.Settings.Default.MultiInstances = value;
             Properties.Settings.Default.Save();
         }
-
-        //private async void FScreenBtn_OnClick(object sender, RoutedEventArgs e)
-        //{
-        //    var dialog = new CustomButtonDialog(DialogButtons.OkCancel, "This will launch a mock instance. It will never load.")
-        //    {
-        //        Owner = App.MainWin,
-        //        WindowStartupLocation = WindowStartupLocation.CenterOwner
-        //    };
-        //    dialog.ShowDialog();
-
-        //    var result = await dialog.Result;
-        //    if (result != DialogButton.Ok) return;
-
-        //    var fsaWin = new FullScreenActionWindow
-        //    {
-        //        InstanceName = "T-Craft Server",
-        //        InstanceVersion = "1.19.0",
-        //        InstanceType = "Fabric",
-        //        InstanceStatus = "Wird gestartet...",
-        //        InstanceProgress = 50
-        //    };
-        //    fsaWin.Show();
-        //}
 
         private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -220,7 +208,7 @@ namespace TCLauncher.MVVM.View
             }
             catch
             {
-                MessageBox.Show("Der Sandboxlevel kann nicht gesetzt werden.");
+                MessageBox.Show(Languages.sandbox_level_setting_error_message);
                 return;
             }
 
@@ -230,10 +218,7 @@ namespace TCLauncher.MVVM.View
 
         private void HotReloadBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            App.MainWin.loadingGrid.Visibility = Visibility.Visible;
-            App.MainWin.mainBorder.Visibility = Visibility.Collapsed;
-            App.MainWin.loadingAnim();
-            App.MainWin.navigateToHome();
+            App.HotReload();
         }
 
         private void AppDataPathBtn_OnClick(object sender, RoutedEventArgs e)
@@ -243,7 +228,7 @@ namespace TCLauncher.MVVM.View
 
             if (!IoUtils.FileSystem.HasFullAccess(newPath))
             {
-                MessageBox.Show("Der angegebene Pfad kann nicht genutzt werden. Bitte wähle einen anderen Pfad.");
+                MessageBox.Show(Languages.invalid_path_error_message);
                 return;
             }
 
@@ -252,8 +237,8 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.VirtualAppDataPath = AppDataPath.Text;
             Properties.Settings.Default.Save();
 
-            var result = MessageBox.Show("Der Pfad wurde erfolgreich gespeichert. Möchtest du die Launcher-Dateien migrieren und den Ordner überschreiben?", "Pfad gespeichert", MessageBoxButton.YesNo, MessageBoxImage.Information);
-            
+            var result = MessageBox.Show(Languages.path_saved_prompt, Languages.path_saved, MessageBoxButton.YesNo, MessageBoxImage.Information);
+
             if (result == MessageBoxResult.Yes)
             {
                 Task.Run(() =>
@@ -261,11 +246,11 @@ namespace TCLauncher.MVVM.View
                     try
                     {
                         Directory.Move(oldPath, newPath);
-                        MessageBox.Show("Die Dateien wurden erfolgreich migriert.");
+                        MessageBox.Show(Languages.files_migrated_success_message);
                     }
                     catch
                     {
-                        MessageBox.Show("Ein Fehler beim Kopieren ist aufgetreten. Bitte stelle sicher, dass die Dateien nicht verwendet werden.");
+                        MessageBox.Show(Languages.copy_error_message);
                     }
                 });
             }
@@ -273,6 +258,18 @@ namespace TCLauncher.MVVM.View
             var appPath = Process.GetCurrentProcess().MainModule.FileName;
             Process.Start(appPath);
             Application.Current.Shutdown();
+        }
+
+        private void LanguageSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            string tag = (string)selectedItem.Tag;
+
+            if (tag == Settings.Default.Language) return;
+            Settings.Default.Language = tag;
+            Settings.Default.Save();
+            App.SetLanguage(Settings.Default.Language, true);
         }
     }
 }

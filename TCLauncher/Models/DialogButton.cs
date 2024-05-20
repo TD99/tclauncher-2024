@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Models
 {
@@ -31,19 +32,19 @@ namespace TCLauncher.Models
         // Default buttons
         public static readonly DialogButton Ok = new DialogButton
         {
-            Text = "OK",
+            Text = Languages.button_ok,
             IsDefault = true
         };
 
         public static readonly DialogButton Cancel = new DialogButton
         {
-            Text = "Cancel",
+            Text = Languages.button_cancel,
             IsCancel = true
         };
 
         public static readonly DialogButton CancelColored = new DialogButton
         {
-            Text = "Cancel",
+            Text = Languages.button_cancel,
             Background = new SolidColorBrush(Color.FromRgb(233, 52, 69)),
             Foreground = new SolidColorBrush(Colors.White),
             IsCancel = true
@@ -51,42 +52,42 @@ namespace TCLauncher.Models
 
         public static readonly DialogButton Yes = new DialogButton
         {
-            Text = "Yes",
+            Text = Languages.button_yes,
             IsDefault = true
         };
 
         public static readonly DialogButton No = new DialogButton
         {
-            Text = "No",
+            Text = Languages.button_no,
             IsCancel = true
         };
 
         public static readonly DialogButton Retry = new DialogButton
         {
-            Text = "Retry",
+            Text = Languages.button_retry,
             IsDefault = true
         };
 
         public static readonly DialogButton Try = new DialogButton
         {
-            Text = "Try"
+            Text = Languages.button_try
         };
 
         public static readonly DialogButton Continue = new DialogButton
         {
-            Text = "Continue",
+            Text = Languages.button_continue,
             IsDefault = true
         };
 
         public static readonly DialogButton Abort = new DialogButton
         {
-            Text = "Abort",
+            Text = Languages.button_abort,
             IsCancel = true
         };
 
         public static readonly DialogButton AbortColored = new DialogButton
         {
-            Text = "Abort",
+            Text = Languages.button_abort,
             Background = new SolidColorBrush(Color.FromRgb(233, 52, 69)),
             Foreground = new SolidColorBrush(Colors.White),
             IsCancel = true
@@ -94,7 +95,7 @@ namespace TCLauncher.Models
 
         public static readonly DialogButton Ignore = new DialogButton
         {
-            Text = "Ignore",
+            Text = Languages.button_ignore,
             IsCancel = true
         };
     }

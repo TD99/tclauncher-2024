@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
     d:Background="#1d2633"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -33,7 +34,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,0,0,10"
-            Content="Accounts"
+            Content="{x:Static p:Languages.accounts_button_text}"
             FontSize="28" />
         <Button
             x:Name="LogoutBtn"
@@ -44,7 +45,7 @@
             VerticalAlignment="Center"
             Background="#55ff0000"
             Click="LogoutBtn_OnClick"
-            Content="Ausloggen"
+            Content="{x:Static p:Languages.logout_button_text}"
             Style="{StaticResource ModernButton}"
             Visibility="Collapsed" />
         <ScrollViewer
@@ -73,7 +74,7 @@
             Padding="7.5"
             HorizontalAlignment="Center"
             Click="NewAccountBtn_OnClick"
-            Content="Account hinzufügen"
+            Content="{x:Static p:Languages.add_account_button_text}"
             Style="{StaticResource ModernButton}" />
     </Grid>
 </UserControl>

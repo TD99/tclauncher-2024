@@ -64,7 +64,7 @@ namespace TCLauncher.MVVM.View
             var tclInstancesFolder = IoUtils.Tcl.InstancesPath;
             if (!(profileSelect.SelectedItem is InstalledInstance instance))
             {
-                MessageBox.Show("Bitte wähle eine Instanz aus!");
+                MessageBox.Show(Languages.select_instance_message);
                 return;
             }
 
@@ -72,17 +72,15 @@ namespace TCLauncher.MVVM.View
             {
                 if (App.LoginHandler.AccountManager.GetAccounts().Count != 1)
                 {
-                    var result =
-                        MessageBox.Show(
-                            "Möchtest du dich mit einem Benutzerkonto anmelden? Klicke auf 'Nein' für ein Offline-Konto.",
-                            "Login", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    var result = MessageBox.Show(Languages.login_prompt_message, Languages.login, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
                     if (result == MessageBoxResult.Yes)
                     {
                         App.MainWin.navigateToLogin();
                         return;
                     }
 
-                    var dialog = new CustomInputDialog("Bitte gib den gewünschten Offline-Benutzernamen ein.")
+                    var dialog = new CustomInputDialog(Languages.offline_user_input_message)
                     {
                         Owner = App.MainWin
                     };
@@ -92,7 +90,7 @@ namespace TCLauncher.MVVM.View
                     if (!await dialog.Result) return;
 
                     App.Session = MSession.CreateOfflineSession(dialog.ResponseText);
-                    App.MainWin.SetDisplayAccount(dialog.ResponseText + " (Offline)");
+                    App.MainWin.SetDisplayAccount(dialog.ResponseText + Languages.offline_annotation);
                 }
                 else
                 {
@@ -185,7 +183,7 @@ namespace TCLauncher.MVVM.View
                     //DockName = "Minecraft on TCL"
                 };
 
-                var actionWindow = new ActionWindow("Lade Spiel...");
+                var actionWindow = new ActionWindow(Languages.loading_game_message);
 
                 App.Launcher.FileChanged += (e1) =>
                 {
@@ -264,7 +262,7 @@ namespace TCLauncher.MVVM.View
                     return;
                 }
 
-                var result = MessageBox.Show($"Die Aktion ist möglicherweise gefährlich! Soll sie in der TCLauncher-Sandbox ausgeführt werden?\n\nACTION='{applet.ActionURL}'", "TCLauncher Sicherheit", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(Languages.sandbox_security_message, Languages.tclauncher_security, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel) return;
             }
 
@@ -301,7 +299,7 @@ namespace TCLauncher.MVVM.View
                     _isServerListLoading = true;
 
                     var serverList = new List<Server>(selectedInstance.Servers);
-                    serverList.Insert(0, new Server("No server", null, null));
+                    serverList.Insert(0, new Server(Languages.no_server_message, null, null));
 
                     ServerSelect.ItemsSource = serverList;
 
@@ -315,7 +313,7 @@ namespace TCLauncher.MVVM.View
                     _isServerListLoading = true;
 
                     var serverList = new List<Server>();
-                    serverList.Insert(0, new Server("No server", null, null));
+                    serverList.Insert(0, new Server(Languages.no_server_message, null, null));
 
                     ServerSelect.ItemsSource = serverList;
 

@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using TCLauncher.Core;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.Windows
 {
@@ -79,7 +80,7 @@ namespace TCLauncher.MVVM.Windows
             }
             else
             {
-                webView2Control.CoreWebView2.NavigateToString("<span style=\"color: #FFF\">Error while loading Plugin! Please retry later. (ENOTFOUND)</span>");
+                webView2Control.CoreWebView2.NavigateToString("<span style=\"color: #FFF\">" + Languages.plugin_loading_error_message + "</span>");
             }
         }
 
@@ -119,7 +120,7 @@ namespace TCLauncher.MVVM.Windows
                         if ((File.GetAttributes(file) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                         {
                             // If the file is read-only, add "(readonly)" to the header
-                            fileItem.Header += " (readonly)";
+                            fileItem.Header += Languages.readonly_annotation;
                         }
                         parentItem.Items.Add(fileItem);
                     }
@@ -131,13 +132,13 @@ namespace TCLauncher.MVVM.Windows
                 }
                 if (inaccessibleItems > 0)
                 {
-                    MessageBox.Show(inaccessibleItems + " items could not be read.");
+                    MessageBox.Show(string.Format(Languages.inaccessible_items_error_message, inaccessibleItems));
                 }
             }
             catch (Exception ex)
             {
                 // Handle exceptions thrown by TclDirectory.GetDirectories(RootPath)
-                MessageBox.Show("An error occurred while accessing the root directory: " + ex.Message);
+                MessageBox.Show(string.Format(Languages.root_directory_access_error_message, ex.Message));
             }
         }
 
@@ -160,7 +161,7 @@ namespace TCLauncher.MVVM.Windows
         {
             Window window = new Window
             {
-                Title = "TCL Editor",
+                Title = Languages.editor_title,
                 Width = 400,
                 Height = 200,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -181,7 +182,7 @@ namespace TCLauncher.MVVM.Windows
 
             TextBlock textBlock1 = new TextBlock
             {
-                Text = "Powered by simpleEdit",
+                Text = Languages.powered_by_text,
                 FontSize = 16,
                 Margin = new Thickness(0, 0, 0, 10)
             };
@@ -189,7 +190,7 @@ namespace TCLauncher.MVVM.Windows
             string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             TextBlock textBlock2 = new TextBlock
             {
-                Text = $"Version: {version}",
+                Text = string.Format(Languages.version_text, version),
                 FontSize = 16
             };
 
@@ -211,12 +212,12 @@ namespace TCLauncher.MVVM.Windows
             if (!File.Exists(file)) return;
             if (IoUtils.TclFile.IsBinary(file))
             {
-                MessageBox.Show("Binary files are not supported.");
+                MessageBox.Show(Languages.binary_files_not_supported_message);
                 return;
             }
             if (new FileInfo(file).Length > 255 * 1024)
             {
-                MessageBox.Show("This file is too large. (> 255 KB)");
+                MessageBox.Show(Languages.file_too_large_message);
                 return;
             }
 

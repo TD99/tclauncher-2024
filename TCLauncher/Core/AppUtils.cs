@@ -14,6 +14,7 @@ using System.IO.Compression;
 using CmlLib.Core;
 using Newtonsoft.Json;
 using static TCLauncher.Core.MessageBoxUtils;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core
 {
@@ -122,7 +123,7 @@ namespace TCLauncher.Core
 
                 if (isNew)
                 {
-                    var result = MessageBox.Show($"Eine neuere Version ({newVersion}) von TCLauncher ist verfügbar. Jetzt installieren?", "TCLauncher", MessageBoxButton.YesNo);
+                    var result = MessageBox.Show(string.Format(Languages.new_version_available, newVersion), "TCLauncher", MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
                         InstallUpdates(msi);
@@ -130,7 +131,7 @@ namespace TCLauncher.Core
                 }
                 else if (userInitiated)
                 {
-                    MessageBox.Show($"Die neuste Version ({version}) ist bereits installiert.", "TCLauncher");
+                    MessageBox.Show(string.Format(Languages.latest_version_installed, version), "TCLauncher");
                 }
             }
             catch
@@ -278,7 +279,7 @@ namespace TCLauncher.Core
             var instanceFolder = Path.Combine(InstancesPath, guid.ToString());
             if (Directory.Exists(instanceFolder))
             {
-                var result = MessageBox.Show("Diese Instanz ist bereits installiert. Überschreiben?", null, MessageBoxButton.YesNo);
+                var result = MessageBox.Show(Languages.instance_already_installed, null, MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
                     Directory.Delete(instanceFolder, true);
@@ -327,7 +328,7 @@ namespace TCLauncher.Core
             var dlg = new Microsoft.Win32.OpenFileDialog
             {
                 DefaultExt = ".tcl",
-                Filter = "TCL Package (*.tcl)|*.tcl"
+                Filter = Languages.tcl_package + " (*.tcl)|*.tcl"
             };
 
             var result = dlg.ShowDialog();
@@ -342,7 +343,7 @@ namespace TCLauncher.Core
         // TODO: needs rework, better code quality
         public static async Task<Instance> LoadInstanceBuilder()
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".zip", Filter = "Zip Files (*.zip)|*.zip" };
+            var dlg = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".zip", Filter = Languages.zip_files + " (*.zip)|*.zip" };
             var result = dlg.ShowDialog();
             if (result != true) return null;
 
@@ -358,10 +359,10 @@ namespace TCLauncher.Core
             ZipFile.ExtractToDirectory(zipPath, extractPath);
 
             string thumbLoc = null;
-            var result2 = MessageBox.Show("Möchtest du ein Thumbnail für das Paket setzen?", "Paket erstellen", MessageBoxButton.YesNo);
+            var result2 = MessageBox.Show(Languages.set_package_thumbnail, Languages.create_package, MessageBoxButton.YesNo);
             if (result2 == MessageBoxResult.Yes)
             {
-                var dlg2 = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".png", Filter = "Image Files (*.png, *.jpg)|*.png;*.jpg" };
+                var dlg2 = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".png", Filter = Languages.image_files + " (*.png, *.jpg)|*.png;*.jpg" };
                 var result3 = dlg2.ShowDialog();
                 if (result3 == true)
                 {
@@ -374,22 +375,22 @@ namespace TCLauncher.Core
             var i = new Instance
             {
                 Guid = Guid.NewGuid(),
-                Name = await AskForString("Bitte geben Sie den Namen ein"),
-                DisplayName = await AskForString("Bitte geben Sie den Anzeigenamen ein"),
-                Version = await AskForString("Bitte geben Sie die Version ein"),
-                Upgradeable = await AskForBool("Ist es aktualisierbar? (true/false)") ?? false,
-                Type = await AskForString("Bitte geben Sie den Typ ein"),
-                McVersion = await AskForString("Bitte geben Sie die McVersion ein"),
-                UseFabric = await AskForBool("Verwenden Sie Fabric? (true/false)", true) ?? false,
-                UseForge = await AskForBool("Verwenden Sie Forge? (true/false)", true) ?? false,
-                UsePatch = await AskForBool("Verwenden Sie Patch? (true/false)", true) ?? false,
-                UseIsolation = await AskForBool("Verwenden Sie Isolation? (true/false)", true),
-                WorkingDirDesc = await AskForJson<Dictionary<string, List<string>>>("Bitte geben Sie den Beschreibungsbaum als rohen JSON-Text ein", true),
-                Requirements = await AskForJson<Dictionary<string, object>>("Bitte geben Sie die Anforderungen als rohen JSON-Text ein", true),
-                Servers = await AskForJson<List<Server>>("Bitte geben Sie die Server als rohen JSON-Text ein", true),
-                MinimumRamMb = await AskForInt("Bitte geben Sie die minimale RAM-Menge in MB ein", true),
-                MaximumRamMb = await AskForInt("Bitte geben Sie die maximale RAM-Menge in MB ein", true),
-                JVMArguments = await AskForJson<string[]>("Bitte geben Sie die JVMArguments als rohen JSON-Text ein", true),
+                Name = await AskForString(Languages.prompt_enter_name),
+                DisplayName = await AskForString(Languages.prompt_enter_display_name),
+                Version = await AskForString(Languages.prompt_enter_version),
+                Upgradeable = await AskForBool(Languages.prompt_is_upgradeable) ?? false,
+                Type = await AskForString(Languages.prompt_enter_type),
+                McVersion = await AskForString(Languages.prompt_enter_mc_version),
+                UseFabric = await AskForBool(Languages.prompt_use_fabric, true) ?? false,
+                UseForge = await AskForBool(Languages.prompt_use_forge, true) ?? false,
+                UsePatch = await AskForBool(Languages.prompt_use_patch, true) ?? false,
+                UseIsolation = await AskForBool(Languages.prompt_use_isolation, true),
+                WorkingDirDesc = await AskForJson<Dictionary<string, List<string>>>(Languages.prompt_enter_desc_tree_json, true),
+                Requirements = await AskForJson<Dictionary<string, object>>(Languages.prompt_enter_requirements_json, true),
+                Servers = await AskForJson<List<Server>>(Languages.prompt_enter_servers_json, true),
+                MinimumRamMb = await AskForInt(Languages.prompt_enter_min_ram_mb, true),
+                MaximumRamMb = await AskForInt(Languages.prompt_enter_max_ram_mb, true),
+                JVMArguments = await AskForJson<string[]>(Languages.prompt_enter_jvm_args_json, true),
                 ThumbnailURL = thumbLoc,
                 WorkingDirZipURL = "[baseURL]/payload.zip",
             };
@@ -398,7 +399,7 @@ namespace TCLauncher.Core
             var jsonPath = Path.Combine(creatorDir, "config.json");
             File.WriteAllText(jsonPath, json);
 
-            var result4 = MessageBox.Show("Möchtest du das Paket jetzt erstellen?", "Paket erstellen", MessageBoxButton.YesNo);
+            var result4 = MessageBox.Show(Languages.prompt_create_package, Languages.create_package, MessageBoxButton.YesNo);
             if (result4 != MessageBoxResult.Yes)
             {
                 Process.Start(creatorDir);
@@ -410,14 +411,14 @@ namespace TCLauncher.Core
             ZipFile.CreateFromDirectory(creatorDir, Path.Combine(cachePath, i.Name + ".zip"));
             Directory.Delete(creatorDir, true);
 
-            var dlg3 = new Microsoft.Win32.SaveFileDialog { FileName = i.Name, DefaultExt = ".tcl", Filter = "TCL Package (*.tcl)|*.tcl" };
+            var dlg3 = new Microsoft.Win32.SaveFileDialog { FileName = i.Name, DefaultExt = ".tcl", Filter = Languages.tcl_package + " (*.tcl)|*.tcl" };
             var result5 = dlg3.ShowDialog();
             if (result5 != true) return null;
 
             File.Copy(Path.Combine(cachePath, i.Name + ".zip"), dlg3.FileName);
             File.Delete(Path.Combine(cachePath, i.Name + ".zip"));
 
-            MessageBox.Show("Das Paket wurde erfolgreich erstellt.", "Paket erstellen");
+            MessageBox.Show(Languages.package_successfully_created, Languages.create_package);
 
             return i;
         }

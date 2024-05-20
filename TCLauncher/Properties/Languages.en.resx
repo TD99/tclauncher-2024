@@ -1,0 +1,729 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="about_tcl_editor_menu_text" xml:space="preserve">
+    <value>About 'TCL Editor'</value>
+  </data>
+  <data name="accounts_button_text" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="action_button_text" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="action_create_game" xml:space="preserve">
+    <value>Create Game</value>
+  </data>
+  <data name="action_export_game" xml:space="preserve">
+    <value>Export Game</value>
+  </data>
+  <data name="action_import_game" xml:space="preserve">
+    <value>Import Game</value>
+  </data>
+  <data name="action_progress_title_text" xml:space="preserve">
+    <value>Action in Progress...</value>
+  </data>
+  <data name="add_account_button_text" xml:space="preserve">
+    <value>Add Account</value>
+  </data>
+  <data name="allow_text" xml:space="preserve">
+    <value>Allow</value>
+  </data>
+  <data name="apply_button_text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="auto_configuration_button_text" xml:space="preserve">
+    <value>Auto Configuration</value>
+  </data>
+  <data name="auto_detect_text" xml:space="preserve">
+    <value>Auto Detect (recommended)</value>
+  </data>
+  <data name="back_button_text" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="binary_files_not_supported_message" xml:space="preserve">
+    <value>Binary files are not supported.</value>
+  </data>
+  <data name="busy_interface_loading_text" xml:space="preserve">
+    <value>Loading Interface...</value>
+  </data>
+  <data name="button_abort" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="button_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="button_continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="button_ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="button_no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="button_ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="button_retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="button_try" xml:space="preserve">
+    <value>Try</value>
+  </data>
+  <data name="button_yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="cache_error_package_create_message" xml:space="preserve">
+    <value>An error occurred (clearing cache may help): {0}</value>
+  </data>
+  <data name="cache_loading_text" xml:space="preserve">
+    <value>Loading Cache ...</value>
+  </data>
+  <data name="cache_write_error_message" xml:space="preserve">
+    <value>Failed to write server list to cache file: {0}</value>
+  </data>
+  <data name="cleaning_package_action" xml:space="preserve">
+    <value>Cleaning package 'ch.tcraft.{0}'</value>
+  </data>
+  <data name="cleaning_package_with_patch_action" xml:space="preserve">
+    <value>Cleaning package 'ch.tcraft.{0}@{1}:{2}'</value>
+  </data>
+  <data name="close_button_text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="close_menu_item_text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="close_text" xml:space="preserve">
+    <value>Close (not recommended)</value>
+  </data>
+  <data name="components_header_text" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="configuration_editor_button_text" xml:space="preserve">
+    <value>Configuration Editor</value>
+  </data>
+  <data name="configuring_package_action" xml:space="preserve">
+    <value>Configuring package 'ch.tcraft.{0}'</value>
+  </data>
+  <data name="configuring_package_with_patch_action" xml:space="preserve">
+    <value>Configuring package 'ch.tcraft.{0}@{1}:{2}'</value>
+  </data>
+  <data name="config_updated" xml:space="preserve">
+    <value>The configuration was successfully updated.</value>
+  </data>
+  <data name="confirm_delete_instance_message" xml:space="preserve">
+    <value>Do you really want to delete the instance?</value>
+  </data>
+  <data name="copy_error_message" xml:space="preserve">
+    <value>An error occurred while copying. Please ensure that the files are not in use.</value>
+  </data>
+  <data name="create_package" xml:space="preserve">
+    <value>Create Package</value>
+  </data>
+  <data name="custom_appdata_path_label_text" xml:space="preserve">
+    <value>Custom AppData Path (BETA, NOT RECOMMENDED FOR NOW, DON'T USE DIRS THAT REQUIRE ADMIN)</value>
+  </data>
+  <data name="data_fetching_text" xml:space="preserve">
+    <value>Fetching Data ...</value>
+  </data>
+  <data name="debug_server_start_text" xml:space="preserve">
+    <value>Start Debug-Server</value>
+  </data>
+  <data name="debug_server_stop_text" xml:space="preserve">
+    <value>Stop Debug-Server</value>
+  </data>
+  <data name="debug_server_url_prompt" xml:space="preserve">
+    <value>Please enter the desired Debug Server URL.</value>
+  </data>
+  <data name="delete_instance" xml:space="preserve">
+    <value>Delete Instance</value>
+  </data>
+  <data name="dependency_fetch_error_message" xml:space="preserve">
+    <value>An error occurred while fetching dependencies.</value>
+  </data>
+  <data name="discover_and_download_games_text" xml:space="preserve">
+    <value>Discover and Download Games</value>
+  </data>
+  <data name="download_cancelled_message" xml:space="preserve">
+    <value>Download cancelled!</value>
+  </data>
+  <data name="editor_title" xml:space="preserve">
+    <value>TCL Editor</value>
+  </data>
+  <data name="enter_text_text" xml:space="preserve">
+    <value>Enter text</value>
+  </data>
+  <data name="error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="error_automatic_sign_in" xml:space="preserve">
+    <value>An error occurred during automatic sign in:</value>
+  </data>
+  <data name="error_cleanup" xml:space="preserve">
+    <value>An error occurred during cleanup. Please delete the instance manually. Error message:\n</value>
+  </data>
+  <data name="error_creating_folder_structure" xml:space="preserve">
+    <value>An error occurred while creating the folder structure!</value>
+  </data>
+  <data name="error_occurred_delete_instance_message" xml:space="preserve">
+    <value>An error occurred: {0}</value>
+  </data>
+  <data name="error_registering_uri_schemes" xml:space="preserve">
+    <value>An error occured while registering URI Schemes: {0}</value>
+  </data>
+  <data name="escaping_not_allowed_exception" xml:space="preserve">
+    <value>Escaping is not allowed!</value>
+  </data>
+  <data name="files_migrated_success_message" xml:space="preserve">
+    <value>The files have been migrated successfully.</value>
+  </data>
+  <data name="file_too_large_message" xml:space="preserve">
+    <value>This file is too large. (&gt; 255 KB)</value>
+  </data>
+  <data name="finishing_text" xml:space="preserve">
+    <value>Finishing ...</value>
+  </data>
+  <data name="forbid_text" xml:space="preserve">
+    <value>Forbid</value>
+  </data>
+  <data name="force_uninstall_button_text" xml:space="preserve">
+    <value>Force Uninstall</value>
+  </data>
+  <data name="format_menu_item_text" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="framework_version_text" xml:space="preserve">
+    <value>WPF on {0}</value>
+  </data>
+  <data name="free_instance_name" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="gamertag_text" xml:space="preserve">
+    <value>GamerTag</value>
+  </data>
+  <data name="games_label_text" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="home_text" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="hot_reload_text" xml:space="preserve">
+    <value>Hot Reload</value>
+  </data>
+  <data name="id" xml:space="preserve">
+    <value>en</value>
+  </data>
+  <data name="id_text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="image_files" xml:space="preserve">
+    <value>Image Files</value>
+  </data>
+  <data name="inaccessible_items_error_message" xml:space="preserve">
+    <value>{0} items could not be read.</value>
+  </data>
+  <data name="info_content_text" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="initialization_error" xml:space="preserve">
+    <value>Initialization error</value>
+  </data>
+  <data name="install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="installed_instances_load_error_message" xml:space="preserve">
+    <value>An error occurred while loading installed instances.</value>
+  </data>
+  <data name="installing_package_action" xml:space="preserve">
+    <value>Installing package 'ch.tcraft.{0}'\nSize: {1}\nInfo: This may take some time!</value>
+  </data>
+  <data name="installing_package_with_patch_action" xml:space="preserve">
+    <value>Installing package 'ch.tcraft.{0}@{1}:{2}'\nSize: {3}\nInfo: This may take some time!</value>
+  </data>
+  <data name="install_instances" xml:space="preserve">
+    <value>Install Instances</value>
+  </data>
+  <data name="install_instances_text" xml:space="preserve">
+    <value>← Here you can install instances</value>
+  </data>
+  <data name="instances_loading_text" xml:space="preserve">
+    <value>Loading Instances ...</value>
+  </data>
+  <data name="instance_already_installed" xml:space="preserve">
+    <value>This instance is already installed. Overwrite?</value>
+  </data>
+  <data name="instance_creation_failure_message" xml:space="preserve">
+    <value>Failed to create instance!</value>
+  </data>
+  <data name="invalid_boolean_input_message" xml:space="preserve">
+    <value>Invalid input. Please enter 'true' or 'false'.</value>
+  </data>
+  <data name="invalid_input_message" xml:space="preserve">
+    <value>Invalid input. Please try again.</value>
+  </data>
+  <data name="invalid_integer_input_message" xml:space="preserve">
+    <value>Invalid input. Please enter an integer.</value>
+  </data>
+  <data name="invalid_json_input_message" xml:space="preserve">
+    <value>Invalid input. Please enter valid JSON text.</value>
+  </data>
+  <data name="invalid_path_error_message" xml:space="preserve">
+    <value>The specified path cannot be used. Please choose a different path.</value>
+  </data>
+  <data name="keep_open_text" xml:space="preserve">
+    <value>Keep Open</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="latest_version_installed" xml:space="preserve">
+    <value>The latest version ({0}) is already installed.</value>
+  </data>
+  <data name="loading_assets" xml:space="preserve">
+    <value>Downloading Assets...</value>
+  </data>
+  <data name="loading_game_message" xml:space="preserve">
+    <value>Loading game...</value>
+  </data>
+  <data name="local_instances_loading_text" xml:space="preserve">
+    <value>Loading Local Instances ...</value>
+  </data>
+  <data name="local_instances_load_error_message" xml:space="preserve">
+    <value>The local instances could not be loaded!</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="login_prompt_message" xml:space="preserve">
+    <value>Do you want to log in with a user account? Click 'No' for an offline account.</value>
+  </data>
+  <data name="logout_button_text" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="maximize_menu_item_text" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="max_ram_label_text" xml:space="preserve">
+    <value>Max RAM: </value>
+  </data>
+  <data name="memory_text" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="minecraft_text" xml:space="preserve">
+    <value>Minecraft</value>
+  </data>
+  <data name="minecraft_version_label_text" xml:space="preserve">
+    <value>Minecraft Version: </value>
+  </data>
+  <data name="minimize_menu_item_text" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="minimize_text" xml:space="preserve">
+    <value>Minimize (recommended)</value>
+  </data>
+  <data name="min_ram_label_text" xml:space="preserve">
+    <value>Min RAM: </value>
+  </data>
+  <data name="multi_instances_text" xml:space="preserve">
+    <value>Multi-Instances</value>
+  </data>
+  <data name="multi_instance_setting_error_message" xml:space="preserve">
+    <value>The multi-instances setting could not be set.</value>
+  </data>
+  <data name="new_version_available" xml:space="preserve">
+    <value>A newer version ({0}) of TCLauncher is available. Install now?</value>
+  </data>
+  <data name="not_logged_button_text" xml:space="preserve">
+    <value>Not Logged In</value>
+  </data>
+  <data name="not_logged_text" xml:space="preserve">
+    <value>Not logged in</value>
+  </data>
+  <data name="no_data_found_message_delete_instance" xml:space="preserve">
+    <value>No data found!</value>
+  </data>
+  <data name="no_server_message" xml:space="preserve">
+    <value>No server</value>
+  </data>
+  <data name="offline_annotation" xml:space="preserve">
+    <value> (offline)</value>
+  </data>
+  <data name="offline_user_input_message" xml:space="preserve">
+    <value>Please enter the desired offline username.</value>
+  </data>
+  <data name="open_code_editor_text" xml:space="preserve">
+    <value>Open Code Editor</value>
+  </data>
+  <data name="optional_annotation" xml:space="preserve">
+    <value> (optional)</value>
+  </data>
+  <data name="other_instance_name" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="package_config_updated_named" xml:space="preserve">
+    <value>The configuration of the package '{0}' was successfully updated.</value>
+  </data>
+  <data name="package_create" xml:space="preserve">
+    <value>Package Create</value>
+  </data>
+  <data name="package_error_installation_corrupted_message" xml:space="preserve">
+    <value>Package error, the installation is corrupted!</value>
+  </data>
+  <data name="package_import" xml:space="preserve">
+    <value>Package Import</value>
+  </data>
+  <data name="package_installed" xml:space="preserve">
+    <value>The package was successfully installed.</value>
+  </data>
+  <data name="package_installed_named" xml:space="preserve">
+    <value>The package '{0}' was successfully installed.</value>
+  </data>
+  <data name="package_install_failed_named" xml:space="preserve">
+    <value>The package '{0}' could not be installed: {1}</value>
+  </data>
+  <data name="package_label_text" xml:space="preserve">
+    <value>Package: </value>
+  </data>
+  <data name="package_load_failed" xml:space="preserve">
+    <value>The package could not be loaded: {0}</value>
+  </data>
+  <data name="package_successfully_created" xml:space="preserve">
+    <value>The package was successfully created.</value>
+  </data>
+  <data name="package_uninstalled" xml:space="preserve">
+    <value>The package was successfully uninstalled.</value>
+  </data>
+  <data name="package_uninstalled_named" xml:space="preserve">
+    <value>The package '{0}' was successfully uninstalled.</value>
+  </data>
+  <data name="patch_label_text" xml:space="preserve">
+    <value>Patch: </value>
+  </data>
+  <data name="path_saved" xml:space="preserve">
+    <value>Path saved</value>
+  </data>
+  <data name="path_saved_prompt" xml:space="preserve">
+    <value>The path has been saved successfully. Do you want to migrate the launcher files and overwrite the folder?</value>
+  </data>
+  <data name="play_button_text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="plugin_loading_error_message" xml:space="preserve">
+    <value>Error while loading Plugin! Please retry later. (ENOTFOUND)</value>
+  </data>
+  <data name="powered_by_text" xml:space="preserve">
+    <value>Powered by simpleEdit</value>
+  </data>
+  <data name="preparing_text" xml:space="preserve">
+    <value>Preparing ...</value>
+  </data>
+  <data name="prompt_create_package" xml:space="preserve">
+    <value>Do you want to create the package now?</value>
+  </data>
+  <data name="prompt_enter_desc_tree_json" xml:space="preserve">
+    <value>Please enter the description tree as raw JSON text</value>
+  </data>
+  <data name="prompt_enter_display_name" xml:space="preserve">
+    <value>Please enter the display name</value>
+  </data>
+  <data name="prompt_enter_jvm_args_json" xml:space="preserve">
+    <value>Please enter the JVM arguments as raw JSON text</value>
+  </data>
+  <data name="prompt_enter_max_ram_mb" xml:space="preserve">
+    <value>Please enter the maximum RAM amount in MB</value>
+  </data>
+  <data name="prompt_enter_mc_version" xml:space="preserve">
+    <value>Please enter the Minecraft version</value>
+  </data>
+  <data name="prompt_enter_min_ram_mb" xml:space="preserve">
+    <value>Please enter the minimum RAM amount in MB</value>
+  </data>
+  <data name="prompt_enter_name" xml:space="preserve">
+    <value>Please enter the name</value>
+  </data>
+  <data name="prompt_enter_requirements_json" xml:space="preserve">
+    <value>Please enter the requirements as raw JSON text</value>
+  </data>
+  <data name="prompt_enter_servers_json" xml:space="preserve">
+    <value>Please enter the servers as raw JSON text</value>
+  </data>
+  <data name="prompt_enter_type" xml:space="preserve">
+    <value>Please enter the type</value>
+  </data>
+  <data name="prompt_enter_version" xml:space="preserve">
+    <value>Please enter the version</value>
+  </data>
+  <data name="prompt_install_package" xml:space="preserve">
+    <value>Do you want to install the package '{0}'?</value>
+  </data>
+  <data name="prompt_is_upgradeable" xml:space="preserve">
+    <value>Is it upgradeable? (true/false)</value>
+  </data>
+  <data name="prompt_use_fabric" xml:space="preserve">
+    <value>Do you use Fabric? (true/false)</value>
+  </data>
+  <data name="prompt_use_forge" xml:space="preserve">
+    <value>Do you use Forge? (true/false)</value>
+  </data>
+  <data name="prompt_use_isolation" xml:space="preserve">
+    <value>Do you use Isolation? (true/false)</value>
+  </data>
+  <data name="prompt_use_patch" xml:space="preserve">
+    <value>Do you use Patch? (true/false)</value>
+  </data>
+  <data name="properties_label_text" xml:space="preserve">
+    <value>Properties: </value>
+  </data>
+  <data name="public_games_text" xml:space="preserve">
+    <value>Public Games</value>
+  </data>
+  <data name="readonly_annotation" xml:space="preserve">
+    <value> (read-only)</value>
+  </data>
+  <data name="reconfiguration_error_message" xml:space="preserve">
+    <value>An error occurred during reconfiguration.</value>
+  </data>
+  <data name="reconfiguration_failed_message" xml:space="preserve">
+    <value>Reconfiguration of '{0}' failed.</value>
+  </data>
+  <data name="remove_button_text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="reset_data_caption" xml:space="preserve">
+    <value>Reset Data</value>
+  </data>
+  <data name="reset_data_error_message" xml:space="preserve">
+    <value>An error occurred while deleting. Please restart the launcher and its processes and ensure that the data is not in use.</value>
+  </data>
+  <data name="reset_data_message" xml:space="preserve">
+    <value>Do you really want to delete all TCL data?</value>
+  </data>
+  <data name="reset_data_success_message" xml:space="preserve">
+    <value>The data has been reset successfully.</value>
+  </data>
+  <data name="reset_local_settings_text" xml:space="preserve">
+    <value>Reset Local Settings</value>
+  </data>
+  <data name="reset_settings_caption" xml:space="preserve">
+    <value>Reset Settings</value>
+  </data>
+  <data name="reset_settings_message" xml:space="preserve">
+    <value>Do you really want to delete all settings?</value>
+  </data>
+  <data name="reset_tcl_data_text" xml:space="preserve">
+    <value>Reset TCL Data</value>
+  </data>
+  <data name="root_directory_access_error_message" xml:space="preserve">
+    <value>An error occurred while accessing the root directory: {0}</value>
+  </data>
+  <data name="sandbox_level_label_text" xml:space="preserve">
+    <value>Sandbox Level of Instances (TCL data must be reset)</value>
+  </data>
+  <data name="sandbox_level_setting_error_message" xml:space="preserve">
+    <value>The sandbox level could not be set.</value>
+  </data>
+  <data name="sandbox_security_message" xml:space="preserve">
+    <value>The action may be dangerous! Should it be executed in the TCLauncher sandbox? \n\nACTION='{applet.ActionURL}'</value>
+  </data>
+  <data name="save_menu_item_text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="search_for_updates_text" xml:space="preserve">
+    <value>Search for Updates</value>
+  </data>
+  <data name="secret_id_text" xml:space="preserve">
+    <value>Secret ID:</value>
+  </data>
+  <data name="select_instance_message" xml:space="preserve">
+    <value>Please select an instance!</value>
+  </data>
+  <data name="settings_text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="set_package_thumbnail" xml:space="preserve">
+    <value>Do you want to set a thumbnail for the package?</value>
+  </data>
+  <data name="show_data_folder_button_text" xml:space="preserve">
+    <value>Show Data Folder</value>
+  </data>
+  <data name="standard_text" xml:space="preserve">
+    <value>Standard: Libraries are shared (recommended)</value>
+  </data>
+  <data name="starting_text" xml:space="preserve">
+    <value>Starting ...</value>
+  </data>
+  <data name="startup_behavior_error_message" xml:space="preserve">
+    <value>The startup behavior could not be set.</value>
+  </data>
+  <data name="startup_behavior_label_text" xml:space="preserve">
+    <value>Startup Behavior</value>
+  </data>
+  <data name="start_debug_server_text" xml:space="preserve">
+    <value>Start Debug Server</value>
+  </data>
+  <data name="statistics_text" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="strict_text" xml:space="preserve">
+    <value>Strict: Instances are fully isolated (may require more disk space)</value>
+  </data>
+  <data name="target_dir_not_instances_dir" xml:space="preserve">
+    <value>Target directory is not in instances directory.</value>
+  </data>
+  <data name="tclauncher_security" xml:space="preserve">
+    <value>TCLauncher Security</value>
+  </data>
+  <data name="tclauncher_supports_forge_skip_ad" xml:space="preserve">
+    <value>TCLauncher supports Forge. Please watch Forge’s advertisement and click on ‘Skip’ to continue.</value>
+  </data>
+  <data name="tcl_package" xml:space="preserve">
+    <value>TCL Package</value>
+  </data>
+  <data name="title_text" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="type_label_text" xml:space="preserve">
+    <value>Type: </value>
+  </data>
+  <data name="uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+  <data name="unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="username_text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="version_text1" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="wpf_on_framework_text" xml:space="preserve">
+    <value>WPF on .NET Framework</value>
+  </data>
+  <data name="zip_files" xml:space="preserve">
+    <value>Zip Files</value>
+  </data>
+</root>

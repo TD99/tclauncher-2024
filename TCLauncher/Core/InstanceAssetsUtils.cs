@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using TCLauncher.Models;
 using TCLauncher.MVVM.View;
 using TCLauncher.MVVM.Windows;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core
 {
@@ -19,7 +20,7 @@ namespace TCLauncher.Core
 
         public static async Task GetAssets(List<string> names, bool isSandboxed, string url = "https://tcraft.link/tclauncher/api/mcassets/")
         {
-            ActionWindow.text = "Lade Assets herunter...";
+            ActionWindow.text = Languages.loading_assets;
             ActionWindow.Show();
 
             var downloadFiles = new List<DownloadFile>();
