@@ -45,16 +45,22 @@
 
     <Grid x:Name="MainFrame">
         <Grid x:Name="FallbackGrid" ZIndex="-1">
-            <busyIndicator:BusyMask
-                x:Name="BusyIndicator"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="Transparent"
-                BusyContent="{x:Static p:Languages.busy_interface_loading_text}"
-                FontSize="20"
-                IndicatorType="Escalade"
-                IsBusy="True"
-                IsBusyAtStartup="True" />
+            <Border
+                Background="#1d2633"
+                BorderBrush="Transparent"
+                BorderThickness="1"
+                CornerRadius="8">
+                <busyIndicator:BusyMask
+                    x:Name="BusyIndicator"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BusyContent="{x:Static p:Languages.busy_interface_loading_text}"
+                    FontSize="20"
+                    IndicatorType="Escalade"
+                    IsBusy="True"
+                    IsBusyAtStartup="True" />
+            </Border>
         </Grid>
 
         <Grid
