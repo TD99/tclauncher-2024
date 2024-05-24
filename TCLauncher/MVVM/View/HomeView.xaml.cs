@@ -248,10 +248,10 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void AppletItem_MouseDown(object sender, MouseButtonEventArgs e)
+        private void AppletItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Border border = (Border)sender;
-            Applet applet = (Applet)border.DataContext;
+            if (!(sender is Border border)) return;
+            if (!(border.DataContext is Applet applet)) return;
 
             if (!applet.is_action) return;
             if (applet.OpenExternal)
@@ -267,7 +267,6 @@ namespace TCLauncher.MVVM.View
             }
 
             SetAppletViewState();
-            await Task.Delay(2000);
             try
             {
                 webView.Source = new Uri(applet.ActionURL);
@@ -324,8 +323,6 @@ namespace TCLauncher.MVVM.View
             }
             RefreshApplets();
         }
-
-        
 
         private async void RefreshApplets()
         {
