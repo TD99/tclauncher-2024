@@ -72,6 +72,14 @@ namespace TCLauncher.Core
         }
 
         /// <summary>
+        /// Retrieves the date of the application's compilation.
+        /// </summary>
+        public static DateTime GetCompilationDate()
+        {
+            return File.GetCreationTime(Assembly.GetExecutingAssembly().Location);
+        }
+
+        /// <summary>
         /// Retrieves the URL of the MSI installer for the newest version of the application.
         /// </summary>
         /// <returns>
