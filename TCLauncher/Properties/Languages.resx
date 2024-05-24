@@ -241,7 +241,7 @@
     <value>Create Package</value>
   </data>
   <data name="custom_appdata_path_label_text" xml:space="preserve">
-    <value>Custom AppData Path (BETA, NOT RECOMMENDED FOR NOW, DON'T USE DIRS THAT REQUIRE ADMIN)</value>
+    <value>Custom AppData Path (Beta)</value>
   </data>
   <data name="data_fetching_text" xml:space="preserve">
     <value>Fetching Data ...</value>

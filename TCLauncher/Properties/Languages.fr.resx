@@ -241,7 +241,7 @@
     <value>Créer un package</value>
   </data>
   <data name="custom_appdata_path_label_text" xml:space="preserve">
-    <value>Chemin AppData personnalisé (BETA, NON RECOMMANDÉ POUR LE MOMENT, NE PAS UTILISER DES RÉPERTOIRES QUI NÉCESSITENT ADMIN)</value>
+    <value>Chemin AppData personnalisé (Beta)</value>
   </data>
   <data name="data_fetching_text" xml:space="preserve">
     <value>Récupération des données…</value>

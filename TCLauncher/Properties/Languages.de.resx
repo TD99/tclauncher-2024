@@ -241,7 +241,7 @@
     <value>Paket erstellen</value>
   </data>
   <data name="custom_appdata_path_label_text" xml:space="preserve">
-    <value>Benutzerdefinierter AppData-Pfad (BETA, DERZEIT NICHT EMPFOHLEN, VERWENDEN SIE KEINE VERZEICHNISSE, DIE ADMIN ERFORDERN)</value>
+    <value>Benutzerdefinierter AppData-Pfad (Beta)</value>
   </data>
   <data name="data_fetching_text" xml:space="preserve">
     <value>Daten werden abgerufen …</value>
