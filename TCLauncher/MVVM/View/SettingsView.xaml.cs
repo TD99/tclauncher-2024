@@ -150,7 +150,7 @@ namespace TCLauncher.MVVM.View
                 if (!await dialog.Result) return;
                 try
                 {
-                    App.DbgHttpServer = new SimpleHttpServer(SendResponse, dialog.ResponseText);
+                    App.DbgHttpServer = new SimpleHttpServer(SendResponse, true, dialog.ResponseText);
                     App.DbgHttpServer.Run();
                     hostBtn.Content = Languages.debug_server_stop_text;
                     Process.Start(dialog.ResponseText);
