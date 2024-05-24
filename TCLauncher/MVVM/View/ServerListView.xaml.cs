@@ -318,12 +318,6 @@ namespace TCLauncher.MVVM.View
             }
 
             reconfigure(instance);
-
-            if (Properties.Settings.Default.FirstTime)
-            {
-                Properties.Settings.Default.FirstTime = false;
-                Properties.Settings.Default.Save();
-            }
         }
 
         public async Task<string> GetFileSizeAsync(string url)
