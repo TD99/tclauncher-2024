@@ -67,6 +67,8 @@ namespace TCLauncher.MVVM.View
                     break;
                 }
             }
+
+            CopyrightCompilationYear.Text = AppUtils.GetCompilationDate().Year.ToString();
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
