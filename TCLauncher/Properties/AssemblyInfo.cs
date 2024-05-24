@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TCLauncher")]
-[assembly: AssemblyDescription("A C# application that allows fast switching between Minecraft instances.")]
+[assembly: AssemblyDescription("A custom Minecraft Launcher that allows fast switching between Minecraft instances.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("T-Craft")]
 [assembly: AssemblyProduct("TCLauncher")]
-[assembly: AssemblyCopyright("Copyright © T-Craft, Images by Pixabay")]
+[assembly: AssemblyCopyright("Copyright © T-Craft, Made by t9craft")]
 [assembly: AssemblyTrademark("T-Craft")]
 [assembly: AssemblyCulture("")]
 
@@ -53,4 +53,4 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.3.4.0")]
 [assembly: AssemblyFileVersion("0.3.4.0")]
-[assembly: NeutralResourcesLanguage("de-CH")]
+[assembly: NeutralResourcesLanguage("en-CH")]
