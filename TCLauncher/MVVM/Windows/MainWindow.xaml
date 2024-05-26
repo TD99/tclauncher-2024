@@ -44,6 +44,10 @@
     </WindowChrome.WindowChrome>
 
     <Grid x:Name="MainFrame">
+        <!--  Layer 0: ThemeProvider  -->
+        <!--  Can be found under Window.*  -->
+
+        <!--  Layer 1: FallbackGrid -> Fallback View if no other Component is loaded  -->
         <Grid x:Name="FallbackGrid" ZIndex="-1">
             <Border
                 Background="#1d2633"
@@ -63,6 +67,7 @@
             </Border>
         </Grid>
 
+        <!--  Layer 2: LoadingGrid -> Loading Animation  -->
         <Grid
             x:Name="loadingGrid"
             HorizontalAlignment="Stretch"
@@ -97,10 +102,10 @@
                 UnloadedBehavior="Manual" />
         </Grid>
 
+        <!--  Layer 3: MainBorder -> Main Window Content  -->
         <Border
             x:Name="mainBorder"
             Background="#1d2633"
-            BorderBrush="Transparent"
             BorderThickness="1"
             CornerRadius="8">
             <Grid>
@@ -316,47 +321,15 @@
                             </Button.Style>
                         </Button>
                     </StackPanel>
-                    <StackPanel
+                    <Border
+                        x:Name="ButtonWindowControlsSpacer"
                         Grid.Row="0"
                         Grid.Column="1"
+                        Width="108"
+                        Height="34"
                         Margin="0,0,10,0"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <Button
-                            x:Name="minimizeBtn"
-                            Height="34"
-                            Click="minimizeBtn_Click"
-                            Style="{StaticResource WindowControlButton}">
-                            <Button.Content>
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M19,11 L5,11 A1,1,0,0,0,5,13 L19,13 A1,1,0,0,0,19 11 Z" Fill="#FFFFFF" />
-                                </Canvas>
-                            </Button.Content>
-                        </Button>
-                        <Button
-                            x:Name="maximizeBtn"
-                            Height="30"
-                            Click="maximizeBtn_Click"
-                            Style="{StaticResource WindowControlButton}">
-                            <Button.Content>
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M17,2 L7,2 A5,5,0,0,0,2,7 L2,17 A5,5,0,0,0,7,22 L17,22 A5,5,0,0,0,22 17 L22 7 A5 5 0 0 0 17 2 Z M20 17 A3 3 0 0 1 17 20 L7 20 A3 3 0 0 1 4 17 L4 7 A3 3 0 0 1 7 4 L17 4 A3 3 0 0 1 20 7 Z" Fill="#FFFFFF" />
-                                </Canvas>
-                            </Button.Content>
-                        </Button>
-                        <Button
-                            x:Name="closeBtn"
-                            Height="34"
-                            Click="closeBtn_Click"
-                            Style="{StaticResource WindowControlButton}">
-                            <Button.Content>
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M13.41,12 L19.71,5.71 A1,1,0,1,0,18.29,4.29 L12,10.59 L5.71,4.29 A1,1,0,0,0,4.29,5.71 L10.59,12 L4.29,18.29 A1,1,0,0,0,5.71,19.71 L12,13.41 L18.29,19.71 A1,1,0,0,0,19.71 18.29 Z" Fill="#FFFFFF" />
-                                </Canvas>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
+                        VerticalAlignment="Center" />
                 </Grid>
 
                 <ContentControl
@@ -368,5 +341,47 @@
                     Focusable="False" />
             </Grid>
         </Border>
+
+        <!--  Layer 5: WindowControls  -->
+        <StackPanel
+            Margin="0,19,21,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Button
+                x:Name="minimizeBtn"
+                Height="34"
+                Panel.ZIndex="9999"
+                Click="minimizeBtn_Click"
+                Style="{StaticResource WindowControlButton}">
+                <Button.Content>
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M19,11 L5,11 A1,1,0,0,0,5,13 L19,13 A1,1,0,0,0,19 11 Z" Fill="#FFFFFF" />
+                    </Canvas>
+                </Button.Content>
+            </Button>
+            <Button
+                x:Name="maximizeBtn"
+                Height="34"
+                Click="maximizeBtn_Click"
+                Style="{StaticResource WindowControlButton}">
+                <Button.Content>
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M17,2 L7,2 A5,5,0,0,0,2,7 L2,17 A5,5,0,0,0,7,22 L17,22 A5,5,0,0,0,22 17 L22 7 A5 5 0 0 0 17 2 Z M20 17 A3 3 0 0 1 17 20 L7 20 A3 3 0 0 1 4 17 L4 7 A3 3 0 0 1 7 4 L17 4 A3 3 0 0 1 20 7 Z" Fill="#FFFFFF" />
+                    </Canvas>
+                </Button.Content>
+            </Button>
+            <Button
+                x:Name="closeBtn"
+                Height="34"
+                Click="closeBtn_Click"
+                Style="{StaticResource WindowControlButton}">
+                <Button.Content>
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M13.41,12 L19.71,5.71 A1,1,0,1,0,18.29,4.29 L12,10.59 L5.71,4.29 A1,1,0,0,0,4.29,5.71 L10.59,12 L4.29,18.29 A1,1,0,0,0,5.71,19.71 L12,13.41 L18.29,19.71 A1,1,0,0,0,19.71 18.29 Z" Fill="#FFFFFF" />
+                    </Canvas>
+                </Button.Content>
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>
