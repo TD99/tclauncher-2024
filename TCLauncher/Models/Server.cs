@@ -19,12 +19,12 @@ namespace TCLauncher.Models
         {
             Name = name;
             Address = address;
-            ThumbnailURL = "/Images/nothumb.png";
+            ThumbnailURL = "/Assets/Images/nothumb.png";
         }
 
         public Server()
         {
-            ThumbnailURL = "/Images/nothumb.png";
+            ThumbnailURL = "/Assets/Images/nothumb.png";
         }
 
         public bool IsSameAs(object compare)

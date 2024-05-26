@@ -13,7 +13,7 @@ namespace TCLauncher.Models
         public Guid Guid { get; set; }
         public string Version { get; set; }
         public bool Upgradeable { get; set; }
-        public string ThumbnailURL { get; set; } = "/Images/nothumb.png";
+        public string ThumbnailURL { get; set; } = "/Assets/Images/nothumb.png";
         public string Type { get; set; }
         public string McVersion { get; set; }
         public bool? UseFabric { get; set; }

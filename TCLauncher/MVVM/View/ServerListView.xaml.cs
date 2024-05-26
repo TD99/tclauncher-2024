@@ -44,7 +44,7 @@ namespace TCLauncher.MVVM.View
             {
                 BitmapImage bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri(instance.ThumbnailURL);
+                bitmap.UriSource = new Uri(instance.ThumbnailURL, UriKind.RelativeOrAbsolute);
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
 
@@ -109,7 +109,7 @@ namespace TCLauncher.MVVM.View
         private void closeFocusBtn_Click(object sender, RoutedEventArgs e)
         {
             itemFocus.Visibility = Visibility.Collapsed;
-            itemFocusBanner.Source = new BitmapImage(new Uri("/Images/nothumb.png", UriKind.RelativeOrAbsolute));
+            itemFocusBanner.Source = new BitmapImage(new Uri("/Assets/Images/nothumb.png", UriKind.RelativeOrAbsolute));
             itemFocusName.Text = "";
             itemFocusPatch.Text = "";
             itemFocusPackage.Text = "";
