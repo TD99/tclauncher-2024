@@ -199,6 +199,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock
@@ -241,24 +242,35 @@
                 Background="Transparent"
                 BorderThickness="0"
                 ItemsSource="{Binding ServerList}"
+                PreviewMouseWheel="ListView_OnPreviewMouseWheel"
                 Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibility}}">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border
-                            Width="190px"
-                            Height="190px"
+                            x:Name="ItemViewBorderTemplate"
+                            Width="{Binding DataContext.ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            Height="{Binding DataContext.ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            MinWidth="{Binding DataContext.ItemMinWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            MinHeight="{Binding DataContext.ItemMinHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            MaxWidth="{Binding DataContext.ItemMaxWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            MaxHeight="{Binding DataContext.ItemMaxHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
                             Margin="5"
                             Background="#88000000"
                             BorderThickness="0"
                             MouseDown="ServerItem_Clicked">
 
-                            <Border.Clip>
-                                <RectangleGeometry
-                                    RadiusX="10"
-                                    RadiusY="10"
-                                    Rect="0, 0, 190, 190" />
-                            </Border.Clip>
+                            <!--<Border.Clip>
+                                <RectangleGeometry RadiusX="10" RadiusY="10">
+                                    <RectangleGeometry.Rect>
+                                        <Rect
+                                            Width="190"
+                                            Height="190"
+                                            X="0"
+                                            Y="0" />
+                                    </RectangleGeometry.Rect>
+                                </RectangleGeometry>
+                            </Border.Clip>-->
 
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -343,7 +355,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.1*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock
@@ -458,6 +470,21 @@
                     Spin="True" />
                 <Label Margin="0,10,0,0" Content="{Binding LoadingText}" />
             </StackPanel>
+
+            <!--  TODO: Introduce Slider  -->
+
+            <!--<Slider
+                x:Name="SizeSlider"
+                Grid.Row="2"
+                Width="200"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True"
+                Maximum="500"
+                Minimum="{Binding ItemMinWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TickFrequency="25"
+                Value="{Binding ItemWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
         </Grid>
     </Grid>
 </UserControl>

@@ -430,7 +430,7 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Custom AppData Path (BETA, NOT RECOMMENDED FOR NOW, DON&apos;T USE DIRS THAT REQUIRE ADMIN).
+        ///   Looks up a localized string similar to Custom AppData Path (Beta).
         /// </summary>
         public static string custom_appdata_path_label_text {
             get {
@@ -678,6 +678,15 @@ namespace TCLauncher.Properties {
         public static string games_label_text {
             get {
                 return ResourceManager.GetString("games_label_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hi.
+        /// </summary>
+        public static string home_greeting_text {
+            get {
+                return ResourceManager.GetString("home_greeting_text", resourceCulture);
             }
         }
         
@@ -1645,6 +1654,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TCLauncher has blocked this action due to security reasons..
+        /// </summary>
+        public static string sandbox_security_message_blocked {
+            get {
+                return ResourceManager.GetString("sandbox_security_message_blocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string save_menu_item_text {
@@ -1866,6 +1884,15 @@ namespace TCLauncher.Properties {
         public static string version_text1 {
             get {
                 return ResourceManager.GetString("version_text1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open in web browser.
+        /// </summary>
+        public static string webview_context_open_in_web_browser {
+            get {
+                return ResourceManager.GetString("webview_context_open_in_web_browser", resourceCulture);
             }
         }
         

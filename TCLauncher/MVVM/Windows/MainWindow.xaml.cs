@@ -335,5 +335,8 @@ namespace TCLauncher.MVVM.Windows
             Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
         }
 
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        }
     }
 }

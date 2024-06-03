@@ -726,4 +726,13 @@
   <data name="zip_files" xml:space="preserve">
     <value>Zip Files</value>
   </data>
+  <data name="home_greeting_text" xml:space="preserve">
+    <value>Hi</value>
+  </data>
+  <data name="sandbox_security_message_blocked" xml:space="preserve">
+    <value>TCLauncher has blocked this action due to security reasons.</value>
+  </data>
+  <data name="webview_context_open_in_web_browser" xml:space="preserve">
+    <value>Open in web browser</value>
+  </data>
 </root>

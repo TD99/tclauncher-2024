@@ -1,6 +1,11 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
+using System.Windows;
 using TCLauncher.Models;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core
 {
@@ -121,5 +126,47 @@ namespace TCLauncher.Core
             return mcServerAddress;
         }
 
+
+        /// <summary>
+        /// Checks if the given string is a valid URL.
+        /// </summary>
+        /// <param name="url">The URL to check.</param>
+        /// <returns>True if the URL is valid, false otherwise.</returns>
+        public static bool CheckIsValidUrl(string url)
+        {
+            // c# check
+            var isValidUrl = Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            // regex check
+            const string pattern = @"^(http|https)://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$";
+            var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            return isValidUrl /*&& regex.IsMatch(url)*/;
+        }
+
+        /// <summary>
+        /// Opens the given URL in the default web browser.
+        /// </summary>
+        /// <param name="url">The URL to open.</param>
+        public static void OpenUrlInWebBrowser(string url)
+        {
+            if (CheckIsValidUrl(url))
+            {
+                try
+                {
+                    Process.Start(url);
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception if the browser was not correctly launched.
+                    MessageBox.Show($"An error occurred: {ex.Message}");
+                }
+            }
+            else
+            {
+                MessageBox.Show(Languages.sandbox_security_message_blocked + " (" + url + ")", Languages.tclauncher_security);
+            }
+        }
     }
 }

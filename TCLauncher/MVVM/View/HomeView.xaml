@@ -35,14 +35,28 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock
+            <StackPanel
                 Grid.Row="0"
                 Grid.Column="0"
                 Margin="0,0,0,20"
                 HorizontalAlignment="Left"
-                FontSize="28"
-                Foreground="White"
-                Text="{x:Static p:Languages.home_text}" />
+                Orientation="Horizontal">
+                <TextBlock
+                    FontSize="28"
+                    Foreground="White"
+                    Text="{x:Static p:Languages.home_greeting_text}" />
+                <TextBlock
+                    x:Name="UserNameTextBlock"
+                    MaxWidth="500px"
+                    FontSize="28"
+                    Foreground="White"
+                    Text=""
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    FontSize="28"
+                    Foreground="White"
+                    Text="!" />
+            </StackPanel>
 
             <Border
                 x:Name="discoverBorder"

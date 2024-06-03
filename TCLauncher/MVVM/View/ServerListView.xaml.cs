@@ -10,6 +10,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Models;
+using TCLauncher.MVVM.ViewModel;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 using static TCLauncher.Core.MessageBoxUtils;
@@ -492,6 +494,25 @@ namespace TCLauncher.MVVM.View
             }
 
             ActionComboBox.SelectedItem = ActionDefaultLabel;
+        }
+
+        private void ListView_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.Modifiers != ModifierKeys.Control) return;
+
+            if (!(sender is ListView listView)) return;
+            if (!(listView.DataContext is ServerListViewModel viewModel)) return;
+
+            var scaleWidth = 1 + e.Delta / 1000.0;
+            var scaleHeight = 1 + e.Delta / 1000.0;
+
+            var newWidth = viewModel.ItemWidth * scaleWidth;
+            var newHeight = viewModel.ItemHeight * scaleHeight;
+
+            if (!(newWidth < viewModel.ItemMinWidth) && !(newWidth > viewModel.ItemMaxWidth)) viewModel.ItemWidth = newWidth;
+            if (!(newHeight < viewModel.ItemMinHeight) && !(newHeight > viewModel.ItemMaxHeight)) viewModel.ItemHeight = newHeight;
+
+            e.Handled = true;
         }
     }
 }

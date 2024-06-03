@@ -22,6 +22,7 @@ using TCLauncher.Properties;
 using CmlLib.Core.Installer;
 using CmlLib.Core.Downloader;
 using CmlLib.Core.Version;
+using Microsoft.Web.WebView2.Core;
 
 namespace TCLauncher.MVVM.View
 {
@@ -39,13 +40,61 @@ namespace TCLauncher.MVVM.View
         {
             InitializeComponent();
             _vm = (HomeViewModel)DataContext;
+
+            UserNameTextBlock.Text = App.Session != null ? (" " + App.Session.Username) : "";
+
+            Loaded += (sender, e) =>
+            {
+                LoadWv();
+            };
         }
 
-        private async void loadWV()
+        private async void LoadWv()
         {
+            // TODO: Add language changement support
+
             await webView.EnsureCoreWebView2Async();
-            webView.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
-            webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+
+            var core = webView.CoreWebView2;
+            var settings = core.Settings;
+            var profile = core.Profile;
+
+            settings.AreBrowserAcceleratorKeysEnabled = false;
+            //settings.AreDefaultContextMenusEnabled = false;
+            settings.AreDevToolsEnabled = false;
+            settings.IsPasswordAutosaveEnabled = false;
+            settings.IsGeneralAutofillEnabled = false;
+            settings.UserAgent += " TCLauncher/" + AppUtils.GetCurrentVersion();
+            settings.IsSwipeNavigationEnabled = false;
+            profile.IsGeneralAutofillEnabled = false;
+            profile.IsPasswordAutosaveEnabled = false;
+            profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Dark;
+            profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Balanced;
+
+            webView.CoreWebView2.ContextMenuRequested += delegate (object sender,
+                CoreWebView2ContextMenuRequestedEventArgs args)
+            {
+                var menuList = args.MenuItems;
+
+                var itemNamesToRemove = new string[] { "saveAs", "print", "webCapture", "share" };
+                var itemsToRemove = menuList.Where(coreWebView2ContextMenuItem => itemNamesToRemove.Contains(coreWebView2ContextMenuItem.Name)).ToList();
+
+                foreach (var coreWebView2ContextMenuItem in itemsToRemove)
+                {
+                    menuList.Remove(coreWebView2ContextMenuItem);
+                }
+
+                var newItem =
+                    webView.CoreWebView2.Environment.CreateContextMenuItem(
+                        Languages.webview_context_open_in_web_browser, null, CoreWebView2ContextMenuItemKind.Command);
+                newItem.CustomItemSelected += delegate
+                {
+                    var pageUri = args.ContextMenuTarget.PageUri;
+                    Task.Run(() => InternetUtils.OpenUrlInWebBrowser(pageUri));
+                };
+                // TODO: Add icon with newItem.Icon = 
+                menuList.Insert(menuList.Count, newItem);
+            };
         }
 
         private void discoverEvent(object sender, MouseButtonEventArgs e)
@@ -368,10 +417,19 @@ namespace TCLauncher.MVVM.View
             IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private async void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            webView.Stop();
-            webView.Dispose();
+            if (webView?.CoreWebView2 == null) return;
+            try
+            {
+                await webView.EnsureCoreWebView2Async();
+                webView.Stop();
+                webView.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

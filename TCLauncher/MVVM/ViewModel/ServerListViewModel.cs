@@ -51,6 +51,34 @@ namespace TCLauncher.MVVM.ViewModel
             }
         }
 
+        private double _itemWidth = 285; // Ratio [5]:3
+        public double ItemWidth
+        {
+            get => _itemWidth;
+            set
+            {
+                _itemWidth = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _itemHeight = 165; // Ratio 5:[3]
+        public double ItemHeight
+        {
+            get => _itemHeight;
+            set
+            {
+                _itemHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double ItemMinWidth { get; private set; } = 250;
+        public double ItemMaxWidth { get; private set; } = 550;
+        public double ItemMinHeight { get; private set; } = 150;
+        public double ItemMaxHeight { get; private set; } = 330;
+
+
         public ServerListViewModel()
         {
             Task.Run(async () =>
