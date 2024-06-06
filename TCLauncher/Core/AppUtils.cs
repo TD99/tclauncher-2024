@@ -230,8 +230,12 @@ namespace TCLauncher.Core
                     "server-tool",
                     "version-checker"
                 },
-                Settings = GetAllSettings()
-            };
+                Settings = GetAllSettings(),
+                UiLanguage = Languages.id,
+                Copyright = "Copyright \u00a9 T-Craft " + GetCompilationDate().Year,
+                UiVersion = string.Format(Languages.framework_version_text, System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription),
+                Environment = System.Runtime.InteropServices.RuntimeInformation.OSDescription
+        };
         }
 
         public static void CreateTemplateInstance()

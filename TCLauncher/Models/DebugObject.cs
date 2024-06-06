@@ -24,8 +24,12 @@ namespace TCLauncher.Models
         public int? DefaultConnectionLimit { get; set; }
         public string[] LoadedPlugins { get; set; }
         public Dictionary<string, object> Settings { get; set; }
+        public string UiLanguage { get; set; }
+        public string Copyright { get; set; }
+        public string UiVersion { get; set; }
+        public string Environment { get; set; }
 
-        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, int? defaultConnectionLimit, string[] loadedPlugins, Dictionary<string, object> settings)
+        public DebugObject(CMLauncher launcher, string[] pathRegistry, string version, string newestVersion, bool? isUpgradeable, string args, string friendlyName, string uriScheme, Uri uriArgs, bool? isSilent, bool? killOld, bool? isInternetAvailable, bool? isTcraftReacheable, Dictionary<string, double> totalAdapterMemoryInGb, double? totalPhysicalMemoryInGb, int? defaultConnectionLimit, string[] loadedPlugins, Dictionary<string, object> settings, string uiLanguage, string copyright, string uiVersion, string environment)
         {
             Launcher = launcher;
             PathRegistry = pathRegistry;
@@ -45,6 +49,10 @@ namespace TCLauncher.Models
             DefaultConnectionLimit = defaultConnectionLimit;
             LoadedPlugins = loadedPlugins;
             Settings = settings;
+            UiLanguage = uiLanguage;
+            Copyright = copyright;
+            UiVersion = uiVersion;
+            Environment = environment;
         }
 
         public DebugObject()
