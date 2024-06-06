@@ -267,13 +267,19 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
+                                    <!--  Fallback  -->
                                     <Image
-                                        x:Name="AccountManagerBtnPicture"
                                         Grid.Column="0"
                                         Width="24"
                                         Height="24"
                                         Margin="0,0,10,0"
                                         Source="/Assets/Images/steve.png" />
+                                    <Image
+                                        x:Name="AccountManagerBtnPicture"
+                                        Grid.Column="0"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,10,0" />
                                     <TextBlock
                                         x:Name="AccountManagerBtnName"
                                         Grid.Column="1"
