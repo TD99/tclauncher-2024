@@ -98,6 +98,8 @@ namespace TCLauncher
 
             RegisterURIScheme();
 
+            RegisterDefaultEnvironment();
+
             // check if forge ad
             try
             {
@@ -185,6 +187,7 @@ namespace TCLauncher
 
         public static void HotReload()
         {
+            RegisterDefaultEnvironment();
             var oldWin = MainWin;
             MainWin = new MainWindow
             {
@@ -389,6 +392,13 @@ namespace TCLauncher
                 MessageBox.Show(string.Format(Languages.error_registering_uri_schemes, e.Message));
             }
         }
+
+        private static void RegisterDefaultEnvironment()
+        {
+            var cultureInfo = CultureInfo.CurrentUICulture;
+            Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", $"--lang={cultureInfo.Name}");
+        }
+
         private void ShowUI()
         {
             MainWin = new MainWindow(is_silent);
