@@ -1,0 +1,34 @@
+﻿<UserControl
+    x:Class="TCLauncher.Installer.Steps.StepWelcome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TCLauncher.Installer.Steps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
+    Loaded="StepWelcome_OnLoaded"
+    mc:Ignorable="d">
+
+    <b:Interaction.Behaviors>
+        <animations:SlideInOutAnimation />
+    </b:Interaction.Behaviors>
+
+    <StackPanel>
+        <Image
+            Width="100"
+            Margin="0,0,0,12.5"
+            Source="/Assets/Images/logo.png" />
+        <Label
+            HorizontalAlignment="Center"
+            Content="{x:Static p:Languages.installer_welcome}"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="28" />
+        <Label
+            x:Name="VersionLabel"
+            HorizontalAlignment="Center"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="20" />
+    </StackPanel>
+</UserControl>

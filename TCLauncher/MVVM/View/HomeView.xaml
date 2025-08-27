@@ -65,7 +65,7 @@
                 Height="176"
                 BorderThickness="0"
                 CornerRadius="10"
-                MouseDown="discoverEvent">
+                MouseDown="DiscoverEvent">
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock
@@ -124,7 +124,7 @@
                 x:Name="webViewBackButton"
                 Grid.Row="0"
                 Height="30"
-                Click="webViewBackButton_Click"
+                Click="WebViewBackButton_Click"
                 Content="{x:Static p:Languages.back_button_text}"
                 Style="{StaticResource ModernButton}" />
             <wv2:WebView2
@@ -257,7 +257,7 @@
                     ItemsSource="{Binding LocalList}"
                     SelectedItem="{Binding LastSelected}"
                     SelectedValuePath="Guid"
-                    SelectionChanged="profileSelect_SelectionChanged">
+                    SelectionChanged="ProfileSelect_SelectionChanged">
                     <ComboBox.Style>
                         <Style BasedOn="{StaticResource ModernComboBox}" TargetType="ComboBox">
                             <Setter Property="Visibility" Value="Visible" />
@@ -276,7 +276,7 @@
                     Cursor="Hand"
                     FontSize="15"
                     Foreground="#5b8dc1"
-                    MouseDown="discoverEvent"
+                    MouseDown="DiscoverEvent"
                     Text="{x:Static p:Languages.install_instances}"
                     TextDecorations="Underline">
                     <TextBlock.Style>
@@ -294,7 +294,7 @@
                 <Button
                     x:Name="playBtn"
                     Grid.Column="1"
-                    Click="playBtn_Click"
+                    Click="PlayBtn_Click"
                     Content="{x:Static p:Languages.play_button_text}"
                     FontSize="20"
                     FontWeight="Medium"

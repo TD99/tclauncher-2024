@@ -1,0 +1,156 @@
+﻿<Window
+    x:Class="TCLauncher.Installer.InstallerWelcomeWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:TCLauncher.Properties"
+    Title="{x:Static p:Languages.installer_welcome}"
+    Width="750"
+    Height="500"
+    Icon="/Assets/Images/logo_installer.png"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
+    <Window.Background>
+        <!--  GRADIENT FROM #03071c TO #3752ae  -->
+        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Offset="0" Color="#03071c" />
+            <GradientStop Offset="1" Color="#3752ae" />
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="15"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="4" />
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border
+            x:Name="TopDrag"
+            Grid.Row="0"
+            Grid.Column="0"
+            Height="50px"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Panel.ZIndex="-1"
+            Background="Transparent"
+            MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown" />
+
+        <StackPanel
+            Grid.Row="0"
+            Margin="20,20,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Image
+                Width="25px"
+                Height="25px"
+                VerticalAlignment="Center"
+                Source="/Assets/Images/logo.png" />
+            <Label
+                Margin="2.5,0,0,0"
+                VerticalAlignment="Center"
+                Content="TCLauncher"
+                FontFamily="{StaticResource PixelifySans}"
+                FontSize="17.5"
+                Foreground="#b2b9cc" />
+        </StackPanel>
+
+        <Button
+            x:Name="CloseButton"
+            Grid.Row="0"
+            Height="30px"
+            Margin="0,20,20,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="CloseButton_OnClick"
+            Style="{StaticResource WindowControlButton}">
+            <Button.Content>
+                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M13.41,12 L19.71,5.71 A1,1,0,1,0,18.29,4.29 L12,10.59 L5.71,4.29 A1,1,0,0,0,4.29,5.71 L10.59,12 L4.29,18.29 A1,1,0,0,0,5.71,19.71 L12,13.41 L18.29,19.71 A1,1,0,0,0,19.71 18.29 Z" Fill="#FFFFFF" />
+                    </Canvas>
+                </Viewbox>
+            </Button.Content>
+        </Button>
+
+        <ContentControl
+            x:Name="FrameView"
+            Grid.Row="0"
+            Margin="15"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Focusable="False" />
+
+        <Button
+            x:Name="BackBtn"
+            Grid.Row="1"
+            Margin="10,0,0,10"
+            Padding="20,10"
+            HorizontalAlignment="Left"
+            Click="BackBtn_OnClick"
+            Content="{x:Static p:Languages.installer_back}"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="15"
+            Style="{StaticResource ModernButton}" />
+
+        <Button
+            x:Name="SkipBtn"
+            Grid.Row="1"
+            Margin="10,0,0,10"
+            Padding="20,10"
+            HorizontalAlignment="Left"
+            Click="SkipBtn_OnClick"
+            Content="{x:Static p:Languages.installer_skip}"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="15"
+            Style="{StaticResource ModernButton}"
+            Visibility="Collapsed" />
+
+        <Label
+            x:Name="ProgressLabel"
+            Grid.Row="1"
+            Margin="0,0,0,25"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="15" />
+
+        <Button
+            x:Name="NextBtn"
+            Grid.Row="1"
+            Margin="0,0,10,10"
+            Padding="20,10"
+            HorizontalAlignment="Right"
+            Click="NextBtn_OnClick"
+            Content="{x:Static p:Languages.installer_next}"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="15"
+            Style="{StaticResource ModernButton}" />
+
+        <Button
+            x:Name="FinishBtn"
+            Grid.Row="1"
+            Margin="0,0,10,10"
+            Padding="20,10"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Click="FinishBtn_OnClick"
+            Content="{x:Static p:Languages.installer_finish}"
+            FontFamily="{StaticResource PixelifySans}"
+            FontSize="15"
+            Style="{StaticResource ModernButton}"
+            Visibility="Collapsed" />
+    </Grid>
+</Window>

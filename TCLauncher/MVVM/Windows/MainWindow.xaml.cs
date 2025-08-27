@@ -22,9 +22,8 @@ namespace TCLauncher.MVVM.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string remote_url = Properties.Settings.Default.DownloadMirror;
-        private MainViewModel vm;
-        private bool is_silent = false;
+        private readonly MainViewModel vm;
+        private readonly bool is_silent;
 
         public MainWindow(bool silent = false)
         {
@@ -171,18 +170,6 @@ namespace TCLauncher.MVVM.Windows
         //    }
         //}
 
-        private void FadeIn(double secs)
-        {
-            var fadeInAnimation = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(secs));
-            BeginAnimation(Window.OpacityProperty, fadeInAnimation);
-        }
-
-        private void FadeOut(double secs)
-        {
-            var fadeOutAnimation = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(secs));
-            BeginAnimation(Window.OpacityProperty, fadeOutAnimation);
-        }
-
         //private void Window_StateChanged(object sender, System.EventArgs e)
         //{
         //    switch (this.WindowState)
@@ -225,7 +212,7 @@ namespace TCLauncher.MVVM.Windows
 
         public void navigateToLogin()
         {
-            vm.AccountViewCommand.Execute(null);
+            vm.AccountListViewCommand.Execute(null);
         }
 
         //public void navigateToSettings()
@@ -242,28 +229,23 @@ namespace TCLauncher.MVVM.Windows
 
         private void Logo_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2) // (っ °Д °;)っ
-            {
-                var transform = logo.RenderTransform as RotateTransform;
-                double currentAngle = transform == null ? 0 : transform.Angle;
+            if (e.ClickCount != 2) return; // (っ °Д °;)っ
+            var currentAngle = !(logo.RenderTransform is RotateTransform transform) ? 0 : transform.Angle;
 
-                var rotateTransform = new RotateTransform(currentAngle, logo.ActualWidth / 2, logo.ActualHeight / 2);
-                logo.RenderTransform = rotateTransform;
+            var rotateTransform = new RotateTransform(currentAngle, logo.ActualWidth / 2, logo.ActualHeight / 2);
+            logo.RenderTransform = rotateTransform;
 
-                var angle = e.ChangedButton == MouseButton.Right ? -360 : 360;
+            var angle = e.ChangedButton == MouseButton.Right ? -360 : 360;
 
-                var animation = new DoubleAnimation(currentAngle, currentAngle + angle, TimeSpan.FromMilliseconds(350));
-                rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
-            }
+            var animation = new DoubleAnimation(currentAngle, currentAngle + angle, TimeSpan.FromMilliseconds(350));
+            rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
         }
 
         private void loadingImg_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2) // (っ °Д °;)っ
-            {
-                this.FontFamily = new FontFamily("Comic Sans MS");
-                AppName.Text = "ComicLauncher";
-            }
+            if (e.ClickCount != 2) return; // (っ °Д °;)っ
+            this.FontFamily = new FontFamily("Comic Sans MS");
+            AppName.Text = "ComicLauncher";
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
@@ -276,7 +258,7 @@ namespace TCLauncher.MVVM.Windows
 
         private void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            vm.AccountViewCommand.Execute(null);
+            vm.AccountListViewCommand.Execute(null);
         }
 
         public void SetDisplayAccount(string username)
@@ -337,6 +319,47 @@ namespace TCLauncher.MVVM.Windows
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+        }
+
+        private void AccountComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (((ComboBoxItem)AccountComboBox.SelectedItem).Tag)
+            {
+                case "AccountListBtn":
+                    AccountListBtn_OnClick();
+                    break;
+                case "AccountOptionsBtn":
+                    AccountOptionsBtn_OnClick();
+                    break;
+                case "LoginLogoutBtn":
+                    LoginLogoutBtn_OnClick();
+                    break;
+            }
+
+            AccountComboBox.SelectedItem = AccountDefaultLabel;
+        }
+
+        private void AccountListBtn_OnClick()
+        {
+            vm.AccountListViewCommand.Execute(null);
+        }
+
+        private void AccountOptionsBtn_OnClick()
+        {
+            vm.AccountOptionsViewCommand.Execute(null);
+        }
+
+        private void LoginLogoutBtn_OnClick()
+        {
+            if (App.Session == null)
+            {
+                vm.AccountListViewCommand.Execute(null);
+            }
+            else
+            {
+                App.MainWin.SetDisplayAccount(null);
+                App.Session = null;
+            }
         }
     }
 }

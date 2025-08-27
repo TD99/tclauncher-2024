@@ -124,7 +124,7 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Action in Progress....
+        ///   Looks up a localized string similar to Action in Progress ....
         /// </summary>
         public static string action_progress_title_text {
             get {
@@ -196,7 +196,7 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading Interface....
+        ///   Looks up a localized string similar to Loading Interface ....
         /// </summary>
         public static string busy_interface_loading_text {
             get {
@@ -799,6 +799,105 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Explore More:.
+        /// </summary>
+        public static string installer_additional_links {
+            get {
+                return ResourceManager.GetString("installer_additional_links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string installer_back {
+            get {
+                return ResourceManager.GetString("installer_back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish.
+        /// </summary>
+        public static string installer_finish {
+            get {
+                return ResourceManager.GetString("installer_finish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GitHub Repository.
+        /// </summary>
+        public static string installer_github_repo {
+            get {
+                return ResourceManager.GetString("installer_github_repo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installation complete!.
+        /// </summary>
+        public static string installer_install_complete_title {
+            get {
+                return ResourceManager.GetString("installer_install_complete_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TCLauncher is ready for action.
+        /// </summary>
+        public static string installer_launcher_ready_subtitle {
+            get {
+                return ResourceManager.GetString("installer_launcher_ready_subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string installer_next {
+            get {
+                return ResourceManager.GetString("installer_next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        public static string installer_skip {
+            get {
+                return ResourceManager.GetString("installer_skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Need Help?.
+        /// </summary>
+        public static string installer_support {
+            get {
+                return ResourceManager.GetString("installer_support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visit the T-Craft Website.
+        /// </summary>
+        public static string installer_visit_website {
+            get {
+                return ResourceManager.GetString("installer_visit_website", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to TCLauncher.
+        /// </summary>
+        public static string installer_welcome {
+            get {
+                return ResourceManager.GetString("installer_welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installing package &apos;ch.tcraft.{0}&apos;\nSize: {1}\nInfo: This may take some time!.
         /// </summary>
         public static string installing_package_action {
@@ -898,6 +997,33 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Accounts.
+        /// </summary>
+        public static string label_account_list {
+            get {
+                return ResourceManager.GetString("label_account-list", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage current account.
+        /// </summary>
+        public static string label_account_options {
+            get {
+                return ResourceManager.GetString("label_account-options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login/Logout.
+        /// </summary>
+        public static string label_login_logout {
+            get {
+                return ResourceManager.GetString("label_login-logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string language {
@@ -916,7 +1042,7 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Downloading Assets....
+        ///   Looks up a localized string similar to Downloading Assets ....
         /// </summary>
         public static string loading_assets {
             get {
@@ -925,7 +1051,7 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading game....
+        ///   Looks up a localized string similar to Loading game ....
         /// </summary>
         public static string loading_game_message {
             get {
@@ -1510,6 +1636,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Setup Screen.
+        /// </summary>
+        public static string re_setup_text {
+            get {
+                return ResourceManager.GetString("re-setup_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  (read-only).
         /// </summary>
         public static string readonly_annotation {
@@ -1699,6 +1834,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select your language:.
+        /// </summary>
+        public static string select_language {
+            get {
+                return ResourceManager.GetString("select_language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you want to set a thumbnail for the package?.
         /// </summary>
         public static string set_package_thumbnail {
@@ -1776,6 +1920,15 @@ namespace TCLauncher.Properties {
         public static string statistics_text {
             get {
                 return ResourceManager.GetString("statistics_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step {0} of {1}.
+        /// </summary>
+        public static string step_count_key {
+            get {
+                return ResourceManager.GetString("step_count_key", resourceCulture);
             }
         }
         

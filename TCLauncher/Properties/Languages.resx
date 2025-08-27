@@ -139,7 +139,7 @@
     <value>Import Game</value>
   </data>
   <data name="action_progress_title_text" xml:space="preserve">
-    <value>Action in Progress...</value>
+    <value>Action in Progress ...</value>
   </data>
   <data name="add_account_button_text" xml:space="preserve">
     <value>Add Account</value>
@@ -163,7 +163,7 @@
     <value>Binary files are not supported.</value>
   </data>
   <data name="busy_interface_loading_text" xml:space="preserve">
-    <value>Loading Interface...</value>
+    <value>Loading Interface ...</value>
   </data>
   <data name="button_abort" xml:space="preserve">
     <value>Abort</value>
@@ -400,10 +400,10 @@
     <value>The latest version ({0}) is already installed.</value>
   </data>
   <data name="loading_assets" xml:space="preserve">
-    <value>Downloading Assets...</value>
+    <value>Downloading Assets ...</value>
   </data>
   <data name="loading_game_message" xml:space="preserve">
-    <value>Loading game...</value>
+    <value>Loading game ...</value>
   </data>
   <data name="local_instances_loading_text" xml:space="preserve">
     <value>Loading Local Instances ...</value>
@@ -734,5 +734,56 @@
   </data>
   <data name="webview_context_open_in_web_browser" xml:space="preserve">
     <value>Open in web browser</value>
+  </data>
+  <data name="label_login-logout" xml:space="preserve">
+    <value>Login/Logout</value>
+  </data>
+  <data name="label_account-list" xml:space="preserve">
+    <value>My Accounts</value>
+  </data>
+  <data name="label_account-options" xml:space="preserve">
+    <value>Manage current account</value>
+  </data>
+  <data name="installer_welcome" xml:space="preserve">
+    <value>Welcome to TCLauncher</value>
+  </data>
+  <data name="installer_back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="installer_skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="installer_next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="installer_finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="select_language" xml:space="preserve">
+    <value>Select your language:</value>
+  </data>
+  <data name="installer_install_complete_title" xml:space="preserve">
+    <value>Installation complete!</value>
+  </data>
+  <data name="installer_launcher_ready_subtitle" xml:space="preserve">
+    <value>TCLauncher is ready for action</value>
+  </data>
+  <data name="installer_additional_links" xml:space="preserve">
+    <value>Explore More:</value>
+  </data>
+  <data name="installer_github_repo" xml:space="preserve">
+    <value>GitHub Repository</value>
+  </data>
+  <data name="installer_visit_website" xml:space="preserve">
+    <value>Visit the T-Craft Website</value>
+  </data>
+  <data name="installer_support" xml:space="preserve">
+    <value>Need Help?</value>
+  </data>
+  <data name="step_count_key" xml:space="preserve">
+    <value>Step {0} of {1}</value>
+  </data>
+  <data name="re-setup_text" xml:space="preserve">
+    <value>Show Setup Screen</value>
   </data>
 </root>

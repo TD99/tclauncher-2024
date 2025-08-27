@@ -21,7 +21,7 @@ namespace TCLauncher.MVVM.View
         public SettingsView()
         {
             InitializeComponent();
-            assemblyVersion.Text = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            assemblyVersion.Text = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version);
             string behaviourTagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)
             {
@@ -218,11 +218,6 @@ namespace TCLauncher.MVVM.View
             Properties.Settings.Default.Save();
         }
 
-        private void HotReloadBtn_OnClick(object sender, RoutedEventArgs e)
-        {
-            App.HotReload();
-        }
-
         private void AppDataPathBtn_OnClick(object sender, RoutedEventArgs e)
         {
             var oldPath = IoUtils.Tcl.RootPath;
@@ -272,6 +267,13 @@ namespace TCLauncher.MVVM.View
             Settings.Default.Language = tag;
             Settings.Default.Save();
             App.SetLanguage(Settings.Default.Language, true);
+        }
+
+        private void ReSetupBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            var appPath = Process.GetCurrentProcess().MainModule.FileName;
+            Process.Start(appPath, "--installer-part-welcome");
+            Application.Current.Shutdown();
         }
     }
 }

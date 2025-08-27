@@ -168,5 +168,44 @@ namespace TCLauncher.Core
                 MessageBox.Show(Languages.sandbox_security_message_blocked + " (" + url + ")", Languages.tclauncher_security);
             }
         }
+
+        /// <summary>
+        /// Checks if the given string is a valid email address.
+        /// </summary>
+        /// <param name="email">The email address to check.</param>
+        /// <returns>True if the email address is valid, false otherwise.</returns>
+        public static bool CheckIsValidEmail(string email)
+        {
+            const string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return regex.IsMatch(email);
+        }
+
+        /// <summary>
+        /// Opens the default email client with the provided email details if the email is valid.
+        /// </summary>
+        /// <param name="to">The recipient's email address.</param>
+        /// <param name="subject">The subject of the email.</param>
+        /// <param name="body">The body of the email.</param>
+        /// <param name="cc">The carbon copy recipient's email address.</param>
+        /// <param name="bcc">The blind carbon copy recipient's email address.</param>
+        public static void OpenEmail(string to, string subject = "", string body = "", string cc = "", string bcc = "")
+        {
+            if (CheckIsValidEmail(to) && (string.IsNullOrEmpty(cc) || CheckIsValidEmail(cc)) && (string.IsNullOrEmpty(bcc) || CheckIsValidEmail(bcc)))
+            {
+                try
+                {
+                    Process.Start($"mailto:{to}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(body)}&cc={Uri.EscapeDataString(cc)}&bcc={Uri.EscapeDataString(bcc)}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to open email client: {ex.Message}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("One or more provided email addresses are invalid.");
+            }
+        }
     }
 }

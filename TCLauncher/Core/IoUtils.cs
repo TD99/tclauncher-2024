@@ -137,6 +137,11 @@ namespace TCLauncher.Core
             /// The path of the TCL root directory
             /// </summary>
             public static readonly string RootPath = Path.Combine(FileSystem.AppDataPath, "TCL");
+
+            /// <summary>
+            /// The path of the default TCL root directory
+            /// </summary>
+            public static readonly string DefaultRootPath = Path.Combine(FileSystem.RealAppDataPath, "TCL");
             
             /// <summary>
             /// The path of the cache directory

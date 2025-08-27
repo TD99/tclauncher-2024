@@ -17,11 +17,7 @@ using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using CmlLib.Core.Installer.FabricMC;
-using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
-using CmlLib.Core.Installer;
-using CmlLib.Core.Downloader;
-using CmlLib.Core.Version;
 using Microsoft.Web.WebView2.Core;
 
 namespace TCLauncher.MVVM.View
@@ -31,15 +27,13 @@ namespace TCLauncher.MVVM.View
     /// </summary>
     public partial class HomeView
     {
-        public ObservableCollection<Applet> Applets { get; set; }
-        private byte StartupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
-        private HomeViewModel _vm;
-        private bool _isServerListLoading = false;
+        private ObservableCollection<Applet> Applets { get; set; }
+        private readonly byte _startupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
+        private bool _isServerListLoading;
 
         public HomeView()
         {
             InitializeComponent();
-            _vm = (HomeViewModel)DataContext;
 
             UserNameTextBlock.Text = App.Session != null ? (" " + App.Session.Username) : "";
 
@@ -97,7 +91,7 @@ namespace TCLauncher.MVVM.View
             };
         }
 
-        private void discoverEvent(object sender, MouseButtonEventArgs e)
+        private void DiscoverEvent(object sender, MouseButtonEventArgs e)
         {
             foreach (Window window in Application.Current.Windows)
             {
@@ -108,7 +102,7 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void playBtn_Click(object sender, RoutedEventArgs e)
+        private async void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
             var tclInstancesFolder = IoUtils.Tcl.InstancesPath;
             if (!(profileSelect.SelectedItem is InstalledInstance instance))
@@ -261,7 +255,7 @@ namespace TCLauncher.MVVM.View
                     // TODO: Add closed logic
                 };
                 processUtil.StartWithEvents();
-                switch (StartupBehaviourLevel)
+                switch (_startupBehaviourLevel)
                 {
                     case 0:
                         break;
@@ -334,7 +328,7 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private void profileSelect_SelectionChanged(object sender, RoutedEventArgs e)
+        private void ProfileSelect_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (profileSelect.SelectedItem is InstalledInstance selectedInstance)
             {
@@ -383,15 +377,14 @@ namespace TCLauncher.MVVM.View
 
             try
             {
-                InstalledInstance selectedInstance = profileSelect.SelectedItem as InstalledInstance;
-                if (selectedInstance is null) throw new Exception();
-                string appletsURL = selectedInstance.AppletURL;
-                if (String.IsNullOrEmpty(appletsURL)) throw new Exception();
-                HttpClient httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(appletsURL);
+                if (!(profileSelect.SelectedItem is InstalledInstance selectedInstance)) throw new Exception();
+                var appletsUrl = selectedInstance.AppletURL;
+                if (string.IsNullOrEmpty(appletsUrl)) throw new Exception();
+                var httpClient = new HttpClient();
+                var response = await httpClient.GetAsync(appletsUrl);
                 if (response.IsSuccessStatusCode)
                 {
-                    string content = await response.Content.ReadAsStringAsync();
+                    var content = await response.Content.ReadAsStringAsync();
                     Applets = new ObservableCollection<Applet>(JsonConvert.DeserializeObject<ObservableCollection<Applet>>(content).OrderByDescending(a => a.Weight));
                 }
             }
@@ -402,7 +395,7 @@ namespace TCLauncher.MVVM.View
             mainApplets.ItemsSource = Applets;
         }
 
-        private void webViewBackButton_Click(object sender, RoutedEventArgs e)
+        private void WebViewBackButton_Click(object sender, RoutedEventArgs e)
         {
             SetAppletViewState(false);
         }

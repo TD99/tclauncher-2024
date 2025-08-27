@@ -139,7 +139,7 @@
     <value>Importer le jeu</value>
   </data>
   <data name="action_progress_title_text" xml:space="preserve">
-    <value>Action en cours…</value>
+    <value>Action en cours ...</value>
   </data>
   <data name="add_account_button_text" xml:space="preserve">
     <value>Ajouter un compte</value>
@@ -163,7 +163,7 @@
     <value>Les fichiers binaires ne sont pas pris en charge.</value>
   </data>
   <data name="busy_interface_loading_text" xml:space="preserve">
-    <value>Chargement de l’interface…</value>
+    <value>Chargement de l’interface ...</value>
   </data>
   <data name="button_abort" xml:space="preserve">
     <value>Abandonner</value>
@@ -196,7 +196,7 @@
     <value>Une erreur s’est produite (vider le cache peut aider) : {0}</value>
   </data>
   <data name="cache_loading_text" xml:space="preserve">
-    <value>Chargement du cache…</value>
+    <value>Chargement du cache ...</value>
   </data>
   <data name="cache_write_error_message" xml:space="preserve">
     <value>Échec de l’écriture de la liste des serveurs dans le fichier de cache : {0}</value>
@@ -244,7 +244,7 @@
     <value>Chemin AppData personnalisé (Beta)</value>
   </data>
   <data name="data_fetching_text" xml:space="preserve">
-    <value>Récupération des données…</value>
+    <value>Récupération des données ...</value>
   </data>
   <data name="debug_server_start_text" xml:space="preserve">
     <value>Démarrer le serveur de débogage</value>
@@ -301,7 +301,7 @@
     <value>Ce fichier est trop grand. (&amp;gt; 255 KB)</value>
   </data>
   <data name="finishing_text" xml:space="preserve">
-    <value>Fin…</value>
+    <value>Fin ...</value>
   </data>
   <data name="forbid_text" xml:space="preserve">
     <value>Interdire</value>
@@ -367,7 +367,7 @@
     <value>← Ici, vous pouvez installer des instances</value>
   </data>
   <data name="instances_loading_text" xml:space="preserve">
-    <value>Chargement des instances…</value>
+    <value>Chargement des instances ...</value>
   </data>
   <data name="instance_already_installed" xml:space="preserve">
     <value>Cette instance est déjà installée. Écraser ?</value>
@@ -400,13 +400,13 @@
     <value>La dernière version ({0}) est déjà installée.</value>
   </data>
   <data name="loading_assets" xml:space="preserve">
-    <value>Téléchargement des ressources…</value>
+    <value>Téléchargement des ressources ...</value>
   </data>
   <data name="loading_game_message" xml:space="preserve">
-    <value>Chargement du jeu…</value>
+    <value>Chargement du jeu ...</value>
   </data>
   <data name="local_instances_loading_text" xml:space="preserve">
-    <value>Chargement des instances locales…</value>
+    <value>Chargement des instances locales ...</value>
   </data>
   <data name="local_instances_load_error_message" xml:space="preserve">
     <value>Les instances locales n’ont pas pu être chargées !</value>
@@ -424,7 +424,7 @@
     <value>Maximiser</value>
   </data>
   <data name="max_ram_label_text" xml:space="preserve">
-    <value>RAM max :</value>
+    <value>RAM max : </value>
   </data>
   <data name="memory_text" xml:space="preserve">
     <value>Mémoire</value>
@@ -433,7 +433,7 @@
     <value>Minecraft</value>
   </data>
   <data name="minecraft_version_label_text" xml:space="preserve">
-    <value>Version de Minecraft :</value>
+    <value>Version de Minecraft : </value>
   </data>
   <data name="minimize_menu_item_text" xml:space="preserve">
     <value>Minimiser</value>
@@ -442,7 +442,7 @@
     <value>Minimiser (recommandé)</value>
   </data>
   <data name="min_ram_label_text" xml:space="preserve">
-    <value>RAM min :</value>
+    <value>RAM min : </value>
   </data>
   <data name="multi_instances_text" xml:space="preserve">
     <value>Multi-Instances</value>
@@ -502,7 +502,7 @@
     <value>Le package ‘{0}’ n’a pas pu être installé : {1}</value>
   </data>
   <data name="package_label_text" xml:space="preserve">
-    <value>Package :</value>
+    <value>Package : </value>
   </data>
   <data name="package_load_failed" xml:space="preserve">
     <value>Le package n’a pas pu être chargé : {0}</value>
@@ -517,7 +517,7 @@
     <value>Le package ‘{0}’ a été désinstallé avec succès.</value>
   </data>
   <data name="patch_label_text" xml:space="preserve">
-    <value>Patch :</value>
+    <value>Patch : </value>
   </data>
   <data name="path_saved" xml:space="preserve">
     <value>Chemin enregistré</value>
@@ -535,7 +535,7 @@
     <value>Propulsé par simpleEdit</value>
   </data>
   <data name="preparing_text" xml:space="preserve">
-    <value>Préparation…</value>
+    <value>Préparation ...</value>
   </data>
   <data name="prompt_create_package" xml:space="preserve">
     <value>Voulez-vous créer le package maintenant ?</value>
@@ -592,7 +592,7 @@
     <value>Utilisez-vous Patch ? (vrai/faux)</value>
   </data>
   <data name="properties_label_text" xml:space="preserve">
-    <value>Propriétés :</value>
+    <value>Propriétés : </value>
   </data>
   <data name="public_games_text" xml:space="preserve">
     <value>Jeux publics</value>
@@ -670,7 +670,7 @@
     <value>Standard : Les bibliothèques sont partagées (recommandé)</value>
   </data>
   <data name="starting_text" xml:space="preserve">
-    <value>Démarrage…</value>
+    <value>Démarrage ...</value>
   </data>
   <data name="startup_behavior_error_message" xml:space="preserve">
     <value>Le comportement de démarrage n’a pas pu être défini.</value>
@@ -703,7 +703,7 @@
     <value>Titre</value>
   </data>
   <data name="type_label_text" xml:space="preserve">
-    <value>Type :</value>
+    <value>Type : </value>
   </data>
   <data name="uninstall" xml:space="preserve">
     <value>Désinstaller</value>
@@ -734,5 +734,56 @@
   </data>
   <data name="webview_context_open_in_web_browser" xml:space="preserve">
     <value>Ouvrir dans le navigateur web</value>
+  </data>
+  <data name="label_login-logout" xml:space="preserve">
+    <value>Connexion/Déconnexion</value>
+  </data>
+  <data name="label_account-list" xml:space="preserve">
+    <value>Mes comptes</value>
+  </data>
+  <data name="label_account-options" xml:space="preserve">
+    <value>Gérer le compte courant</value>
+  </data>
+  <data name="installer_welcome" xml:space="preserve">
+    <value>Bienvenue dans TCLauncher</value>
+  </data>
+  <data name="installer_back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="installer_skip" xml:space="preserve">
+    <value>Passer</value>
+  </data>
+  <data name="installer_next" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="installer_finish" xml:space="preserve">
+    <value>Finir</value>
+  </data>
+  <data name="select_language" xml:space="preserve">
+    <value>Sélectionnez votre langue :</value>
+  </data>
+  <data name="installer_install_complete_title" xml:space="preserve">
+    <value>Installation terminée!</value>
+  </data>
+  <data name="installer_launcher_ready_subtitle" xml:space="preserve">
+    <value>TCLauncher est prêt à l’emploi</value>
+  </data>
+  <data name="installer_additional_links" xml:space="preserve">
+    <value>Explorez plus :</value>
+  </data>
+  <data name="installer_github_repo" xml:space="preserve">
+    <value>Répertoire GitHub</value>
+  </data>
+  <data name="installer_visit_website" xml:space="preserve">
+    <value>Visitez le site Web de T-Craft</value>
+  </data>
+  <data name="installer_support" xml:space="preserve">
+    <value>Besoin d’aide ?</value>
+  </data>
+  <data name="step_count_key" xml:space="preserve">
+    <value>Étape {0} sur {1}</value>
+  </data>
+  <data name="re-setup_text" xml:space="preserve">
+    <value>Afficher l’écran de configuration</value>
   </data>
 </root>

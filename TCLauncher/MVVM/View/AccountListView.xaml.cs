@@ -8,9 +8,9 @@ using TCLauncher.MVVM.Controls;
 
 namespace TCLauncher.MVVM.View
 {
-    public partial class AccountView
+    public partial class AccountListView
     {
-        public AccountView()
+        public AccountListView()
         {
             InitializeComponent();
         }

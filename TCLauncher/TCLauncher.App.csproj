@@ -98,16 +98,49 @@
     <LangVersion>7.3</LangVersion>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup.WelcomeWindow|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Setup.WelcomeWindow\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup.WelcomeWindow|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Setup.WelcomeWindow\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\TCLauncher.xml</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup.WelcomeWindow|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Setup.WelcomeWindow\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\TCLauncher.xml</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup.WelcomeWindow|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Setup.WelcomeWindow\</OutputPath>
+    <DocumentationFile>bin\x64\Debug\TCLauncher.xml</DocumentationFile>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework">
-      <HintPath>..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -131,6 +164,18 @@
     <Compile Include="Core\LoopStream.cs" />
     <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\XamlUtils.cs" />
+    <Compile Include="Installer\Steps\StepDone.xaml.cs">
+      <DependentUpon>StepDone.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Installer\Steps\StepLanguage.xaml.cs">
+      <DependentUpon>StepLanguage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Installer\Steps\StepPath.xaml.cs">
+      <DependentUpon>StepPath.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Installer\Steps\StepWelcome.xaml.cs">
+      <DependentUpon>StepWelcome.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\DebugObject.cs" />
     <Compile Include="Models\DialogButtons.cs" />
     <Compile Include="Models\DialogButton.cs" />
@@ -139,6 +184,7 @@
     <Compile Include="Models\AssetFragment.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
+    <Compile Include="MVVM\Animations\SlideRightIn.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
     </Compile>
@@ -163,9 +209,13 @@
     <Compile Include="MVVM\Converters\InvertibleBooleanToVisibilityConverter.cs" />
     <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
     <Compile Include="MVVM\Converters\RequiredFieldTextConverter.cs" />
-    <Compile Include="MVVM\ViewModel\AccountViewModel.cs" />
-    <Compile Include="MVVM\View\AccountView.xaml.cs">
-      <DependentUpon>AccountView.xaml</DependentUpon>
+    <Compile Include="MVVM\ViewModel\AccountListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\AccountOptionsViewModel.cs" />
+    <Compile Include="MVVM\View\AccountListView.xaml.cs">
+      <DependentUpon>AccountListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\AccountOptionsView.xaml.cs">
+      <DependentUpon>AccountOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Windows\CustomButtonDialog.xaml.cs">
       <DependentUpon>CustomButtonDialog.xaml</DependentUpon>
@@ -182,6 +232,22 @@
     <Compile Include="MVVM\View\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Installer\Steps\StepDone.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Installer\Steps\StepLanguage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Installer\Steps\StepPath.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Installer\Steps\StepWelcome.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\Controls\AccountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,7 +256,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MVVM\View\AccountView.xaml">
+    <Page Include="MVVM\View\AccountListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\AccountOptionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -214,6 +284,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Installer\InstallerWelcomeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -230,6 +304,9 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
     <Compile Include="Core\SystemInfoUtils.cs" />
+    <Compile Include="Installer\InstallerWelcomeWindow.xaml.cs">
+      <DependentUpon>InstallerWelcomeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -370,11 +447,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Assets\Fonts\Rubik.ttf" />
-    <Resource Include="Assets\Fonts\OpenSans.ttf" />
-    <Resource Include="Assets\Fonts\RobotoFlex.ttf" />
-    <Resource Include="Assets\Fonts\Barlow-Regular.ttf" />
-    <Resource Include="Assets\Fonts\Tourney.ttf" />
     <Resource Include="Assets\Fonts\Font Awesome 6 Brands-Regular-400.otf" />
     <Resource Include="Assets\Fonts\Font Awesome 6 Free-Regular-400.otf" />
     <Resource Include="Assets\Fonts\Font Awesome 6 Free-Solid-900.otf" />
@@ -401,13 +473,16 @@
       <Version>4.7.0.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.2478.35</Version>
+      <Version>1.0.2535.41</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
-      <Version>1.1.77</Version>
+      <Version>1.1.122</Version>
+    </PackageReference>
+    <PackageReference Include="MojangAPI">
+      <Version>1.2.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>3.3.1</Version>
+      <Version>3.4.3</Version>
     </PackageReference>
     <PackageReference Include="NAudio">
       <Version>2.2.1</Version>
@@ -463,6 +538,7 @@
     <Resource Include="Assets\Images\steve.png" />
     <Resource Include="Assets\Images\escapebutton.png" />
     <Resource Include="Assets\Images\harddrive.png" />
+    <Resource Include="Assets\Images\logo_installer.png" />
     <Content Include="Assets\Videos\bganim.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

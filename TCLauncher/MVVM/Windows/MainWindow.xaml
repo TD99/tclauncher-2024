@@ -11,8 +11,10 @@
     xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
     Title="TCLauncher"
-    Width="920"
+    Width="915"
     Height="600"
+    MinWidth="915"
+    MinHeight="600"
     Activated="MainWindow_OnActivated"
     Background="#737c88"
     Deactivated="MainWindow_OnDeactivated"
@@ -254,50 +256,55 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="15,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         Orientation="Horizontal">
-                        <Button
-                            x:Name="AccountManagerBtn"
-                            Padding="15,0"
-                            HorizontalAlignment="Left"
-                            Click="AccountManagerBtn_OnClick">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
 
-                                    <!--  Fallback  -->
-                                    <Image
-                                        Grid.Column="0"
-                                        Width="24"
-                                        Height="24"
-                                        Margin="0,0,10,0"
-                                        Source="/Assets/Images/steve.png" />
-                                    <Image
-                                        x:Name="AccountManagerBtnPicture"
-                                        Grid.Column="0"
-                                        Width="24"
-                                        Height="24"
-                                        Margin="0,0,10,0" />
-                                    <TextBlock
-                                        x:Name="AccountManagerBtnName"
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        Text="{x:Static p:Languages.not_logged_text}" />
-                                </Grid>
-                            </Button.Content>
-                            <Button.Style>
-                                <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:AccountViewModel}}" Value="True">
-                                            <Setter Property="Background" Value="#171e29" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
+                        <ComboBox
+                            x:Name="AccountComboBox"
+                            MinWidth="140"
+                            Padding="0"
+                            Background="Transparent"
+                            SelectionChanged="AccountComboBox_OnSelectionChanged"
+                            Style="{StaticResource ModernComboBox}">
+                            <ComboBoxItem
+                                x:Name="AccountDefaultLabel"
+                                IsSelected="True"
+                                Visibility="Collapsed">
+                                <ComboBoxItem.Content>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Fallback  -->
+                                        <Image
+                                            Grid.Column="0"
+                                            Width="24"
+                                            Height="24"
+                                            Margin="0,0,10,0"
+                                            Panel.ZIndex="-1"
+                                            Source="/Assets/Images/steve.png" />
+                                        <Image
+                                            x:Name="AccountManagerBtnPicture"
+                                            Grid.Column="0"
+                                            Width="24"
+                                            Height="24"
+                                            Margin="0,0,10,0" />
+                                        <TextBlock
+                                            x:Name="AccountManagerBtnName"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Static p:Languages.not_logged_text}" />
+                                    </Grid>
+                                </ComboBoxItem.Content>
+                            </ComboBoxItem>
+                            <ComboBoxItem Content="{x:Static p:Languages.label_login_logout}" Tag="LoginLogoutBtn" />
+                            <ComboBoxItem Content="{x:Static p:Languages.label_account_list}" Tag="AccountListBtn" />
+                            <ComboBoxItem Content="{x:Static p:Languages.label_account_options}" Tag="AccountOptionsBtn" />
+                        </ComboBox>
+
                         <Border
                             Width="1"
                             Height="20"

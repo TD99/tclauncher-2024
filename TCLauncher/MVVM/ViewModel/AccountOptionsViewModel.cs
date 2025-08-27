@@ -2,7 +2,7 @@
 
 namespace TCLauncher.MVVM.ViewModel
 {
-    class AccountViewModel : ObservableObject
+    class AccountOptionsViewModel : ObservableObject
     {
     }
 }

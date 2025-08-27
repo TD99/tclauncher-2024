@@ -20,6 +20,7 @@ using static System.String;
 using static TCLauncher.Core.MessageBoxUtils;
 using System.Globalization;
 using System.Reflection;
+using TCLauncher.Installer;
 
 namespace TCLauncher
 {
@@ -38,6 +39,8 @@ namespace TCLauncher
         public static Uri UriArgs;
 
         public static bool IsCoreLoaded = false;
+
+        private static bool LoadUI = true;
 
         public static MSession Session
         {
@@ -58,6 +61,7 @@ namespace TCLauncher
         public static CMLauncher Launcher { get; set; }
         public static MLaunchOption LaunchOption { get; set; }
         public static MainWindow MainWin { get; set; }
+        public static InstallerWelcomeWindow InstallerWin { get; set; }
 
         public App()
         {
@@ -165,7 +169,7 @@ namespace TCLauncher
                 .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
                 .Build();
 
-            ShowUI();
+            if (LoadUI) ShowUI();
             TryAutoLogin();
 
             IsCoreLoaded = true;
@@ -200,6 +204,22 @@ namespace TCLauncher
             };
             Current.MainWindow = MainWin;
             MainWin.Show();
+            oldWin.Close();
+        }
+
+        public static void HotReloadInstaller()
+        {
+            RegisterDefaultEnvironment();
+            var oldWin = InstallerWin;
+            InstallerWin = new InstallerWelcomeWindow(InstallerWin.CurrentStep)
+            {
+                Top = oldWin.Top,
+                Left = oldWin.Left,
+                Width = oldWin.Width,
+                Height = oldWin.Height,
+                WindowStartupLocation = WindowStartupLocation.Manual
+            };
+            InstallerWin.Show();
             oldWin.Close();
         }
 
@@ -328,6 +348,11 @@ namespace TCLauncher
                         break;
                     case "--silent":
                         is_silent = true;
+                        break;
+                    case "--installer-part-welcome":
+                        InstallerWin = new InstallerWelcomeWindow();
+                        InstallerWin.Show();
+                        LoadUI = false;
                         break;
                 }
             }
