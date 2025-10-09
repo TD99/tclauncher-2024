@@ -234,13 +234,19 @@ namespace TCLauncher.MVVM.View
                     var progress = e1.ProgressedFileCount;
                     var total = e1.TotalFileCount;
                     var percent = progress / total * 100;
-
+                    
                     actionWindow.percent = percent;
                     actionWindow.text = $"[{e1.FileKind}] {e1.FileName}";
+
+                    if (percent == 100)
+                    {
+                        actionWindow.Close();
+                    }
                 };
 
                 App.Launcher.ProgressChanged += (sender1, e1) =>
                 {
+                    // This is only called when downloading, not when launching
                     // TODO: Add percent logic
                 };
 
