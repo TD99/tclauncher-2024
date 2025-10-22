@@ -2,7 +2,7 @@
   <br>
   <a href="https://tcraft.link/tclauncher"><img src=".assets/logo.png" alt="TCLauncher" width="200"></a>
   <br>
-  TCLauncher
+  TCLauncher Legacy
   <br>
 </h1>
 
@@ -10,7 +10,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/license/TD99/T-Craft-Game-Launcher?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/github/v/release/TD99/T-Craft-Game-Launcher?include_prereleases&label=Alpha&style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/github/last-commit/TD99/T-Craft-Game-Launcher?style=for-the-badge" alt="Last Commit">
 </p>
 
@@ -18,8 +17,7 @@
   <a href="#about">About</a> •
   <a href="#installation">Installation</a> •
   <a href="#system-requirements">System Requirements</a> •
-  <a href="#public-games">Public Games</a> •
-  <a href="#your-own-games">Your own Games</a>
+  <a href="#public-games">Public Games</a>
 </p>
 
 <img src=".assets/app.png" alt="App UI">
@@ -34,7 +32,7 @@ Download TCLauncher and experience lightning-fast switching between instances!
 ## Installation
 To install TCLauncher, follow these steps:
 
-- Download the latest version of TCLauncher from our [Website](https://tcraft.link/tclauncher) or from [Releases](https://github.com/TD99/T-Craft-Game-Launcher/releases/latest).
+- Download the latest version of TCLauncher from our [Website](https://tcraft.link/tclauncher).
 - Run the installer and follow the on-screen instructions.
 - Once the installation is complete, launch TCLauncher and start exploring!
 
@@ -48,6 +46,3 @@ To run TCLauncher (not the instances!), your system must meet the following requ
 
 ## Public Games
 With TCLauncher, you can discover and download a variety of public games. Browse through our selection of games and find your next adventure!
-
-## Your own Games
-We're working on this feature.
