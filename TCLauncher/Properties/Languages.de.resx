@@ -151,7 +151,7 @@
     <value>Anwenden</value>
   </data>
   <data name="auto_configuration_button_text" xml:space="preserve">
-    <value>Automatische Konfiguration</value>
+    <value>Neu installieren</value>
   </data>
   <data name="auto_detect_text" xml:space="preserve">
     <value>Automatische Erkennung (empfohlen)</value>

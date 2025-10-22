@@ -31,7 +31,7 @@ namespace TCLauncher.MVVM.Windows
             vm = (MainViewModel)this.DataContext;
             is_silent = silent;
 
-            ResetBgMedia();
+            //ResetBgMedia();
             loadingGrid.Visibility = Visibility.Visible;
             mainBorder.Visibility = Visibility.Collapsed;
 
@@ -245,7 +245,6 @@ namespace TCLauncher.MVVM.Windows
         {
             if (e.ClickCount != 2) return; // (っ °Д °;)っ
             this.FontFamily = new FontFamily("Comic Sans MS");
-            AppName.Text = "ComicLauncher";
         }
 
         private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
@@ -284,16 +283,16 @@ namespace TCLauncher.MVVM.Windows
             }
         }
 
-        private void BgMediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
-        {
-            ResetBgMedia();
-        }
+        //private void BgMediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
+        //{
+        //    ResetBgMedia();
+        //}
 
-        private void ResetBgMedia()
-        {
-            BgMediaElement.Position = TimeSpan.Zero;
-            BgMediaElement.Play();
-        }
+        //private void ResetBgMedia()
+        //{
+        //    BgMediaElement.Position = TimeSpan.Zero;
+        //    BgMediaElement.Play();
+        //}
 
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {

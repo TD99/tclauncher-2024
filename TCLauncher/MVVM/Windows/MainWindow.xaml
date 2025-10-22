@@ -94,13 +94,13 @@
                     FontSize="25"
                     Foreground="#b2b9cc" />
             </StackPanel>
-            <MediaElement
+            <!--<MediaElement
                 x:Name="BgMediaElement"
                 LoadedBehavior="Manual"
                 MediaEnded="BgMediaElement_OnMediaEnded"
                 Source="pack://siteoforigin:,,,/Assets/Videos/bganim.mp4"
                 Stretch="UniformToFill"
-                UnloadedBehavior="Manual" />
+                UnloadedBehavior="Manual" />-->
         </Grid>
 
         <!--  Layer 3: MainBorder -> Main Window Content  -->
@@ -112,7 +112,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="23" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="53" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />
                 </Grid.ColumnDefinitions>
@@ -150,89 +150,93 @@
                     </Border.ContextMenu>
                 </Border>
 
-                <Grid Grid.Row="1" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="32" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Image
-                        x:Name="logo"
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        MouseDown="Logo_MouseDown"
-                        Source="/Assets/Images/logo.png" />
-                    <TextBlock
-                        x:Name="AppName"
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        FontSize="22"
-                        FontWeight="Medium"
-                        Foreground="#D3DBF2"
-                        Text="TCLauncher" />
-                </Grid>
+                <Image
+                    Grid.Column="1" Grid.Row="1"
+                    x:Name="logo"
+                    Margin="5"
+                    HorizontalAlignment="Center"
+                    MouseDown="Logo_MouseDown"
+                    Source="/Assets/Images/logo.png" />
 
                 <StackPanel
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,10,0,0">
-                    <RadioButton
+                    <Button
                         x:Name="homeBtn"
-                        Margin="0,0,0,5"
-                        Command="{Binding HomeViewCommand}"
-                        Content="{x:Static p:Languages.home_text}">
-                        <RadioButton.Style>
-                            <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
+                        Padding="12,12"
+                        HorizontalAlignment="Center"
+                        Command="{Binding HomeViewCommand}">
+                        <Button.Content>
+                            <controls:Icon
+                                FontFamily="{StaticResource FaSolid}"
+                                Identifier="house"
+                                Unicode="f015" />
+                        </Button.Content>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
+                                <Setter Property="Background" Value="Transparent" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:HomeViewModel}}" Value="True">
-                                        <Setter Property="IsChecked" Value="True" />
+                                        <Setter Property="Background" Value="#171e29" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
-                    <RadioButton
+                        </Button.Style>
+                    </Button>
+                    <Button
                         x:Name="serverBtn"
-                        Margin="0,0,0,5"
-                        Command="{Binding ServerListViewCommand}"
-                        Content="{x:Static p:Languages.games_label_text}"
-                        ToolTipService.IsEnabled="False">
-                        <RadioButton.ToolTip>
-                            <ToolTip
-                                x:Name="newToolTip"
-                                Background="#84caf4"
-                                Placement="Left"
-                                StaysOpen="False"
-                                Style="{StaticResource ModernToolTip}">
-                                <ToolTip.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Foreground="Black" Text="{x:Static p:Languages.install_instances_text}" />
-                                    </StackPanel>
-                                </ToolTip.Content>
-                            </ToolTip>
-                        </RadioButton.ToolTip>
-                        <RadioButton.Style>
-                            <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
+                        Padding="12,12"
+                        Margin="0, 5, 0, 0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ServerListViewCommand}">
+                        <Button.Content>
+                            <controls:Icon
+                                FontFamily="{StaticResource FaSolid}"
+                                Identifier="gamepad"
+                                Unicode="f11b" />
+                        </Button.Content>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
+                                <Setter Property="Background" Value="Transparent" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:ServerListViewModel}}" Value="True">
-                                        <Setter Property="IsChecked" Value="True" />
+                                        <Setter Property="Background" Value="#171e29" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </RadioButton.Style>
-                    </RadioButton>
+                        </Button.Style>
+                    </Button>
+                    <Button
+                        x:Name="SettingsBtn"
+                        Padding="12,12"
+                        Margin="0, 5, 0, 0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding SettingsViewCommand}">
+                        <Button.Content>
+                            <controls:Icon
+                                FontFamily="{StaticResource FaSolid}"
+                                Identifier="gear"
+                                Unicode="f013" />
+                        </Button.Content>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:SettingsViewModel}}" Value="True">
+                                        <Setter Property="Background" Value="#171e29" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
 
                     <!--<RadioButton
                         x:Name="settingsBtn"
                         Command="{Binding SettingsViewCommand}"
                         Content="Einstellungen"
                         Style="{StaticResource MenuButtonTheme}" />-->
-                    <RadioButton
+                    <!--<RadioButton
                         x:Name="statusBtn"
                         Command="{Binding StatusViewCommand}"
                         Content="{x:Static p:Languages.info_content_text}">
@@ -245,7 +249,7 @@
                                 </Style.Triggers>
                             </Style>
                         </RadioButton.Style>
-                    </RadioButton>
+                    </RadioButton>-->
                 </StackPanel>
                 <Grid Grid.Row="1" Grid.Column="2">
                     <Grid.ColumnDefinitions>
@@ -302,36 +306,8 @@
                             </ComboBoxItem>
                             <ComboBoxItem Content="{x:Static p:Languages.label_login_logout}" Tag="LoginLogoutBtn" />
                             <ComboBoxItem Content="{x:Static p:Languages.label_account_list}" Tag="AccountListBtn" />
-                            <ComboBoxItem Content="{x:Static p:Languages.label_account_options}" Tag="AccountOptionsBtn" />
+                            <!--<ComboBoxItem Content="{x:Static p:Languages.label_account_options}" Tag="AccountOptionsBtn" />-->
                         </ComboBox>
-
-                        <Border
-                            Width="1"
-                            Height="20"
-                            Margin="10,0"
-                            Background="#7f8799" />
-                        <Button
-                            x:Name="SettingsBtn"
-                            Padding="12,0"
-                            HorizontalAlignment="Left"
-                            Command="{Binding SettingsViewCommand}">
-                            <Button.Content>
-                                <controls:Icon
-                                    FontFamily="{StaticResource FaSolid}"
-                                    Identifier="gear"
-                                    Unicode="f013" />
-                            </Button.Content>
-                            <Button.Style>
-                                <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:SettingsViewModel}}" Value="True">
-                                            <Setter Property="Background" Value="#171e29" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
                     </StackPanel>
                     <Border
                         x:Name="ButtonWindowControlsSpacer"

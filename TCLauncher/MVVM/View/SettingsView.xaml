@@ -84,13 +84,13 @@
                 Click="updateBtn_Click"
                 Content="{x:Static p:Languages.search_for_updates_text}"
                 Style="{StaticResource ModernButton}" />
-            <Button
+            <!--<Button
                 x:Name="codeBtn"
                 Margin="0,7.5,0,0"
                 Padding="5"
                 Click="codeBtn_Click"
                 Content="{x:Static p:Languages.open_code_editor_text}"
-                Style="{StaticResource ModernButton}" />
+                Style="{StaticResource ModernButton}" />-->
             <controls:HorizontalSeparator Margin="0,10,0,0" />
             <Button
                 x:Name="resetSettBtn"
@@ -106,14 +106,6 @@
                 Click="resetDataBtn_Click"
                 Content="{x:Static p:Languages.reset_tcl_data_text}"
                 Style="{StaticResource ModernButton}" />
-            <Button
-                x:Name="hostBtn"
-                Margin="0,7.5,0,0"
-                Padding="5"
-                Click="HostBtn_OnClick"
-                Content="{x:Static p:Languages.start_debug_server_text}"
-                Style="{StaticResource ModernButton}"
-                Tag="0" />
             <Button
                 x:Name="ReSetupBtn"
                 Margin="0,7.5,0,0"

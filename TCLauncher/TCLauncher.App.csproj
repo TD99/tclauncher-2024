@@ -539,9 +539,6 @@
     <Resource Include="Assets\Images\escapebutton.png" />
     <Resource Include="Assets\Images\harddrive.png" />
     <Resource Include="Assets\Images\logo_installer.png" />
-    <Content Include="Assets\Videos\bganim.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Plugins\Monaco\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

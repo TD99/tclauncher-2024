@@ -159,13 +159,13 @@
                             Content="{x:Static p:Languages.auto_configuration_button_text}"
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
-                        <Button
+                        <!--<Button
                             x:Name="editConfig"
                             Margin="0,15,0,0"
                             Click="editConfig_Click"
                             Content="{x:Static p:Languages.configuration_editor_button_text}"
                             FontSize="20"
-                            Style="{StaticResource ModernButton}" />
+                            Style="{StaticResource ModernButton}" />-->
                         <Button
                             x:Name="forceUninstallBtn"
                             Margin="0,50,0,0"

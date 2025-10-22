@@ -151,7 +151,7 @@
     <value>Apply</value>
   </data>
   <data name="auto_configuration_button_text" xml:space="preserve">
-    <value>Auto Configuration</value>
+    <value>Reinstall</value>
   </data>
   <data name="auto_detect_text" xml:space="preserve">
     <value>Auto Detect (recommended)</value>

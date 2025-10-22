@@ -52,7 +52,7 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
-            hostBtn.Content = App.DbgHttpServer == null ? Languages.debug_server_start_text : Languages.debug_server_stop_text;
+            //hostBtn.Content = App.DbgHttpServer == null ? Languages.debug_server_start_text : Languages.debug_server_stop_text;
 
             AppDataPath.Text = Properties.Settings.Default.VirtualAppDataPath;
 
@@ -109,13 +109,13 @@ namespace TCLauncher.MVVM.View
             AppUtils.HandleUpdates(true);
         }
 
-        private void codeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            this.Cursor = Cursors.Wait;
-            EditorWindow editorWindow = new EditorWindow(IoUtils.Tcl.InstancesPath, true);
-            editorWindow.Show();
-            this.Cursor = null;
-        }
+        //private void codeBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Cursor = Cursors.Wait;
+        //    EditorWindow editorWindow = new EditorWindow(IoUtils.Tcl.InstancesPath, true);
+        //    editorWindow.Show();
+        //    this.Cursor = null;
+        //}
 
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -154,7 +154,7 @@ namespace TCLauncher.MVVM.View
                 {
                     App.DbgHttpServer = new SimpleHttpServer(SendResponse, true, dialog.ResponseText);
                     App.DbgHttpServer.Run();
-                    hostBtn.Content = Languages.debug_server_stop_text;
+                    //hostBtn.Content = Languages.debug_server_stop_text;
                     Process.Start(dialog.ResponseText);
                 }
                 catch (Exception exception)
@@ -167,7 +167,7 @@ namespace TCLauncher.MVVM.View
             {
                 App.DbgHttpServer.Stop();
                 App.DbgHttpServer = null;
-                hostBtn.Content = Languages.debug_server_start_text;
+                //hostBtn.Content = Languages.debug_server_start_text;
             }
         }
 
