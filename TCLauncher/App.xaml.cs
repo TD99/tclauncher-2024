@@ -20,7 +20,7 @@ using static System.String;
 using static TCLauncher.Core.MessageBoxUtils;
 using System.Globalization;
 using System.Reflection;
-using TCLauncher.Installer;
+using TCLauncher.Setup;
 
 namespace TCLauncher
 {

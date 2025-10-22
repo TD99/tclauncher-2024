@@ -2,7 +2,7 @@
 using System.Windows;
 using static TCLauncher.Core.InternetUtils;
 
-namespace TCLauncher.Installer.Steps
+namespace TCLauncher.Setup.Steps
 {
     public partial class StepDone
     {

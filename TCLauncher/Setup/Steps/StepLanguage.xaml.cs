@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using TCLauncher.Properties;
 
-namespace TCLauncher.Installer.Steps
+namespace TCLauncher.Setup.Steps
 {
     public partial class StepLanguage
     {

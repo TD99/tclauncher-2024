@@ -164,16 +164,16 @@
     <Compile Include="Core\LoopStream.cs" />
     <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\XamlUtils.cs" />
-    <Compile Include="Installer\Steps\StepDone.xaml.cs">
+    <Compile Include="Setup\Steps\StepDone.xaml.cs">
       <DependentUpon>StepDone.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Installer\Steps\StepLanguage.xaml.cs">
+    <Compile Include="Setup\Steps\StepLanguage.xaml.cs">
       <DependentUpon>StepLanguage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Installer\Steps\StepPath.xaml.cs">
+    <Compile Include="Setup\Steps\StepPath.xaml.cs">
       <DependentUpon>StepPath.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Installer\Steps\StepWelcome.xaml.cs">
+    <Compile Include="Setup\Steps\StepWelcome.xaml.cs">
       <DependentUpon>StepWelcome.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DebugObject.cs" />
@@ -223,28 +223,25 @@
     <Compile Include="MVVM\Windows\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Windows\EditorWindow.xaml.cs">
-      <DependentUpon>EditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MVVM\Converters\DeprecatedInverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="MVVM\ViewModel\StatusViewModel.cs" />
     <Compile Include="MVVM\View\StatusView.xaml.cs">
       <DependentUpon>StatusView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Installer\Steps\StepDone.xaml">
+    <Page Include="Setup\Steps\StepDone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Installer\Steps\StepLanguage.xaml">
+    <Page Include="Setup\Steps\StepLanguage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Installer\Steps\StepPath.xaml">
+    <Page Include="Setup\Steps\StepPath.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Installer\Steps\StepWelcome.xaml">
+    <Page Include="Setup\Steps\StepWelcome.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -280,11 +277,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\Windows\EditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Installer\InstallerWelcomeWindow.xaml">
+    <Page Include="Setup\InstallerWelcomeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -304,7 +297,7 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
     <Compile Include="Core\SystemInfoUtils.cs" />
-    <Compile Include="Installer\InstallerWelcomeWindow.xaml.cs">
+    <Compile Include="Setup\InstallerWelcomeWindow.xaml.cs">
       <DependentUpon>InstallerWelcomeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Windows\MainWindow.xaml.cs">
@@ -346,6 +339,10 @@
     <Page Include="Theme\ButtonComboBoxTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Theme\ModernCheckBoxTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Theme\ModernComboBoxTheme.xaml">
       <SubType>Designer</SubType>
@@ -533,157 +530,13 @@
     <Resource Include="tcl_instance_icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <None Include="Resources\load0.wmv" />
-    <None Include="Resources\load0.wav" />
     <Resource Include="Assets\Images\steve.png" />
     <Resource Include="Assets\Images\escapebutton.png" />
     <Resource Include="Assets\Images\harddrive.png" />
     <Resource Include="Assets\Images\logo_installer.png" />
-    <Content Include="Plugins\Monaco\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\browser\ui\codicons\codicon\codicon.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.de.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.es.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.fr.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.it.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.ja.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.ko.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.ru.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.zh-cn.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\common\worker\simpleWorker.nls.zh-tw.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\base\worker\workerMain.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\bat\bat.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\css\css.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\html\html.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\ini\ini.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\javascript\javascript.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\lua\lua.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\markdown\markdown.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\powershell\powershell.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\python\python.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\shell\shell.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\sql\sql.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\typescript\typescript.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\xml\xml.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\basic-languages\yaml\yaml.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.de.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.es.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.fr.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.it.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.ja.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.ko.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.ru.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.zh-cn.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\editor\editor.main.nls.zh-tw.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\css\cssMode.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\css\cssWorker.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\html\htmlMode.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\html\htmlWorker.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\json\jsonMode.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\json\jsonWorker.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\typescript\tsMode.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\language\typescript\tsWorker.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Plugins\Monaco\min\vs\loader.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\Images\startbg.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

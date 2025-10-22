@@ -5,7 +5,7 @@ using TCLauncher.Core;
 using TCLauncher.Properties;
 using static TCLauncher.Properties.Settings;
 
-namespace TCLauncher.Installer.Steps
+namespace TCLauncher.Setup.Steps
 {
     public partial class StepPath
     {

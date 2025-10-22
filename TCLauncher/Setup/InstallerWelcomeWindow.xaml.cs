@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using TCLauncher.Properties;
 
-namespace TCLauncher.Installer
+namespace TCLauncher.Setup
 {   public partial class InstallerWelcomeWindow
     {
         private readonly Dictionary<int, UserControl> _steps = new Dictionary<int, UserControl>

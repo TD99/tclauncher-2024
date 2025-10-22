@@ -3,7 +3,7 @@ using System.Windows;
 using TCLauncher.Core;
 using TCLauncher.Properties;
 
-namespace TCLauncher.Installer.Steps
+namespace TCLauncher.Setup.Steps
 {
     public partial class StepWelcome
     {
