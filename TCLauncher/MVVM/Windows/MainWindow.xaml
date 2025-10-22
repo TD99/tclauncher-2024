@@ -15,14 +15,14 @@
     Height="600"
     MinWidth="915"
     MinHeight="600"
+    MaxWidth="1200"
+    MaxHeight="800"
     Activated="MainWindow_OnActivated"
     Background="#737c88"
     Deactivated="MainWindow_OnDeactivated"
     Foreground="White"
     Icon="/Assets/Images/logo.png"
-    KeyDown="MainWindow_OnKeyDown"
     Loaded="Window_Loaded"
-    SizeChanged="MainWindow_OnSizeChanged"
     StateChanged="MainWindow_OnStateChanged"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -75,7 +75,6 @@
             VerticalAlignment="Stretch"
             Background="#1d2633"
             MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown"
-            MouseLeftButtonUp="TopDrag_OnMouseLeftButtonUp"
             Visibility="Collapsed">
             <StackPanel
                 HorizontalAlignment="Center"
@@ -131,8 +130,7 @@
                     Grid.ColumnSpan="4"
                     Panel.ZIndex="-1"
                     Background="Transparent"
-                    MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown"
-                    MouseLeftButtonUp="TopDrag_OnMouseLeftButtonUp">
+                    MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown">
                     <Border.ContextMenu>
                         <ContextMenu
                             Margin="0"
@@ -140,7 +138,6 @@
                             Placement="MousePoint"
                             VerticalOffset="0">
                             <MenuItem Click="minimizeBtn_Click" Header="{x:Static p:Languages.minimize_menu_item_text}" />
-                            <MenuItem Click="maximizeBtn_Click" Header="{x:Static p:Languages.maximize_menu_item_text}" />
                             <MenuItem
                                 Click="closeBtn_Click"
                                 Header="{x:Static p:Languages.close_menu_item_text}"
@@ -264,50 +261,97 @@
                         VerticalAlignment="Stretch"
                         Orientation="Horizontal">
 
-                        <ComboBox
-                            x:Name="AccountComboBox"
-                            MinWidth="140"
+                        <Button
+                            x:Name="AccountListButton"
                             Padding="0"
                             Background="Transparent"
-                            SelectionChanged="AccountComboBox_OnSelectionChanged"
-                            Style="{StaticResource ModernComboBox}">
-                            <ComboBoxItem
-                                x:Name="AccountDefaultLabel"
-                                IsSelected="True"
-                                Visibility="Collapsed">
-                                <ComboBoxItem.Content>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                            Click="AccountListButton_OnClick">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource ModernButtonLight}" TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:AccountListViewModel}}" Value="True">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border
+                                                            x:Name="border"
+                                                            Margin="{TemplateBinding Margin}"
+                                                            Padding="{TemplateBinding Padding}"
+                                                            Background="{TemplateBinding Background}">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect
+                                                                    Color="#B2B9CC"
+                                                                    BlurRadius="20"
+                                                                    ShadowDepth="0"
+                                                                    Opacity="0.9" />
+                                                            </Border.Effect>
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
 
-                                        <!--  Fallback  -->
-                                        <Image
-                                            Grid.Column="0"
-                                            Width="24"
-                                            Height="24"
-                                            Margin="0,0,10,0"
-                                            Panel.ZIndex="-1"
-                                            Source="/Assets/Images/steve.png" />
-                                        <Image
-                                            x:Name="AccountManagerBtnPicture"
-                                            Grid.Column="0"
-                                            Width="24"
-                                            Height="24"
-                                            Margin="0,0,10,0" />
-                                        <TextBlock
-                                            x:Name="AccountManagerBtnName"
-                                            Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Text="{x:Static p:Languages.not_logged_text}" />
-                                    </Grid>
-                                </ComboBoxItem.Content>
-                            </ComboBoxItem>
-                            <ComboBoxItem Content="{x:Static p:Languages.label_login_logout}" Tag="LoginLogoutBtn" />
-                            <ComboBoxItem Content="{x:Static p:Languages.label_account_list}" Tag="AccountListBtn" />
-                            <!--<ComboBoxItem Content="{x:Static p:Languages.label_account_options}" Tag="AccountOptionsBtn" />-->
-                        </ComboBox>
+                                                        <ControlTemplate.Triggers>
+                                                            <!-- Hover glow -->
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="border" Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            Color="#66B2B9CC"
+                                                                            BlurRadius="20"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.9" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+
+                                                            <!-- Pressed state (optional) -->
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter TargetName="border" Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            Color="#AAB2B9CC"
+                                                                            BlurRadius="20"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.9" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Fallback  -->
+                                    <Image
+                                        Grid.Column="0"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,10,0"
+                                        Panel.ZIndex="-1"
+                                        Source="/Assets/Images/steve.png" />
+                                    <Image
+                                        x:Name="AccountManagerBtnPicture"
+                                        Grid.Column="0"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,10,0" />
+                                    <TextBlock
+                                        x:Name="AccountManagerBtnName"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Text="{x:Static p:Languages.not_logged_text}" />
+                                </Grid>
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
                     <Border
                         x:Name="ButtonWindowControlsSpacer"
@@ -350,19 +394,6 @@
                         </Canvas>
                     </Viewbox>
 
-                </Button>
-                <Button
-                    x:Name="maximizeBtn"
-                    Height="34"
-                    Click="maximizeBtn_Click"
-                    Style="{StaticResource WindowControlButton}">
-                    <Button.Content>
-                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Canvas Width="24" Height="24">
-                                <Path Data="M17,2 L7,2 A5,5,0,0,0,2,7 L2,17 A5,5,0,0,0,7,22 L17,22 A5,5,0,0,0,22 17 L22 7 A5 5 0 0 0 17 2 Z M20 17 A3 3 0 0 1 17 20 L7 20 A3 3 0 0 1 4 17 L4 7 A3 3 0 0 1 7 4 L17 4 A3 3 0 0 1 20 7 Z" Fill="#FFFFFF" />
-                            </Canvas>
-                        </Viewbox>
-                    </Button.Content>
                 </Button>
                 <Button
                     x:Name="closeBtn"

@@ -114,38 +114,10 @@ namespace TCLauncher.MVVM.Windows
             WindowState = WindowState.Minimized;
         }
 
-        private void maximizeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Maximized)
-            {
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this.WindowState = WindowState.Maximized;
-            }
-        }
 
         private void TopDrag_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
-            {
-                this.WindowState = (this.WindowState == WindowState.Maximized)
-                    ? WindowState.Normal
-                    : WindowState.Maximized;
-            }
-            else
-            {
-                this.DragMove();
-            }
-        }
-
-        private void TopDrag_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-            {
-                this.WindowState = (this.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
-            }
+            this.DragMove();
         }
 
 
@@ -247,14 +219,6 @@ namespace TCLauncher.MVVM.Windows
             this.FontFamily = new FontFamily("Comic Sans MS");
         }
 
-        private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.F11)
-                this.WindowState = (this.WindowState == WindowState.Maximized)
-                    ? WindowState.Normal
-                    : WindowState.Maximized;
-        }
-
         private void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)
         {
             vm.AccountListViewCommand.Execute(null);
@@ -316,49 +280,9 @@ namespace TCLauncher.MVVM.Windows
             Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
         }
 
-        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
-
-        private void AccountComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (((ComboBoxItem)AccountComboBox.SelectedItem).Tag)
-            {
-                case "AccountListBtn":
-                    AccountListBtn_OnClick();
-                    break;
-                case "AccountOptionsBtn":
-                    AccountOptionsBtn_OnClick();
-                    break;
-                case "LoginLogoutBtn":
-                    LoginLogoutBtn_OnClick();
-                    break;
-            }
-
-            AccountComboBox.SelectedItem = AccountDefaultLabel;
-        }
-
-        private void AccountListBtn_OnClick()
+        private void AccountListButton_OnClick(object sender, RoutedEventArgs e)
         {
             vm.AccountListViewCommand.Execute(null);
-        }
-
-        private void AccountOptionsBtn_OnClick()
-        {
-            vm.AccountOptionsViewCommand.Execute(null);
-        }
-
-        private void LoginLogoutBtn_OnClick()
-        {
-            if (App.Session == null)
-            {
-                vm.AccountListViewCommand.Execute(null);
-            }
-            else
-            {
-                App.MainWin.SetDisplayAccount(null);
-                App.Session = null;
-            }
         }
     }
 }

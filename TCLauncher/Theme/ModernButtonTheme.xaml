@@ -27,4 +27,49 @@
             </Setter>
         </Style.Setters>
     </Style>
+
+    <Style x:Key="ModernButtonLight" TargetType="{x:Type Button}" BasedOn="{StaticResource ModernButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                    x:Name="border"
+                    Margin="{TemplateBinding Margin}"
+                    Padding="{TemplateBinding Padding}"
+                    Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Hover glow -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                    Color="#66B2B9CC"
+                                    BlurRadius="20"
+                                    ShadowDepth="0"
+                                    Opacity="0.9" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <!-- Pressed state (optional) -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                    Color="#AAB2B9CC"
+                                    BlurRadius="20"
+                                    ShadowDepth="0"
+                                    Opacity="0.9" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
