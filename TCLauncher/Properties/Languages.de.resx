@@ -133,10 +133,10 @@
     <value>Spiel erstellen</value>
   </data>
   <data name="action_export_game" xml:space="preserve">
-    <value>Spiel exportieren</value>
+    <value>Paket erstellen</value>
   </data>
   <data name="action_import_game" xml:space="preserve">
-    <value>Spiel importieren</value>
+    <value>Paket importieren</value>
   </data>
   <data name="action_progress_title_text" xml:space="preserve">
     <value>Aktion in Bearbeitung ...</value>
@@ -151,7 +151,7 @@
     <value>Anwenden</value>
   </data>
   <data name="auto_configuration_button_text" xml:space="preserve">
-    <value>Neu installieren</value>
+    <value>Konfiguration aktualisieren</value>
   </data>
   <data name="auto_detect_text" xml:space="preserve">
     <value>Automatische Erkennung (empfohlen)</value>
@@ -788,5 +788,8 @@
   </data>
   <data name="tclauncher" xml:space="preserve">
     <value>TCLauncher</value>
+  </data>
+  <data name="use_pixel_font_everywhere" xml:space="preserve">
+    <value>Überall Pixel-Schriftarten verwenden</value>
   </data>
 </root>

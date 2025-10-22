@@ -133,10 +133,10 @@
     <value>Create Game</value>
   </data>
   <data name="action_export_game" xml:space="preserve">
-    <value>Export Game</value>
+    <value>Create Package</value>
   </data>
   <data name="action_import_game" xml:space="preserve">
-    <value>Import Game</value>
+    <value>Import Package</value>
   </data>
   <data name="action_progress_title_text" xml:space="preserve">
     <value>Action in Progress ...</value>
@@ -151,7 +151,7 @@
     <value>Apply</value>
   </data>
   <data name="auto_configuration_button_text" xml:space="preserve">
-    <value>Reinstall</value>
+    <value>Update configuration</value>
   </data>
   <data name="auto_detect_text" xml:space="preserve">
     <value>Auto Detect (recommended)</value>
