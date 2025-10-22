@@ -30,6 +30,7 @@ namespace TCLauncher.MVVM.View
         private ObservableCollection<Applet> Applets { get; set; }
         private readonly byte _startupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
         private bool _isServerListLoading;
+        private bool _isAppletLoaderVisible = false;
 
         public HomeView()
         {
@@ -70,7 +71,7 @@ namespace TCLauncher.MVVM.View
             {
                 var menuList = args.MenuItems;
 
-                var itemNamesToRemove = new string[] { "saveAs", "print", "webCapture", "share" };
+                var itemNamesToRemove = new string[] { "saveAs", "print", "webCapture", "share", "moreTools" };
                 var itemsToRemove = menuList.Where(coreWebView2ContextMenuItem => itemNamesToRemove.Contains(coreWebView2ContextMenuItem.Name)).ToList();
 
                 foreach (var coreWebView2ContextMenuItem in itemsToRemove)
@@ -286,6 +287,7 @@ namespace TCLauncher.MVVM.View
                 homeOverview.Visibility = Visibility.Collapsed;
                 mainApplets.Visibility = Visibility.Collapsed;
                 appletView.Visibility = Visibility.Visible;
+                _isAppletLoaderVisible = false;
             }
             else
             {
@@ -293,7 +295,16 @@ namespace TCLauncher.MVVM.View
                 mainApplets.Visibility = Visibility.Visible;
                 appletView.Visibility = Visibility.Collapsed;
 
-                webView.Source = new Uri("https://tcraft.link/tclauncher/api/plugins/applet-loader/");
+                try
+                {
+                    webView.Source = new Uri("https://tcraft.link/tclauncher/api/plugins/applet-loader/");
+                    _isAppletLoaderVisible = true;
+                }
+                catch
+                {
+                    _isAppletLoaderVisible = false;
+                    // ignore invalid uri or assignment failures
+                }
             }
         }
 
@@ -428,6 +439,49 @@ namespace TCLauncher.MVVM.View
             catch
             {
                 // ignored
+            }
+        }
+
+        private async void WebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            // If the applet-loader was set previously and we're navigating away from it,
+            // attempt to remove/normalize that entry from the history by running a small
+            // script that calls history.replaceState on the current entry.
+            try
+            {
+                if (!_isAppletLoaderVisible) return;
+
+                const string loaderUrl = "https://tcraft.link/tclauncher/api/plugins/applet-loader/";
+
+                // e.Uri can be null for certain navigations; guard against that.
+                var target = e?.Uri ?? string.Empty;
+                if (!string.Equals(target, loaderUrl, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Replace the current history entry with itself to reduce chance of leaving a loader-only entry.
+                    // This won't guarantee removal of all historical entries across WebView2 internals,
+                    // but it helps prevent a distinct loader entry in the page history stack.
+                    try
+                    {
+                        if (webView?.CoreWebView2 != null)
+                        {
+                            // Use replaceState to normalize the current entry. Run it asynchronously and ignore the result.
+                            await webView.CoreWebView2.ExecuteScriptAsync("try{ history.replaceState(null, '', location.href); }catch(e){}");
+                        }
+                    }
+                    catch
+                    {
+                        // ignore script execution errors
+                    }
+                    finally
+                    {
+                        _isAppletLoaderVisible = false;
+                    }
+                }
+            }
+            catch
+            {
+                // Keep silent on any unexpected errors in the handler.
+                _isAppletLoaderVisible = false;
             }
         }
     }

@@ -130,6 +130,7 @@
             <wv2:WebView2
                 Name="webView"
                 Grid.Row="1"
+                NavigationStarting="WebView_OnNavigationStarting"
                 Margin="0,20"
                 Source="https://tcraft.link/tclauncher/api/plugins/applet-loader/" />
         </Grid>
