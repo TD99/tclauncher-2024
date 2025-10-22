@@ -92,6 +92,8 @@
                     FontSize="35"
                     Foreground="#b2b9cc" />
             </StackPanel>
+            <Image Source="/Assets/Images/startbg.png"
+                   Stretch="UniformToFill" />
             <!--<MediaElement
                 x:Name="BgMediaElement"
                 LoadedBehavior="Manual"

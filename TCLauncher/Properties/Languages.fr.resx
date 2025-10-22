@@ -163,7 +163,7 @@
     <value>Les fichiers binaires ne sont pas pris en charge.</value>
   </data>
   <data name="busy_interface_loading_text" xml:space="preserve">
-    <value>Chargement de l’interface ...</value>
+    <value>Veuillez patienter...</value>
   </data>
   <data name="button_abort" xml:space="preserve">
     <value>Abandonner</value>

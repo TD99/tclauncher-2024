@@ -83,7 +83,7 @@ namespace TCLauncher.MVVM.Windows
             {
                 From = 0,
                 To = 100,
-                Duration = new Duration(TimeSpan.FromSeconds(1)),
+                Duration = new Duration(TimeSpan.FromSeconds(1.5)),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
             };
             

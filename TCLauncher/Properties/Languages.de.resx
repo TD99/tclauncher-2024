@@ -163,7 +163,7 @@
     <value>Binärdateien werden nicht unterstützt.</value>
   </data>
   <data name="busy_interface_loading_text" xml:space="preserve">
-    <value>Schnittstelle wird geladen ...</value>
+    <value>Bitte warten ...</value>
   </data>
   <data name="button_abort" xml:space="preserve">
     <value>Abbrechen</value>
