@@ -278,10 +278,17 @@ namespace TCLauncher.MVVM.View
             Application.Current.Shutdown();
         }
 
-        private void CheckBoxUsePixelFontEverywhere_OnChecked(object sender, RoutedEventArgs e)
+        private void CheckBoxUsePixelFontEverywhere_OnCheckStateChanged(object sender, RoutedEventArgs e)
         {
-            Settings.Default.UsePixelFontEverywhere = CheckBoxUsePixelFontEverywhere.IsChecked ?? false;
+            if (!(sender is CheckBox checkBox)) return;
+
+            var isChecked = checkBox.IsChecked ?? false;
+
+            if (Settings.Default.UsePixelFontEverywhere == isChecked) return;
+
+            Settings.Default.UsePixelFontEverywhere = checkBox.IsChecked ?? false;
             Settings.Default.Save();
+            App.HotReload();
         }
     }
 }
