@@ -1960,6 +1960,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TCLauncher.
+        /// </summary>
+        public static string tclauncher {
+            get {
+                return ResourceManager.GetString("tclauncher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TCLauncher Security.
         /// </summary>
         public static string tclauncher_security {

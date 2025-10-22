@@ -88,9 +88,9 @@
                 <Label
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"
-                    Content="{x:Static p:Languages.starting_text}"
+                    Content="{x:Static p:Languages.tclauncher}"
                     FontFamily="{StaticResource PixelifySans}"
-                    FontSize="25"
+                    FontSize="35"
                     Foreground="#b2b9cc" />
             </StackPanel>
             <!--<MediaElement

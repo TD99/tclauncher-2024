@@ -786,4 +786,7 @@
   <data name="re-setup_text" xml:space="preserve">
     <value>Setup-Bildschirm anzeigen</value>
   </data>
+  <data name="tclauncher" xml:space="preserve">
+    <value>TCLauncher</value>
+  </data>
 </root>
