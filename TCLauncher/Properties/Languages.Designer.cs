@@ -2023,6 +2023,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Pixel Font everywhere.
+        /// </summary>
+        public static string use_pixel_font_everywhere {
+            get {
+                return ResourceManager.GetString("use_pixel_font_everywhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
         public static string username_text {

@@ -39,6 +39,11 @@ namespace TCLauncher.MVVM.Windows
 
             HandleFirstTime();
             ReloadNavPolicies();
+
+            if (Settings.Default.UsePixelFontEverywhere)
+            {
+                FontFamily = (FontFamily)FindResource("PixelifySans");
+            }
         }
 
         // TODO: CHECK IF FIRST TIME
@@ -211,12 +216,6 @@ namespace TCLauncher.MVVM.Windows
 
             var animation = new DoubleAnimation(currentAngle, currentAngle + angle, TimeSpan.FromMilliseconds(350));
             rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
-        }
-
-        private void loadingImg_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount != 2) return; // (っ °Д °;)っ
-            this.FontFamily = new FontFamily("Comic Sans MS");
         }
 
         private void AccountManagerBtn_OnClick(object sender, RoutedEventArgs e)

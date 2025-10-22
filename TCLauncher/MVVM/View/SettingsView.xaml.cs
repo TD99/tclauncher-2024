@@ -68,6 +68,8 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
+            CheckBoxUsePixelFontEverywhere.IsChecked = Settings.Default.UsePixelFontEverywhere;
+
             CopyrightCompilationYear.Text = AppUtils.GetCompilationDate().Year.ToString();
         }
 
@@ -274,6 +276,12 @@ namespace TCLauncher.MVVM.View
             var appPath = Process.GetCurrentProcess().MainModule.FileName;
             Process.Start(appPath, "--installer-part-welcome");
             Application.Current.Shutdown();
+        }
+
+        private void CheckBoxUsePixelFontEverywhere_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.UsePixelFontEverywhere = CheckBoxUsePixelFontEverywhere.IsChecked ?? false;
+            Settings.Default.Save();
         }
     }
 }

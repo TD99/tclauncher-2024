@@ -83,7 +83,6 @@
                 <Image
                     x:Name="loadingImg"
                     Width="160"
-                    MouseDown="loadingImg_MouseDown"
                     Source="/Assets/Images/logo.png" />
                 <Label
                     Margin="0,15,0,0"

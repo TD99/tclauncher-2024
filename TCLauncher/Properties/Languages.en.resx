@@ -789,4 +789,7 @@
   <data name="tclauncher" xml:space="preserve">
     <value>TCLauncher</value>
   </data>
+  <data name="use_pixel_font_everywhere" xml:space="preserve">
+    <value>Use Pixel Font everywhere</value>
+  </data>
 </root>
