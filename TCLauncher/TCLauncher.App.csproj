@@ -159,10 +159,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Core\AnimationUtils.cs" />
     <Compile Include="Core\InstanceAssetsUtils.cs" />
-    <Compile Include="Core\LoopStream.cs" />
-    <Compile Include="Core\MusicPlayer.cs" />
     <Compile Include="Core\XamlUtils.cs" />
     <Compile Include="Setup\Steps\StepDone.xaml.cs">
       <DependentUpon>StepDone.xaml</DependentUpon>
@@ -183,8 +180,7 @@
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\AssetFragment.cs" />
     <Compile Include="Models\SimpleHTTPServer.cs" />
-    <Compile Include="MVVM\Animations\SlideInOutAnimation.cs" />
-    <Compile Include="MVVM\Animations\SlideRightIn.cs" />
+    <Compile Include="MVVM\Animations\SlideInAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
     </Compile>

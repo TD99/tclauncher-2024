@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <b:Interaction.Behaviors>
-        <animations:SlideInOutAnimation />
+        <animations:SlideInAnimation />
     </b:Interaction.Behaviors>
 
     <StackPanel>

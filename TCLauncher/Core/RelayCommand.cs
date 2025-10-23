@@ -27,8 +27,8 @@ namespace TCLauncher.Core
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            _execute = execute;
+            _canExecute = canExecute;
         }
 
         /// <summary>

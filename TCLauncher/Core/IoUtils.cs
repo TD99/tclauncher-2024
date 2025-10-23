@@ -32,7 +32,7 @@ namespace TCLauncher.Core
                     int character;
                     while ((character = fileStream.ReadByte()) != -1)
                     {
-                        if (character > 0 && character < 8 || character > 13 && character < 32)
+                        if ((character > 0 && character < 8) || (character > 13 && character < 32))
                         {
                             return true;
                         }
@@ -41,37 +41,17 @@ namespace TCLauncher.Core
                 return false;
             }
 
-            public static bool CompareImages(string urlOrPath1, string urlOrPath2)
-            {
-                var image1 = GetImageBytes(urlOrPath1);
-                var image2 = GetImageBytes(urlOrPath2);
-
-                if (image1 == null || image2 == null)
-                {
-                    return false;
-                }
-
-                return image1.SequenceEqual(image2);
-            }
-
-            public static byte[] GetImageBytes(string urlOrPath)
-            {
-                if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
-                    return File.Exists(urlOrPath) ? File.ReadAllBytes(urlOrPath) : null;
-
-                using (var webClient = new WebClient())
-                {
-                    try
-                    {
-                        return webClient.DownloadData(urlOrPath);
-                    }
-                    catch (WebException)
-                    {
-                        return null;
-                    }
-                }
-            }
-
+            /// <summary>
+            /// Determines whether a file exists at the specified local file path or remote URL.
+            /// </summary>
+            /// <remarks>For local file paths, this method checks for the existence of the file on the
+            /// file system. For URLs, it attempts to access the resource using a web request; network errors or
+            /// inaccessible resources will result in a return value of false. This method may block while performing
+            /// network operations when a URL is provided.</remarks>
+            /// <param name="urlOrPath">The local file system path or absolute URL to check for file existence. If a URL is provided, it must be
+            /// well-formed and absolute.</param>
+            /// <returns>true if the file exists at the specified path or the resource is accessible at the given URL; otherwise,
+            /// false.</returns>
             public static bool DoesFileExistByUrlOrPath(string urlOrPath)
             {
                 if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
@@ -200,23 +180,6 @@ namespace TCLauncher.Core
                 if (!Directory.Exists(UdataPath)) Directory.CreateDirectory(UdataPath);
                 if (!Directory.Exists(DefaultPath)) Directory.CreateDirectory(DefaultPath);
                 if (!Directory.Exists(SharedPath)) Directory.CreateDirectory(SharedPath);
-            }
-
-            /// <summary>
-            /// Generates a temporary file name with an optional file type.
-            /// </summary>
-            /// <param name="fileType">The file type (e.g., ".txt"). Optional.</param>
-            /// <returns>A string representing the full path of the temporary file.</returns>
-            public static string GetTempFileName(string fileType = null)
-            {
-                string fileName = Path.GetRandomFileName();
-
-                if (!string.IsNullOrEmpty(fileType))
-                {
-                    fileName = Path.ChangeExtension(fileName, fileType);
-                }
-
-                return Path.Combine(CachePath, fileName);
             }
 
             /// <summary>

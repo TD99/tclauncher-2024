@@ -6,7 +6,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace TCLauncher.MVVM.Animations
 {
-    public class SlideRightIn : Behavior<FrameworkElement>
+    public class SlideInAnimation : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {
@@ -24,21 +24,16 @@ namespace TCLauncher.MVVM.Animations
         {
             var frameworkElement = this.AssociatedObject as FrameworkElement;
             if (frameworkElement == null) return;
-
-            // Set the initial position off-screen to the right
-            frameworkElement.RenderTransform = new TranslateTransform { X = SystemParameters.PrimaryScreenWidth };
-
+            frameworkElement.RenderTransform = new TranslateTransform();
             var doubleAnimation = new DoubleAnimation
             {
                 Duration = new Duration(TimeSpan.FromMilliseconds(400)),
-                From = SystemParameters.PrimaryScreenWidth,
-                To = 0, // End at the element's original position
+                From = frameworkElement.ActualHeight / 8, // Change from ActualWidth to ActualHeight
+                To = 0,
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
             };
-
-            Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath("RenderTransform.(TranslateTransform.X)"));
+            Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath("RenderTransform.(TranslateTransform.Y)")); // Change from X to Y
             Storyboard.SetTarget(doubleAnimation, frameworkElement);
-
             var storyboard = new Storyboard();
             storyboard.Children.Add(doubleAnimation);
             storyboard.Begin();

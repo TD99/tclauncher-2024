@@ -16,7 +16,7 @@
     </UserControl.DataContext>
 
     <b:Interaction.Behaviors>
-        <animations:SlideInOutAnimation />
+        <animations:SlideInAnimation />
     </b:Interaction.Behaviors>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">

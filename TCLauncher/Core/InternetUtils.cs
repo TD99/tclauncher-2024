@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Windows;
 using TCLauncher.Models;
@@ -11,24 +11,6 @@ namespace TCLauncher.Core
 {
     public static class InternetUtils
     {
-        public static long PingPage(string url)
-        {
-            try
-            {
-                var pingSender = new Ping();
-                var reply = pingSender.Send(RemoveProtocol(url));
-
-                if (reply != null && reply.Status == IPStatus.Success)
-                    return reply.RoundtripTime;
-            }
-            catch
-            {
-                // TODO: Don't ignore
-            }
-
-            return -1;
-        }
-
         public static bool ReachPage(string url)
         {
             string[] protocols = { "http://", "https://" };
@@ -89,15 +71,7 @@ namespace TCLauncher.Core
                 protocols = new[] { "http://", "https://" };
             }
 
-            foreach (var i in protocols)
-            {
-                if (url.StartsWith(i))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return protocols.Any(url.StartsWith);
         }
 
         public static McServerAddress GetMcServerAddress(string ipPortPair)

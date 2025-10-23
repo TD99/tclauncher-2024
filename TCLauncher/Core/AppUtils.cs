@@ -437,7 +437,5 @@ namespace TCLauncher.Core
 
             return i;
         }
-
-
     }
 }

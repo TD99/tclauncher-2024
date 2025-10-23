@@ -80,10 +80,7 @@ namespace TCLauncher.Core
                 File.Create(downloadedAssetsPath).Close();
             }
 
-            foreach (var downloadFile in downloadFiles)
-            {
-                assetsHistory.Add(downloadFile);
-            }
+            assetsHistory.AddRange(downloadFiles);
 
             var assetsHistoryJsonNew = JsonConvert.SerializeObject(assetsHistory);
             File.WriteAllText(downloadedAssetsPath, assetsHistoryJsonNew);

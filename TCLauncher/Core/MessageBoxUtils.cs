@@ -106,7 +106,7 @@ namespace TCLauncher.Core
                     Owner = App.MainWin
                 };
                 dialog.Show();
-                if (!await dialog.Result) return default(T);
+                if (!await dialog.Result) return default;
                 var input = dialog.ResponseText;
                 try
                 {
@@ -116,7 +116,7 @@ namespace TCLauncher.Core
                 {
                     if (isOptional && string.IsNullOrEmpty(input))
                     {
-                        return default(T);
+                        return default;
                     }
                     MessageBox.Show(Languages.invalid_json_input_message, Languages.error, MessageBoxButton.OK);
                 }

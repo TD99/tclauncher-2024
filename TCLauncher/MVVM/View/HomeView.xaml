@@ -16,7 +16,7 @@
     mc:Ignorable="d">
 
     <b:Interaction.Behaviors>
-        <animations:SlideInOutAnimation />
+        <animations:SlideInAnimation />
     </b:Interaction.Behaviors>
 
     <Grid>
@@ -88,7 +88,9 @@
                                         <ImageBrush
                                             ImageSource="/Assets/Images/banner1.png"
                                             Opacity="0.4"
-                                            Stretch="UniformToFill" />
+                                            Stretch="UniformToFill"
+                                            AlignmentX="Center"
+                                            AlignmentY="Bottom" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
@@ -98,7 +100,9 @@
                                         <ImageBrush
                                             ImageSource="/Assets/Images/banner1.png"
                                             Opacity="0.5"
-                                            Stretch="UniformToFill" />
+                                            Stretch="UniformToFill"
+                                            AlignmentX="Center"
+                                            AlignmentY="Bottom" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
