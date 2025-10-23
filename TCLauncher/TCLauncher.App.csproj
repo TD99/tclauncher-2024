@@ -498,9 +498,6 @@
     <Resource Include="Assets\Images\banner1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Images\import.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\Images\nothumb.png" />
   </ItemGroup>
   <ItemGroup>
@@ -531,7 +528,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Images\steve.png" />
-    <Resource Include="Assets\Images\escapebutton.png" />
     <Resource Include="Assets\Images\harddrive.png" />
     <Resource Include="Assets\Images\logo_installer.png" />
   </ItemGroup>
