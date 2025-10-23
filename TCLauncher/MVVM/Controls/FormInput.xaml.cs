@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace TCLauncher.MVVM.Controls
 {
-    public partial class FormInput : UserControl
+    public partial class FormInput
     {
         public FormInput()
         {

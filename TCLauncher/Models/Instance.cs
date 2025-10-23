@@ -32,8 +32,6 @@ namespace TCLauncher.Models
         public string[] JVMArguments { get; set; }
         public bool Is_LocalSource { get; set; }
 
-        
-
         public Instance()
         {
         }

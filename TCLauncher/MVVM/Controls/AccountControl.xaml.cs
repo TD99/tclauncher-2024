@@ -23,7 +23,6 @@ namespace TCLauncher.MVVM.Controls
             Account = account;
             Username.Text = account.Profile?.Username ?? "";
             GamerTag.Text = account.Gamertag ?? "";
-            Identifier.Text = account.Identifier ?? "";
 
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
@@ -41,11 +40,9 @@ namespace TCLauncher.MVVM.Controls
             var avatarSrc = $"https://mc-heads.net/avatar/{uuid}";
             var avatarCacheFile = Path.Combine(IoUtils.Tcl.CachePath, $"avatar_{uuid}.png");
 
-            if (!File.Exists(avatarCacheFile))
-            {
-                var webClient = new WebClient();
-                webClient.DownloadFile(avatarSrc, avatarCacheFile);
-            }
+            if (File.Exists(avatarCacheFile)) return avatarCacheFile;
+            var webClient = new WebClient();
+            webClient.DownloadFile(avatarSrc, avatarCacheFile);
 
             return avatarCacheFile;
         }

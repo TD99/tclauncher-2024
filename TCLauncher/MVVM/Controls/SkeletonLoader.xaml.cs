@@ -45,7 +45,7 @@ namespace TCLauncher.MVVM.Controls
         public SkeletonLoader()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
         }
     }
 

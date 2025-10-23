@@ -35,10 +35,12 @@ namespace TCLauncher.MVVM.Windows
         {
             InitializeComponent();
             text = action;
-            taskbarInfo = new TaskbarItemInfo();
-            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
-            taskbarInfo.ProgressValue = 0.0;
-            this.TaskbarItemInfo = taskbarInfo;
+            taskbarInfo = new TaskbarItemInfo
+            {
+                ProgressState = TaskbarItemProgressState.Normal,
+                ProgressValue = 0.0
+            };
+            TaskbarItemInfo = taskbarInfo;
         }
     }
 }

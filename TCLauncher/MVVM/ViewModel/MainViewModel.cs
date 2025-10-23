@@ -9,14 +9,11 @@ namespace TCLauncher.MVVM.ViewModel
         public RelayCommand SettingsViewCommand { get; set; }
         public RelayCommand StatusViewCommand { get; set; }
         public RelayCommand AccountListViewCommand { get; set; }
-        public RelayCommand AccountOptionsViewCommand { get; set; }
 
         private HomeViewModel HomeViewModel { get; set; }
         private ServerListViewModel ServerListViewModel { get; set; }
         private SettingsViewModel SettingsViewModel { get; set; }
-        private StatusViewModel StatusViewModel { get; set; }
         private AccountListViewModel AccountListViewModel { get; set; }
-        private AccountOptionsViewModel AccountOptionsViewModel { get; set; }
 
 
         private object _currentView;
@@ -36,9 +33,7 @@ namespace TCLauncher.MVVM.ViewModel
             HomeViewModel = new HomeViewModel();
             ServerListViewModel = new ServerListViewModel();
             SettingsViewModel = new SettingsViewModel();
-            StatusViewModel = new StatusViewModel();
             AccountListViewModel = new AccountListViewModel();
-            AccountOptionsViewModel = new AccountOptionsViewModel();
 
             CurrentView = HomeViewModel;
 
@@ -54,17 +49,9 @@ namespace TCLauncher.MVVM.ViewModel
             {
                 CurrentView = SettingsViewModel;
             });
-            StatusViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = StatusViewModel;
-            });
             AccountListViewCommand = new RelayCommand(o =>
             {
                 CurrentView = AccountListViewModel;
-            });
-            AccountOptionsViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = AccountOptionsViewModel;
             });
         }
     }

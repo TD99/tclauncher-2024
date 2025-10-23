@@ -72,7 +72,7 @@ namespace TCLauncher.MVVM.View
             {
                 var menuList = args.MenuItems;
 
-                var itemNamesToRemove = new string[] { "saveAs", "print", "webCapture", "share", "moreTools" };
+                var itemNamesToRemove = new[] { "saveAs", "print", "webCapture", "share", "moreTools" };
                 var itemsToRemove = menuList.Where(coreWebView2ContextMenuItem => itemNamesToRemove.Contains(coreWebView2ContextMenuItem.Name)).ToList();
 
                 foreach (var coreWebView2ContextMenuItem in itemsToRemove)

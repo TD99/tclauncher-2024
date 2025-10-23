@@ -31,14 +31,8 @@
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:StatusViewModel}">
-                <view:StatusView />
-            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:AccountListViewModel}">
                 <view:AccountListView />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:AccountOptionsViewModel}">
-                <view:AccountOptionsView />
             </DataTemplate>
 
             <FontFamily x:Key="FaRegular">Assets/Fonts/#Font Awesome 6 Free Regular</FontFamily>

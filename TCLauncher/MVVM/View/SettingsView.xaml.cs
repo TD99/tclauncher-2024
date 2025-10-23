@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Newtonsoft.Json;
 using TCLauncher.Core;
-using TCLauncher.Models;
-using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.View
@@ -50,8 +46,6 @@ namespace TCLauncher.MVVM.View
                     break;
                 }
             }
-
-            //hostBtn.Content = App.DbgHttpServer == null ? Languages.debug_server_start_text : Languages.debug_server_stop_text;
 
             AppDataPath.Text = Settings.Default.VirtualAppDataPath;
 
@@ -110,14 +104,6 @@ namespace TCLauncher.MVVM.View
             AppUtils.HandleUpdates(true);
         }
 
-        //private void codeBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.Cursor = Cursors.Wait;
-        //    EditorWindow editorWindow = new EditorWindow(IoUtils.Tcl.InstancesPath, true);
-        //    editorWindow.Show();
-        //    this.Cursor = null;
-        //}
-
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
@@ -136,45 +122,6 @@ namespace TCLauncher.MVVM.View
 
             Settings.Default.StartBehaviour = value;
             Settings.Default.Save();
-        }
-
-        private async void HostBtn_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (App.DbgHttpServer == null)
-            {
-                var dialog = new CustomInputDialog(Languages.debug_server_url_prompt)
-                {
-                    Owner = App.MainWin,
-                    ResponseText = "http://localhost:4535/"
-                };
-
-                dialog.Show();
-
-                if (!await dialog.Result) return;
-                try
-                {
-                    App.DbgHttpServer = new SimpleHttpServer(SendResponse, true, dialog.ResponseText);
-                    App.DbgHttpServer.Run();
-                    //hostBtn.Content = Languages.debug_server_stop_text;
-                    Process.Start(dialog.ResponseText);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
-
-            }
-            else
-            {
-                App.DbgHttpServer.Stop();
-                App.DbgHttpServer = null;
-                //hostBtn.Content = Languages.debug_server_start_text;
-            }
-        }
-
-        private string SendResponse(HttpListenerRequest request)
-        {
-            return JsonConvert.SerializeObject(AppUtils.GetDebugObject().Result);
         }
 
         private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

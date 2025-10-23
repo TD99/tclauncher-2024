@@ -173,13 +173,11 @@
     <Compile Include="Setup\Steps\StepWelcome.xaml.cs">
       <DependentUpon>StepWelcome.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\DebugObject.cs" />
     <Compile Include="Models\DialogButtons.cs" />
     <Compile Include="Models\DialogButton.cs" />
     <Compile Include="Models\McServerAddress.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\AssetFragment.cs" />
-    <Compile Include="Models\SimpleHTTPServer.cs" />
     <Compile Include="MVVM\Animations\SlideInAnimation.cs" />
     <Compile Include="MVVM\Controls\AccountControl.xaml.cs">
       <DependentUpon>AccountControl.xaml</DependentUpon>
@@ -195,9 +193,7 @@
       <DependentUpon>SkeletonLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Controls\Spoiler.cs" />
-    <Compile Include="MVVM\Controls\StackedBarChart.cs" />
     <Compile Include="MVVM\Converters\GreaterThanZeroConverter.cs" />
-    <Compile Include="MVVM\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Models\StackedBarItem.cs" />
     <Compile Include="Core\IoUtils.cs" />
     <Compile Include="Core\MessageBoxUtils.cs" />
@@ -206,12 +202,8 @@
     <Compile Include="MVVM\Converters\ObjectTypeToBooleanConverter.cs" />
     <Compile Include="MVVM\Converters\RequiredFieldTextConverter.cs" />
     <Compile Include="MVVM\ViewModel\AccountListViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\AccountOptionsViewModel.cs" />
     <Compile Include="MVVM\View\AccountListView.xaml.cs">
       <DependentUpon>AccountListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVVM\View\AccountOptionsView.xaml.cs">
-      <DependentUpon>AccountOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Windows\CustomButtonDialog.xaml.cs">
       <DependentUpon>CustomButtonDialog.xaml</DependentUpon>
@@ -219,12 +211,7 @@
     <Compile Include="MVVM\Windows\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\Converters\DeprecatedInverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Models\Server.cs" />
-    <Compile Include="MVVM\ViewModel\StatusViewModel.cs" />
-    <Compile Include="MVVM\View\StatusView.xaml.cs">
-      <DependentUpon>StatusView.xaml</DependentUpon>
-    </Compile>
     <Page Include="Setup\Steps\StepDone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -250,10 +237,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\AccountListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVVM\View\AccountOptionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -292,7 +275,6 @@
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\AppUtils.cs" />
-    <Compile Include="Core\SystemInfoUtils.cs" />
     <Compile Include="Setup\InstallerWelcomeWindow.xaml.cs">
       <DependentUpon>InstallerWelcomeWindow.xaml</DependentUpon>
     </Compile>
@@ -313,10 +295,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\View\SettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVVM\View\StatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,7 +11,7 @@ namespace TCLauncher.MVVM.Controls
         public static readonly DependencyProperty SpoilerContentProperty = DependencyProperty.Register(
             nameof(SpoilerContent), typeof(object), typeof(Spoiler), new PropertyMetadata(default(object)));
 
-        private bool _isContentVisible = false;
+        private bool _isContentVisible;
         private readonly Button _button;
 
         public Spoiler()

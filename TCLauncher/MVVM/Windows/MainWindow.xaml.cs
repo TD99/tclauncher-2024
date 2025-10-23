@@ -13,7 +13,7 @@ namespace TCLauncher.MVVM.Windows
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private readonly MainViewModel vm;
         private readonly bool is_silent;
@@ -118,56 +118,6 @@ namespace TCLauncher.MVVM.Windows
             this.DragMove();
         }
 
-
-
-        //private void UpdateNetSpeeds()
-        //{
-        //    if (InternetUtils.ReachPage(remote_url))
-        //    {
-        //        connectionIndicator.Fill = Brushes.Green;
-        //        long ms = InternetUtils.PingPage("https://www.google.com");
-        //        connectionStatus.Text = (ms < 0) ? "Verbunden" : $"Verbunden ({ms} ms)";
-        //    }
-        //    else if (InternetUtils.ReachPage("google.com"))
-        //    {
-        //        connectionIndicator.Fill = Brushes.Yellow;
-        //        connectionStatus.Text = "Getrennt";
-        //    }
-        //    else
-        //    {
-        //        connectionIndicator.Fill = Brushes.Red;
-        //        connectionStatus.Text = "Kein Internet";
-        //    }
-        //}
-
-        //private void Window_StateChanged(object sender, System.EventArgs e)
-        //{
-        //    switch (this.WindowState)
-        //    {
-        //        case WindowState.Normal:
-        //            mainBorder.CornerRadius = new CornerRadius(20);
-        //            mainBorder.BorderThickness = new Thickness(2);
-        //            break;
-        //        case WindowState.Maximized:
-        //            FadeIn(0.2);
-        //            mainBorder.CornerRadius = new CornerRadius(0);
-        //            mainBorder.BorderThickness = new Thickness(0);
-        //            break;
-        //        case WindowState.Minimized:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-
-        //private async void connectionBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    connectionIndicator.Fill = Brushes.Gray;
-        //    connectionStatus.Text = "Bitte warten";
-        //    await Task.Delay(1000);
-        //    UpdateNetSpeeds();
-        //}
-
         public void navigateToHome()
         {
             //homeBtn.IsChecked = true;
@@ -238,17 +188,6 @@ namespace TCLauncher.MVVM.Windows
                 Topmost = false;
             }
         }
-
-        //private void BgMediaElement_OnMediaEnded(object sender, RoutedEventArgs e)
-        //{
-        //    ResetBgMedia();
-        //}
-
-        //private void ResetBgMedia()
-        //{
-        //    BgMediaElement.Position = TimeSpan.Zero;
-        //    BgMediaElement.Play();
-        //}
 
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {

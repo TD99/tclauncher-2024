@@ -193,54 +193,6 @@ namespace TCLauncher.Core
             return new MinecraftPath(GetInstanceDataPath(instanceGuid));
         }
 
-        /// <summary>
-        /// Asynchronously retrieves a DebugObject containing various application and system information.
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation. The task result contains a DebugObject with the current state of the application and system.
-        /// </returns>
-        public static async Task<DebugObject> GetDebugObject()
-        {
-            return new DebugObject
-            {
-                Launcher = App.Launcher,
-                PathRegistry = new[]
-                {
-                    RootPath,
-                    CachePath,
-                    DefaultPath,
-                    UdataPath,
-                    InstancesPath
-                },
-                Version = GetCurrentVersion(),
-                NewestVersion = await GetNewestVersionName(),
-                IsUpgradeable = await CheckForNewVersion(),
-                Args = App.AppArgs,
-                FriendlyName = App.FRIENDLY_NAME,
-                UriScheme = App.URI_SCHEME,
-                UriArgs = App.UriArgs,
-                IsSilent = App.is_silent,
-                KillOld = App.kill_old,
-                IsInternetAvailable = InternetUtils.ReachPage("https://www.google.com/"),
-                IsTcraftReacheable = InternetUtils.ReachPage("https://tcraft.link/tclauncher/api"),
-                TotalAdapterMemoryInGb = SystemInfoUtils.GetTotalAdapterMemoryInGb(),
-                TotalPhysicalMemoryInGb = SystemInfoUtils.GetTotalPhysicalMemoryInGb(),
-                DefaultConnectionLimit = ServicePointManager.DefaultConnectionLimit,
-                LoadedPlugins = new []
-                {
-                    "AppletLoader",
-                    "SimpleEdit",
-                    "server-tool",
-                    "version-checker"
-                },
-                Settings = GetAllSettings(),
-                UiLanguage = Languages.id,
-                Copyright = "Copyright \u00a9 T-Craft " + GetCompilationDate().Year,
-                UiVersion = string.Format(Languages.framework_version_text, RuntimeInformation.FrameworkDescription),
-                Environment = RuntimeInformation.OSDescription
-        };
-        }
-
         public static void CreateTemplateInstance()
         {
             var randGuid = Guid.NewGuid();

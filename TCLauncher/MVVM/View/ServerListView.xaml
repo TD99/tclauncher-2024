@@ -103,26 +103,6 @@
                                 FontSize="20"
                                 Foreground="White" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="20"
-                                Foreground="White"
-                                Text="{x:Static p:Languages.min_ram_label_text}" />
-                            <TextBlock
-                                x:Name="itemFocusRamMin"
-                                FontSize="20"
-                                Foreground="White" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="20"
-                                Foreground="White"
-                                Text="{x:Static p:Languages.max_ram_label_text}" />
-                            <TextBlock
-                                x:Name="itemFocusRamMax"
-                                FontSize="20"
-                                Foreground="White" />
-                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel

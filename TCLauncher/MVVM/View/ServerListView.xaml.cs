@@ -58,12 +58,6 @@ namespace TCLauncher.MVVM.View
             itemFocusType.Text = instance.Type;
             itemFocusMCVersion.Text = instance.McVersion;
 
-            string minRam = (instance.MinimumRamMb / 1000 ?? 0).ToString();
-            string maxRam = (instance.MaximumRamMb / 1000 ?? 0).ToString();
-            string totalPhysicalMemory = SystemInfoUtils.GetTotalPhysicalMemoryInGb().ToString();
-            itemFocusRamMin.Text = $"{minRam} GB / {totalPhysicalMemory} GB";
-            itemFocusRamMax.Text = $"{maxRam} GB / {totalPhysicalMemory} GB";
-
             specialFocusBtn.Content = (instance.Is_Installed) ? Languages.uninstall : Languages.install;
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             reconfigDef.Visibility = (instance.Is_Installed && !instance.Is_LocalSource) ? Visibility.Visible : Visibility.Collapsed;
@@ -426,24 +420,6 @@ namespace TCLauncher.MVVM.View
                 MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
             }
         }
-
-        //private void editConfig_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
-        //        string configFile = Path.Combine(instanceFolder, @"config.json");
-
-        //        this.Cursor = Cursors.Wait;
-        //        EditorWindow editorWindow = new EditorWindow(configFile, false);
-        //        editorWindow.Show();
-        //        this.Cursor = null;
-        //    }
-        //    catch
-        //    {
-        //        MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
-        //    }
-        //}
 
         private async void ExportServerBtn_OnClick()
         {

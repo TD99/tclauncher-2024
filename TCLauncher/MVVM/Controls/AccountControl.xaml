@@ -44,53 +44,6 @@
                 FontSize="16"
                 Style="{StaticResource SelectableLabel}"
                 Text="{x:Static p:Languages.gamertag_text}" />
-            <StackPanel Orientation="Horizontal">
-                <TextBox
-                    FontSize="12"
-                    Style="{StaticResource SelectableLabel}"
-                    Text="{x:Static p:Languages.secret_id_text}" />
-                <Rectangle
-                    Width="35"
-                    Height="15"
-                    Margin="5,0,0,0"
-                    Fill="Black"
-                    RadiusX="5"
-                    RadiusY="5">
-                    <Rectangle.ToolTip>
-                        <ToolTip Style="{StaticResource ModernToolTip}">
-                            <ToolTip.Content>
-                                <TextBox
-                                    Name="Identifier"
-                                    FontSize="12"
-                                    Style="{StaticResource SelectableLabel}"
-                                    Text="{x:Static p:Languages.id_text}" />
-                            </ToolTip.Content>
-                        </ToolTip>
-                    </Rectangle.ToolTip>
-                    <Rectangle.Triggers>
-                        <EventTrigger RoutedEvent="Rectangle.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation
-                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                        To="LightSlateGray"
-                                        Duration="0:0:5" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="Rectangle.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation
-                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                        To="Black"
-                                        Duration="0:0:1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Rectangle.Triggers>
-                </Rectangle>
-            </StackPanel>
         </StackPanel>
 
         <Button

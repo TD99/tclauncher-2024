@@ -51,8 +51,6 @@ namespace TCLauncher
             }
         }
 
-        public static SimpleHttpServer DbgHttpServer;
-
         public static JELoginHandler LoginHandler;
 
         public static MinecraftPath MinecraftPath { get; set; }

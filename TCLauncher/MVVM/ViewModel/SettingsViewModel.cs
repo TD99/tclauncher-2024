@@ -10,14 +10,11 @@ namespace TCLauncher.MVVM.ViewModel
 
         public string DownloadMirror
         {
-            get
-            {
-                return downloadMirror;
-            }
+            get => downloadMirror;
             set
             {
                 downloadMirror = value;
-                OnPropertyChanged(nameof(DownloadMirror));
+                OnPropertyChanged();
             }
         }
 
