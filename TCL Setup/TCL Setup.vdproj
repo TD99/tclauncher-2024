@@ -1269,14 +1269,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EE505BEB2A5A43FD88AEDC54970375B1"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_EF113CBCFCD62BAB7E9B2542E48018F1"
+        "OwnerKey" = "8:_50EE5956A9734A2B9E089200184EFB88"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EF113CBCFCD62BAB7E9B2542E48018F1"
-        "OwnerKey" = "8:_50EE5956A9734A2B9E089200184EFB88"
+        "MsmKey" = "8:_EFB0FF637E734CE1B7CF7794648D1F87"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -6717,26 +6717,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EE505BEB2A5A43FD88AEDC54970375B1"
-            {
-            "SourcePath" = "8:..\\TCLauncher\\Assets\\Images\\logo.ico"
-            "TargetName" = "8:logo.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EF113CBCFCD62BAB7E9B2542E48018F1"
             {
             "AssemblyRegister" = "3:1"
@@ -6766,6 +6746,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EFB0FF637E734CE1B7CF7794648D1F87"
+            {
+            "SourcePath" = "8:..\\TCLauncher\\logo.ico"
+            "TargetName" = "8:logo.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F099912A593E2861CA5AC7C70ACD502E"
@@ -7137,15 +7137,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TCLauncher"
-        "ProductCode" = "8:{D5B8B806-9192-4DC5-8B0A-EAB86ACD11C7}"
-        "PackageCode" = "8:{25FC15CA-BCA7-4FC8-80E4-B0BB53822A52}"
+        "ProductCode" = "8:{B6736111-6448-4FB4-9E29-1FCF1345987E}"
+        "PackageCode" = "8:{C2B22FC8-4BD7-40FF-81F4-E11A3DDCD916}"
         "UpgradeCode" = "8:{6BE44004-C883-457B-8E2A-8046034FEF4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.4.0.0"
+        "ProductVersion" = "8:0.4.1"
         "Manufacturer" = "8:TCraft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -7155,7 +7155,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Der offizielle T-Craft Launcher"
         "ARPURLINFOABOUT" = "8:https://tcraft.link/tclauncher"
-        "ARPPRODUCTICON" = "8:_EE505BEB2A5A43FD88AEDC54970375B1"
+        "ARPPRODUCTICON" = "8:_EFB0FF637E734CE1B7CF7794648D1F87"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -7269,7 +7269,7 @@
             "Target" = "8:_50EE5956A9734A2B9E089200184EFB88"
             "Folder" = "8:_339F7409035A474593BE52FA7674BE9C"
             "WorkingFolder" = "8:_5759CF534040443D8A3E5F614C658496"
-            "Icon" = "8:_EE505BEB2A5A43FD88AEDC54970375B1"
+            "Icon" = "8:_EFB0FF637E734CE1B7CF7794648D1F87"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A36ABEA1A72E4992BC49D3945F48037F"
@@ -7283,7 +7283,7 @@
             "Target" = "8:_50EE5956A9734A2B9E089200184EFB88"
             "Folder" = "8:_8279E5D04483497CA56AA1C4B9552CAA"
             "WorkingFolder" = "8:_5759CF534040443D8A3E5F614C658496"
-            "Icon" = "8:_EE505BEB2A5A43FD88AEDC54970375B1"
+            "Icon" = "8:_EFB0FF637E734CE1B7CF7794648D1F87"
             "Feature" = "8:"
             }
         }
