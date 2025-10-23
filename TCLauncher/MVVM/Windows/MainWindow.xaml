@@ -226,26 +226,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
-                    <!--<RadioButton
-                        x:Name="settingsBtn"
-                        Command="{Binding SettingsViewCommand}"
-                        Content="Einstellungen"
-                        Style="{StaticResource MenuButtonTheme}" />-->
-                    <!--<RadioButton
-                        x:Name="statusBtn"
-                        Command="{Binding StatusViewCommand}"
-                        Content="{x:Static p:Languages.info_content_text}">
-                        <RadioButton.Style>
-                            <Style BasedOn="{StaticResource MenuButtonTheme}" TargetType="RadioButton">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:StatusViewModel}}" Value="True">
-                                        <Setter Property="IsChecked" Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </RadioButton.Style>
-                    </RadioButton>-->
                 </StackPanel>
                 <Grid Grid.Row="1" Grid.Column="2">
                     <Grid.ColumnDefinitions>
@@ -336,7 +316,7 @@
                                         Height="24"
                                         Margin="0,0,10,0"
                                         Panel.ZIndex="-1"
-                                        Source="/Assets/Images/steve.png" />
+                                        Source="/Assets/Images/anonymous.png" />
                                     <Image
                                         x:Name="AccountManagerBtnPicture"
                                         Grid.Column="0"
@@ -356,7 +336,7 @@
                         x:Name="ButtonWindowControlsSpacer"
                         Grid.Row="0"
                         Grid.Column="1"
-                        Width="108"
+                        Width="72"
                         Height="34"
                         Margin="0,0,10,0"
                         HorizontalAlignment="Right"

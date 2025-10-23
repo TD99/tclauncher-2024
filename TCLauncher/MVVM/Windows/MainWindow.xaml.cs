@@ -176,7 +176,7 @@ namespace TCLauncher.MVVM.Windows
             else
             {
                 AccountManagerBtnName.Text = Languages.not_logged_button_text;
-                AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/steve.png"));
+                AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/anonymous.png"));
             }
         }
 

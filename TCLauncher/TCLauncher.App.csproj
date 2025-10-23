@@ -501,7 +501,7 @@
     <Resource Include="tcl_instance_icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Images\steve.png" />
+    <Resource Include="Assets\Images\anonymous.png" />
     <Resource Include="Assets\Images\harddrive.png" />
     <Resource Include="Assets\Images\logo_installer.png" />
   </ItemGroup>
