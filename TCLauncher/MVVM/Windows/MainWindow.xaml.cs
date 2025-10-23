@@ -1,16 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using CmlLib.Core.Auth;
 using TCLauncher.Core;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
@@ -49,8 +42,8 @@ namespace TCLauncher.MVVM.Windows
         // TODO: CHECK IF FIRST TIME
         private void HandleFirstTime()
         {
-            if (!Properties.Settings.Default.FirstTime && !IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath)) return;
-            Properties.Settings.Default.FirstTime = false;
+            if (!Settings.Default.FirstTime && !IoUtils.TclDirectory.IsEmpty(IoUtils.Tcl.InstancesPath)) return;
+            Settings.Default.FirstTime = false;
             //newToolTip.PlacementTarget = serverBtn;
             //newToolTip.IsOpen = true;
         }
@@ -91,7 +84,7 @@ namespace TCLauncher.MVVM.Windows
             pageStoryboard.Children.Add(pageAnim);
 
             Storyboard.SetTarget(pageAnim, mainBorder);
-            Storyboard.SetTargetProperty(pageAnim, new PropertyPath(FrameworkElement.OpacityProperty));
+            Storyboard.SetTargetProperty(pageAnim, new PropertyPath(OpacityProperty));
 
             pageStoryboard.Completed += (s2, e2) =>
             {

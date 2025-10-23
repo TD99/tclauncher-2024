@@ -9,7 +9,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
-    xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:vm="clr-namespace:TCLauncher.MVVM.ViewModel"

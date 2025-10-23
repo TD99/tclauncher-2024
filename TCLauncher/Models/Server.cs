@@ -1,6 +1,4 @@
-﻿using TCLauncher.Core;
-
-namespace TCLauncher.Models
+﻿namespace TCLauncher.Models
 {
     public class Server
     {

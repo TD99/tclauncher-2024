@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using TCLauncher.Core;
 using TCLauncher.Properties;
 using static TCLauncher.Properties.Settings;
+using MessageBox = System.Windows.MessageBox;
 
 namespace TCLauncher.Setup.Steps
 {
@@ -76,14 +78,14 @@ namespace TCLauncher.Setup.Steps
 
         private void AppDataPathBrowseBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog
+            var dialog = new FolderBrowserDialog
             {
                 Description = "Select the folder where the application data should be stored.",
                 ShowNewFolderButton = true,
                 SelectedPath = AppDataPath.Text
             };
 
-            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            if (dialog.ShowDialog() != DialogResult.OK) return;
 
             ApplyPath(dialog.SelectedPath);
         }

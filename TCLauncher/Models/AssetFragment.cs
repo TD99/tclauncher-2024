@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TCLauncher.Properties;
 
 namespace TCLauncher.Models
@@ -14,7 +15,7 @@ namespace TCLauncher.Models
             SourcePath = Path.Combine(App.MinecraftPath.BasePath + sourcePathRelative);
 
             if (!SourcePath.StartsWith(App.MinecraftPath.BasePath))
-                throw new System.Exception(Languages.escaping_not_allowed_exception);
+                throw new Exception(Languages.escaping_not_allowed_exception);
         }
     }
 }

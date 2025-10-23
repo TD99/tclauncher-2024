@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.Properties;
@@ -121,7 +121,7 @@ namespace TCLauncher.MVVM.ViewModel
             ObservableCollection<Instance> internetData = null;
             try
             {
-                var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror);
+                var response = await _httpClient.GetAsync(Settings.Default.DownloadMirror);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

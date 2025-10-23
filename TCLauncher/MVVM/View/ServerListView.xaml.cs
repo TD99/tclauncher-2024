@@ -1,7 +1,4 @@
-﻿using CmlLib.Core;
-using CmlLib.Core.Installer;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,19 +7,18 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
-using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.MVVM.View
 {
@@ -161,9 +157,9 @@ namespace TCLauncher.MVVM.View
 
         private async void installInstance(Instance instance)
         {
-            string instanceFolder = System.IO.Path.Combine(IoUtils.Tcl.InstancesPath, instance.Guid.ToString());
-            string installFolder = System.IO.Path.Combine(instanceFolder, "data");
-            string payloadFile = System.IO.Path.Combine(instanceFolder, "base.zip");
+            string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, instance.Guid.ToString());
+            string installFolder = Path.Combine(instanceFolder, "data");
+            string payloadFile = Path.Combine(instanceFolder, "base.zip");
 
             try
             {
@@ -406,10 +402,10 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = System.IO.Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
+                string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
 
                 HttpClient _httpClient = new HttpClient();
-                var response = await _httpClient.GetAsync(Properties.Settings.Default.DownloadMirror + "?guid=" + current.Guid.ToString());
+                var response = await _httpClient.GetAsync(Settings.Default.DownloadMirror + "?guid=" + current.Guid.ToString());
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

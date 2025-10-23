@@ -3,11 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using CmlLib.Core.Downloader;
 using Newtonsoft.Json;
 using TCLauncher.Models;
-using TCLauncher.MVVM.View;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 

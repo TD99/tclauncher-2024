@@ -6,7 +6,6 @@
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:converters="clr-namespace:TCLauncher.MVVM.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:TCLauncher.MVVM.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
@@ -92,8 +91,7 @@
                     FontSize="35"
                     Foreground="#b2b9cc" />
             </StackPanel>
-            <Image Source="/Assets/Images/startbg.png"
-                   Stretch="UniformToFill" />
+            <Image Source="/Assets/Images/startbg.png" Stretch="UniformToFill" />
             <!--<MediaElement
                 x:Name="BgMediaElement"
                 LoadedBehavior="Manual"
@@ -149,8 +147,9 @@
                 </Border>
 
                 <Image
-                    Grid.Column="1" Grid.Row="1"
                     x:Name="logo"
+                    Grid.Row="1"
+                    Grid.Column="1"
                     Margin="5"
                     HorizontalAlignment="Center"
                     MouseDown="Logo_MouseDown"
@@ -184,8 +183,8 @@
                     </Button>
                     <Button
                         x:Name="serverBtn"
+                        Margin="0,5,0,0"
                         Padding="12,12"
-                        Margin="0, 5, 0, 0"
                         HorizontalAlignment="Center"
                         Command="{Binding ServerListViewCommand}">
                         <Button.Content>
@@ -207,8 +206,8 @@
                     </Button>
                     <Button
                         x:Name="SettingsBtn"
+                        Margin="0,5,0,0"
                         Padding="12,12"
-                        Margin="0, 5, 0, 0"
                         HorizontalAlignment="Center"
                         Command="{Binding SettingsViewCommand}">
                         <Button.Content>
@@ -281,37 +280,37 @@
                                                             Background="{TemplateBinding Background}">
                                                             <Border.Effect>
                                                                 <DropShadowEffect
-                                                                    Color="#B2B9CC"
                                                                     BlurRadius="20"
+                                                                    Opacity="0.9"
                                                                     ShadowDepth="0"
-                                                                    Opacity="0.9" />
+                                                                    Color="#B2B9CC" />
                                                             </Border.Effect>
                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                         </Border>
 
                                                         <ControlTemplate.Triggers>
-                                                            <!-- Hover glow -->
+                                                            <!--  Hover glow  -->
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter TargetName="border" Property="Effect">
                                                                     <Setter.Value>
                                                                         <DropShadowEffect
-                                                                            Color="#66B2B9CC"
                                                                             BlurRadius="20"
+                                                                            Opacity="0.9"
                                                                             ShadowDepth="0"
-                                                                            Opacity="0.9" />
+                                                                            Color="#66B2B9CC" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Trigger>
 
-                                                            <!-- Pressed state (optional) -->
+                                                            <!--  Pressed state (optional)  -->
                                                             <Trigger Property="IsPressed" Value="True">
                                                                 <Setter TargetName="border" Property="Effect">
                                                                     <Setter.Value>
                                                                         <DropShadowEffect
-                                                                            Color="#AAB2B9CC"
                                                                             BlurRadius="20"
+                                                                            Opacity="0.9"
                                                                             ShadowDepth="0"
-                                                                            Opacity="0.9" />
+                                                                            Color="#AAB2B9CC" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Trigger>

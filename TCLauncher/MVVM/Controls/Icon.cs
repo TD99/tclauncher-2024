@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -31,7 +32,7 @@ namespace TCLauncher.MVVM.Controls
 
             if (e.Property == UnicodeProperty)
             {
-                var codePoint = int.Parse(Unicode, System.Globalization.NumberStyles.HexNumber);
+                var codePoint = int.Parse(Unicode, NumberStyles.HexNumber);
                 Content = char.ConvertFromUtf32(codePoint);
             }
             else if (e.Property == ColorProperty)

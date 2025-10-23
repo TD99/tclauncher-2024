@@ -1,6 +1,7 @@
-﻿using System.Management;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Management;
+using Microsoft.Win32;
 
 namespace TCLauncher.Core
 {
@@ -29,7 +30,7 @@ namespace TCLauncher.Core
                     try
                     {
                         // Try to get HardwareInformation.qwMemorySize from the registry
-                        var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Class\{{4d36e968-e325-11ce-bfc1-08002be10318}}\000{gpuIndex}");
+                        var key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Class\{{4d36e968-e325-11ce-bfc1-08002be10318}}\000{gpuIndex}");
                         var qwMemorySize = key?.GetValue("HardwareInformation.qwMemorySize");
                         var driverDesc = key?.GetValue("DriverDesc");
                         if (qwMemorySize != null)

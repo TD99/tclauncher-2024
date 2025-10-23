@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using TCLauncher.Core;
+using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.ViewModel
 {
-    class SettingsViewModel : ObservableObject, INotifyPropertyChanged
+    class SettingsViewModel : ObservableObject
     {
         private string downloadMirror;
 
@@ -25,7 +25,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         public SettingsViewModel()
         {
-            DownloadMirror = Properties.Settings.Default.DownloadMirror;
+            DownloadMirror = Settings.Default.DownloadMirror;
             SaveCommand = new RelayCommand(
                 p => {
                     Save();
@@ -34,8 +34,8 @@ namespace TCLauncher.MVVM.ViewModel
 
         private void Save()
         {
-            Properties.Settings.Default.DownloadMirror = DownloadMirror;
-            Properties.Settings.Default.Save();
+            Settings.Default.DownloadMirror = DownloadMirror;
+            Settings.Default.Save();
         }
     }
 }

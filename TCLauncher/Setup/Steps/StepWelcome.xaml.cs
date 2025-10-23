@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Windows;
-using TCLauncher.Core;
 using TCLauncher.Properties;
 
 namespace TCLauncher.Setup.Steps

@@ -15,7 +15,7 @@ namespace TCLauncher.Setup.Steps
         {
             foreach (ComboBoxItem item in LanguageSelector.Items)
             {
-                if ((string)item.Tag != Properties.Settings.Default.Language) continue;
+                if ((string)item.Tag != Settings.Default.Language) continue;
                 LanguageSelector.SelectedItem = item;
                 break;
             }

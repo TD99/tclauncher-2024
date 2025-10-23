@@ -6,7 +6,6 @@
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:p="clr-namespace:TCLauncher.Properties"
     mc:Ignorable="d">
 
     <b:Interaction.Behaviors>

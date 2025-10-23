@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,13 +12,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
+using CmlLib.Core.Installer.FabricMC;
 using CmlLib.Utils;
+using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
-using CmlLib.Core.Installer.FabricMC;
 using TCLauncher.Properties;
-using Microsoft.Web.WebView2.Core;
 
 namespace TCLauncher.MVVM.View
 {
@@ -28,7 +29,7 @@ namespace TCLauncher.MVVM.View
     public partial class HomeView
     {
         private ObservableCollection<Applet> Applets { get; set; }
-        private readonly byte _startupBehaviourLevel = Properties.Settings.Default.StartBehaviour;
+        private readonly byte _startupBehaviourLevel = Settings.Default.StartBehaviour;
         private bool _isServerListLoading;
         private bool _isAppletLoaderVisible = false;
 
@@ -156,7 +157,7 @@ namespace TCLauncher.MVVM.View
 
             try
             {
-                System.Net.ServicePointManager.DefaultConnectionLimit = 256;
+                ServicePointManager.DefaultConnectionLimit = 256;
 
                 var path = new MinecraftPath();
                 var isIsolated = true;

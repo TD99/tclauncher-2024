@@ -1,8 +1,10 @@
 ﻿// ReSharper disable MemberCanBePrivate.Global
-using System.Net;
-using System.Threading;
+
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using System.Threading;
 
 namespace TCLauncher.Models
 {
@@ -76,7 +78,7 @@ namespace TCLauncher.Models
                             {
                                 if (ctx == null) return;
                                 var rstr = _responderMethod(ctx.Request);
-                                var buf = System.Text.Encoding.UTF8.GetBytes(rstr);
+                                var buf = Encoding.UTF8.GetBytes(rstr);
                                 ctx.Response.ContentLength64 = buf.Length;
                                 ctx.Response.ContentType = "application/json";
                                 if (_useDefaultCorsConfiguration)

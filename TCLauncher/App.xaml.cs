@@ -1,7 +1,7 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -11,16 +11,14 @@ using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Sessions;
-using CmlLib.Core.Installer.FabricMC;
+using Microsoft.Win32;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
+using TCLauncher.Setup;
 using static System.String;
 using static TCLauncher.Core.MessageBoxUtils;
-using System.Globalization;
-using System.Reflection;
-using TCLauncher.Setup;
 
 namespace TCLauncher
 {
@@ -343,7 +341,7 @@ namespace TCLauncher
                         }
                         catch (Exception exception)
                         {
-                            ShowToVoid(string.Format(Languages.package_load_failed, exception));
+                            ShowToVoid(Format(Languages.package_load_failed, exception));
                         }
                         break;
                     case "--silent":

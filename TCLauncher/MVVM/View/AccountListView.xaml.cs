@@ -1,8 +1,8 @@
-﻿using CmlLib.Core.Auth.Microsoft.Sessions;
-using CmlLib.Core.Auth;
+﻿using System;
 using System.Windows;
-using System;
 using System.Windows.Controls;
+using CmlLib.Core.Auth;
+using CmlLib.Core.Auth.Microsoft.Sessions;
 using TCLauncher.Core;
 using TCLauncher.MVVM.Controls;
 

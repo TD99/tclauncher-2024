@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using CmlLib.Core.Auth.Microsoft.Sessions;
 using TCLauncher.Core;
@@ -32,7 +33,7 @@ namespace TCLauncher.MVVM.Controls
             Avatar.Source = bitmap;
 
             if (isPrimary)
-                LoginBtn.Visibility = System.Windows.Visibility.Hidden;
+                LoginBtn.Visibility = Visibility.Hidden;
         }
 
         private static string GetAvatarUrl(string uuid)

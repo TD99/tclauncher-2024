@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
 using TCLauncher.Properties;
@@ -66,7 +64,7 @@ namespace TCLauncher.MVVM.ViewModel
             }
             catch
             {
-                if (!Properties.Settings.Default.FirstTime)
+                if (!Settings.Default.FirstTime)
                     MessageBox.Show(Languages.local_instances_load_error_message);
             }
 
@@ -85,7 +83,7 @@ namespace TCLauncher.MVVM.ViewModel
 
         private void LoadLastSelected()
         {
-            Guid guidLastPlayed = Properties.Settings.Default.LastSelected;
+            Guid guidLastPlayed = Settings.Default.LastSelected;
             InstalledInstance instance = LocalList.FirstOrDefault(x => x.Guid == guidLastPlayed);
             if (instance == null)
             {

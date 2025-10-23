@@ -3,11 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Threading;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Models;
@@ -22,7 +21,7 @@ namespace TCLauncher.MVVM.View
         {
             InitializeComponent();
             assemblyVersion.Text = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version);
-            string behaviourTagToSelect = Properties.Settings.Default.StartBehaviour.ToString();
+            string behaviourTagToSelect = Settings.Default.StartBehaviour.ToString();
             foreach (ComboBoxItem item in Behaviour.Items)
             {
                 if ((string) item.Tag == behaviourTagToSelect)
@@ -32,7 +31,7 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
-            string multiInstancesTagToSelect = Properties.Settings.Default.MultiInstances.ToString();
+            string multiInstancesTagToSelect = Settings.Default.MultiInstances.ToString();
             foreach (ComboBoxItem item in MultiInstances.Items)
             {
                 if ((string)item.Tag == multiInstancesTagToSelect)
@@ -42,7 +41,7 @@ namespace TCLauncher.MVVM.View
                 }
             }
 
-            string sandboxLevelTagToSelect = Properties.Settings.Default.SandboxLevel.ToString();
+            string sandboxLevelTagToSelect = Settings.Default.SandboxLevel.ToString();
             foreach (ComboBoxItem item in SandboxLevel.Items)
             {
                 if ((string)item.Tag == sandboxLevelTagToSelect)
@@ -54,11 +53,11 @@ namespace TCLauncher.MVVM.View
 
             //hostBtn.Content = App.DbgHttpServer == null ? Languages.debug_server_start_text : Languages.debug_server_stop_text;
 
-            AppDataPath.Text = Properties.Settings.Default.VirtualAppDataPath;
+            AppDataPath.Text = Settings.Default.VirtualAppDataPath;
 
-            frameworkVersion.Text = string.Format(Languages.framework_version_text, System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+            frameworkVersion.Text = string.Format(Languages.framework_version_text, RuntimeInformation.FrameworkDescription);
 
-            string languageTagToSelect = Properties.Settings.Default.Language;
+            string languageTagToSelect = Settings.Default.Language;
             foreach (ComboBoxItem item in LanguageSelector.Items)
             {
                 if ((string)item.Tag == languageTagToSelect)
@@ -78,8 +77,8 @@ namespace TCLauncher.MVVM.View
             var result = MessageBox.Show(Languages.reset_settings_message, Languages.reset_settings_caption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result != MessageBoxResult.Yes) return;
-            Properties.Settings.Default.Reset();
-            Properties.Settings.Default.Save();
+            Settings.Default.Reset();
+            Settings.Default.Save();
         }
 
         private void resetDataBtn_Click(object sender, RoutedEventArgs e)
@@ -91,8 +90,8 @@ namespace TCLauncher.MVVM.View
                 try
                 {
                     Directory.Delete(IoUtils.Tcl.RootPath, true);
-                    Properties.Settings.Default.Reset();
-                    Properties.Settings.Default.Save();
+                    Settings.Default.Reset();
+                    Settings.Default.Save();
 
                     MessageBox.Show(Languages.reset_data_success_message);
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
@@ -135,8 +134,8 @@ namespace TCLauncher.MVVM.View
                 return;
             }
 
-            Properties.Settings.Default.StartBehaviour = value;
-            Properties.Settings.Default.Save();
+            Settings.Default.StartBehaviour = value;
+            Settings.Default.Save();
         }
 
         private async void HostBtn_OnClick(object sender, RoutedEventArgs e)
@@ -195,8 +194,8 @@ namespace TCLauncher.MVVM.View
                 return;
             }
 
-            Properties.Settings.Default.MultiInstances = value;
-            Properties.Settings.Default.Save();
+            Settings.Default.MultiInstances = value;
+            Settings.Default.Save();
         }
 
         private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -216,8 +215,8 @@ namespace TCLauncher.MVVM.View
                 return;
             }
 
-            Properties.Settings.Default.SandboxLevel = value;
-            Properties.Settings.Default.Save();
+            Settings.Default.SandboxLevel = value;
+            Settings.Default.Save();
         }
 
         private void AppDataPathBtn_OnClick(object sender, RoutedEventArgs e)
@@ -233,8 +232,8 @@ namespace TCLauncher.MVVM.View
 
             newPath = Path.Combine(newPath, "TCL");
 
-            Properties.Settings.Default.VirtualAppDataPath = AppDataPath.Text;
-            Properties.Settings.Default.Save();
+            Settings.Default.VirtualAppDataPath = AppDataPath.Text;
+            Settings.Default.Save();
 
             var result = MessageBox.Show(Languages.path_saved_prompt, Languages.path_saved, MessageBoxButton.YesNo, MessageBoxImage.Information);
 

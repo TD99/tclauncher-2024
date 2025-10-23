@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FontAwesome.WPF;
 using TCLauncher.Models;
 
 namespace TCLauncher.MVVM.Controls
@@ -59,7 +60,7 @@ namespace TCLauncher.MVVM.Controls
             {
                 var loadingIcon = new FontAwesome.WPF.FontAwesome
                 {
-                    Icon = FontAwesome.WPF.FontAwesomeIcon.SquareOutline,
+                    Icon = FontAwesomeIcon.SquareOutline,
                     Spin = true,
                     FontSize = 40,
                     Foreground = new SolidColorBrush(Colors.White),

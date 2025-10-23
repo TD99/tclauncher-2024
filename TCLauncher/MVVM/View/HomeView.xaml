@@ -6,7 +6,6 @@
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
-    xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
@@ -130,8 +129,8 @@
             <wv2:WebView2
                 Name="webView"
                 Grid.Row="1"
-                NavigationStarting="WebView_OnNavigationStarting"
                 Margin="0,20"
+                NavigationStarting="WebView_OnNavigationStarting"
                 Source="https://tcraft.link/tclauncher/api/plugins/applet-loader/" />
         </Grid>
 

@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Windows;
-using System;
 using System.Windows.Data;
 
 namespace TCLauncher.MVVM.Converters

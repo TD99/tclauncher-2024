@@ -3,16 +3,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TCLauncher.Properties;
+using TCLauncher.Setup.Steps;
 
 namespace TCLauncher.Setup
 {   public partial class InstallerWelcomeWindow
     {
         private readonly Dictionary<int, UserControl> _steps = new Dictionary<int, UserControl>
         {
-            {0, new Steps.StepWelcome()},
-            {1, new Steps.StepLanguage()},
-            {2, new Steps.StepPath()},
-            {3, new Steps.StepDone()}
+            {0, new StepWelcome()},
+            {1, new StepLanguage()},
+            {2, new StepPath()},
+            {3, new StepDone()}
         };
 
         private int _currentStep;

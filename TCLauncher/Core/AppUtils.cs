@@ -1,20 +1,23 @@
 ﻿using System;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
-using System.Reflection;
-using System.Windows;
-using static TCLauncher.Core.IoUtils.Tcl;
-using System.Threading.Tasks;
-using TCLauncher.Models;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Windows;
 using CmlLib.Core;
+using Microsoft.Win32;
 using Newtonsoft.Json;
-using static TCLauncher.Core.MessageBoxUtils;
+using Newtonsoft.Json.Linq;
+using TCLauncher.Models;
 using TCLauncher.Properties;
+using static TCLauncher.Core.IoUtils.Tcl;
+using static TCLauncher.Core.MessageBoxUtils;
 
 namespace TCLauncher.Core
 {
@@ -167,10 +170,10 @@ namespace TCLauncher.Core
         {
             var settings = new Dictionary<string, object>();
 
-            foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
+            foreach (SettingsProperty currentProperty in Settings.Default.Properties)
             {
                 string key = currentProperty.Name;
-                var value = Properties.Settings.Default[key];
+                var value = Settings.Default[key];
                 settings.Add(key, value);
             }
 
@@ -222,7 +225,7 @@ namespace TCLauncher.Core
                 IsTcraftReacheable = InternetUtils.ReachPage("https://tcraft.link/tclauncher/api"),
                 TotalAdapterMemoryInGb = SystemInfoUtils.GetTotalAdapterMemoryInGb(),
                 TotalPhysicalMemoryInGb = SystemInfoUtils.GetTotalPhysicalMemoryInGb(),
-                DefaultConnectionLimit = System.Net.ServicePointManager.DefaultConnectionLimit,
+                DefaultConnectionLimit = ServicePointManager.DefaultConnectionLimit,
                 LoadedPlugins = new []
                 {
                     "AppletLoader",
@@ -233,8 +236,8 @@ namespace TCLauncher.Core
                 Settings = GetAllSettings(),
                 UiLanguage = Languages.id,
                 Copyright = "Copyright \u00a9 T-Craft " + GetCompilationDate().Year,
-                UiVersion = string.Format(Languages.framework_version_text, System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription),
-                Environment = System.Runtime.InteropServices.RuntimeInformation.OSDescription
+                UiVersion = string.Format(Languages.framework_version_text, RuntimeInformation.FrameworkDescription),
+                Environment = RuntimeInformation.OSDescription
         };
         }
 
@@ -337,7 +340,7 @@ namespace TCLauncher.Core
         // TODO: needs rework, better code quality
         public static void LoadInstanceImporter()
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog
+            var dlg = new OpenFileDialog
             {
                 DefaultExt = ".tcl",
                 Filter = Languages.tcl_package + " (*.tcl)|*.tcl"
@@ -355,7 +358,7 @@ namespace TCLauncher.Core
         // TODO: needs rework, better code quality
         public static async Task<Instance> LoadInstanceBuilder()
         {
-            var dlg = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".zip", Filter = Languages.zip_files + " (*.zip)|*.zip" };
+            var dlg = new OpenFileDialog { DefaultExt = ".zip", Filter = Languages.zip_files + " (*.zip)|*.zip" };
             var result = dlg.ShowDialog();
             if (result != true) return null;
 
@@ -374,7 +377,7 @@ namespace TCLauncher.Core
             var result2 = MessageBox.Show(Languages.set_package_thumbnail, Languages.create_package, MessageBoxButton.YesNo);
             if (result2 == MessageBoxResult.Yes)
             {
-                var dlg2 = new Microsoft.Win32.OpenFileDialog { DefaultExt = ".png", Filter = Languages.image_files + " (*.png, *.jpg)|*.png;*.jpg" };
+                var dlg2 = new OpenFileDialog { DefaultExt = ".png", Filter = Languages.image_files + " (*.png, *.jpg)|*.png;*.jpg" };
                 var result3 = dlg2.ShowDialog();
                 if (result3 == true)
                 {
@@ -423,7 +426,7 @@ namespace TCLauncher.Core
             ZipFile.CreateFromDirectory(creatorDir, Path.Combine(cachePath, i.Name + ".zip"));
             Directory.Delete(creatorDir, true);
 
-            var dlg3 = new Microsoft.Win32.SaveFileDialog { FileName = i.Name, DefaultExt = ".tcl", Filter = Languages.tcl_package + " (*.tcl)|*.tcl" };
+            var dlg3 = new SaveFileDialog { FileName = i.Name, DefaultExt = ".tcl", Filter = Languages.tcl_package + " (*.tcl)|*.tcl" };
             var result5 = dlg3.ShowDialog();
             if (result5 != true) return null;
 

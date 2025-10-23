@@ -6,6 +6,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using Newtonsoft.Json;
 using TCLauncher.Models;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core
 {
@@ -262,9 +263,9 @@ namespace TCLauncher.Core
             public static string RealAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             public static string AppDataPath = 
-                Properties.Settings.Default.VirtualAppDataPath == ""
+                Settings.Default.VirtualAppDataPath == ""
                     ? RealAppDataPath
-                    : Properties.Settings.Default.VirtualAppDataPath;
+                    : Settings.Default.VirtualAppDataPath;
 
             /// <summary>
             /// Gets the total storage of the file system in GB.

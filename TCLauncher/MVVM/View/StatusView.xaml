@@ -7,8 +7,6 @@
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:converters="clr-namespace:TCLauncher.MVVM.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:local="clr-namespace:TCLauncher.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"

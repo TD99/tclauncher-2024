@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
