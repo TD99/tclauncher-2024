@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*"
+			 Name="!(loc.ProductName)"
+			 Language="1033"
+			 Version="0.4.2"
+			 Manufacturer="!(loc.Manufacturer)"
+			 UpgradeCode="6BE44004-C883-457B-8E2A-8046034FEF4A">
+		
+		<Package InstallerVersion="200"
+				 Compressed="yes"
+				 InstallScope="perMachine"
+				 Description="!(loc.ProductDescription)"
+				 Comments="!(loc.ProductComments)"
+				 Manufacturer="!(loc.Manufacturer)" />
+
+		<MediaTemplate EmbedCab="yes" />
+		
+		<MajorUpgrade AllowDowngrades="no"
+					  DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+		<!-- Properties -->
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
+		<Property Id="ALLUSERS" Value="2" />
+		<Property Id="MSIINSTALLPERUSER" Value="1" />
+		
+		<!-- .NET Framework 4.8 prerequisite -->
+		<PropertyRef Id="WIX_IS_NETFRAMEWORK_48_OR_LATER_INSTALLED"/>
+		<Condition Message="!(loc.DotNet48Required)">
+			<![CDATA[Installed OR WIX_IS_NETFRAMEWORK_48_OR_LATER_INSTALLED]]>
+		</Condition>
+
+		<!-- Custom Actions -->
+		<CustomActionRef Id="LaunchApplicationAfterInstall" />
+		
+		<!-- UI -->
+		<UIRef Id="CustomUI" />
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+		<WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
+
+		<!-- Features -->
+		<Feature Id="ProductFeature"
+				 Title="!(loc.ProductName)"
+				 Level="1"
+				 ConfigurableDirectory="INSTALLFOLDER">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="ContentFiles" />
+			<ComponentGroupRef Id="LocalizedResources" />
+			<ComponentGroupRef Id="Shortcuts" />
+			<ComponentRef Id="FileAssociation" />
+		</Feature>
+	</Product>
+
+	<!-- Directory Structure -->
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="ManufacturerFolder" Name="T-Craft">
+					<Directory Id="INSTALLFOLDER" Name="TCLauncher" />
+				</Directory>
+			</Directory>
+			
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ApplicationProgramsFolder" Name="TCLauncher"/>
+			</Directory>
+			
+			<Directory Id="DesktopFolder" Name="Desktop"/>
+			
+			<Directory Id="LocalAppDataFolder">
+				<Directory Id="LocalManufacturerFolder" Name="T-Craft">
+					<Directory Id="LOCALINSTALLFOLDER" Name="TCLauncher" />
+				</Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<!-- Set default directory based on installation scope -->
+	<Fragment>
+		<Property Id="INSTALLFOLDER">
+			<RegistrySearch Id="FindInstallLocation" Root="HKLM" Key="Software\T-Craft\TCLauncher" Name="InstallLocation" Type="raw" />
+		</Property>
+		
+		<SetDirectory Id="INSTALLFOLDER" Value="[LocalAppDataFolder]T-Craft\TCLauncher">
+			<![CDATA[MSIINSTALLPERUSER=1]]>
+		</SetDirectory>
+		<SetDirectory Id="INSTALLFOLDER" Value="[ProgramFilesFolder]T-Craft\TCLauncher">
+			<![CDATA[MSIINSTALLPERUSER=0 OR ALLUSERS=1]]>
+		</SetDirectory>
+	</Fragment>
+</Wix>

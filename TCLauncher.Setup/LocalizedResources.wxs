@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="LocalizedResources" Directory="INSTALLFOLDER">
+            <!-- English Resources -->
+            <Component Id="ResourcesEN" Guid="*">
+                <File Source="$(var.TCLauncher.App.TargetDir)en\Resources.dll" KeyPath="yes" />
+            </Component>
+
+            <!-- German Resources -->
+            <Component Id="ResourcesDE" Guid="*">
+                <File Source="$(var.TCLauncher.App.TargetDir)de\Resources.dll" KeyPath="yes" />
+            </Component>
+
+            <!-- Add more localized resources as needed -->
+        </ComponentGroup>
+    </Fragment>
+</Wix>

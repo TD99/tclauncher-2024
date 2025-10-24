@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="de-DE" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+    <String Id="ProductName">TCLauncher Legacy</String>
+    <String Id="Manufacturer">T-Craft</String>
+    <String Id="ProductDescription">Der offizielle T-Craft Minecraft Launcher</String>
+    <String Id="ProductComments">TCLauncher Legacy Installer</String>
+    <String Id="DowngradeError">Eine neuere Version von [ProductName] ist bereits installiert.</String>
+    <String Id="DotNet48Required">Diese Anwendung benötigt .NET Framework 4.8 oder höher. Bitte installieren Sie .NET Framework 4.8 und führen Sie dieses Installationsprogramm erneut aus.</String>
+</WixLocalization>
