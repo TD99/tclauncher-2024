@@ -57,7 +57,7 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="ManufacturerFolder" Name="T-Craft">
-					<Directory Id="INSTALLFOLDER" Name="TCLauncher" />
+					<Directory Id="INSTALLFOLDER_Main" Name="TCLauncher" />
 				</Directory>
 			</Directory>
 			
@@ -77,14 +77,14 @@
 
 	<!-- Set default directory based on installation scope -->
 	<Fragment>
-		<Property Id="INSTALLFOLDER">
+		<Property Id="INSTALLFOLDER_Main">
 			<RegistrySearch Id="FindInstallLocation" Root="HKLM" Key="Software\T-Craft\TCLauncher" Name="InstallLocation" Type="raw" />
 		</Property>
 		
-		<SetDirectory Id="INSTALLFOLDER" Value="[LocalAppDataFolder]T-Craft\TCLauncher">
+		<SetDirectory Id="INSTALLFOLDER_Main" Value="[LocalAppDataFolder]T-Craft\TCLauncher">
 			<![CDATA[MSIINSTALLPERUSER=1]]>
 		</SetDirectory>
-		<SetDirectory Id="INSTALLFOLDER" Value="[ProgramFilesFolder]T-Craft\TCLauncher">
+		<SetDirectory Id="INSTALLFOLDER_Main" Value="[ProgramFilesFolder]T-Craft\TCLauncher">
 			<![CDATA[MSIINSTALLPERUSER=0 OR ALLUSERS=1]]>
 		</SetDirectory>
 	</Fragment>

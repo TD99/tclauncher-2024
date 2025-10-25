@@ -3,11 +3,11 @@
     <Fragment>
         <ComponentGroup Id="Shortcuts">
             <!-- Optional Desktop Shortcut -->
-            <Component Id="DesktopShortcut"
+            <Component Id="DesktopShortcutMain"
                        Directory="DesktopFolder"
                        Guid="*">
                 <Condition><![CDATA[INSTALLDESKTOPSHORTCUT = 1]]></Condition>
-                <Shortcut Id="DesktopShortcut"
+                <Shortcut Id="DesktopShortcutMain"
                           Name="TCLauncher"
                           Description="!(loc.ProductDescription)"
                           Target="[INSTALLFOLDER]TCLauncher.exe"
