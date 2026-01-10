@@ -86,11 +86,11 @@
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <ImageBrush
-                                            ImageSource="/Assets/Images/banner1.png"
-                                            Opacity="0.4"
+                                            ImageSource="/Assets/Images/banner2.png"
+                                            Opacity="0.6"
                                             Stretch="UniformToFill"
                                             AlignmentX="Center"
-                                            AlignmentY="Bottom" />
+                                            AlignmentY="Center" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
@@ -98,11 +98,11 @@
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <ImageBrush
-                                            ImageSource="/Assets/Images/banner1.png"
-                                            Opacity="0.5"
+                                            ImageSource="/Assets/Images/banner2.png"
+                                            Opacity="0.7"
                                             Stretch="UniformToFill"
                                             AlignmentX="Center"
-                                            AlignmentY="Bottom" />
+                                            AlignmentY="Center" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>

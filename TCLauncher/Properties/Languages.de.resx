@@ -792,4 +792,7 @@
   <data name="use_pixel_font_everywhere" xml:space="preserve">
     <value>Überall Pixel-Schriftarten verwenden</value>
   </data>
+  <data name="running_game_message" xml:space="preserve">
+    <value>Läuft</value>
+  </data>
 </root>

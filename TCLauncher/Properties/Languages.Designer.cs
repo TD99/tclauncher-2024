@@ -1762,6 +1762,15 @@ namespace TCLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Running.
+        /// </summary>
+        public static string running_game_message {
+            get {
+                return ResourceManager.GetString("running_game_message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sandbox Level of Instances (TCL data must be reset).
         /// </summary>
         public static string sandbox_level_label_text {

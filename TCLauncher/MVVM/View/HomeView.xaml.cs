@@ -10,10 +10,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using BusyIndicator;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Installer.FabricMC;
 using CmlLib.Utils;
+using fNbt;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using TCLauncher.Core;
@@ -106,6 +109,12 @@ namespace TCLauncher.MVVM.View
 
         private async void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
+            playBtn.Content = new Indicator()
+            {
+                IndicatorType = IndicatorType.ThreeDots,
+                Margin = new Thickness(10)
+            };
+
             var tclInstancesFolder = IoUtils.Tcl.InstancesPath;
             if (!(profileSelect.SelectedItem is InstalledInstance instance))
             {
@@ -221,7 +230,7 @@ namespace TCLauncher.MVVM.View
                     ServerIp = mcServerAddress.IP,
                     ServerPort = mcServerAddress.Port ?? 25565,
 
-                    VersionType = "\u00a7b@TCLauncher",
+                    VersionType = "\u00a7b@TCLauncher\u00a7r",
                     //GameLauncherName = "tcl",
                     //GameLauncherVersion = AppUtils.GetCurrentVersion(),
 
@@ -254,13 +263,91 @@ namespace TCLauncher.MVVM.View
 
                 actionWindow.Show();
 
+                // Server List
+                try
+                {
+                    if (instance.Servers != null && instance.Servers.Count > 0)
+                    {
+                        var serversFilePath = Path.Combine(instanceFolder, "servers.dat");
+                        var serversNbtFile = new NbtFile();
+
+                        bool validFile =
+                            File.Exists(serversFilePath) &&
+                            new FileInfo(serversFilePath).Length > 0;
+
+                        if (validFile)
+                        {
+                            try
+                            {
+                                serversNbtFile.LoadFromFile(serversFilePath);
+                            }
+                            catch
+                            {
+                                // File exists but is corrupted or invalid
+                                validFile = false;
+                            }
+                        }
+
+                        if (!validFile)
+                        {
+                            // Create fresh valid NBT
+                            var root = new NbtCompound("");
+                            var serversList = new NbtList("servers", NbtTagType.Compound);
+                            root.Add(serversList);
+                            serversNbtFile.RootTag = root;
+                        }
+
+                        var servers = serversNbtFile.RootTag.Get<NbtList>("servers");
+
+                        foreach (var instanceServer in instance.Servers)
+                        {
+                            bool exists = false;
+
+                            foreach (NbtCompound server in servers)
+                            {
+                                var ip = server.Get<NbtString>("ip")?.Value;
+                                if (ip == instanceServer.Address)
+                                {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+
+                            if (exists)
+                                continue;
+
+                            if (instanceServer.Name == null || instanceServer.Address == null)
+                                continue;
+
+                            var newServer = new NbtCompound
+                            {
+                                new NbtString("name", instanceServer.Name),
+                                new NbtString("ip", instanceServer.Address),
+                                new NbtShort("x-tcl-suggested", 1)
+                            };
+
+                            servers.Add(newServer);
+                        }
+
+                        serversNbtFile.SaveToFile(serversFilePath, NbtCompression.None);
+                    }
+                }
+                catch
+                {
+                    // Ignored for now
+                }
+
                 // TODO: Variable versions
                 var process = await App.Launcher.CreateProcessAsync(instance.McVersion, App.LaunchOption);
+
+                playBtn.Content = Languages.running_game_message;
 
                 var processUtil = new ProcessUtil(process);
                 processUtil.Exited += (sender1, e1) =>
                 {
                     // TODO: Add closed logic
+
+                    Dispatcher.Invoke(() => playBtn.Content = Languages.play_button_text);
                 };
                 processUtil.StartWithEvents();
                 switch (_startupBehaviourLevel)
