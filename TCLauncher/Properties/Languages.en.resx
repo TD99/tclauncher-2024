@@ -792,4 +792,7 @@
   <data name="use_pixel_font_everywhere" xml:space="preserve">
     <value>Use Pixel Font everywhere</value>
   </data>
+  <data name="running_game_message" xml:space="preserve">
+    <value>Running</value>
+  </data>
 </root>

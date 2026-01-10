@@ -792,4 +792,7 @@
   <data name="use_pixel_font_everywhere" xml:space="preserve">
     <value>Utiliser les polices Pixel partout</value>
   </data>
+  <data name="running_game_message" xml:space="preserve">
+    <value>Lancé</value>
+  </data>
 </root>
