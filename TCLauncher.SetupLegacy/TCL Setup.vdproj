@@ -874,6 +874,12 @@
         "Entry"
         {
         "MsmKey" = "8:_ACA0224AD8EB52168AE4FC48E3C4E478"
+        "OwnerKey" = "8:_ADAF35676C820125FFBE5474DC0494F5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ACA0224AD8EB52168AE4FC48E3C4E478"
         "OwnerKey" = "8:_6676006CDB958B4A5A203564FEC78245"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -904,6 +910,12 @@
         "Entry"
         {
         "MsmKey" = "8:_AD24B21B4F482C31A337A70C7D0029E8"
+        "OwnerKey" = "8:_50EE5956A9734A2B9E089200184EFB88"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ADAF35676C820125FFBE5474DC0494F5"
         "OwnerKey" = "8:_50EE5956A9734A2B9E089200184EFB88"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -5597,6 +5609,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ADAF35676C820125FFBE5474DC0494F5"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:fNbt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_ADAF35676C820125FFBE5474DC0494F5"
+                    {
+                    "Name" = "8:fNbt.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:fNbt.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5759CF534040443D8A3E5F614C658496"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AF483634814BD4855BEB0E99E61671CC"
             {
             "AssemblyRegister" = "3:1"
@@ -7071,15 +7114,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TCLauncher"
-        "ProductCode" = "8:{B6736111-6448-4FB4-9E29-1FCF1345987E}"
-        "PackageCode" = "8:{C2B22FC8-4BD7-40FF-81F4-E11A3DDCD916}"
+        "ProductCode" = "8:{DCE33662-22D4-421D-A5DB-A3960CD5F80C}"
+        "PackageCode" = "8:{5BE744F8-A787-4868-8360-A290D36FEFDE}"
         "UpgradeCode" = "8:{6BE44004-C883-457B-8E2A-8046034FEF4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.4.1"
+        "ProductVersion" = "8:0.4.2"
         "Manufacturer" = "8:TCraft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
