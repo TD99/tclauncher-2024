@@ -262,28 +262,17 @@ namespace TCLauncher.MVVM.View
                     // Ignored for now
                 }
 
-                OperationResult<GameLaunchHandle> launchResult;
-                using (var launchCancellation = new CancellationTokenSource())
-                {
-                    var operationWindow = new OperationWindow { Owner = App.MainWin };
-                    operationWindow.CancelRequested += (operationSender, operationArgs) => launchCancellation.Cancel();
-                    operationWindow.Show();
-                    try
-                    {
-                        launchResult = await AppServices.Launches.StartAsync(
+                var launchResult = await AppServices.Operations.RunAsync(
+                    "Starting " + instance.DisplayName,
+                    true,
+                    (progress, cancellationToken) => AppServices.Launches.StartAsync(
                             instance,
                             App.Session,
                             selectedServer,
                             App.Launcher,
                             App.MinecraftPath,
-                            new Progress<OperationProgress>(operationWindow.Update),
-                            launchCancellation.Token);
-                    }
-                    finally
-                    {
-                        operationWindow.Close();
-                    }
-                }
+                            progress,
+                            cancellationToken));
 
                 if (!launchResult.IsSuccess)
                     throw launchResult.Exception ?? new InvalidOperationException(launchResult.Message);

@@ -20,10 +20,14 @@ namespace TCLauncher.Core.Services
         public static IForgeVersionResolver ForgeVersions { get; private set; }
         public static ILaunchService Launches { get; private set; }
         public static IInstanceOperationService InstanceOperations { get; private set; }
+        public static IOverlayService Overlays { get; private set; }
+        public static IOperationCoordinator Operations { get; private set; }
 
         public static void Initialize(string rootPath)
         {
             Log = new RollingLogService(Path.Combine(rootPath, "Logs"));
+            Overlays = new OverlayService(System.Windows.Application.Current.Dispatcher);
+            Operations = new OperationCoordinator();
             AtomicFiles = new AtomicFileService();
             Archives = new SafeArchiveService();
             InstanceConfigs = new InstanceConfigService(AtomicFiles, Log);

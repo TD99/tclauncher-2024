@@ -391,5 +391,8 @@
                 </Button>
             </StackPanel>
         </Border>
+
+        <!-- Shell-owned drawers, sheets, activity, and toasts. -->
+        <controls:OverlayHost Panel.ZIndex="100" />
     </Grid>
 </Window>

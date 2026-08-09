@@ -1,0 +1,85 @@
+<UserControl x:Class="TCLauncher.MVVM.Controls.OverlayHost"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="clr-namespace:TCLauncher.Core.Services"
+             Focusable="False" IsTabStop="False">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+    <Grid x:Name="Root" Focusable="False">
+        <Border x:Name="ActivityTray" Width="360" MinHeight="56" Margin="0,0,20,18"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" Panel.ZIndex="30"
+                Padding="14,10" Background="#F02A3442" CornerRadius="12"
+                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock FontWeight="SemiBold" Text="{Binding Active.Title}" />
+                    <TextBlock Margin="0,2,0,7" Foreground="#B2B9CC" Text="{Binding Active.Message}" TextTrimming="CharacterEllipsis" />
+                    <ProgressBar Height="3" Maximum="100" Value="{Binding Active.Percent}" />
+                </StackPanel>
+                <Button Grid.Column="1" Margin="12,0,0,0" Padding="10,5" Content="Cancel"
+                        Command="{Binding CancelOperationCommand}" IsEnabled="{Binding Active.CanCancel}" />
+            </Grid>
+        </Border>
+
+        <ItemsControl ItemsSource="{Binding Toasts}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                      Margin="0,62,20,0" Panel.ZIndex="40" IsTabStop="False">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type core:OverlayToast}">
+                    <Border Width="340" Margin="0,0,0,8" Padding="14" Background="#F02A3442" CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                            <TextBlock Margin="0,3,0,0" Foreground="#D5DAE3" Text="{Binding Message}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid x:Name="ModalLayer" Panel.ZIndex="50" Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}"
+              KeyboardNavigation.TabNavigation="Cycle">
+            <Border Background="#A6000000" MouseLeftButtonDown="Backdrop_OnMouseLeftButtonDown" />
+            <Border x:Name="Surface" Width="520" MaxHeight="560" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22"
+                    Background="#F51D2633" BorderBrush="#3D4A5C" BorderThickness="1" CornerRadius="14">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsDrawer}" Value="True">
+                                <Setter Property="Width" Value="480" />
+                                <Setter Property="MaxHeight" Value="{x:Static SystemParameters.PrimaryScreenHeight}" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="VerticalAlignment" Value="Stretch" />
+                                <Setter Property="CornerRadius" Value="16,0,0,16" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid>
+                        <TextBlock Margin="0,0,44,0" FontSize="20" FontWeight="SemiBold" Text="{Binding Current.Title}" />
+                        <Button HorizontalAlignment="Right" Width="34" Height="34" Padding="0" Content="×"
+                                Command="{Binding CloseCommand}" AutomationProperties.Name="Close" />
+                    </Grid>
+                    <ScrollViewer Grid.Row="1" Margin="0,18,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                  Focusable="False" IsTabStop="False">
+                        <ContentPresenter Content="{Binding Current.Content}" />
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="2" Margin="0,20,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers><DataTrigger Binding="{Binding Current.IsConfirmation}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Button Margin="0,0,8,0" Padding="16,8" Content="{Binding Current.SecondaryText}" Command="{Binding CancelCommand}" />
+                        <Button Padding="16,8" Content="{Binding Current.PrimaryText}" Command="{Binding ConfirmCommand}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
