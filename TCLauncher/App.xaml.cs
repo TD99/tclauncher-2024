@@ -59,7 +59,6 @@ namespace TCLauncher
 
         public static MinecraftPath MinecraftPath { get; set; }
         public static MinecraftLauncher Launcher { get; set; }
-        public static MLaunchOption LaunchOption { get; set; }
         public static MainWindow MainWin { get; set; }
         public static InstallerWelcomeWindow InstallerWin { get; set; }
 

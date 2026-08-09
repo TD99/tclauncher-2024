@@ -15,7 +15,6 @@ using System.Windows.Media;
 using BusyIndicator;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
-using CmlLib.Core.ProcessBuilder;
 using fNbt;
 using Microsoft.Web.WebView2.Core;
 using TCLauncher.Core;
@@ -187,74 +186,7 @@ namespace TCLauncher.MVVM.View
 
                 App.Launcher = new MinecraftLauncher(App.MinecraftPath.BasePath);
 
-                string startVersion;
-                using (var loaderCancellation = new CancellationTokenSource())
-                {
-                    var loaderWindow = new OperationWindow { Owner = App.MainWin };
-                    loaderWindow.CancelRequested += (loaderSender, loaderArgs) => loaderCancellation.Cancel();
-                    loaderWindow.Show();
-                    try
-                    {
-                        startVersion = await AppServices.ModLoaders.EnsureInstalledAsync(
-                            instance,
-                            App.Launcher,
-                            new Progress<OperationProgress>(loaderWindow.Update),
-                            loaderCancellation.Token);
-                    }
-                    finally
-                    {
-                        loaderWindow.Close();
-                    }
-                }
-
-                var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
-                var mcServerAddress = InternetUtils.GetMcServerAddress(serverAddressString);
-
-                App.LaunchOption = new MLaunchOption
-                {
-                    StartVersion = null, // Fix
-                    Session = App.Session,
-
-                    Path = App.MinecraftPath,
-                    MinimumRamMb = instance.MinimumRamMb ?? 0,
-                    MaximumRamMb = instance.MaximumRamMb ?? 1024,
-                    ExtraJvmArguments = instance.JVMArguments?.Select(argument => new MArgument(argument)),
-
-                    ServerIp = mcServerAddress.IP,
-                    ServerPort = mcServerAddress.Port ?? 25565,
-
-                    VersionType = "\u00a7b@TCLauncher\u00a7r",
-                    //GameLauncherName = "tcl",
-                    //GameLauncherVersion = AppUtils.GetCurrentVersion(),
-
-                    //DockName = "Minecraft on TCL"
-                };
-
-                var actionWindow = new ActionWindow(Languages.loading_game_message);
-
-                App.Launcher.FileProgressChanged += (sender1, e1) =>
-                {
-                    // TODO: Check for start event
-                    var progress = e1.ProgressedTasks;
-                    var total = e1.TotalTasks;
-                    var percent = total == 0 ? 0 : progress * 100d / total;
-                    
-                    actionWindow.percent = (int)Math.Round(percent);
-                    actionWindow.text = e1.Name;
-
-                    if (percent == 100)
-                    {
-                        actionWindow.Close();
-                    }
-                };
-
-                App.Launcher.ByteProgressChanged += (sender1, e1) =>
-                {
-                    // This is only called when downloading, not when launching
-                    // TODO: Add percent logic
-                };
-
-                actionWindow.Show();
+                var selectedServer = ServerSelect.SelectedItem as Server;
 
                 // Server List
                 try
@@ -330,22 +262,41 @@ namespace TCLauncher.MVVM.View
                     // Ignored for now
                 }
 
-                // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync(startVersion, App.LaunchOption);
+                OperationResult<GameLaunchHandle> launchResult;
+                using (var launchCancellation = new CancellationTokenSource())
+                {
+                    var operationWindow = new OperationWindow { Owner = App.MainWin };
+                    operationWindow.CancelRequested += (operationSender, operationArgs) => launchCancellation.Cancel();
+                    operationWindow.Show();
+                    try
+                    {
+                        launchResult = await AppServices.Launches.StartAsync(
+                            instance,
+                            App.Session,
+                            selectedServer,
+                            App.Launcher,
+                            App.MinecraftPath,
+                            new Progress<OperationProgress>(operationWindow.Update),
+                            launchCancellation.Token);
+                    }
+                    finally
+                    {
+                        operationWindow.Close();
+                    }
+                }
+
+                if (!launchResult.IsSuccess)
+                    throw launchResult.Exception ?? new InvalidOperationException(launchResult.Message);
+
+                var process = launchResult.Value.Process;
 
                 playBtn.Content = Languages.running_game_message;
 
-                process.EnableRaisingEvents = true;
                 process.Exited += (sender1, e1) =>
                 {
-                    // TODO: Add closed logic
-
-                    AppServices.Log.Info("game.exited", $"profile={instance.Guid}; exitCode={process.ExitCode}");
                     Dispatcher.Invoke(ResetPlayButton);
                 };
-                process.Start();
                 launchStarted = true;
-                AppServices.Log.Info("game.started", $"profile={instance.Guid}; processId={process.Id}; version={startVersion}");
                 switch (_startupBehaviourLevel)
                 {
                     case 0:
