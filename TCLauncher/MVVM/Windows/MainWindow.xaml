@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
     Title="TCLauncher"
     Width="1040"
@@ -23,6 +24,7 @@
     Loaded="Window_Loaded"
     StateChanged="MainWindow_OnStateChanged"
     WindowStartupLocation="CenterScreen"
+    core:InputModality.IsEnabled="True"
     mc:Ignorable="d">
 
     <Window.DataContext>
