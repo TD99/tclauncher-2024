@@ -39,6 +39,7 @@ namespace TCLauncher.Models
         public bool Featured { get; set; }
         public DateTime PublishedAtUtc { get; set; }
         public DateTime UpdatedAtUtc { get; set; }
+        public string LegacyAppletUrl { get; set; }
 
         public static CatalogItem FromLegacy(Instance instance)
         {
@@ -56,7 +57,8 @@ namespace TCLauncher.Models
                 PackVersion = instance.Version,
                 Requirements = instance.Requirements,
                 Servers = instance.Servers,
-                PayloadUrl = instance.WorkingDirZipURL
+                PayloadUrl = instance.WorkingDirZipURL,
+                LegacyAppletUrl = instance.AppletURL
             };
         }
 
@@ -78,6 +80,7 @@ namespace TCLauncher.Models
                 ThumbnailURL = ThumbnailUrl,
                 WorkingDirZipURL = PayloadUrl,
                 PayloadSha256 = PayloadSha256,
+                AppletURL = LegacyAppletUrl,
                 Requirements = Requirements,
                 Servers = Servers,
                 WorkingDirDesc = string.IsNullOrWhiteSpace(Description)

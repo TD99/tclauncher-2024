@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using Newtonsoft.Json;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.Properties;
 
@@ -23,6 +24,7 @@ namespace TCLauncher.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        public ObservableCollection<InstalledInstance> RecentProfiles { get; } = new ObservableCollection<InstalledInstance>();
 
         private InstalledInstance _lastSelected;
         public InstalledInstance LastSelected
@@ -40,6 +42,7 @@ namespace TCLauncher.MVVM.ViewModel
             LocalList = new ObservableCollection<InstalledInstance>();
             LoadLocalInstances();
             LoadLastSelected();
+            LoadRecentProfiles();
         }
 
         private void LoadLocalInstances()
@@ -52,8 +55,9 @@ namespace TCLauncher.MVVM.ViewModel
                     {
                         string json = reader.ReadToEnd();
                         var instance = JsonConvert.DeserializeObject<Instance>(json);
+                        instance?.NormalizeLegacyConfiguration();
 
-                        if (instance.Is_Installed)
+                        if (instance?.Is_Installed == true)
                         {
                             InstalledInstance installed = new InstalledInstance(instance);
                             LocalList.Add(installed);
@@ -62,10 +66,9 @@ namespace TCLauncher.MVVM.ViewModel
                     }
                 }
             }
-            catch
+            catch (Exception exception)
             {
-                if (!Settings.Default.FirstTime)
-                    MessageBox.Show(Languages.local_instances_load_error_message);
+                if (!Settings.Default.FirstTime) AppServices.Log.Warning("home.instances_load_failed", exception.Message);
             }
         }
 
@@ -82,6 +85,18 @@ namespace TCLauncher.MVVM.ViewModel
                 return;
             }
             LastSelected = instance;
+        }
+
+        private void LoadRecentProfiles()
+        {
+            var orderedIds = AppServices.Activity.List().Select(item => item.ProfileId).Distinct().Take(4).ToList();
+            foreach (var id in orderedIds)
+            {
+                var profile = LocalList.FirstOrDefault(item => item.Guid == id);
+                if (profile != null) RecentProfiles.Add(profile);
+            }
+            foreach (var profile in LocalList.Where(item => RecentProfiles.All(recent => recent.Guid != item.Guid)).Take(4 - RecentProfiles.Count))
+                RecentProfiles.Add(profile);
         }
     }
 }

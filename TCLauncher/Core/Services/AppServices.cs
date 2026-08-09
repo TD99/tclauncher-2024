@@ -23,12 +23,14 @@ namespace TCLauncher.Core.Services
         public static IInstanceOperationService InstanceOperations { get; private set; }
         public static IOverlayService Overlays { get; private set; }
         public static IOperationCoordinator Operations { get; private set; }
+        public static IActivityStore Activity { get; private set; }
 
         public static void Initialize(string rootPath)
         {
             Log = new RollingLogService(Path.Combine(rootPath, "Logs"));
             Overlays = new OverlayService(System.Windows.Application.Current.Dispatcher);
             Operations = new OperationCoordinator();
+            Activity = new ActivityStore(Path.Combine(rootPath, "Udata", "activity.json"), AtomicFiles);
             AtomicFiles = new AtomicFileService();
             Archives = new SafeArchiveService();
             InstanceConfigs = new InstanceConfigService(AtomicFiles, Log);
@@ -50,7 +52,7 @@ namespace TCLauncher.Core.Services
                 TCLauncher.Properties.Settings.Default.LastAccountUUID, OfflineProfiles.GetSelected());
             ForgeVersions = new ForgeVersionResolver(LauncherHttpClient.Instance, Path.Combine(rootPath, "Cache", "forge"), AtomicFiles, Log);
             ModLoaders = new ModLoaderService(LauncherHttpClient.Instance, ForgeVersions);
-            Launches = new LaunchService(ModLoaders, Log);
+            Launches = new LaunchService(ModLoaders, Log, Activity);
             InstanceOperations = new InstanceOperationService(Path.Combine(rootPath, "Instances"), LauncherHttpClient.Instance, Archives, AtomicFiles, InstanceConfigs, Backups, Log);
         }
     }

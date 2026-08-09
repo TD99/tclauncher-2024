@@ -16,7 +16,7 @@ using BusyIndicator;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
 using fNbt;
-using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
@@ -38,60 +38,12 @@ namespace TCLauncher.MVVM.View
         {
             InitializeComponent();
 
-            UserNameTextBlock.Text = App.Session != null ? (" " + App.Session.Username) : "";
+            UserNameTextBlock.Text = App.Session != null ? (", " + App.Session.Username) : "";
 
             Loaded += (sender, e) =>
             {
                 RefreshApplets();
-            };
-        }
-
-        private async Task LoadWv()
-        {
-            // TODO: Add language changement support
-
-            if (webView.CoreWebView2 != null) return;
-            await webView.EnsureCoreWebView2Async();
-
-            var core = webView.CoreWebView2;
-            var settings = core.Settings;
-            var profile = core.Profile;
-
-            settings.AreBrowserAcceleratorKeysEnabled = false;
-            //settings.AreDefaultContextMenusEnabled = false;
-            settings.AreDevToolsEnabled = false;
-            settings.IsPasswordAutosaveEnabled = false;
-            settings.IsGeneralAutofillEnabled = false;
-            settings.UserAgent += " TCLauncher/" + AppUtils.GetCurrentVersion();
-            settings.IsSwipeNavigationEnabled = false;
-            profile.IsGeneralAutofillEnabled = false;
-            profile.IsPasswordAutosaveEnabled = false;
-            profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Dark;
-            profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Balanced;
-
-            webView.CoreWebView2.ContextMenuRequested += delegate (object sender,
-                CoreWebView2ContextMenuRequestedEventArgs args)
-            {
-                var menuList = args.MenuItems;
-
-                var itemNamesToRemove = new[] { "saveAs", "print", "webCapture", "share", "moreTools" };
-                var itemsToRemove = menuList.Where(coreWebView2ContextMenuItem => itemNamesToRemove.Contains(coreWebView2ContextMenuItem.Name)).ToList();
-
-                foreach (var coreWebView2ContextMenuItem in itemsToRemove)
-                {
-                    menuList.Remove(coreWebView2ContextMenuItem);
-                }
-
-                var newItem =
-                    webView.CoreWebView2.Environment.CreateContextMenuItem(
-                        Languages.webview_context_open_in_web_browser, null, CoreWebView2ContextMenuItemKind.Command);
-                newItem.CustomItemSelected += delegate
-                {
-                    var pageUri = args.ContextMenuTarget.PageUri;
-                    Task.Run(() => InternetUtils.OpenUrlInWebBrowser(pageUri));
-                };
-                // TODO: Add icon with newItem.Icon = 
-                menuList.Insert(menuList.Count, newItem);
+                UpdateDashboard();
             };
         }
 
@@ -119,7 +71,7 @@ namespace TCLauncher.MVVM.View
             var tclInstancesFolder = IoUtils.Tcl.InstancesPath;
             if (!(profileSelect.SelectedItem is InstalledInstance instance))
             {
-                MessageBox.Show(Languages.select_instance_message);
+                AppServices.Overlays.ShowToast("Choose a profile", Languages.select_instance_message, ToastTone.Warning);
                 ResetPlayButton();
                 return;
             }
@@ -128,15 +80,8 @@ namespace TCLauncher.MVVM.View
             {
                 if (App.LoginHandler.AccountManager.GetAccounts().Count != 1)
                 {
-                    var result = MessageBox.Show(Languages.login_prompt_message, Languages.login, MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        App.MainWin.navigateToLogin();
-                        ResetPlayButton();
-                        return;
-                    }
-                    MessageBox.Show("Choose a Microsoft account or create an explicit offline profile on the Accounts page.", Languages.login);
+                    await AppServices.Overlays.ShowSheetAsync("Choose an account",
+                        "Select a Microsoft account or create an explicit offline profile before playing.");
                     App.MainWin.navigateToLogin();
                     ResetPlayButton();
                     return;
@@ -149,7 +94,7 @@ namespace TCLauncher.MVVM.View
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        AppServices.Overlays.ShowToast("Sign-in failed", ex.Message, ToastTone.Error);
                         ResetPlayButton();
                         return;
                     }
@@ -300,7 +245,8 @@ namespace TCLauncher.MVVM.View
             catch (Exception ex)
             {
                 AppServices.Log.Error("game.launch_failed", ex);
-                MessageBox.Show(ex.Message);
+                _ = AppServices.Overlays.ShowSheetAsync("Minecraft could not start", new LaunchErrorSheet(ex.Message,
+                    () => PlayBtn_Click(playBtn, new RoutedEventArgs())), false);
             }
             finally
             {
@@ -314,61 +260,14 @@ namespace TCLauncher.MVVM.View
             playBtn.IsEnabled = true;
         }
 
-        private void SetAppletViewState(bool val = true)
+        private async void AppletItem_OnClick(object sender, RoutedEventArgs e)
         {
-            if (val)
-            {
-                homeOverview.Visibility = Visibility.Collapsed;
-                mainApplets.Visibility = Visibility.Collapsed;
-                appletView.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                homeOverview.Visibility = Visibility.Visible;
-                mainApplets.Visibility = Visibility.Visible;
-                appletView.Visibility = Visibility.Collapsed;
-                webView.Source = null;
-            }
-        }
-
-        private async void AppletItem_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!(sender is Border border)) return;
-            if (!(border.DataContext is Applet applet)) return;
-
-            if (!applet.is_action) return;
-            if (applet.OpenExternal)
-            {
-                Uri external;
-                if (Uri.TryCreate(applet.ActionURL, UriKind.Absolute, out external) && external.Scheme == Uri.UriSchemeHttps)
-                {
-                    if (MessageBox.Show($"Open {external.Host} in your browser?", "TCLauncher", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
-                        Process.Start(applet.ActionURL);
-                    return;
-                }
-
-                var result = MessageBox.Show(Languages.sandbox_security_message, Languages.tclauncher_security, MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.Cancel) return;
-            }
-
-            await LoadWv();
-            SetAppletViewState();
-            try
-            {
-                webView.Source = new Uri(applet.ActionURL);
-            }
-            catch
-            {
-                try
-                {
-                    webView.Source = new Uri(
-                        "data:text/plain;base64,RGllIFJlc3NvdXJjZSBrb25udGUgbmljaHQgZ2VsYWRlbiB3ZXJkZW4uIE1vZWdsaWNoZSBHcnVlbmRlIHNpbmQ6Ci0gSW50ZXJuZXRwcm9ibGVtZQotIE5pY2h0IGV4aXN0aWVyZW5kZSBSZXNzb3VyY2UKLSBVbmd1ZWx0aWdlcyBSZXNzb3VyY2VuZm9ybWF0Ci0gQmxvY2tpZXJ1bmcgZHVyY2ggVENMYXVuY2hlci1TaWNoZXJoZWl0");
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+            var applet = (sender as Button)?.Tag as Applet;
+            if (applet == null || !applet.is_action) return;
+            if (!Uri.TryCreate(applet.ActionURL, UriKind.Absolute, out var target) || target.Scheme != Uri.UriSchemeHttps)
+            { AppServices.Overlays.ShowToast("Link blocked", "Only secure links can be opened.", ToastTone.Warning); return; }
+            if (!await AppServices.Overlays.ConfirmAsync("Open external link", "Open " + target.Host + " in your browser?", "Open browser", "Cancel")) return;
+            Process.Start(target.ToString());
         }
 
         private void ProfileSelect_SelectionChanged(object sender, RoutedEventArgs e)
@@ -408,34 +307,54 @@ namespace TCLauncher.MVVM.View
                 }
             }
             RefreshApplets();
+            UpdateDashboard();
         }
 
         private async void RefreshApplets()
         {
             CatalogStatus.Text = string.Empty;
+            var merged = new List<Applet>();
             var result = await AppServices.Catalog.LoadAsync(CancellationToken.None);
             if (!result.IsSuccess)
             {
-                CatalogStatus.Text = result.Message;
-                Applets = new ObservableCollection<Applet>();
+                CatalogStatus.Text = "Offline • local dashboard";
             }
             else
             {
                 var load = result.Value;
                 if (load.IsOffline) CatalogStatus.Text = Languages.ResourceManager.GetString("catalog_offline");
                 else if (load.IsStale) CatalogStatus.Text = "Cached catalog may be out of date";
-                var cards = load.Catalog.Content.Select(card => new Applet(card.Weight, null, card.ImageUrl, card.Title, card.Summary, card.ActionUrl, true));
+                var cards = load.Catalog.Content.Select(card => new Applet(card.Weight, null, card.ImageUrl, card.Title, card.Summary, card.ActionUrl, true, "T-Craft"));
                 var featured = load.Catalog.Items.Where(item => item.Featured).Take(2).Select(item =>
-                    new Applet(100, item.Slug, item.ThumbnailUrl, item.Title, item.Summary, "https://tcraft.link/tclauncher/", true));
-                Applets = new ObservableCollection<Applet>(cards.Concat(featured).OrderByDescending(card => card.Weight).Take(4));
+                    new Applet(100, item.Slug, item.ThumbnailUrl, item.Title, item.Summary, "https://tcraft.link/tclauncher/", true, "T-Craft"));
+                merged.AddRange(cards.Concat(featured));
             }
 
-            mainApplets.ItemsSource = Applets;
-        }
+            if (profileSelect.SelectedItem is InstalledInstance selected &&
+                Uri.TryCreate(selected.AppletURL, UriKind.Absolute, out var appletUri) && appletUri.Scheme == Uri.UriSchemeHttps)
+            {
+                try
+                {
+                    var json = await LauncherHttpClient.Instance.GetStringAsync(appletUri);
+                    var legacy = JsonConvert.DeserializeObject<List<Applet>>(json) ?? new List<Applet>();
+                    foreach (var applet in legacy) { applet.Origin = "Profile"; merged.Add(applet); }
+                }
+                catch (Exception exception) { AppServices.Log.Warning("home.profile_content_unavailable", exception.Message); }
+            }
 
-        private void WebViewBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetAppletViewState(false);
+            var localCount = (DataContext as MVVM.ViewModel.HomeViewModel)?.LocalList.Count ?? 0;
+            merged.Add(new Applet(10, "profiles", null, localCount + " profiles ready", "Installed games remain available even when T-Craft services are offline.", null, false, "Local"));
+            if (profileSelect.SelectedItem is InstalledInstance active)
+            {
+                var latest = AppServices.Backups.List(active.Guid).FirstOrDefault();
+                merged.Add(new Applet(9, "backup", null, latest == null ? "Backup recommended" : "Backup protected",
+                    latest == null ? "Create a backup before your next update." : "Latest backup: " + latest.Manifest.CreatedAtUtc.ToLocalTime().ToString("g"), null, false, "Local"));
+            }
+            merged.Add(new Applet(8, "privacy", null, "Private by default", "Diagnostics stay on this PC until you export a support bundle.", null, false, "Local"));
+            Applets = new ObservableCollection<Applet>(merged.Where(card => !string.IsNullOrWhiteSpace(card.Title))
+                .GroupBy(card => (card.Origin ?? "") + "|" + card.Title).Select(group => group.First())
+                .OrderByDescending(card => card.Weight).Take(6));
+            mainApplets.ItemsSource = Applets;
         }
 
         private void ServerSelect_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -444,36 +363,36 @@ namespace TCLauncher.MVVM.View
 
             if (!(profileSelect.SelectedItem is InstalledInstance selectedInstance)) return;
             
-            selectedInstance.LastServer = ((Server)ServerSelect.SelectedItem).Address;
+            selectedInstance.LastServer = (ServerSelect.SelectedItem as Server)?.Address;
             IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
+            UpdateDashboard();
         }
 
-        private async void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void DiscoverButton_OnClick(object sender, RoutedEventArgs e) => App.MainWin.navigateToServer();
+
+        private void EditSelection_OnClick(object sender, RoutedEventArgs e)
         {
-            if (webView?.CoreWebView2 == null) return;
-            try
-            {
-                await webView.EnsureCoreWebView2Async();
-                webView.Stop();
-                webView.Dispose();
-            }
-            catch
-            {
-                // ignored
-            }
+            profileSelect.Focus();
+            profileSelect.IsDropDownOpen = true;
         }
 
-        private void WebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        private void RecentProfile_OnClick(object sender, RoutedEventArgs e)
         {
-            Uri target;
-            if (!Uri.TryCreate(e.Uri, UriKind.Absolute, out target) || target.Scheme != Uri.UriSchemeHttps ||
-                !(target.Host.Equals("tcraft.link", StringComparison.OrdinalIgnoreCase) || target.Host.EndsWith(".tcraft.link", StringComparison.OrdinalIgnoreCase)))
-            {
-                e.Cancel = true;
-                if (target != null && target.Scheme == Uri.UriSchemeHttps &&
-                    MessageBox.Show($"Open {target.Host} in your browser?", "TCLauncher", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
-                    Process.Start(target.ToString());
-            }
+            if (!((sender as Button)?.Tag is InstalledInstance profile)) return;
+            profileSelect.SelectedItem = (profileSelect.ItemsSource as IEnumerable<InstalledInstance>)?.FirstOrDefault(item => item.Guid == profile.Guid);
+        }
+
+        private void UpdateDashboard()
+        {
+            var profile = profileSelect.SelectedItem as InstalledInstance;
+            ContinueProfileName.Text = profile?.DisplayName ?? "Choose a profile";
+            var server = ServerSelect.SelectedItem as Server;
+            ContinueSummary.Text = profile == null ? "Install or create a game to begin." :
+                "Minecraft " + profile.McVersion + " • " + (string.IsNullOrWhiteSpace(server?.Address) ? "No direct server" : server.Name);
+            var selection = AppServices.AccountSelection.Get();
+            AccountSummary.Text = selection == null ? "No account selected" : selection.DisplayName + " • " + selection.Kind;
+            UpdateWarning.Text = profile?.Upgradeable == true ? "An update is ready for this profile." : "Profile is up to date.";
+            BackupWarning.Text = profile != null && AppServices.Backups.List(profile.Guid).Count == 0 ? "No backup yet — one click from Games." : "Backup available.";
         }
     }
 }

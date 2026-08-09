@@ -48,5 +48,42 @@ namespace TCLauncher.Tests
                 if (Directory.Exists(root)) Directory.Delete(root, true);
             }
         }
+
+        [TestMethod]
+        public void LegacyCatalogConversionPreservesProfileAppletEndpoint()
+        {
+            var legacy = new Instance
+            {
+                Guid = Guid.NewGuid(), Name = "legacy", DisplayName = "Legacy", McVersion = "1.20.1",
+                AppletURL = "https://tcraft.link/profile/applets"
+            };
+            var item = CatalogItem.FromLegacy(legacy);
+            var restored = item.ToInstance();
+            Assert.AreEqual(legacy.AppletURL, item.LegacyAppletUrl);
+            Assert.AreEqual(legacy.AppletURL, restored.AppletURL);
+        }
+
+        [TestMethod]
+        public void ActivityStorePersistsOnlyLaunchMetadataAndCompletesRecord()
+        {
+            var root = Path.Combine(Path.GetTempPath(), "tcl-activity-test-" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                var path = Path.Combine(root, "activity.json");
+                var store = new ActivityStore(path, new AtomicFileService());
+                var profileId = Guid.NewGuid();
+                var activity = store.RecordStarted(profileId, "play.example.test");
+                store.RecordCompleted(activity.Id, TimeSpan.FromSeconds(42), 0);
+                var saved = store.List()[0];
+                Assert.AreEqual(profileId, saved.ProfileId);
+                Assert.AreEqual(42, saved.DurationSeconds);
+                Assert.AreEqual(0, saved.ExitCode);
+                Assert.IsFalse(File.ReadAllText(path).IndexOf("token", StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
     }
 }

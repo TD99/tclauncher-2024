@@ -31,11 +31,13 @@ namespace TCLauncher.Core.Services
     {
         private readonly IModLoaderService _modLoaders;
         private readonly ILogService _log;
+        private readonly IActivityStore _activity;
 
-        public LaunchService(IModLoaderService modLoaders, ILogService log)
+        public LaunchService(IModLoaderService modLoaders, ILogService log, IActivityStore activity)
         {
             _modLoaders = modLoaders ?? throw new ArgumentNullException(nameof(modLoaders));
             _log = log ?? throw new ArgumentNullException(nameof(log));
+            _activity = activity ?? throw new ArgumentNullException(nameof(activity));
         }
 
         public async Task<OperationResult<GameLaunchHandle>> StartAsync(Instance instance, MSession session, Server server,
@@ -58,10 +60,12 @@ namespace TCLauncher.Core.Services
                 var process = await launcher.CreateProcessAsync(version, options);
                 cancellationToken.ThrowIfCancellationRequested();
                 var startedAt = DateTime.UtcNow;
+                var activity = _activity.RecordStarted(instance.Guid, server?.Address);
                 process.EnableRaisingEvents = true;
                 process.Exited += (sender, args) =>
                 {
                     var duration = DateTime.UtcNow - startedAt;
+                    _activity.RecordCompleted(activity.Id, duration, process.ExitCode);
                     _log.Info("game.exited", $"profile={instance.Guid}; exitCode={process.ExitCode}; durationSeconds={(long)duration.TotalSeconds}", operationId);
                 };
                 process.Start();
