@@ -7,7 +7,6 @@ using Microsoft.Win32;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.MVVM.ViewModel;
-using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.View
@@ -47,8 +46,7 @@ namespace TCLauncher.MVVM.View
 
         private void CreateProfile_OnClick(object sender, RoutedEventArgs e)
         {
-            var window = new ProfileCreatorWindow { Owner = App.MainWin };
-            if (window.ShowDialog() == true) OnGameChanged(window.CreatedInstance);
+            _ = AppServices.Overlays.ShowSheetAsync("Create profile", new ProfileCreatorSheet(null, OnGameChanged), false);
         }
 
         private async void ImportPackage_OnClick(object sender, RoutedEventArgs e)

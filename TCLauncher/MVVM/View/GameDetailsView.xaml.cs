@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
-using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.View
@@ -87,18 +86,18 @@ namespace TCLauncher.MVVM.View
         }
 
         private async void Configure_OnClick(object sender, RoutedEventArgs e) =>
-            await AppServices.Overlays.ShowSheetAsync("Configure profile", "Profile configuration is moving into this sheet in the workflow polish phase.");
+            await AppServices.Overlays.ShowSheetAsync("Configure profile", new ProfileConfigurationSheet((InstalledInstance)Presentation.Game, _changed), false);
 
         private void Clone_OnClick(object sender, RoutedEventArgs e)
         {
             if (!(Presentation.Game is InstalledInstance installed)) return;
-            var window = new ProfileCreatorWindow(installed) { Owner = App.MainWin };
-            if (window.ShowDialog() == true) _changed?.Invoke(window.CreatedInstance);
+            _ = AppServices.Overlays.ShowSheetAsync("Clone profile", new ProfileCreatorSheet(installed, _changed), false);
         }
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            if (Presentation.Game is InstalledInstance installed) new PackageExportWindow(installed) { Owner = App.MainWin }.ShowDialog();
+            if (Presentation.Game is InstalledInstance installed)
+                _ = AppServices.Overlays.ShowSheetAsync("Export package", new PackageExportSheet(installed), false);
         }
 
         private void OpenFolder_OnClick(object sender, RoutedEventArgs e)
@@ -109,7 +108,14 @@ namespace TCLauncher.MVVM.View
 
         private void ManageBackups_OnClick(object sender, RoutedEventArgs e)
         {
-            if (Presentation.Game is InstalledInstance installed) new BackupWindow(installed) { Owner = App.MainWin }.ShowDialog();
+            if (Presentation.Game is InstalledInstance installed)
+                _ = AppServices.Overlays.ShowSheetAsync("Manage backups", new BackupManagerSheet(installed, _changed), false);
+        }
+
+        private void Health_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Presentation.Game is InstalledInstance installed)
+                _ = AppServices.Overlays.ShowSheetAsync("Health & support", new HealthSheet(installed), true);
         }
 
         private async void Repair_OnClick(object sender, RoutedEventArgs e) => await InstallOrRepairAsync();

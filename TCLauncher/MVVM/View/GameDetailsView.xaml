@@ -29,6 +29,7 @@
                         <Separator />
                         <MenuItem Header="Open folder" Click="OpenFolder_OnClick" />
                         <MenuItem Header="Manage backups" Click="ManageBackups_OnClick" />
+                        <MenuItem Header="Health &amp; support" Click="Health_OnClick" />
                         <MenuItem Header="Repair" Click="Repair_OnClick" />
                         <Separator />
                         <MenuItem Header="Uninstall" Foreground="#FF9A9A" Click="Uninstall_OnClick" />

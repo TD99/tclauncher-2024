@@ -63,19 +63,18 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void NewOfflineBtn_OnClick(object sender, RoutedEventArgs e)
+        private void NewOfflineBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            var dialog = new Windows.CustomInputDialog("Offline Minecraft name (3–16 letters, numbers, or underscores)") { Owner = App.MainWin };
-            dialog.Show();
-            if (!await dialog.Result) return;
-            var result = AppServices.OfflineProfiles.Add(dialog.ResponseText);
-            if (!result.IsSuccess)
-            {
-                AppServices.Overlays.ShowToast("Offline profile not created", result.Message, ToastTone.Warning);
-                return;
-            }
-            App.SetOfflineSession(result.Value);
-            ListAccounts();
+            _ = AppServices.Overlays.ShowSheetAsync("Add offline profile", new TextPromptSheet(
+                "Minecraft name (3–16 letters, numbers, or underscores)", value =>
+                {
+                    var result = AppServices.OfflineProfiles.Add(value);
+                    if (!result.IsSuccess) return OperationResult.Failure(result.ErrorCode, result.Message, result.Exception, result.OperationId);
+                    App.SetOfflineSession(result.Value);
+                    ListAccounts();
+                    AppServices.Overlays.ShowToast("Offline profile added", result.Value.Username);
+                    return OperationResult.Success(result.OperationId);
+                }), false);
         }
 
         private async void SelectAccount_OnClick(object sender, RoutedEventArgs e)

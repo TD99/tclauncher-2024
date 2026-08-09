@@ -1,0 +1,18 @@
+<UserControl x:Class="TCLauncher.MVVM.View.BackupManagerSheet" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid MinHeight="360">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Border Padding="14" Background="#202B39" CornerRadius="10">
+            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel><TextBlock Margin="0,0,0,6" Text="Optional backup name"/><TextBox x:Name="BackupName"/></StackPanel>
+                <StackPanel Grid.Column="1" Margin="14,0,0,0"><CheckBox x:Name="FullBackup" Content="Full instance"/><Button Margin="0,10,0,0" Padding="14,8" Content="Create backup" Click="Create_Click"/></StackPanel>
+            </Grid>
+        </Border>
+        <ListBox x:Name="BackupList" Grid.Row="1" Margin="0,14,0,0" Background="Transparent" BorderThickness="0">
+            <ListBox.ItemTemplate><DataTemplate><Border Margin="0,0,0,8" Padding="12" Background="#202B39" CornerRadius="9"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock FontWeight="SemiBold" Text="{Binding Manifest.Name}"/><TextBlock Margin="0,3,0,0" Foreground="#AEB8C7" Text="{Binding DisplayLabel}"/></StackPanel><TextBlock Grid.Column="1" VerticalAlignment="Center" Foreground="#8EA6C8" Text="{Binding SizeBytes, StringFormat={}{0:N0} bytes}"/></Grid></Border></DataTemplate></ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2" Margin="0,14,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Padding="14,8" Content="Restore as copy" Click="RestoreCopy_Click"/>
+            <Button Margin="8,0,0,0" Padding="14,8" Content="Restore and overwrite" Click="Restore_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
