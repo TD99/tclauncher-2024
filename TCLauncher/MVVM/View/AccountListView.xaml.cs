@@ -1,151 +1,139 @@
-﻿using System;
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft.Sessions;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
-using TCLauncher.MVVM.Controls;
 
 namespace TCLauncher.MVVM.View
 {
     public partial class AccountListView
     {
-        public AccountListView()
-        {
-            InitializeComponent();
-        }
+        public ObservableCollection<AccountRow> Rows { get; } = new ObservableCollection<AccountRow>();
 
-        private void AccountView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            ListAccounts();
-        }
+        public AccountListView() => InitializeComponent();
+        private void AccountView_OnLoaded(object sender, RoutedEventArgs e) => ListAccounts();
 
         private void ListAccounts()
         {
-            LogoutBtn.Visibility = Visibility.Collapsed;
-            Accounts.Items.Clear();
-            var accounts = App.LoginHandler.AccountManager.GetAccounts();
-            foreach (var account in accounts)
+            Rows.Clear();
+            var selected = AppServices.AccountSelection.Get();
+            foreach (var account in App.LoginHandler.AccountManager.GetAccounts())
             {
-                if (!(account is JEGameAccount jeGameAccount))
-                    continue;
-
-                var isPrimary = jeGameAccount?.Profile?.UUID == App.Session?.UUID;
-
-                var control = new AccountControl(jeGameAccount, isPrimary)
+                if (!(account is JEGameAccount gameAccount)) continue;
+                var id = gameAccount.Profile?.UUID;
+                Rows.Add(new AccountRow
                 {
-                    DataContext = jeGameAccount
-                };
-
-                control.LoginBtn.Click += Control_OnLoginClicked;
-                control.RemoveBtn.Click += Control_OnRemoveClicked;
-
-                Accounts.Items.Add(control);
+                    MicrosoftAccount = gameAccount,
+                    StableId = id,
+                    Username = gameAccount.Profile?.Username ?? gameAccount.Gamertag ?? "Microsoft account",
+                    Subtitle = string.IsNullOrWhiteSpace(gameAccount.Gamertag) ? "Microsoft" : gameAccount.Gamertag + " • Microsoft",
+                    AvatarUri = GetAvatarUri(id),
+                    IsSelected = selected?.Kind == AccountSelectionKind.Microsoft && string.Equals(selected.StableId, id, StringComparison.OrdinalIgnoreCase)
+                });
             }
-            var selectedOffline = AppServices.OfflineProfiles.GetSelected();
             foreach (var profile in AppServices.OfflineProfiles.List())
             {
-                var control = new OfflineAccountControl(profile, selectedOffline?.Id == profile.Id);
-                control.LoginBtn.Click += (sender, args) => SelectOffline(profile);
-                control.RemoveBtn.Click += (sender, args) => RemoveOffline(profile);
-                Accounts.Items.Add(control);
+                Rows.Add(new AccountRow
+                {
+                    OfflineProfile = profile,
+                    StableId = profile.Id.ToString("D"),
+                    Username = profile.Username,
+                    Subtitle = "Offline • stored on this device",
+                    IsSelected = selected?.Kind == AccountSelectionKind.Offline && string.Equals(selected.StableId, profile.Id.ToString("D"), StringComparison.OrdinalIgnoreCase)
+                });
             }
-            if (App.Session != null)
-                LogoutBtn.Visibility = Visibility.Visible;
+            LogoutBtn.Visibility = selected == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private async void NewAccountBtn_OnClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                await App.LoginHandler.AuthenticateInteractively();
+                var session = await App.LoginHandler.AuthenticateInteractively();
+                App.SetMicrosoftSession(session);
                 ListAccounts();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message);
+                AppServices.Overlays.ShowToast("Sign-in failed", exception.Message, ToastTone.Error);
             }
         }
 
         private async void NewOfflineBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            var dialog = new TCLauncher.MVVM.Windows.CustomInputDialog("Offline Minecraft name (3–16 letters, numbers, or underscores)") { Owner = App.MainWin };
+            var dialog = new Windows.CustomInputDialog("Offline Minecraft name (3–16 letters, numbers, or underscores)") { Owner = App.MainWin };
             dialog.Show();
             if (!await dialog.Result) return;
             var result = AppServices.OfflineProfiles.Add(dialog.ResponseText);
             if (!result.IsSuccess)
             {
-                MessageBox.Show(result.Message, "TCLauncher", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppServices.Overlays.ShowToast("Offline profile not created", result.Message, ToastTone.Warning);
                 return;
             }
-            SelectOffline(result.Value);
-        }
-
-        private void SelectOffline(OfflineProfile profile)
-        {
-            AppServices.OfflineProfiles.Select(profile.Id);
-            App.Session = MSession.CreateOfflineSession(profile.Username);
-            App.MainWin.SetDisplayAccount(profile.Username + " (Offline)");
+            App.SetOfflineSession(result.Value);
             ListAccounts();
         }
 
-        private void RemoveOffline(OfflineProfile profile)
+        private async void SelectAccount_OnClick(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show($"Remove offline profile {profile.Username}?", "TCLauncher", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-            var selected = AppServices.OfflineProfiles.GetSelected();
-            AppServices.OfflineProfiles.Remove(profile.Id);
-            if (selected?.Id == profile.Id) SetSession(null);
-            ListAccounts();
-        }
-
-        private async void Control_OnLoginClicked(object sender, EventArgs e)
-        {
-            var btn = (Button)sender;
-            var control = XamlUtils.FindParent<AccountControl>(btn);
+            if (!((sender as Button)?.Tag is AccountRow row) || row.IsSelected) return;
             try
             {
-                var selectedAccount = control.Account ?? throw new InvalidOperationException();
-                var result = await App.LoginHandler.Authenticate(selectedAccount);
-                SetSession(result);
-                App.MainWin.navigateToHome();
+                if (row.IsOffline) App.SetOfflineSession(row.OfflineProfile);
+                else App.SetMicrosoftSession(await App.LoginHandler.Authenticate(row.MicrosoftAccount));
+                ListAccounts();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message);
+                AppServices.Overlays.ShowToast("Account unavailable", exception.Message, ToastTone.Error);
             }
         }
 
-        private void Control_OnRemoveClicked(object sender, EventArgs e)
+        private async void RemoveAccount_OnClick(object sender, RoutedEventArgs e)
         {
-            var btn = (Button)sender;
-            var control = XamlUtils.FindParent<AccountControl>(btn);
+            if (!((sender as Button)?.Tag is AccountRow row)) return;
+            if (!await AppServices.Overlays.ConfirmAsync("Remove account", "Remove " + row.Username + " from this device?", "Remove", "Cancel")) return;
             try
             {
-                var selectedAccount = control.Account ?? throw new InvalidOperationException();
-                if (MessageBox.Show("Remove Microsoft account " + (selectedAccount.Profile?.Username ?? "") + " from this device?",
-                        "TCLauncher", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-                App.LoginHandler.Signout(selectedAccount);
-                SetSession(null);
+                if (row.IsOffline) AppServices.OfflineProfiles.Remove(row.OfflineProfile.Id);
+                else await App.LoginHandler.Signout(row.MicrosoftAccount);
+                if (row.IsSelected) App.SetOfflineSession(null);
+                ListAccounts();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MessageBox.Show(ex.Message);
+                AppServices.Overlays.ShowToast("Account could not be removed", exception.Message, ToastTone.Error);
             }
-        }
-
-        private void SetSession(MSession session)
-        {
-            if (session == null) AppServices.OfflineProfiles.Select(null);
-            App.MainWin.SetDisplayAccount(session?.Username);
-            App.Session = session;
-            ListAccounts();
         }
 
         private void LogoutBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            SetSession(null);
+            App.SetOfflineSession(null);
+            ListAccounts();
         }
+
+        private static string GetAvatarUri(string uuid)
+        {
+            if (string.IsNullOrWhiteSpace(uuid)) return null;
+            var cached = Path.Combine(IoUtils.Tcl.CachePath, "avatar_" + uuid + ".png");
+            return File.Exists(cached) ? cached : "https://mc-heads.net/avatar/" + uuid;
+        }
+    }
+
+    public sealed class AccountRow
+    {
+        public string StableId { get; set; }
+        public string Username { get; set; }
+        public string Subtitle { get; set; }
+        public string AvatarUri { get; set; }
+        public bool IsSelected { get; set; }
+        public JEGameAccount MicrosoftAccount { get; set; }
+        public OfflineProfile OfflineProfile { get; set; }
+        public bool IsOffline => OfflineProfile != null;
+        public bool IsMicrosoft => MicrosoftAccount != null;
     }
 }

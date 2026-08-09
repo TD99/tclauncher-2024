@@ -145,8 +145,7 @@ namespace TCLauncher.MVVM.View
                 {
                     try
                     {
-                        App.Session = await App.LoginHandler.AuthenticateSilently();
-                        App.MainWin.SetDisplayAccount(App.Session?.Username);
+                        App.SetMicrosoftSession(await App.LoginHandler.AuthenticateSilently());
                     }
                     catch (Exception ex)
                     {

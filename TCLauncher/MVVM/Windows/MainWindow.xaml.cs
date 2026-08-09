@@ -176,16 +176,20 @@ namespace TCLauncher.MVVM.Windows
             vm.AccountListViewCommand.Execute(null);
         }
 
-        public void SetDisplayAccount(string username)
+        public void SetDisplayAccount(string username, bool isOffline = false)
         {
             if (username != null)
             {
-                AccountManagerBtnName.Text = username;
-                AccountManagerBtnPicture.Source = new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
+                AccountManagerBtnName.Text = isOffline ? username + " • Offline" : username;
+                OfflineAccountGlyph.Visibility = isOffline ? Visibility.Visible : Visibility.Collapsed;
+                AccountFallbackPicture.Visibility = isOffline ? Visibility.Collapsed : Visibility.Visible;
+                AccountManagerBtnPicture.Source = isOffline ? null : new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
             }
             else
             {
                 AccountManagerBtnName.Text = Languages.not_logged_button_text;
+                OfflineAccountGlyph.Visibility = Visibility.Collapsed;
+                AccountFallbackPicture.Visibility = Visibility.Visible;
                 AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/anonymous.png"));
             }
         }

@@ -313,6 +313,7 @@
 
                                     <!--  Fallback  -->
                                     <Image
+                                        x:Name="AccountFallbackPicture"
                                         Grid.Column="0"
                                         Width="24"
                                         Height="24"
@@ -325,6 +326,11 @@
                                         Width="24"
                                         Height="24"
                                         Margin="0,0,10,0" />
+                                    <Border x:Name="OfflineAccountGlyph" Grid.Column="0" Width="24" Height="24" Margin="0,0,10,0"
+                                            Background="#28384A" CornerRadius="6" Visibility="Collapsed">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Text="⌁"
+                                                   AutomationProperties.Name="Offline account" />
+                                    </Border>
                                     <TextBlock
                                         x:Name="AccountManagerBtnName"
                                         Grid.Column="1"

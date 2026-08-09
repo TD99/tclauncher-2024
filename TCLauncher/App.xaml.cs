@@ -83,6 +83,31 @@ namespace TCLauncher
             };
         }
 
+        public static void SetMicrosoftSession(MSession session)
+        {
+            Session = session;
+            AppServices.OfflineProfiles.Select(null);
+            if (session == null) AppServices.AccountSelection.Clear();
+            else AppServices.AccountSelection.SetMicrosoft(session.UUID, session.Username);
+            MainWin?.SetDisplayAccount(session?.Username, false);
+        }
+
+        public static void SetOfflineSession(OfflineProfile profile)
+        {
+            if (profile == null)
+            {
+                Session = null;
+                AppServices.OfflineProfiles.Select(null);
+                AppServices.AccountSelection.Clear();
+                MainWin?.SetDisplayAccount(null, false);
+                return;
+            }
+            AppServices.OfflineProfiles.Select(profile.Id);
+            Session = MSession.CreateOfflineSession(profile.Username);
+            AppServices.AccountSelection.SetOffline(profile.Id, profile.Username);
+            MainWin?.SetDisplayAccount(profile.Username, true);
+        }
+
         private async void App_Startup(object sender, StartupEventArgs e)
         {
             UriArgs = Get_AppURI(e.Args);
@@ -188,22 +213,28 @@ namespace TCLauncher
 
         private async void TryAutoLogin()
         {
-            var signedIn = false;
             try
             {
+                var selected = AppServices.AccountSelection.Get();
+                if (selected?.Kind == AccountSelectionKind.Offline && Guid.TryParse(selected.StableId, out var offlineId))
+                {
+                    var offline = AppServices.OfflineProfiles.List().FirstOrDefault(profile => profile.Id == offlineId);
+                    if (offline != null) SetOfflineSession(offline);
+                    else SetOfflineSession(null);
+                    return;
+                }
+
+                if (selected?.Kind != AccountSelectionKind.Microsoft) return;
                 var accounts = LoginHandler.AccountManager.GetAccounts();
                 foreach (var account in accounts)
                 {
                     if (!(account is JEGameAccount jeGameAccount)) continue;
-                    if (jeGameAccount?.Profile?.UUID != Settings.Default.LastAccountUUID) continue;
+                    if (!string.Equals(jeGameAccount?.Profile?.UUID, selected.StableId, StringComparison.OrdinalIgnoreCase)) continue;
 
                     try
                     {
                         var session = await LoginHandler.Authenticate(jeGameAccount);
-
-                        MainWin.SetDisplayAccount(session?.Username);
-                        Session = session;
-                        signedIn = session != null;
+                        SetMicrosoftSession(session);
                     }
                     catch
                     {
@@ -211,15 +242,6 @@ namespace TCLauncher
                     }
 
                     break;
-                }
-                if (!signedIn)
-                {
-                    var offline = AppServices.OfflineProfiles.GetSelected();
-                    if (offline != null)
-                    {
-                        Session = MSession.CreateOfflineSession(offline.Username);
-                        MainWin.SetDisplayAccount(offline.Username + " (Offline)");
-                    }
                 }
             } catch (Exception e)
             {

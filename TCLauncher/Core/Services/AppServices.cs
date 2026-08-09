@@ -16,6 +16,7 @@ namespace TCLauncher.Core.Services
         public static IUpdateService Updates { get; private set; }
         public static IProfileService Profiles { get; private set; }
         public static IOfflineProfileService OfflineProfiles { get; private set; }
+        public static IAccountSelectionService AccountSelection { get; private set; }
         public static IModLoaderService ModLoaders { get; private set; }
         public static IForgeVersionResolver ForgeVersions { get; private set; }
         public static ILaunchService Launches { get; private set; }
@@ -45,6 +46,8 @@ namespace TCLauncher.Core.Services
             Updates = new UpdateService(LauncherHttpClient.Instance, new System.Uri("https://tcraft.link/tclauncher/api/v2/update-manifest"), Log);
             Profiles = new ProfileService(Path.Combine(rootPath, "Instances"), AtomicFiles, InstanceConfigs, Log);
             OfflineProfiles = new OfflineProfileService(Path.Combine(rootPath, "Udata", "offline_profiles.json"), AtomicFiles);
+            AccountSelection = new AccountSelectionService(Path.Combine(rootPath, "Udata", "active_account.json"), AtomicFiles,
+                TCLauncher.Properties.Settings.Default.LastAccountUUID, OfflineProfiles.GetSelected());
             ForgeVersions = new ForgeVersionResolver(LauncherHttpClient.Instance, Path.Combine(rootPath, "Cache", "forge"), AtomicFiles, Log);
             ModLoaders = new ModLoaderService(LauncherHttpClient.Instance, ForgeVersions);
             Launches = new LaunchService(ModLoaders, Log);
