@@ -26,6 +26,9 @@ namespace TCLauncher.Models
                    instance.Patches, instance.UsePatch, instance.UseIsolation, instance.WorkingDirDesc, instance.AppletURL, instance.Requirements,
                    instance.Servers, instance.MinimumRamMb, instance.MaximumRamMb, instance.JVMArguments)
         {
+            Loader = instance.Loader;
+            PayloadSha256 = instance.PayloadSha256;
+            SchemaVersion = instance.SchemaVersion;
             InstallationDir = IoUtils.Tcl.GetInstancePath(instance.Guid);
             DataDir = IoUtils.Tcl.GetInstanceDataPath(instance.Guid);
             ConfigFile = IoUtils.Tcl.GetInstanceConfigPath(instance.Guid);
