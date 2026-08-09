@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.ComponentModel;
+using System;
+using System.Windows.Media.Animation;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 
@@ -16,8 +18,24 @@ namespace TCLauncher.MVVM.Controls
             {
                 Root.DataContext = AppServices.Overlays.Host;
                 ActivityTray.DataContext = new OperationTrayViewModel(AppServices.Operations);
+                AppServices.Overlays.Host.PropertyChanged += Host_OnPropertyChanged;
             };
+            Unloaded += (sender, args) => AppServices.Overlays.Host.PropertyChanged -= Host_OnPropertyChanged;
             PreviewKeyDown += OnPreviewKeyDown;
+        }
+
+        private void Host_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(OverlayHostViewModel.IsOpen) || !AppServices.Overlays.Host.IsOpen) return;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Surface.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                if (!SystemParameters.ClientAreaAnimation) return;
+                Surface.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
+                SurfaceTranslate.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty,
+                    new DoubleAnimation(AppServices.Overlays.Host.IsDrawer ? 28 : 0, 0, TimeSpan.FromMilliseconds(190))
+                    { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            }), System.Windows.Threading.DispatcherPriority.Input);
         }
 
         private void Backdrop_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

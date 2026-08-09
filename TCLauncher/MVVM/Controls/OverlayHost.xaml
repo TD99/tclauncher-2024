@@ -43,6 +43,7 @@
             <Border x:Name="Surface" Width="520" MaxHeight="560" Margin="24"
                     HorizontalAlignment="Center" VerticalAlignment="Center" Padding="22"
                     Background="#F51D2633" BorderBrush="#3D4A5C" BorderThickness="1" CornerRadius="14">
+                <Border.RenderTransform><TranslateTransform x:Name="SurfaceTranslate" /></Border.RenderTransform>
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>

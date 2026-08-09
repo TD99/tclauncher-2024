@@ -829,4 +829,64 @@
   <data name="new_update_found_message" xml:space="preserve"><value>Version {0} is available. Download and verify it now?</value></data>
   <data name="downloading_text" xml:space="preserve"><value>Downloading and verifying the signed installer…</value></data>
   <data name="update_installer_opened" xml:space="preserve"><value>The verified installer has been opened. You can keep playing until you choose to install.</value></data>
+  <data name="ux_search_settings" xml:space="preserve"><value>Search settings</value></data>
+  <data name="settings_downloads" xml:space="preserve"><value>Downloads</value></data>
+  <data name="ux_saved" xml:space="preserve"><value>Saved</value></data>
+  <data name="home_continue" xml:space="preserve"><value>Continue</value></data>
+  <data name="home_continue_playing" xml:space="preserve"><value>CONTINUE PLAYING</value></data>
+  <data name="home_edit_selection" xml:space="preserve"><value>Edit selection</value></data>
+  <data name="home_ready_check" xml:space="preserve"><value>Ready check</value></data>
+  <data name="home_recent_profiles" xml:space="preserve"><value>Recent profiles</value></data>
+  <data name="home_for_you" xml:space="preserve"><value>For you</value></data>
+  <data name="home_browse_games" xml:space="preserve"><value>Browse games</value></data>
+  <data name="discovery_subtitle" xml:space="preserve"><value>Browse T-Craft games and manage profiles already on this PC.</value></data>
+  <data name="discovery_empty_title" xml:space="preserve"><value>No games match these filters</value></data>
+  <data name="discovery_empty_help" xml:space="preserve"><value>Try another search or clear a filter.</value></data>
+  <data name="refresh_catalog" xml:space="preserve"><value>Refresh catalog</value></data>
+  <data name="selected_badge" xml:space="preserve"><value>Selected</value></data>
+  <data name="clear_selection" xml:space="preserve"><value>Clear selection</value></data>
+  <data name="add_microsoft_account" xml:space="preserve"><value>Add Microsoft account</value></data>
+  <data name="accounts_subtitle" xml:space="preserve"><value>Choose a Microsoft account or an explicit offline identity.</value></data>
+  <data name="configure_action" xml:space="preserve"><value>Configure</value></data>
+  <data name="clone_action" xml:space="preserve"><value>Clone</value></data>
+  <data name="export_package" xml:space="preserve"><value>Export package</value></data>
+  <data name="open_folder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="manage_backups" xml:space="preserve"><value>Manage backups</value></data>
+  <data name="health_backups" xml:space="preserve"><value>Health &amp; backups</value></data>
+  <data name="overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="uninstall_action" xml:space="preserve"><value>Uninstall</value></data>
+  <data name="restart_badge" xml:space="preserve"><value>RESTART</value></data>
+  <data name="settings_after_launch" xml:space="preserve"><value>After Minecraft starts</value></data>
+  <data name="settings_after_launch_help" xml:space="preserve"><value>Choose what the launcher window should do.</value></data>
+  <data name="settings_language_help" xml:space="preserve"><value>Interface language; applies the next time the shell opens.</value></data>
+  <data name="settings_typography" xml:space="preserve"><value>Typography</value></data>
+  <data name="settings_typography_help" xml:space="preserve"><value>Pixel typography is best kept for branding; enable it globally only if preferred.</value></data>
+  <data name="settings_pixel_global" xml:space="preserve"><value>Use pixel font throughout the app</value></data>
+  <data name="settings_java_help" xml:space="preserve"><value>TCLauncher checks runtime compatibility before launch and explains version or memory problems.</value></data>
+  <data name="settings_advanced" xml:space="preserve"><value>Advanced</value></data>
+  <data name="settings_multi_help" xml:space="preserve"><value>Control whether a second TCLauncher process is allowed.</value></data>
+  <data name="settings_sandboxing" xml:space="preserve"><value>Profile sandboxing</value></data>
+  <data name="settings_sandboxing_help" xml:space="preserve"><value>Strict mode isolates Minecraft files per profile.</value></data>
+  <data name="settings_data_location" xml:space="preserve"><value>Launcher data location</value></data>
+  <data name="settings_data_location_help" xml:space="preserve"><value>Leave empty for the Windows default. Valid paths save after you stop typing.</value></data>
+  <data name="settings_move_data" xml:space="preserve"><value>Move existing data…</value></data>
+  <data name="settings_download_service" xml:space="preserve"><value>Download service</value></data>
+  <data name="settings_download_service_help" xml:space="preserve"><value>The trusted T-Craft endpoint used for legacy catalog compatibility.</value></data>
+  <data name="settings_updates_help" xml:space="preserve"><value>Update failures never prevent Minecraft from launching.</value></data>
+  <data name="settings_local_diagnostics" xml:space="preserve"><value>Local diagnostics</value></data>
+  <data name="settings_local_diagnostics_help" xml:space="preserve"><value>No automatic telemetry or crash upload. Preview and export a redacted bundle when you choose.</value></data>
+  <data name="settings_destructive" xml:space="preserve"><value>Destructive actions</value></data>
+  <data name="settings_reset_setup" xml:space="preserve"><value>Reset and re-setup</value></data>
+  <data name="settings_reset_setup_help" xml:space="preserve"><value>These actions always ask for confirmation.</value></data>
+  <data name="settings_reset_all_data" xml:space="preserve"><value>Reset all data</value></data>
+  <data name="settings_run_setup" xml:space="preserve"><value>Run setup</value></data>
+  <data name="open_logs" xml:space="preserve"><value>Open logs</value></data>
+  <data name="operation_in_progress" xml:space="preserve"><value>Operation in progress</value></data>
+  <data name="operation_close_help" xml:space="preserve"><value>A background operation is still finishing. TCLauncher must complete cancellation or cleanup before it can close safely.</value></data>
+  <data name="operation_wait_exit" xml:space="preserve"><value>Wait, then exit</value></data>
+  <data name="operation_cancel_exit" xml:space="preserve"><value>Cancel operation and exit</value></data>
+  <data name="operation_stay" xml:space="preserve"><value>Stay in TCLauncher</value></data>
+  <data name="launch_error_help" xml:space="preserve"><value>Retry the launch, inspect the profile in Games, or open the launcher logs.</value></data>
+  <data name="repair_action" xml:space="preserve"><value>Repair</value></data>
+  <data name="retry_action" xml:space="preserve"><value>Retry</value></data>
 </root>

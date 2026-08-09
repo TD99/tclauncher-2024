@@ -8,6 +8,8 @@ using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
+using System.ComponentModel;
+using TCLauncher.MVVM.View;
 
 namespace TCLauncher.MVVM.Windows
 {
@@ -18,6 +20,8 @@ namespace TCLauncher.MVVM.Windows
     {
         private readonly MainViewModel vm;
         private readonly bool is_silent;
+        private bool _allowClose;
+        private bool _closeAfterOperation;
 
         public MainWindow(bool silent = false)
         {
@@ -38,6 +42,27 @@ namespace TCLauncher.MVVM.Windows
             {
                 FontFamily = (FontFamily)FindResource("PixelifySans");
             }
+            Closing += MainWindow_OnClosing;
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            if (_allowClose || !AppServices.Operations.IsBusy) return;
+            e.Cancel = true;
+            if (AppServices.Overlays.Host.IsOpen) return;
+            _ = AppServices.Overlays.ShowSheetAsync(Languages.ResourceManager.GetString("operation_in_progress") ?? "Operation in progress", new OperationCloseSheet(cancel =>
+            {
+                _closeAfterOperation = true;
+                if (cancel) AppServices.Operations.RequestCancellation();
+                AppServices.Operations.PropertyChanged += Operations_OnPropertyChanged;
+            }), false);
+        }
+
+        private void Operations_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!_closeAfterOperation || e.PropertyName != nameof(IOperationCoordinator.IsBusy) || AppServices.Operations.IsBusy) return;
+            AppServices.Operations.PropertyChanged -= Operations_OnPropertyChanged;
+            Dispatcher.BeginInvoke(new Action(() => { _allowClose = true; Close(); }));
         }
 
         private static async System.Threading.Tasks.Task CheckForUpdatesSilently()

@@ -829,4 +829,64 @@
   <data name="new_update_found_message" xml:space="preserve"><value>Version {0} ist verfügbar. Jetzt herunterladen und prüfen?</value></data>
   <data name="downloading_text" xml:space="preserve"><value>Das signierte Installationsprogramm wird heruntergeladen und geprüft…</value></data>
   <data name="update_installer_opened" xml:space="preserve"><value>Das geprüfte Installationsprogramm wurde geöffnet. Bis zur Installation kann weitergespielt werden.</value></data>
+  <data name="ux_search_settings" xml:space="preserve"><value>Einstellungen durchsuchen</value></data>
+  <data name="settings_downloads" xml:space="preserve"><value>Downloads</value></data>
+  <data name="ux_saved" xml:space="preserve"><value>Gespeichert</value></data>
+  <data name="home_continue" xml:space="preserve"><value>Fortsetzen</value></data>
+  <data name="home_continue_playing" xml:space="preserve"><value>WEITERSPIELEN</value></data>
+  <data name="home_edit_selection" xml:space="preserve"><value>Auswahl bearbeiten</value></data>
+  <data name="home_ready_check" xml:space="preserve"><value>Bereitschaft</value></data>
+  <data name="home_recent_profiles" xml:space="preserve"><value>Letzte Profile</value></data>
+  <data name="home_for_you" xml:space="preserve"><value>Für dich</value></data>
+  <data name="home_browse_games" xml:space="preserve"><value>Spiele durchsuchen</value></data>
+  <data name="discovery_subtitle" xml:space="preserve"><value>T-Craft-Spiele durchsuchen und installierte Profile verwalten.</value></data>
+  <data name="discovery_empty_title" xml:space="preserve"><value>Keine Spiele entsprechen den Filtern</value></data>
+  <data name="discovery_empty_help" xml:space="preserve"><value>Suche ändern oder einen Filter entfernen.</value></data>
+  <data name="refresh_catalog" xml:space="preserve"><value>Katalog aktualisieren</value></data>
+  <data name="selected_badge" xml:space="preserve"><value>Ausgewählt</value></data>
+  <data name="clear_selection" xml:space="preserve"><value>Auswahl löschen</value></data>
+  <data name="add_microsoft_account" xml:space="preserve"><value>Microsoft-Konto hinzufügen</value></data>
+  <data name="accounts_subtitle" xml:space="preserve"><value>Microsoft-Konto oder lokale Offline-Identität auswählen.</value></data>
+  <data name="configure_action" xml:space="preserve"><value>Konfigurieren</value></data>
+  <data name="clone_action" xml:space="preserve"><value>Klonen</value></data>
+  <data name="export_package" xml:space="preserve"><value>Paket exportieren</value></data>
+  <data name="open_folder" xml:space="preserve"><value>Ordner öffnen</value></data>
+  <data name="manage_backups" xml:space="preserve"><value>Sicherungen verwalten</value></data>
+  <data name="health_backups" xml:space="preserve"><value>Zustand &amp; Sicherungen</value></data>
+  <data name="overview" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="uninstall_action" xml:space="preserve"><value>Deinstallieren</value></data>
+  <data name="restart_badge" xml:space="preserve"><value>NEUSTART</value></data>
+  <data name="settings_after_launch" xml:space="preserve"><value>Nach dem Minecraft-Start</value></data>
+  <data name="settings_after_launch_help" xml:space="preserve"><value>Lege fest, was mit dem Launcherfenster geschieht.</value></data>
+  <data name="settings_language_help" xml:space="preserve"><value>Die Sprache gilt beim nächsten Öffnen der Oberfläche.</value></data>
+  <data name="settings_typography" xml:space="preserve"><value>Typografie</value></data>
+  <data name="settings_typography_help" xml:space="preserve"><value>Die Pixelschrift eignet sich am besten für die Marke; global nur bei Wunsch aktivieren.</value></data>
+  <data name="settings_pixel_global" xml:space="preserve"><value>Pixelschrift in der gesamten App verwenden</value></data>
+  <data name="settings_java_help" xml:space="preserve"><value>TCLauncher prüft vor dem Start Java-Kompatibilität, Version und Arbeitsspeicher.</value></data>
+  <data name="settings_advanced" xml:space="preserve"><value>Erweitert</value></data>
+  <data name="settings_multi_help" xml:space="preserve"><value>Steuert, ob ein zweiter TCLauncher-Prozess erlaubt ist.</value></data>
+  <data name="settings_sandboxing" xml:space="preserve"><value>Profil-Isolierung</value></data>
+  <data name="settings_sandboxing_help" xml:space="preserve"><value>Der strikte Modus isoliert Minecraft-Dateien je Profil.</value></data>
+  <data name="settings_data_location" xml:space="preserve"><value>Speicherort der Launcherdaten</value></data>
+  <data name="settings_data_location_help" xml:space="preserve"><value>Leer lassen für den Windows-Standard. Gültige Pfade werden automatisch gespeichert.</value></data>
+  <data name="settings_move_data" xml:space="preserve"><value>Vorhandene Daten verschieben…</value></data>
+  <data name="settings_download_service" xml:space="preserve"><value>Download-Dienst</value></data>
+  <data name="settings_download_service_help" xml:space="preserve"><value>Vertrauenswürdiger T-Craft-Endpunkt für ältere Kataloge.</value></data>
+  <data name="settings_updates_help" xml:space="preserve"><value>Fehler bei Updates verhindern niemals den Minecraft-Start.</value></data>
+  <data name="settings_local_diagnostics" xml:space="preserve"><value>Lokale Diagnose</value></data>
+  <data name="settings_local_diagnostics_help" xml:space="preserve"><value>Keine automatische Telemetrie. Ein bereinigtes Supportpaket wird nur auf Wunsch exportiert.</value></data>
+  <data name="settings_destructive" xml:space="preserve"><value>Destruktive Aktionen</value></data>
+  <data name="settings_reset_setup" xml:space="preserve"><value>Zurücksetzen und neu einrichten</value></data>
+  <data name="settings_reset_setup_help" xml:space="preserve"><value>Diese Aktionen verlangen immer eine Bestätigung.</value></data>
+  <data name="settings_reset_all_data" xml:space="preserve"><value>Alle Daten zurücksetzen</value></data>
+  <data name="settings_run_setup" xml:space="preserve"><value>Einrichtung starten</value></data>
+  <data name="open_logs" xml:space="preserve"><value>Protokolle öffnen</value></data>
+  <data name="operation_in_progress" xml:space="preserve"><value>Vorgang läuft</value></data>
+  <data name="operation_close_help" xml:space="preserve"><value>Ein Hintergrundvorgang wird noch abgeschlossen. TCLauncher muss Abbruch oder Bereinigung sicher beenden.</value></data>
+  <data name="operation_wait_exit" xml:space="preserve"><value>Warten, dann beenden</value></data>
+  <data name="operation_cancel_exit" xml:space="preserve"><value>Vorgang abbrechen und beenden</value></data>
+  <data name="operation_stay" xml:space="preserve"><value>In TCLauncher bleiben</value></data>
+  <data name="launch_error_help" xml:space="preserve"><value>Start erneut versuchen, das Profil unter Spiele prüfen oder die Protokolle öffnen.</value></data>
+  <data name="repair_action" xml:space="preserve"><value>Reparieren</value></data>
+  <data name="retry_action" xml:space="preserve"><value>Erneut versuchen</value></data>
 </root>

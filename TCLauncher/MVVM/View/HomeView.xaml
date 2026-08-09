@@ -2,6 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:Background="#1D2633" d:DesignHeight="600" d:DesignWidth="960" mc:Ignorable="d"
@@ -21,19 +22,19 @@
                         <Grid>
                             <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                             <StackPanel>
-                                <TextBlock FontSize="13" Foreground="#83D5BB" Text="CONTINUE PLAYING"/>
+                                <TextBlock FontSize="13" Foreground="#83D5BB" Text="{core:Localize Key=home_continue_playing}"/>
                                 <TextBlock x:Name="ContinueProfileName" Margin="0,8,0,0" FontSize="27" FontWeight="SemiBold" Text="Choose a profile" TextTrimming="CharacterEllipsis"/>
                                 <TextBlock x:Name="ContinueSummary" Margin="0,7,0,0" Foreground="#C7D0DC" Text="Your selected account and server appear here." TextWrapping="Wrap"/>
                             </StackPanel>
                             <StackPanel Grid.Row="1" Margin="0,16,0,0" Orientation="Horizontal">
-                                <Button MinWidth="150" Padding="18,9" Content="Continue" Click="PlayBtn_Click"/>
-                                <Button Margin="8,0,0,0" Padding="13,9" Content="Edit selection" Click="EditSelection_OnClick"/>
+                                <Button MinWidth="150" Padding="18,9" Content="{core:Localize Key=home_continue}" Click="PlayBtn_Click"/>
+                                <Button Margin="8,0,0,0" Padding="13,9" Content="{core:Localize Key=home_edit_selection}" Click="EditSelection_OnClick"/>
                             </StackPanel>
                         </Grid>
                     </Border>
                     <Border Grid.Column="1" Margin="14,0,0,0" Padding="18" Background="#222D3B" CornerRadius="14">
                         <StackPanel>
-                            <TextBlock FontSize="16" FontWeight="SemiBold" Text="Ready check"/>
+                            <TextBlock FontSize="16" FontWeight="SemiBold" Text="{core:Localize Key=home_ready_check}"/>
                             <TextBlock x:Name="AccountSummary" Margin="0,12,0,0" Foreground="#C7D0DC" TextWrapping="Wrap"/>
                             <TextBlock x:Name="UpdateWarning" Margin="0,9,0,0" Foreground="#EAB464" TextWrapping="Wrap"/>
                             <TextBlock x:Name="BackupWarning" Margin="0,9,0,0" Foreground="#EAB464" TextWrapping="Wrap"/>
@@ -41,15 +42,15 @@
                     </Border>
                 </Grid>
 
-                <TextBlock Margin="0,22,0,10" FontSize="17" FontWeight="SemiBold" Text="Recent profiles"/>
+                <TextBlock Margin="0,22,0,10" FontSize="17" FontWeight="SemiBold" Text="{core:Localize Key=home_recent_profiles}"/>
                 <ItemsControl ItemsSource="{Binding RecentProfiles}">
                     <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate><DataTemplate><Button Width="180" Margin="0,0,10,0" Padding="13" Tag="{Binding}" Click="RecentProfile_OnClick" HorizontalContentAlignment="Left"><StackPanel><TextBlock FontWeight="SemiBold" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"/><TextBlock Margin="0,4,0,0" Foreground="#AEB8C7" FontSize="11" Text="{Binding McVersion, StringFormat=Minecraft {0}}"/></StackPanel></Button></DataTemplate></ItemsControl.ItemTemplate>
                 </ItemsControl>
 
                 <DockPanel Margin="0,22,0,10">
-                    <TextBlock FontSize="17" FontWeight="SemiBold" Text="For you"/>
-                    <Button DockPanel.Dock="Right" Padding="12,5" Content="Browse games" Click="DiscoverButton_OnClick"/>
+                    <TextBlock FontSize="17" FontWeight="SemiBold" Text="{core:Localize Key=home_for_you}"/>
+                    <Button DockPanel.Dock="Right" Padding="12,5" Content="{core:Localize Key=home_browse_games}" Click="DiscoverButton_OnClick"/>
                 </DockPanel>
                 <ItemsControl x:Name="mainApplets">
                     <ItemsControl.ItemsPanel><ItemsPanelTemplate><controls:AdaptiveCardPanel MinimumCardWidth="220" MinimumColumns="2" MaximumColumns="3" Gap="12"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>

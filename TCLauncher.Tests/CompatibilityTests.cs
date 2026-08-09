@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
+using TCLauncher.Properties;
+using System.Globalization;
 
 namespace TCLauncher.Tests
 {
@@ -84,6 +86,15 @@ namespace TCLauncher.Tests
             {
                 if (Directory.Exists(root)) Directory.Delete(root, true);
             }
+        }
+
+        [TestMethod]
+        public void RenovatedNavigationLabelsExistInEverySupportedLanguage()
+        {
+            var keys = new[] { "home_continue", "home_recent_profiles", "discovery_empty_title", "settings_downloads", "accounts_subtitle", "manage_backups" };
+            foreach (var culture in new[] { "en", "de", "fr" })
+            foreach (var key in keys)
+                Assert.IsFalse(string.IsNullOrWhiteSpace(Languages.ResourceManager.GetString(key, new CultureInfo(culture))), culture + ":" + key);
         }
     }
 }
