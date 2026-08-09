@@ -159,6 +159,11 @@ namespace TCLauncher.MVVM.Windows
             vm.HomeViewCommand.Execute(null);
         }
 
+        public void NavigateToHome(Guid profileId)
+        {
+            vm.SelectHomeProfile(profileId);
+        }
+
         public void navigateToServer()
         {
             //serverBtn.IsChecked = true;

@@ -76,7 +76,7 @@ namespace TCLauncher.MVVM.View
             Settings.Default.LastSelected = Presentation.Game.Guid;
             Settings.Default.Save();
             AppServices.Overlays.Close();
-            App.MainWin.navigateToHome();
+            App.MainWin.NavigateToHome(Presentation.Game.Guid);
         }
 
         private void Manage_OnClick(object sender, RoutedEventArgs e)

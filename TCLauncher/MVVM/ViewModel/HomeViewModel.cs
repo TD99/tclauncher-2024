@@ -98,5 +98,11 @@ namespace TCLauncher.MVVM.ViewModel
             foreach (var profile in LocalList.Where(item => RecentProfiles.All(recent => recent.Guid != item.Guid)).Take(4 - RecentProfiles.Count))
                 RecentProfiles.Add(profile);
         }
+
+        internal void SelectProfile(Guid profileId)
+        {
+            var profile = LocalList.FirstOrDefault(item => item.Guid == profileId);
+            if (profile != null) LastSelected = profile;
+        }
     }
 }

@@ -54,5 +54,11 @@ namespace TCLauncher.MVVM.ViewModel
                 CurrentView = AccountListViewModel;
             });
         }
+
+        internal void SelectHomeProfile(System.Guid profileId)
+        {
+            HomeViewModel.SelectProfile(profileId);
+            CurrentView = HomeViewModel;
+        }
     }
 }
