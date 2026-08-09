@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using TCLauncher.Core;
 
 namespace TCLauncher.Models
 {
     public class Instance
     {
+        [JsonProperty("schemaVersion", Order = -20)]
+        public int SchemaVersion { get; set; }
+
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public Guid Guid { get; set; }
@@ -17,7 +21,11 @@ namespace TCLauncher.Models
         public string McVersion { get; set; }
         public bool? UseFabric { get; set; }
         public bool? UseForge { get; set; }
+
+        [JsonProperty("loader", NullValueHandling = NullValueHandling.Ignore, Order = -10)]
+        public LoaderConfiguration Loader { get; set; }
         public string WorkingDirZipURL { get; set; }
+        public string PayloadSha256 { get; set; }
         public List<Patch> Patches { get; set; }
         public bool UsePatch { get; set; }
         public bool? UseIsolation { get; set; }
@@ -34,6 +42,30 @@ namespace TCLauncher.Models
 
         public Instance()
         {
+        }
+
+        public LoaderConfiguration GetEffectiveLoader()
+        {
+            if (Loader != null) return Loader;
+            if (UseForge == true) return new LoaderConfiguration { Type = LoaderType.Forge };
+            if (UseFabric == true) return new LoaderConfiguration { Type = LoaderType.Fabric };
+            return LoaderConfiguration.Vanilla();
+        }
+
+        public void NormalizeLegacyConfiguration()
+        {
+            Loader = GetEffectiveLoader();
+            Patches = Patches ?? new List<Patch>();
+            Servers = Servers ?? new List<Server>();
+            JVMArguments = JVMArguments ?? new string[0];
+        }
+
+        public void PrepareForV2Save()
+        {
+            NormalizeLegacyConfiguration();
+            SchemaVersion = 2;
+            UseFabric = Loader.Type == LoaderType.Fabric;
+            UseForge = Loader.Type == LoaderType.Forge;
         }
 
         public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, bool? useForge, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)

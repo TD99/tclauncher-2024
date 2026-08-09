@@ -795,4 +795,38 @@
   <data name="running_game_message" xml:space="preserve">
     <value>Lancé</value>
   </data>
+  <data name="windows_edition" xml:space="preserve"><value>Édition Windows</value></data>
+  <data name="profile_creator" xml:space="preserve"><value>Créer un profil</value></data>
+  <data name="profile_name" xml:space="preserve"><value>Nom du profil</value></data>
+  <data name="internal_name" xml:space="preserve"><value>Nom interne</value></data>
+  <data name="loader" xml:space="preserve"><value>Chargeur de mods</value></data>
+  <data name="loader_version" xml:space="preserve"><value>Version du chargeur (facultatif)</value></data>
+  <data name="memory" xml:space="preserve"><value>Mémoire</value></data>
+  <data name="isolation" xml:space="preserve"><value>Isoler les fichiers du jeu</value></data>
+  <data name="server_address" xml:space="preserve"><value>Adresse du serveur par défaut (facultatif)</value></data>
+  <data name="review" xml:space="preserve"><value>Vérification</value></data>
+  <data name="create_profile" xml:space="preserve"><value>Créer le profil</value></data>
+  <data name="backup" xml:space="preserve"><value>Sauvegarde</value></data>
+  <data name="full_backup" xml:space="preserve"><value>Inclure toute l’instance</value></data>
+  <data name="restore_backup" xml:space="preserve"><value>Restaurer la sauvegarde</value></data>
+  <data name="health" xml:space="preserve"><value>État</value></data>
+  <data name="support_bundle" xml:space="preserve"><value>Exporter le dossier d’assistance</value></data>
+  <data name="add_offline_profile" xml:space="preserve"><value>Ajouter un profil hors ligne</value></data>
+  <data name="offline_badge" xml:space="preserve"><value>HORS LIGNE</value></data>
+  <data name="include_saves" xml:space="preserve"><value>Inclure les sauvegardes et les mondes</value></data>
+  <data name="catalog_offline" xml:space="preserve"><value>Hors ligne — contenu en cache</value></data>
+  <data name="create_backup" xml:space="preserve"><value>Créer une sauvegarde</value></data>
+  <data name="settings_general" xml:space="preserve"><value>Général</value></data>
+  <data name="settings_minecraft" xml:space="preserve"><value>Minecraft / Java</value></data>
+  <data name="settings_storage" xml:space="preserve"><value>Stockage</value></data>
+  <data name="settings_privacy" xml:space="preserve"><value>Confidentialité / Diagnostic</value></data>
+  <data name="settings_about" xml:space="preserve"><value>À propos</value></data>
+  <data name="java_runtime_hint" xml:space="preserve"><value>La compatibilité Java est vérifiée avant le lancement. Le lanceur utilise ou installe un environnement adapté si nécessaire.</value></data>
+  <data name="restart_required_hint" xml:space="preserve"><value>Après la migration du stockage, TCLauncher doit être redémarré.</value></data>
+  <data name="diagnostics_local_hint" xml:space="preserve"><value>Les diagnostics restent sur cet appareil. Rien n'est envoyé automatiquement ; vous pouvez vérifier le paquet d'assistance anonymisé avant l'export.</value></data>
+  <data name="support_bundle_excludes" xml:space="preserve"><value>Toujours exclus :</value></data>
+  <data name="no_updates_found_message" xml:space="preserve"><value>TCLauncher est à jour.</value></data>
+  <data name="new_update_found_message" xml:space="preserve"><value>La version {0} est disponible. La télécharger et la vérifier maintenant ?</value></data>
+  <data name="downloading_text" xml:space="preserve"><value>Téléchargement et vérification du programme d'installation signé…</value></data>
+  <data name="update_installer_opened" xml:space="preserve"><value>Le programme d'installation vérifié est ouvert. Vous pouvez continuer à jouer avant de l'installer.</value></data>
 </root>

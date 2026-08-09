@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Properties;
+using Microsoft.Win32;
 
 namespace TCLauncher.MVVM.View
 {
@@ -63,7 +65,7 @@ namespace TCLauncher.MVVM.View
 
             CheckBoxUsePixelFontEverywhere.IsChecked = Settings.Default.UsePixelFontEverywhere;
 
-            CopyrightCompilationYear.Text = AppUtils.GetCompilationDate().Year.ToString();
+            CopyrightCompilationYear.Text = "Copyright © T-Craft " + AppUtils.GetCompilationDate().Year;
         }
 
         private void resetSettBtn_Click(object sender, RoutedEventArgs e)
@@ -99,9 +101,75 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private void updateBtn_Click(object sender, RoutedEventArgs e)
+        private async void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            AppUtils.HandleUpdates(true);
+            updateBtn.IsEnabled = false;
+            UpdateStatus.Text = Languages.search_for_updates_text;
+            try
+            {
+                var current = Assembly.GetExecutingAssembly().GetName().Version;
+                var check = await AppServices.Updates.CheckAsync(current, System.Threading.CancellationToken.None);
+                if (!check.IsSuccess)
+                {
+                    UpdateStatus.Text = check.Message;
+                    return;
+                }
+                if (!check.Value.IsUpdateAvailable)
+                {
+                    UpdateStatus.Text = L("no_updates_found_message");
+                    return;
+                }
+
+                var manifest = check.Value.Manifest;
+                if (!check.Value.IsCompatible)
+                {
+                    UpdateStatus.Text = check.Value.CompatibilityMessage;
+                    return;
+                }
+                var prompt = manifest.ReleaseNotes + Environment.NewLine + Environment.NewLine +
+                             string.Format(L("new_update_found_message"), manifest.Version);
+                if (MessageBox.Show(prompt, "TCLauncher Windows Edition", MessageBoxButton.YesNo, MessageBoxImage.Information) != MessageBoxResult.Yes)
+                    return;
+
+                UpdateStatus.Text = L("downloading_text");
+                var staging = Path.Combine(IoUtils.Tcl.RootPath, "Updates", manifest.Version);
+                var download = await AppServices.Updates.DownloadAndVerifyAsync(manifest, staging, System.Threading.CancellationToken.None);
+                if (!download.IsSuccess)
+                {
+                    UpdateStatus.Text = download.Message;
+                    return;
+                }
+
+                Process.Start(new ProcessStartInfo("msiexec.exe", "/i \"" + download.Value + "\"") { UseShellExecute = true });
+                UpdateStatus.Text = L("update_installer_opened");
+            }
+            catch (Exception exception)
+            {
+                AppServices.Log.Error("settings.update_failed", exception);
+                UpdateStatus.Text = exception.Message;
+            }
+            finally
+            {
+                updateBtn.IsEnabled = true;
+            }
+        }
+
+        private void SupportBundle_Click(object sender, RoutedEventArgs e)
+        {
+            var preview = AppServices.SupportBundles.Preview(null);
+            var message = string.Join(Environment.NewLine, preview.IncludedFiles) + Environment.NewLine + Environment.NewLine +
+                          L("support_bundle_excludes") + Environment.NewLine + string.Join(Environment.NewLine, preview.ExcludedData);
+            if (MessageBox.Show(message, L("support_bundle"), MessageBoxButton.OKCancel, MessageBoxImage.Information) != MessageBoxResult.OK) return;
+            var dialog = new SaveFileDialog { Filter = "ZIP archive (*.zip)|*.zip", FileName = "TCLauncher-support-" + DateTime.Now.ToString("yyyyMMdd-HHmm") + ".zip" };
+            if (dialog.ShowDialog() != true) return;
+            var result = AppServices.SupportBundles.Export(dialog.FileName, null);
+            MessageBox.Show(result.IsSuccess ? dialog.FileName : result.Message, L("support_bundle"),
+                MessageBoxButton.OK, result.IsSuccess ? MessageBoxImage.Information : MessageBoxImage.Error);
+        }
+
+        private static string L(string key)
+        {
+            return Languages.ResourceManager.GetString(key, Languages.Culture) ?? key;
         }
 
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)

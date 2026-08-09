@@ -23,6 +23,7 @@ namespace TCLauncher.MVVM.Animations
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (!(AssociatedObject is FrameworkElement frameworkElement)) return;
+            if (!SystemParameters.ClientAreaAnimation) return;
             frameworkElement.RenderTransform = new TranslateTransform();
             var doubleAnimation = new DoubleAnimation
             {

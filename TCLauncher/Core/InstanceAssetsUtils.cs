@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using CmlLib.Core.Downloader;
 using Newtonsoft.Json;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
+using TCLauncher.Core.Services;
 
 namespace TCLauncher.Core
 {
     public class InstanceAssetsUtils
     {
-        private static readonly HttpClient HttpClient = new HttpClient();
         private static readonly ActionWindow ActionWindow = new ActionWindow();
 
         public static async Task GetAssets(List<string> names, bool isSandboxed, string url = "https://tcraft.link/tclauncher/api/mcassets/")
@@ -21,19 +19,19 @@ namespace TCLauncher.Core
             ActionWindow.text = Languages.loading_assets;
             ActionWindow.Show();
 
-            var downloadFiles = new List<DownloadFile>();
+            var downloadFiles = new List<AssetDownloadRecord>();
 
             var assetsHistoryPath = Path.Combine(isSandboxed ? App.MinecraftPath.BasePath : IoUtils.Tcl.SharedPath, "DO_NOT_MODIFY_assetsHistory.json");
 
-            List<DownloadFile> assetsHistory;
+            List<AssetDownloadRecord> assetsHistory;
             if (File.Exists(assetsHistoryPath))
             {
                 var assetsHistoryJson = File.ReadAllText(assetsHistoryPath);
-                assetsHistory = JsonConvert.DeserializeObject<List<DownloadFile>>(assetsHistoryJson);
+                assetsHistory = JsonConvert.DeserializeObject<List<AssetDownloadRecord>>(assetsHistoryJson);
             }
             else
             {
-                assetsHistory = new List<DownloadFile>();
+                assetsHistory = new List<AssetDownloadRecord>();
             }
 
             for (var index = 0; index < names.Count; index++)
@@ -42,7 +40,7 @@ namespace TCLauncher.Core
 
                 ActionWindow.percent = (index / names.Count) * 100;
 
-                var assetsJson = await HttpClient.GetStringAsync(url + "?name=" + name);
+                var assetsJson = await LauncherHttpClient.Instance.GetStringAsync(url + "?name=" + name);
                 var assets = JsonConvert.DeserializeObject<List<Asset>>(assetsJson);
 
                 foreach (var fragments in assets.Select(asset => asset.AssetFragments))
@@ -57,7 +55,7 @@ namespace TCLauncher.Core
                             Directory.CreateDirectory(directoryPath);
                         }
 
-                        var downloadFile = new DownloadFile(fragment.SourcePath, fragment.TargetUrl);
+                        var downloadFile = new AssetDownloadRecord(fragment.SourcePath, fragment.TargetUrl);
 
                         // Skip if the file is already in the assetsHistory
                         if (assetsHistory.Any(assetsHistoryFile => assetsHistoryFile.Url == downloadFile.Url))
@@ -67,7 +65,7 @@ namespace TCLauncher.Core
 
                         downloadFiles.Add(downloadFile);
 
-                        var downloadFileContent = await HttpClient.GetByteArrayAsync(downloadFile.Url);
+                        var downloadFileContent = await LauncherHttpClient.Instance.GetByteArrayAsync(downloadFile.Url);
                         File.WriteAllBytes(path, downloadFileContent);
                     }
                 }
@@ -88,5 +86,21 @@ namespace TCLauncher.Core
             ActionWindow.Hide();
         }
 
+    }
+
+    internal sealed class AssetDownloadRecord
+    {
+        public string Path { get; set; }
+        public string Url { get; set; }
+
+        public AssetDownloadRecord(string path, string url)
+        {
+            Path = path;
+            Url = url;
+        }
+
+        public AssetDownloadRecord()
+        {
+        }
     }
 }

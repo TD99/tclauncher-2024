@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.MVVM.Windows;
@@ -60,6 +61,9 @@ namespace TCLauncher.MVVM.View
 
             specialFocusBtn.Content = (instance.Is_Installed) ? Languages.uninstall : Languages.install;
             openFolderBtn.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
+            healthBtn.Visibility = instance.Is_Installed ? Visibility.Visible : Visibility.Collapsed;
+            exportProfileBtn.Visibility = instance.Is_Installed ? Visibility.Visible : Visibility.Collapsed;
+            cloneProfileBtn.Visibility = instance.Is_Installed ? Visibility.Visible : Visibility.Collapsed;
             reconfigDef.Visibility = (instance.Is_Installed && !instance.Is_LocalSource) ? Visibility.Visible : Visibility.Collapsed;
             //editConfig.Visibility = (instance.Is_Installed) ? Visibility.Visible : Visibility.Collapsed;
             itemFocusMCWorkingDirDesc.Children.Clear();
@@ -123,9 +127,7 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                var instanceFolder = Path.Combine(
-                    IoUtils.Tcl.InstancesPath,
-                    current.Guid.ToString());
+                var instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, instance.Guid.ToString());
                 if (!Directory.Exists(instanceFolder))
                 {
                     MessageBox.Show(Languages.no_data_found_message_delete_instance, Languages.delete_instance);
@@ -138,10 +140,8 @@ namespace TCLauncher.MVVM.View
                 if (result != MessageBoxResult.Yes) return;
                 
                 Directory.Delete(instanceFolder, true);
-
-                var appPath = Process.GetCurrentProcess().MainModule?.FileName;
-                Process.Start(appPath, $"--uninstallCheck {instanceFolder} --uninstallSuccess {instance.DisplayName}");
-                Application.Current.Shutdown();
+                if (DataContext is ServerListViewModel viewModel) viewModel.ServerList.Remove(instance);
+                closeFocusBtn_Click(this, new RoutedEventArgs());
             }
             catch (Exception ex)
             {
@@ -149,216 +149,7 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void installInstance(Instance instance)
-        {
-            string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, instance.Guid.ToString());
-            string installFolder = Path.Combine(instanceFolder, "data");
-            string payloadFile = Path.Combine(instanceFolder, "base.zip");
-
-            try
-            {
-                Directory.CreateDirectory(instanceFolder);
-            }
-            catch
-            {
-                MessageBox.Show(Languages.instance_creation_failure_message);
-            }
-
-            try
-            {
-                if (!URLExists(instance.WorkingDirZipURL))
-                {
-                    MessageBox.Show(Languages.dependency_fetch_error_message);
-                    return;
-                }
-
-                Directory.CreateDirectory(installFolder);
-
-                if (instance.UsePatch != true)
-                {
-                    using (var client = new WebClient())
-                    {
-                        string fileSize = await GetFileSizeAsync(instance.WorkingDirZipURL);
-
-                        ActionWindow action = new ActionWindow(string.Format(Languages.installing_package_action, current.Name, fileSize));
-                        action.Show();
-
-                        client.DownloadProgressChanged += (sender, e) =>
-                        {
-                            action.percent = e.ProgressPercentage;
-                        };
-
-                        action.Closed += (sender, e) =>
-                        {
-                            client.CancelAsync();
-                        };
-
-                        try
-                        {
-                            await client.DownloadFileTaskAsync(new Uri(instance.WorkingDirZipURL), payloadFile);
-                        }
-                        catch
-                        {
-                            MessageBox.Show(Languages.download_cancelled_message);
-                            uninstallInstance(current, true);
-                            action.Close();
-                            return;
-                        }
-
-                        action.Close();
-                    }
-
-                    ActionWindow action2 = new ActionWindow(string.Format(Languages.configuring_package_action, current.Name));
-                    action2.Show();
-
-                    await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
-
-                    action2.Close();
-
-                    ActionWindow action3 = new ActionWindow(string.Format(Languages.cleaning_package_action, current.Name));
-                    action3.Show();
-
-                    try
-                    {
-                        await Task.Run(() =>
-                        {
-                            File.Delete(payloadFile);
-                        });
-                    }
-                    catch { }
-
-                    action3.Close();
-                }
-                else
-                {
-                    foreach (var patch in instance.Patches.OrderBy(p => p.ID))
-                    {
-                        using (var client = new WebClient())
-                        {
-                            string fileSize = await GetFileSizeAsync(patch.URL);
-
-                            ActionWindow action = new ActionWindow(string.Format(Languages.installing_package_with_patch_action, current.Name, patch.Name, patch.ID, fileSize));
-                            action.Show();
-
-                            client.DownloadProgressChanged += (sender, e) =>
-                            {
-                                action.percent = e.ProgressPercentage;
-                            };
-
-                            action.Closed += (sender, e) =>
-                            {
-                                client.CancelAsync();
-                            };
-
-                            bool err = false;
-
-                            try
-                            {
-                                await client.DownloadFileTaskAsync(new Uri(patch.URL), payloadFile);
-                            }
-                            catch
-                            {
-                                MessageBox.Show(Languages.package_error_installation_corrupted_message);
-                                err = true;
-                            }
-
-                            if (!err)
-                            {
-                                action.Close();
-
-                                ActionWindow action2 = new ActionWindow(string.Format(Languages.configuring_package_with_patch_action, current.Name, patch.Name, patch.ID));
-                                action2.Show();
-
-                                await Task.Run(() => ZipFile.ExtractToDirectory(payloadFile, installFolder));
-
-                                action2.Close();
-
-                                ActionWindow action3 = new ActionWindow(string.Format(Languages.cleaning_package_with_patch_action, current.Name, patch.Name, patch.ID));
-                                action3.Show();
-
-                                try
-                                {
-                                    await Task.Run(() =>
-                                    {
-                                        File.Delete(payloadFile);
-                                    });
-                                }
-                                catch { }
-
-                                action3.Close();
-                            }
-                        }
-                    }
-                }
-
-                string appPath = Process.GetCurrentProcess().MainModule.FileName;
-
-                var guid = Guid.NewGuid();
-
-                if (instance.UseForge == true)
-                {             
-                    var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
-                    File.WriteAllText(forgeAdFile, guid.ToString());
-                }
-
-                Process.Start(appPath, $"--installSuccess {instance.DisplayName}");
-                Application.Current.Shutdown();
-            }
-            catch
-            {
-                MessageBox.Show(Languages.dependency_fetch_error_message);
-            }
-
-            reconfigure(instance);
-        }
-
-        public async Task<string> GetFileSizeAsync(string url)
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-                    {
-                        response.EnsureSuccessStatusCode();
-                        long fileSize = response.Content.Headers.ContentLength ?? 0;
-                        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
-                        int order = 0;
-                        while (fileSize >= 1024 && order < sizes.Length - 1)
-                        {
-                            fileSize = fileSize / 1024;
-                            order++;
-                        }
-                        return string.Format("{0:0.##} {1}", fileSize, sizes[order]);
-                    }
-                }
-            }
-            catch { }
-
-            return Languages.unknown;
-        }
-
-        private bool URLExists(string url)
-        {
-            bool result = true;
-
-            WebRequest webRequest = WebRequest.Create(url);
-            webRequest.Timeout = 1200;
-            webRequest.Method = "HEAD";
-
-            try
-            {
-                webRequest.GetResponse();
-            }
-            catch
-            {
-                result = false;
-            }
-
-            return result;
-        }
-
-        private void specialFocusBtn_Click(object sender, RoutedEventArgs e)
+        private async void specialFocusBtn_Click(object sender, RoutedEventArgs e)
         {
             if (current.Is_Installed)
             {
@@ -366,24 +157,54 @@ namespace TCLauncher.MVVM.View
             }
             else
             {
-                installInstance(current);
+                await InstallInstanceModern(current);
             }
 
-            specialFocusBtn.Content = (current.Is_Installed) ? Languages.uninstall : Languages.install;
+            if (current != null) specialFocusBtn.Content = current.Is_Installed ? Languages.uninstall : Languages.install;
         }
 
-        private void reconfigure(Instance instance)
+        private async Task InstallInstanceModern(Instance instance)
         {
-            var installedInstance = new InstalledInstance(instance);
+            var cancellation = new CancellationTokenSource();
+            var window = new OperationWindow { Owner = App.MainWin };
+            window.CancelRequested += (sender, args) => cancellation.Cancel();
+            var progress = new Progress<OperationProgress>(window.Update);
+            specialFocusBtn.IsEnabled = false;
+            window.Show();
             try
             {
-                var json = JsonConvert.SerializeObject(installedInstance);
-                File.WriteAllText(installedInstance.ConfigFile, json);
+                var result = await AppServices.InstanceOperations.InstallOrUpdateAsync(instance, progress, cancellation.Token);
+                if (!result.IsSuccess)
+                {
+                    MessageBox.Show(result.Message + "\n\nReference: " + result.OperationId, Languages.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (DataContext is ServerListViewModel viewModel)
+                {
+                    var index = viewModel.ServerList.IndexOf(instance);
+                    if (index >= 0) viewModel.ServerList[index] = result.Value;
+                }
+                current = result.Value;
+                specialFocusBtn.Content = Languages.uninstall;
+                openFolderBtn.Visibility = Visibility.Visible;
+                healthBtn.Visibility = Visibility.Visible;
+                exportProfileBtn.Visibility = Visibility.Visible;
             }
-            catch
+            finally
             {
-                MessageBox.Show(Languages.reconfiguration_error_message);
+                specialFocusBtn.IsEnabled = true;
+                cancellation.Dispose();
+                window.Close();
             }
+        }
+
+        private OperationResult<InstalledInstance> reconfigure(Instance instance)
+        {
+            var installedInstance = new InstalledInstance(instance);
+            var result = AppServices.InstanceConfigs.Save(installedInstance, installedInstance.ConfigFile);
+            return result.IsSuccess
+                ? OperationResult<InstalledInstance>.Success(installedInstance, result.OperationId)
+                : OperationResult<InstalledInstance>.Failure(result.ErrorCode, result.Message, result.Exception, result.OperationId);
         }
 
         private void openFolderBtn_Click(object sender, RoutedEventArgs e)
@@ -396,21 +217,21 @@ namespace TCLauncher.MVVM.View
         {
             try
             {
-                string instanceFolder = Path.Combine(IoUtils.Tcl.InstancesPath, current.Guid.ToString());
-
-                HttpClient _httpClient = new HttpClient();
-                var response = await _httpClient.GetAsync(Settings.Default.DownloadMirror + "?guid=" + current.Guid.ToString());
+                var response = await LauncherHttpClient.Instance.GetAsync(Settings.Default.DownloadMirror + "?guid=" + current.Guid);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var instance = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content)[0];
 
-                    reconfigure(instance);
-
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    Process.Start(appPath, $"--updateSuccess {instance.DisplayName}");
-                    Application.Current.Shutdown();
-
+                    var saved = reconfigure(instance);
+                    if (!saved.IsSuccess) throw new InvalidDataException(saved.Message);
+                    if (DataContext is ServerListViewModel viewModel)
+                    {
+                        var index = viewModel.ServerList.IndexOf(current);
+                        if (index >= 0) viewModel.ServerList[index] = saved.Value;
+                    }
+                    current = saved.Value;
+                    ServerItem_Clicked(new Border { DataContext = current }, null);
                     return;
                 }
                 MessageBox.Show(string.Format(Languages.reconfiguration_failed_message, current.Name));
@@ -421,33 +242,87 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void ExportServerBtn_OnClick()
+        private void ExportServerBtn_OnClick()
         {
-            try
+            if (!(current is InstalledInstance installed))
             {
-                await AppUtils.LoadInstanceBuilder();
+                MessageBox.Show("Open an installed profile first, then choose Export .tcl.", Languages.package_create);
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format(Languages.cache_error_package_create_message, ex.Message), Languages.package_create);
-            }
+            ExportProfile(installed);
         }
 
         private void ImportServerBtn_OnClick()
         {
-            try
+            var dialog = new OpenFileDialog { DefaultExt = ".tcl", Filter = Languages.tcl_package + " (*.tcl)|*.tcl" };
+            if (dialog.ShowDialog() != true) return;
+            var preview = AppServices.Packages.PreviewImport(dialog.FileName);
+            if (!preview.IsSuccess)
             {
-                AppUtils.LoadInstanceImporter();
+                MessageBox.Show(preview.Message, Languages.package_import, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            catch (Exception ex)
+
+            var loader = preview.Value.Manifest.Instance.GetEffectiveLoader();
+            var includesSaves = preview.Value.Manifest.Files?.Any(file => file.Path.StartsWith("saves/", StringComparison.OrdinalIgnoreCase)) == true;
+            var summary = preview.Value.Manifest.Instance.DisplayName + "\nMinecraft " + preview.Value.Manifest.Instance.McVersion +
+                          " • " + loader.Type + (string.IsNullOrWhiteSpace(loader.Version) ? "" : " " + loader.Version) +
+                          "\nPack " + preview.Value.Manifest.Instance.Version + " • " + (preview.Value.PackageBytes / 1024d / 1024d).ToString("0.##") + " MB" +
+                          "\nSaves: " + (includesSaves ? "included" : "not included") + (preview.Value.IsLegacy ? "\nLegacy v1 package" : "\nVerified v2 package");
+            if (MessageBox.Show(summary, Languages.package_import, MessageBoxButton.OKCancel, MessageBoxImage.Information) != MessageBoxResult.OK) return;
+
+            var resolution = ImportConflictResolution.Cancel;
+            if (preview.Value.HasConflict)
             {
-                MessageBox.Show(string.Format(Languages.cache_error_package_create_message, ex.Message), Languages.package_import);
+                var choice = MessageBox.Show($"{preview.Value.Manifest.Instance.DisplayName} is already installed.\n\nYes: replace it\nNo: import as a copy\nCancel: stop", Languages.package_import, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                if (choice == MessageBoxResult.Yes) resolution = ImportConflictResolution.Replace;
+                else if (choice == MessageBoxResult.No) resolution = ImportConflictResolution.ImportAsCopy;
+                else return;
+            }
+
+            var result = AppServices.Packages.Import(dialog.FileName, resolution);
+            if (!result.IsSuccess)
+            {
+                MessageBox.Show(result.Message, Languages.package_import, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (DataContext is ServerListViewModel viewModel)
+            {
+                var existing = viewModel.ServerList.FirstOrDefault(item => item.Guid == result.Value.Guid);
+                if (existing != null) viewModel.ServerList.Remove(existing);
+                viewModel.ServerList.Add(result.Value);
             }
         }
 
         private void CreateBlankBtn_OnClick()
         {
-            AppUtils.CreateTemplateInstance();
+            var window = new ProfileCreatorWindow { Owner = App.MainWin };
+            if (window.ShowDialog() == true && DataContext is ServerListViewModel viewModel)
+                viewModel.ServerList.Add(window.CreatedInstance);
+        }
+
+        private void healthBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (current is InstalledInstance installed)
+                new InstanceHealthWindow(installed) { Owner = App.MainWin }.ShowDialog();
+        }
+
+        private void exportProfileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (current is InstalledInstance installed) ExportProfile(installed);
+        }
+
+        private void cloneProfileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(current is InstalledInstance installed)) return;
+            var window = new ProfileCreatorWindow(installed) { Owner = App.MainWin };
+            if (window.ShowDialog() == true && DataContext is ServerListViewModel viewModel)
+                viewModel.ServerList.Add(window.CreatedInstance);
+        }
+
+        private void ExportProfile(InstalledInstance installed)
+        {
+            new PackageExportWindow(installed) { Owner = App.MainWin }.ShowDialog();
         }
 
         private void ActionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

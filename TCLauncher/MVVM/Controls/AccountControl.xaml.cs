@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using CmlLib.Core.Auth.Microsoft.Sessions;
@@ -41,10 +40,7 @@ namespace TCLauncher.MVVM.Controls
             var avatarCacheFile = Path.Combine(IoUtils.Tcl.CachePath, $"avatar_{uuid}.png");
 
             if (File.Exists(avatarCacheFile)) return avatarCacheFile;
-            var webClient = new WebClient();
-            webClient.DownloadFile(avatarSrc, avatarCacheFile);
-
-            return avatarCacheFile;
+            return avatarSrc;
         }
     }
 }

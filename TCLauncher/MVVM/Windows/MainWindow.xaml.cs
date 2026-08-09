@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
 
@@ -28,7 +29,7 @@ namespace TCLauncher.MVVM.Windows
             loadingGrid.Visibility = Visibility.Visible;
             mainBorder.Visibility = Visibility.Collapsed;
 
-            AppUtils.HandleUpdates();
+            _ = CheckForUpdatesSilently();
 
             HandleFirstTime();
             ReloadNavPolicies();
@@ -37,6 +38,15 @@ namespace TCLauncher.MVVM.Windows
             {
                 FontFamily = (FontFamily)FindResource("PixelifySans");
             }
+        }
+
+        private static async System.Threading.Tasks.Task CheckForUpdatesSilently()
+        {
+            var result = await AppServices.Updates.CheckAsync(
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
+                System.Threading.CancellationToken.None);
+            if (result.IsSuccess && result.Value.IsUpdateAvailable)
+                AppServices.Log.Info("update.available", result.Value.Manifest.Version);
         }
 
         // TODO: CHECK IF FIRST TIME

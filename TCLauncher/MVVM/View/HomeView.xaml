@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -55,6 +56,12 @@
                     FontSize="28"
                     Foreground="White"
                     Text="!" />
+                <TextBlock
+                    x:Name="CatalogStatus"
+                    Margin="18,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="#eab464" />
             </StackPanel>
 
             <Border
@@ -134,8 +141,7 @@
                 Name="webView"
                 Grid.Row="1"
                 Margin="0,20"
-                NavigationStarting="WebView_OnNavigationStarting"
-                Source="https://tcraft.link/tclauncher/api/plugins/applet-loader/" />
+                NavigationStarting="WebView_OnNavigationStarting" />
         </Grid>
 
         <ListView

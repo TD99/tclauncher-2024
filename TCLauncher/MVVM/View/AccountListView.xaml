@@ -5,6 +5,7 @@
     xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
@@ -66,14 +67,9 @@
                 </ItemsControl>
             </StackPanel>
         </ScrollViewer>
-        <Button
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Padding="7.5"
-            HorizontalAlignment="Center"
-            Click="NewAccountBtn_OnClick"
-            Content="{x:Static p:Languages.add_account_button_text}"
-            Style="{StaticResource ModernButton}" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Padding="7.5" Click="NewAccountBtn_OnClick" Content="{x:Static p:Languages.add_account_button_text}" Style="{StaticResource ModernButton}" />
+            <Button Margin="10,0,0,0" Padding="7.5" Click="NewOfflineBtn_OnClick" Content="{core:Localize Key=add_offline_profile}" Style="{StaticResource ModernButton}" />
+        </StackPanel>
     </Grid>
 </UserControl>

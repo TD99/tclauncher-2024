@@ -1,141 +1,77 @@
-﻿<UserControl
-    x:Class="TCLauncher.MVVM.View.SettingsView"
+<UserControl x:Class="TCLauncher.MVVM.View.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
-    xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
-    d:Background="#1d2633"
-    mc:Ignorable="d">
-    <UserControl.DataContext>
-        <viewModel:SettingsViewModel />
-    </UserControl.DataContext>
+    d:Background="#1d2633" mc:Ignorable="d">
+    <b:Interaction.Behaviors><animations:SlideInAnimation /></b:Interaction.Behaviors>
 
-    <b:Interaction.Behaviors>
-        <animations:SlideInAnimation />
-    </b:Interaction.Behaviors>
-
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock
-                Margin="0,0,0,20"
-                HorizontalAlignment="Left"
-                FontSize="28"
-                Text="{x:Static p:Languages.settings_text}" />
-            <Label Content="{x:Static p:Languages.startup_behavior_label_text}" />
-            <ComboBox
-                x:Name="Behaviour"
-                SelectionChanged="Behaviour_SelectionChanged"
-                Style="{StaticResource ModernComboBox}">
-                <ComboBoxItem Content="{x:Static p:Languages.keep_open_text}" Tag="0" />
-                <ComboBoxItem Content="{x:Static p:Languages.minimize_text}" Tag="1" />
-                <ComboBoxItem Content="{x:Static p:Languages.close_text}" Tag="2" />
-            </ComboBox>
-            <Label Content="{x:Static p:Languages.multi_instances_text}" />
-            <ComboBox
-                x:Name="MultiInstances"
-                SelectionChanged="MultiInstances_OnSelectionChanged"
-                Style="{StaticResource ModernComboBox}">
-                <ComboBoxItem Content="{x:Static p:Languages.auto_detect_text}" Tag="0" />
-                <ComboBoxItem Content="{x:Static p:Languages.forbid_text}" Tag="1" />
-                <ComboBoxItem Content="{x:Static p:Languages.allow_text}" Tag="2" />
-            </ComboBox>
-            <Label Content="{x:Static p:Languages.sandbox_level_label_text}" />
-            <ComboBox
-                x:Name="SandboxLevel"
-                SelectionChanged="SandboxLevel_OnSelectionChanged"
-                Style="{StaticResource ModernComboBox}">
-                <ComboBoxItem Content="{x:Static p:Languages.standard_text}" Tag="0" />
-                <ComboBoxItem Content="{x:Static p:Languages.strict_text}" Tag="1" />
-            </ComboBox>
-            <Label Content="{x:Static p:Languages.language}" />
-            <ComboBox
-                x:Name="LanguageSelector"
-                SelectionChanged="LanguageSelector_OnSelectionChanged"
-                Style="{StaticResource ModernComboBox}">
-                <ComboBoxItem Content="English" Tag="en" />
-                <ComboBoxItem Content="Deutsch" Tag="de" />
-                <ComboBoxItem Content="Français" Tag="fr" />
-            </ComboBox>
-            <CheckBox x:Name="CheckBoxUsePixelFontEverywhere"
-                      Margin="0,10,0,0"
-                      Checked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" 
-                      Unchecked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" 
-                      Content="{x:Static p:Languages.use_pixel_font_everywhere}"
-                      Style="{StaticResource ModernCheckbox}" />
-            <controls:HorizontalSeparator Margin="0,10,0,0" />
-            <Label Content="{x:Static p:Languages.custom_appdata_path_label_text}" />
-            <TextBox
-                x:Name="AppDataPath"
-                MinWidth="100"
-                HorizontalAlignment="Stretch"
-                Style="{StaticResource ModernTextBoxV2}" />
-            <Button
-                x:Name="AppDataPathBtn"
-                Margin="0,7.5,0,0"
-                Padding="7.5"
-                Click="AppDataPathBtn_OnClick"
-                Content="{x:Static p:Languages.apply_button_text}"
-                Style="{StaticResource ModernButton}" />
-
-            <controls:HorizontalSeparator Margin="0,10,0,0" />
-            <Button
-                x:Name="updateBtn"
-                Margin="0,7.5,0,0"
-                Padding="7.5"
-                Click="updateBtn_Click"
-                Content="{x:Static p:Languages.search_for_updates_text}"
-                Style="{StaticResource ModernButton}" />
-            <!--<Button
-                x:Name="codeBtn"
-                Margin="0,7.5,0,0"
-                Padding="5"
-                Click="codeBtn_Click"
-                Content="{x:Static p:Languages.open_code_editor_text}"
-                Style="{StaticResource ModernButton}" />-->
-            <controls:HorizontalSeparator Margin="0,10,0,0" />
-            <Button
-                x:Name="resetSettBtn"
-                Margin="0,7.5,0,0"
-                Padding="5"
-                Click="resetSettBtn_Click"
-                Content="{x:Static p:Languages.reset_local_settings_text}"
-                Style="{StaticResource ModernButton}" />
-            <Button
-                x:Name="resetDataBtn"
-                Margin="0,7.5,0,0"
-                Padding="5"
-                Click="resetDataBtn_Click"
-                Content="{x:Static p:Languages.reset_tcl_data_text}"
-                Style="{StaticResource ModernButton}" />
-            <Button
-                x:Name="ReSetupBtn"
-                Margin="0,7.5,0,0"
-                Padding="5"
-                Click="ReSetupBtn_OnClick"
-                Content="{x:Static p:Languages.re_setup_text}"
-                Style="{StaticResource ModernButton}"
-                Tag="0" />
-            <TextBlock
-                x:Name="assemblyVersion"
-                Margin="0,10,0,0"
-                Text="{x:Static p:Languages.version_text}" />
-            <TextBlock
-                x:Name="frameworkVersion"
-                Margin="0,10,0,0"
-                Text="{x:Static p:Languages.wpf_on_framework_text}" />
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <TextBlock Text="UI Language: " />
-                <TextBlock Text="{x:Static p:Languages.id}" />
-            </StackPanel>
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <TextBlock Text="Copyright © T-Craft " />
-                <TextBlock x:Name="CopyrightCompilationYear" Text="" />
-            </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,12">
+            <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="30" Text="{x:Static p:Languages.settings_text}" />
+            <TextBlock Foreground="#8ea6c8" Text="{core:Localize Key=windows_edition}" />
         </StackPanel>
-    </ScrollViewer>
+        <TabControl Grid.Row="1">
+            <TabItem Header="{core:Localize Key=settings_general}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
+                    <Label Content="{x:Static p:Languages.startup_behavior_label_text}" />
+                    <ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged" Style="{StaticResource ModernComboBox}">
+                        <ComboBoxItem Content="{x:Static p:Languages.keep_open_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.minimize_text}" Tag="1"/><ComboBoxItem Content="{x:Static p:Languages.close_text}" Tag="2"/>
+                    </ComboBox>
+                    <Label Content="{x:Static p:Languages.language}" />
+                    <ComboBox x:Name="LanguageSelector" SelectionChanged="LanguageSelector_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
+                        <ComboBoxItem Content="English" Tag="en"/><ComboBoxItem Content="Deutsch" Tag="de"/><ComboBoxItem Content="Français" Tag="fr"/>
+                    </ComboBox>
+                    <CheckBox x:Name="CheckBoxUsePixelFontEverywhere" Margin="0,14,0,0" Checked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" Unchecked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" Content="{x:Static p:Languages.use_pixel_font_everywhere}" Style="{StaticResource ModernCheckbox}" />
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="{core:Localize Key=settings_minecraft}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
+                    <Label Content="{x:Static p:Languages.multi_instances_text}" />
+                    <ComboBox x:Name="MultiInstances" SelectionChanged="MultiInstances_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
+                        <ComboBoxItem Content="{x:Static p:Languages.auto_detect_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.forbid_text}" Tag="1"/><ComboBoxItem Content="{x:Static p:Languages.allow_text}" Tag="2"/>
+                    </ComboBox>
+                    <Label Content="{x:Static p:Languages.sandbox_level_label_text}" />
+                    <ComboBox x:Name="SandboxLevel" SelectionChanged="SandboxLevel_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
+                        <ComboBoxItem Content="{x:Static p:Languages.standard_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.strict_text}" Tag="1"/>
+                    </ComboBox>
+                    <TextBlock Margin="0,16,0,0" Foreground="#8ea6c8" Text="{core:Localize Key=java_runtime_hint}" TextWrapping="Wrap" />
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="{core:Localize Key=settings_storage}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
+                    <Label Content="{x:Static p:Languages.custom_appdata_path_label_text}" />
+                    <TextBox x:Name="AppDataPath" MinWidth="100" Style="{StaticResource ModernTextBoxV2}" />
+                    <TextBlock Margin="0,8,0,0" Foreground="#8ea6c8" Text="{core:Localize Key=restart_required_hint}" TextWrapping="Wrap"/>
+                    <Button x:Name="AppDataPathBtn" Margin="0,10,0,0" Padding="10,7" Click="AppDataPathBtn_OnClick" Content="{x:Static p:Languages.apply_button_text}" Style="{StaticResource ModernButton}" />
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="{core:Localize Key=settings_privacy}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
+                    <TextBlock Text="{core:Localize Key=diagnostics_local_hint}" TextWrapping="Wrap" Foreground="#8ea6c8"/>
+                    <Button Margin="0,14,0,0" Padding="10,7" Click="SupportBundle_Click" Content="{core:Localize Key=support_bundle}" Style="{StaticResource ModernButton}" />
+                    <controls:HorizontalSeparator Margin="0,16,0,8"/>
+                    <Button x:Name="resetSettBtn" Margin="0,7,0,0" Padding="8" Click="resetSettBtn_Click" Content="{x:Static p:Languages.reset_local_settings_text}" Style="{StaticResource ModernButton}" />
+                    <Button x:Name="resetDataBtn" Margin="0,7,0,0" Padding="8" Click="resetDataBtn_Click" Content="{x:Static p:Languages.reset_tcl_data_text}" Style="{StaticResource ModernButton}" />
+                </StackPanel></ScrollViewer>
+            </TabItem>
+            <TabItem Header="{core:Localize Key=settings_about}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
+                    <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="24" Text="TCLauncher Windows Edition"/>
+                    <TextBlock x:Name="assemblyVersion" Margin="0,10,0,0"/>
+                    <TextBlock x:Name="frameworkVersion" Margin="0,8,0,0"/>
+                    <TextBlock x:Name="CopyrightCompilationYear" Margin="0,8,0,0"/>
+                    <Button x:Name="updateBtn" Margin="0,18,0,0" Padding="10,7" Click="updateBtn_Click" Content="{x:Static p:Languages.search_for_updates_text}" Style="{StaticResource ModernButton}" />
+                    <TextBlock x:Name="UpdateStatus" Margin="0,8,0,0" Foreground="#8ea6c8" TextWrapping="Wrap"/>
+                    <Button x:Name="ReSetupBtn" Margin="0,18,0,0" Padding="8" Click="ReSetupBtn_OnClick" Content="{x:Static p:Languages.re_setup_text}" Style="{StaticResource ModernButton}"/>
+                </StackPanel></ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </UserControl>

@@ -2,47 +2,42 @@
   <br>
   <a href="https://tcraft.link/tclauncher"><img src=".assets/logo.png" alt="TCLauncher" width="200"></a>
   <br>
-  TCLauncher Legacy
+  TCLauncher Windows Edition
   <br>
 </h1>
 
-<h4 align="center">A C# application that allows fast switching between Minecraft instances.⚡</h4>
+<h4 align="center">Fast, reliable switching between T-Craft and local Minecraft profiles.</h4>
 
-<p align="center">
-  <img src="https://img.shields.io/github/license/TD99/T-Craft-Game-Launcher?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/github/last-commit/TD99/T-Craft-Game-Launcher?style=for-the-badge" alt="Last Commit">
-</p>
+TCLauncher Windows Edition is the maintained WPF launcher for Windows. It keeps the compact dark interface and T-Craft-first experience while adding transactional installs, portable profiles, backups, diagnostics, offline accounts, and Fabric/Forge/NeoForge support. It is distinct from the separate cross-platform edition.
 
-<p align="center">
-  <a href="#about">About</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#system-requirements">System Requirements</a> •
-  <a href="#public-games">Public Games</a>
-</p>
+## Highlights
 
-<img src=".assets/app.png" alt="App UI">
+- Microsoft multi-account and explicit offline profiles
+- Vanilla, Fabric, Forge, and NeoForge profiles
+- Guided local profile creation and native catalog discovery
+- Verified, cancellable installs with staging and rollback
+- Safe `.tcl` v1 imports and portable `.tcl` v2 import/export
+- Manual and automatic pre-update backups
+- Instance health checks and previewed, redacted support bundles
+- Signed update-manifest verification with non-blocking failures
+- English, German, and French UI resources
 
-## About
-TCLauncher enables secure connections to Minecraft servers and allows for fast switching between instances. TCLauncher offers a user-friendly interface based on the .NET Framework 4.8 and WPF.
+No telemetry or crash report is uploaded automatically. Diagnostics remain local until the user explicitly exports a support bundle.
 
-TCLauncher is continuously developed by t9craft. T-Craft is happy to provide the software under the MIT license.
+## Build
 
-Download TCLauncher and experience lightning-fast switching between instances!
+Requirements: Windows 10/11 x64, the .NET Framework 4.8.1 developer pack, and a current .NET SDK/MSBuild installation.
 
-## Installation
-To install TCLauncher, follow these steps:
+```powershell
+dotnet restore TCLauncher.sln
+dotnet build TCLauncher.sln --no-restore -c Release -m:1
+dotnet test TCLauncher.sln --no-build -c Release -m:1
+```
 
-- Download the latest version of TCLauncher from our [Website](https://tcraft.link/tclauncher).
-- Run the installer and follow the on-screen instructions.
-- Once the installation is complete, launch TCLauncher and start exploring!
+The SDK-style solution contains the application, unit tests, and integration tests. Advanced Installer remains the release packaging route but is intentionally excluded from the normal application build.
 
-## System Requirements
-To run TCLauncher (not the instances!), your system must meet the following requirements:
-- Operating System: Windows 10 x64 or later
-- Processor: Intel Core i3 or equivalent
-- Memory: 2GB RAM
-- Graphics: DirectX 11 compatible GPU
-- Storage: 50MB available space
+## Compatibility
 
-## Public Games
-With TCLauncher, you can discover and download a variety of public games. Browse through our selection of games and find your next adventure!
+Existing settings, Microsoft account storage, instance directories, `config.json`, `tcl:` links, and legacy `.tcl` packages remain supported. Missing configuration schema versions are interpreted as v1; a profile is written as schema v2 only after a successful atomic save.
+
+Protocol and package contracts are described in [docs/contracts.md](docs/contracts.md). The project is available under the MIT license.

@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
     Title="{x:Static p:Languages.action_progress_title_text}"
@@ -19,13 +18,11 @@
     mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid>
-            <fa:ImageAwesome
-                Width="60"
-                Height="60"
-                Cursor="Wait"
-                Foreground="White"
-                Icon="SquareOutline"
-                Spin="True" />
+            <ProgressBar
+                Width="120"
+                Height="5"
+                VerticalAlignment="Bottom"
+                IsIndeterminate="True" />
             <StackPanel
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

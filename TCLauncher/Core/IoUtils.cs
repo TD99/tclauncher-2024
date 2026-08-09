@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Newtonsoft.Json;
@@ -57,18 +56,8 @@ namespace TCLauncher.Core
                 if (!Uri.IsWellFormedUriString(urlOrPath, UriKind.Absolute))
                     return File.Exists(urlOrPath);
 
-                using (var webClient = new WebClient())
-                {
-                    try
-                    {
-                        webClient.DownloadData(urlOrPath);
-                        return true;
-                    }
-                    catch (WebException)
-                    {
-                        return false;
-                    }
-                }
+                return Uri.TryCreate(urlOrPath, UriKind.Absolute, out var uri) &&
+                       (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
             }
         }
 

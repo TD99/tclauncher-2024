@@ -795,4 +795,38 @@
   <data name="running_game_message" xml:space="preserve">
     <value>Running</value>
   </data>
+  <data name="windows_edition" xml:space="preserve"><value>Windows Edition</value></data>
+  <data name="profile_creator" xml:space="preserve"><value>Create profile</value></data>
+  <data name="profile_name" xml:space="preserve"><value>Profile name</value></data>
+  <data name="internal_name" xml:space="preserve"><value>Internal name</value></data>
+  <data name="loader" xml:space="preserve"><value>Mod loader</value></data>
+  <data name="loader_version" xml:space="preserve"><value>Loader version (optional)</value></data>
+  <data name="memory" xml:space="preserve"><value>Memory</value></data>
+  <data name="isolation" xml:space="preserve"><value>Keep game files isolated</value></data>
+  <data name="server_address" xml:space="preserve"><value>Default server address (optional)</value></data>
+  <data name="review" xml:space="preserve"><value>Review</value></data>
+  <data name="create_profile" xml:space="preserve"><value>Create profile</value></data>
+  <data name="backup" xml:space="preserve"><value>Backup</value></data>
+  <data name="full_backup" xml:space="preserve"><value>Include the full instance</value></data>
+  <data name="restore_backup" xml:space="preserve"><value>Restore backup</value></data>
+  <data name="health" xml:space="preserve"><value>Health</value></data>
+  <data name="support_bundle" xml:space="preserve"><value>Export support bundle</value></data>
+  <data name="add_offline_profile" xml:space="preserve"><value>Add offline profile</value></data>
+  <data name="offline_badge" xml:space="preserve"><value>OFFLINE</value></data>
+  <data name="include_saves" xml:space="preserve"><value>Include saves and worlds</value></data>
+  <data name="catalog_offline" xml:space="preserve"><value>Offline — showing cached content</value></data>
+  <data name="create_backup" xml:space="preserve"><value>Create backup</value></data>
+  <data name="settings_general" xml:space="preserve"><value>General</value></data>
+  <data name="settings_minecraft" xml:space="preserve"><value>Minecraft / Java</value></data>
+  <data name="settings_storage" xml:space="preserve"><value>Storage</value></data>
+  <data name="settings_privacy" xml:space="preserve"><value>Privacy / Diagnostics</value></data>
+  <data name="settings_about" xml:space="preserve"><value>About</value></data>
+  <data name="java_runtime_hint" xml:space="preserve"><value>Java compatibility is checked before launch. The launcher uses or installs a suitable runtime when required.</value></data>
+  <data name="restart_required_hint" xml:space="preserve"><value>Changing the storage root requires restarting TCLauncher after migration.</value></data>
+  <data name="diagnostics_local_hint" xml:space="preserve"><value>Diagnostics stay on this device. Nothing is uploaded automatically; you can preview a redacted support bundle before exporting it.</value></data>
+  <data name="support_bundle_excludes" xml:space="preserve"><value>Always excluded:</value></data>
+  <data name="no_updates_found_message" xml:space="preserve"><value>TCLauncher is up to date.</value></data>
+  <data name="new_update_found_message" xml:space="preserve"><value>Version {0} is available. Download and verify it now?</value></data>
+  <data name="downloading_text" xml:space="preserve"><value>Downloading and verifying the signed installer…</value></data>
+  <data name="update_installer_opened" xml:space="preserve"><value>The verified installer has been opened. You can keep playing until you choose to install.</value></data>
 </root>

@@ -1,280 +1,166 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Newtonsoft.Json;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.Properties;
 
 namespace TCLauncher.MVVM.ViewModel
 {
-    class ServerListViewModel : ObservableObject
+    internal sealed class ServerListViewModel : ObservableObject
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly List<Instance> _allInstances = new List<Instance>();
+        private ObservableCollection<Instance> _serverList = new ObservableCollection<Instance>();
+        private bool _isLoading;
+        private string _loadingText;
+        private string _statusText;
+        private string _searchText;
+        private string _loaderFilter = "All";
+        private bool _installedOnly;
+        private double _itemWidth = 285;
+        private double _itemHeight = 165;
 
-        private ObservableCollection<Instance> _serverList;
         public ObservableCollection<Instance> ServerList
         {
             get => _serverList;
-            set
-            {
-                _serverList = value;
-                OnPropertyChanged();
-            }
+            set { _serverList = value; OnPropertyChanged(); }
         }
+        public bool IsLoading { get => _isLoading; set { _isLoading = value; OnPropertyChanged(); } }
+        public string LoadingText { get => _loadingText; set { _loadingText = value; OnPropertyChanged(); } }
+        public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(); } }
+        public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); ApplyFilters(); } }
+        public string LoaderFilter { get => _loaderFilter; set { _loaderFilter = value; OnPropertyChanged(); ApplyFilters(); } }
+        public bool InstalledOnly { get => _installedOnly; set { _installedOnly = value; OnPropertyChanged(); ApplyFilters(); } }
+        public IReadOnlyList<string> LoaderFilters { get; } = new[] { "All", "Vanilla", "Fabric", "Forge", "NeoForge" };
+        public ICommand RefreshCommand { get; }
 
-        private bool _isLoading;
-
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set
-            {
-                _isLoading = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _loadingText;
-
-        public string LoadingText
-        {
-            get => _loadingText;
-            set
-            {
-                _loadingText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private double _itemWidth = 285; // Ratio [5]:3
-        public double ItemWidth
-        {
-            get => _itemWidth;
-            set
-            {
-                _itemWidth = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private double _itemHeight = 165; // Ratio 5:[3]
-        public double ItemHeight
-        {
-            get => _itemHeight;
-            set
-            {
-                _itemHeight = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double ItemMinWidth { get; private set; } = 250;
-        public double ItemMaxWidth { get; private set; } = 550;
-        public double ItemMinHeight { get; private set; } = 150;
-        public double ItemMaxHeight { get; private set; } = 330;
-
+        public double ItemWidth { get => _itemWidth; set { _itemWidth = value; OnPropertyChanged(); } }
+        public double ItemHeight { get => _itemHeight; set { _itemHeight = value; OnPropertyChanged(); } }
+        public double ItemMinWidth { get; } = 250;
+        public double ItemMaxWidth { get; } = 550;
+        public double ItemMinHeight { get; } = 150;
+        public double ItemMaxHeight { get; } = 330;
 
         public ServerListViewModel()
         {
-            Task.Run(async () =>
-            {
-                IsLoading = true;
-                LoadingText = Languages.preparing_text;
-                await Task.Delay(400);
-                await LoadServers();
-                LoadingText = Languages.finishing_text;
-                IsLoading = false;
-            });
+            RefreshCommand = new AsyncRelayCommand(LoadAsync);
+            RefreshCommand.Execute(null);
         }
 
-        private async Task LoadServers()
+        private async Task LoadAsync(CancellationToken cancellationToken)
         {
-            var cacheFilePath = Path.Combine(IoUtils.Tcl.CachePath, "ServerListCache.json");
-            var tempServerList = File.Exists(cacheFilePath) ? LoadFromCache(cacheFilePath) : null;
-            tempServerList = await FetchServerList(tempServerList, cacheFilePath);
-            tempServerList = LoadLocalInstances(tempServerList);
-            if (tempServerList != null) LoadInstances(tempServerList);
-        }
-
-        private ObservableCollection<Instance> LoadFromCache(string cacheFilePath)
-        {
-            LoadingText = Languages.cache_loading_text;
-            try
-            {
-                var cacheContent = File.ReadAllText(cacheFilePath);
-                return JsonConvert.DeserializeObject<ObservableCollection<Instance>>(cacheContent);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private async Task<ObservableCollection<Instance>> FetchServerList(ObservableCollection<Instance> tempServerList, string cacheFilePath)
-        {
+            IsLoading = true;
             LoadingText = Languages.data_fetching_text;
-            ObservableCollection<Instance> internetData = null;
+            StatusText = null;
             try
             {
-                var response = await _httpClient.GetAsync(Settings.Default.DownloadMirror);
-                if (response.IsSuccessStatusCode)
+                var result = await AppServices.Catalog.LoadAsync(cancellationToken);
+                var remote = result.IsSuccess
+                    ? result.Value.Catalog.Items.Select(item => item.ToInstance()).ToList()
+                    : new List<Instance>();
+                var local = LoadLocalInstances();
+                var localById = local.ToDictionary(item => item.Guid);
+
+                _allInstances.Clear();
+                foreach (var remoteInstance in remote)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    internetData = JsonConvert.DeserializeObject<ObservableCollection<Instance>>(content);
-                }
-                else
-                {
-                    return tempServerList;
-                }
-            }
-            catch
-            {
-                return tempServerList;
-            }
-
-            var isCacheUpToDate = tempServerList?.Count == internetData?.Count;
-            if (isCacheUpToDate)
-            {
-                foreach (var i in internetData)
-                {
-                    var guid = i.Guid;
-                    var cacheInstance = tempServerList.FirstOrDefault(x => x.Guid == guid);
-                    if (cacheInstance != null)
+                    InstalledInstance installed;
+                    if (localById.TryGetValue(remoteInstance.Guid, out installed))
                     {
-                        if (cacheInstance.IsSameAs(i)) continue;
-                    }
-
-                    isCacheUpToDate = false;
-                    break;
-                }
-            }
-
-            if (isCacheUpToDate) return tempServerList;
-
-            {
-                tempServerList = internetData;
-                if (tempServerList != null)
-                {
-                    var thumbsDir = Path.Combine(IoUtils.Tcl.CachePath, "thumbs");
-                    try
-                    {
-                        if (Directory.Exists(thumbsDir))
-                            Directory.Delete(thumbsDir, true);
-
-                        Directory.CreateDirectory(thumbsDir);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
-                    foreach (var i in tempServerList)
-                    {
-                        var path = Path.Combine(thumbsDir, i.Guid + Path.GetExtension(i.ThumbnailURL));
-                        var oldThumbnailUrl = i.ThumbnailURL;
-                        try
+                        var merged = new InstalledInstance(remoteInstance)
                         {
-                            var thumbResponse = await _httpClient.GetAsync(i.ThumbnailURL);
-                            if (thumbResponse.IsSuccessStatusCode)
-                            {
-                                var thumbContent = await thumbResponse.Content.ReadAsByteArrayAsync();
-                                File.WriteAllBytes(path, thumbContent);
-                                i.ThumbnailURL = path;
-                            }
-                        }
-                        catch
-                        {
-                            i.ThumbnailURL = oldThumbnailUrl;
-                        }
+                            LastServer = installed.LastServer,
+                            Is_LocalSource = installed.Is_LocalSource,
+                            ThumbnailURL = File.Exists(installed.ThumbnailURL) ? installed.ThumbnailURL : remoteInstance.ThumbnailURL
+                        };
+                        _allInstances.Add(merged);
+                        localById.Remove(remoteInstance.Guid);
                     }
-                    try
-                    {
-                        File.WriteAllText(cacheFilePath, JsonConvert.SerializeObject(tempServerList));
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(string.Format(Languages.cache_write_error_message, e.Message), Languages.error);
-                    }
+                    else _allInstances.Add(remoteInstance);
                 }
-            }
+                _allInstances.AddRange(localById.Values);
 
-            return tempServerList;
+                if (!result.IsSuccess) StatusText = result.Message;
+                else if (result.Value.IsOffline) StatusText = Languages.ResourceManager.GetString("catalog_offline");
+                else if (result.Value.IsStale) StatusText = "Cached catalog may be out of date";
+
+                ApplyFilters();
+            }
+            catch (OperationCanceledException)
+            {
+                StatusText = "Refresh cancelled";
+            }
+            catch (Exception exception)
+            {
+                AppServices.Log.Error("discovery.load_failed", exception);
+                StatusText = Languages.installed_instances_load_error_message;
+                _allInstances.Clear();
+                _allInstances.AddRange(LoadLocalInstances());
+                ApplyFilters();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        private ObservableCollection<Instance> LoadLocalInstances(ObservableCollection<Instance> tempServerList)
+        private List<InstalledInstance> LoadLocalInstances()
         {
-            LoadingText = Languages.local_instances_loading_text;
-            try
+            var result = new List<InstalledInstance>();
+            Directory.CreateDirectory(IoUtils.Tcl.InstancesPath);
+            foreach (var directory in Directory.GetDirectories(IoUtils.Tcl.InstancesPath))
             {
-                var instancesFolder = IoUtils.Tcl.InstancesPath;
-
-                // Durchlaufen Sie jede Instanz (config.json-Datei im Instanzordner im Instanzenordner)
-                foreach (var directory in Directory.GetDirectories(instancesFolder))
+                var configPath = Path.Combine(directory, "config.json");
+                if (!File.Exists(configPath)) continue;
+                InstalledInstance installed;
+                try
                 {
-                    var configPath = Path.Combine(directory, "config.json");
-                    if (!File.Exists(configPath)) continue;
-                    var config = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(configPath));
-
-                    // Überprüfen Sie, ob die Instanz in tempServerList vorhanden ist, indem Sie instance.IsSameAsDecent() überprüfen
-                    if (tempServerList.Any(instance => instance.IsSameAsDecent(config))) continue;
-
-                    config = new InstalledInstance(config)
-                    {
-                        Is_LocalSource = true
-                    };
-
-                    // Wenn nicht, fügen Sie die Instanz zu tempServerList hinzu
-                    tempServerList.Add(config);
+                    installed = JsonConvert.DeserializeObject<InstalledInstance>(File.ReadAllText(configPath));
+                    installed?.NormalizeLegacyConfiguration();
                 }
+                catch (Exception exception)
+                {
+                    AppServices.Log.Warning("discovery.local_skipped", exception.Message);
+                    continue;
+                }
+                if (installed == null || AppServices.InstanceConfigs.Validate(installed).Count > 0) continue;
+                installed.InstallationDir = directory;
+                installed.DataDir = Path.Combine(directory, "data");
+                installed.ConfigFile = configPath;
+                installed.Is_Installed = true;
+                result.Add(installed);
             }
-            catch
-            {
-                // ignored
-            }
-
-            // Rückgabe von tempServerList
-            return tempServerList;
+            return result;
         }
 
-        private void LoadInstances(ObservableCollection<Instance> tempServerList)
+        private void ApplyFilters()
         {
-            LoadingText = Languages.instances_loading_text;
-            try
+            IEnumerable<Instance> filtered = _allInstances;
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                var finalServerList = new ObservableCollection<Instance>();
-                foreach (var instance in tempServerList)
-                {
-                    if (instance.Is_Installed)
-                    {
-                        finalServerList.Add(instance);
-                        continue;
-                    }
-
-                    string instanceFolder = IoUtils.Tcl.GetInstancePath(instance.Guid);
-                    string installFolder = IoUtils.Tcl.GetInstanceDataPath(instance.Guid);
-                    string configFile = IoUtils.Tcl.GetInstanceConfigPath(instance.Guid);
-
-                    if (Directory.Exists(instanceFolder) && Directory.Exists(installFolder) && File.Exists(configFile))
-                    {
-                        var installedinstance = new InstalledInstance(instance);
-                        finalServerList.Add(installedinstance);
-                    }
-                    else
-                    {
-                        finalServerList.Add(instance);
-                    }
-                }
-                ServerList = finalServerList;
+                var query = SearchText.Trim();
+                filtered = filtered.Where(item =>
+                    (item.DisplayName ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    (item.Name ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    (item.McVersion ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    (item.Type ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0);
             }
-            catch
-            {
-                MessageBox.Show(Languages.installed_instances_load_error_message);
-            }
+            if (!string.IsNullOrWhiteSpace(LoaderFilter) && LoaderFilter != "All")
+                filtered = filtered.Where(item => item.GetEffectiveLoader().Type.ToString() == LoaderFilter);
+            if (InstalledOnly) filtered = filtered.Where(item => item.Is_Installed);
+
+            var materialized = filtered.OrderByDescending(item => item.Is_Installed).ThenBy(item => item.DisplayName).ToList();
+            void Update() => ServerList = new ObservableCollection<Instance>(materialized);
+            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess()) Application.Current.Dispatcher.Invoke((Action)Update);
+            else Update();
         }
     }
 }

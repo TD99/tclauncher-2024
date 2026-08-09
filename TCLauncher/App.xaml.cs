@@ -11,8 +11,10 @@ using CmlLib.Core;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Sessions;
+using CmlLib.Core.ProcessBuilder;
 using Microsoft.Win32;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
@@ -26,7 +28,9 @@ namespace TCLauncher
     {
         public const string URI_SCHEME = "tcl";
         public const string FRIENDLY_NAME = "TCLauncher";
+        private const string PIPE_NAME = "TCLauncher.WindowsEdition.v1";
         private static Mutex mutex;
+        private SingleInstanceService _singleInstance;
         
         public static bool is_silent;
         public static bool kill_old;
@@ -54,15 +58,30 @@ namespace TCLauncher
         public static JELoginHandler LoginHandler;
 
         public static MinecraftPath MinecraftPath { get; set; }
-        public static CMLauncher Launcher { get; set; }
+        public static MinecraftLauncher Launcher { get; set; }
         public static MLaunchOption LaunchOption { get; set; }
         public static MainWindow MainWin { get; set; }
         public static InstallerWelcomeWindow InstallerWin { get; set; }
 
         public App()
         {
+            AppServices.Initialize(IoUtils.Tcl.RootPath);
             SetLanguage(Settings.Default.Language);
             Startup += App_Startup;
+            DispatcherUnhandledException += (sender, args) =>
+            {
+                var operationId = Guid.NewGuid().ToString("N");
+                AppServices.Log.Error("application.dispatcher_unhandled", args.Exception, operationId);
+                MessageBox.Show($"TCLauncher encountered an unexpected error. Reference: {operationId}", "TCLauncher", MessageBoxButton.OK, MessageBoxImage.Error);
+                args.Handled = true;
+            };
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                AppServices.Log.Error("application.domain_unhandled", args.ExceptionObject as Exception ?? new Exception("Unknown fatal error"));
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+            {
+                AppServices.Log.Error("application.task_unobserved", args.Exception);
+                args.SetObserved();
+            };
         }
 
         private async void App_Startup(object sender, StartupEventArgs e)
@@ -70,84 +89,27 @@ namespace TCLauncher
             UriArgs = Get_AppURI(e.Args);
             AppArgs = Join(" ", e.Args);
 
+            bool createdNew;
+            mutex = new Mutex(true, PIPE_NAME, out createdNew);
+            if (!createdNew && Settings.Default.MultiInstances != 2)
+            {
+                await SingleInstanceService.SendAsync(PIPE_NAME, e.Args, 3000);
+                Shutdown();
+                return;
+            }
+
             if (UriArgs == null)
             {
-                await ProcessAppArgs(e);
+                await ProcessAppArgs(e.Args);
             }
             else
             {
                 ProcessAppURI(UriArgs);
             }
 
-            bool createdNew;
-            mutex = new Mutex(true, FRIENDLY_NAME, out createdNew);
-            if (!createdNew)
-            {
-                var multiInstances = Settings.Default.MultiInstances;
-                switch (multiInstances)
-                {
-                    case 0:
-                        kill_old = true;
-                        is_silent = true;
-                        break;
-                    case 1:
-                        Environment.Exit(0);
-                        break;
-                }
-            }
-
             RegisterURIScheme();
 
             RegisterDefaultEnvironment();
-
-            // check if forge ad
-            try
-            {
-                var adUrl = "https://adfoc.us/serve/sitelinks/?id=271228&url=https://tcraft.link/tclauncher/api/plugins/start-tcl?forgeAdValidationKey=";
-
-                var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
-                if (File.Exists(forgeAdFile))
-                {
-                    var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
-                    if (guid != Guid.Empty)
-                    {
-                        // get string "test" from Properties/Languages.resx
-
-                        ShowToVoidLegacy(Languages.tclauncher_supports_forge_skip_ad);
-                        Thread.Sleep(1000);
-                        Process.Start(adUrl + guid);
-
-                        var trials = 100;
-                        for (var j = 0; j < trials; j++)
-                        {
-                            if (File.Exists(forgeAdFile))
-                            {
-                                var content = File.ReadAllText(forgeAdFile);
-                                if (Guid.TryParse(content, out var guidResult) && guidResult == Guid.Empty)
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-
-                            Thread.Sleep(600);
-                        }
-
-                        if (File.Exists(forgeAdFile))
-                        {
-                            File.Delete(forgeAdFile);
-                        }
-
-                        if (trials > 0)
-                        {
-                            Environment.Exit(0);
-                        }
-                    }
-                }
-            } catch { }
 
             try
             {
@@ -159,7 +121,7 @@ namespace TCLauncher
                 if (result == MessageBoxResult.Cancel) Environment.Exit(1);
             }
 
-            Launcher = new CMLauncher(new MinecraftPath(IoUtils.Tcl.DefaultPath));
+            Launcher = new MinecraftLauncher(IoUtils.Tcl.DefaultPath);
 
             LoginHandler = new JELoginHandlerBuilder()
                 .WithAccountManager(Path.Combine(IoUtils.Tcl.UdataPath, "tcl_accounts.json"))
@@ -167,6 +129,12 @@ namespace TCLauncher
 
             if (LoadUI) ShowUI();
             TryAutoLogin();
+
+            if (createdNew)
+            {
+                _singleInstance = new SingleInstanceService(PIPE_NAME, arguments => Dispatcher.BeginInvoke(new Action(() => HandleHandoff(arguments))));
+                _singleInstance.Start();
+            }
 
             IsCoreLoaded = true;
         }
@@ -221,6 +189,7 @@ namespace TCLauncher
 
         private async void TryAutoLogin()
         {
+            var signedIn = false;
             try
             {
                 var accounts = LoginHandler.AccountManager.GetAccounts();
@@ -235,6 +204,7 @@ namespace TCLauncher
 
                         MainWin.SetDisplayAccount(session?.Username);
                         Session = session;
+                        signedIn = session != null;
                     }
                     catch
                     {
@@ -242,6 +212,15 @@ namespace TCLauncher
                     }
 
                     break;
+                }
+                if (!signedIn)
+                {
+                    var offline = AppServices.OfflineProfiles.GetSelected();
+                    if (offline != null)
+                    {
+                        Session = MSession.CreateOfflineSession(offline.Username);
+                        MainWin.SetDisplayAccount(offline.Username + " (Offline)");
+                    }
                 }
             } catch (Exception e)
             {
@@ -263,18 +242,19 @@ namespace TCLauncher
             return null;
         }
 
-        private async Task ProcessAppArgs(StartupEventArgs e)
+        private async Task ProcessAppArgs(string[] arguments)
         {
-            for (var i = 0; i != e.Args.Length; ++i)
+            for (var i = 0; i != arguments.Length; ++i)
             {
-                switch (e.Args[i])
+                switch (arguments[i])
                 {
                     case "--uninstallCheck":
                         try
                         {
-                            var targetDir = e.Args[i + 1] ?? throw new ArgumentNullException();
-                            var instancesDir = IoUtils.Tcl.InstancesPath;
-                            if (!targetDir.StartsWith(instancesDir)) throw new DirectoryNotFoundException(Languages.target_dir_not_instances_dir);
+                            var targetDir = Path.GetFullPath(arguments[i + 1] ?? throw new ArgumentNullException());
+                            var instancesDir = Path.GetFullPath(IoUtils.Tcl.InstancesPath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                            if (!targetDir.StartsWith(instancesDir, StringComparison.OrdinalIgnoreCase) || targetDir.Equals(instancesDir, StringComparison.OrdinalIgnoreCase))
+                                throw new DirectoryNotFoundException(Languages.target_dir_not_instances_dir);
                             if (Directory.Exists(targetDir)) Directory.Delete(targetDir);
                         }
                         catch (Exception err)
@@ -286,7 +266,7 @@ namespace TCLauncher
                         is_silent = true;
                         try
                         {
-                            ShowToVoid(string.Format(Languages.package_installed_named, e.Args[i + 1]));
+                            ShowToVoid(string.Format(Languages.package_installed_named, arguments[i + 1]));
                         }
                         catch
                         {
@@ -297,7 +277,7 @@ namespace TCLauncher
                         is_silent = true;
                         try
                         {
-                            ShowToVoid(string.Format(Languages.package_config_updated_named, e.Args[i + 1]));
+                            ShowToVoid(string.Format(Languages.package_config_updated_named, arguments[i + 1]));
                         }
                         catch
                         {
@@ -308,7 +288,7 @@ namespace TCLauncher
                         is_silent = true;
                         try
                         {
-                            ShowToVoid(string.Format(Languages.package_uninstalled_named, e.Args[i + 1]));
+                            ShowToVoid(string.Format(Languages.package_uninstalled_named, arguments[i + 1]));
                         }
                         catch
                         {
@@ -318,7 +298,7 @@ namespace TCLauncher
                     case "--installPackage":
                         try
                         {
-                            var filePath = e.Args[i + 1];
+                            var filePath = arguments[i + 1];
                             if (!File.Exists(filePath)) throw new FileNotFoundException();
                             var fileName = Path.GetFileName(filePath);
                             var dialog = new CustomButtonDialog(DialogButtons.YesNo, string.Format(Languages.prompt_install_package, fileName));
@@ -330,7 +310,19 @@ namespace TCLauncher
 
                             try
                             {
-                                AppUtils.ImportInstance(filePath);
+                                var preview = AppServices.Packages.PreviewImport(filePath);
+                                if (!preview.IsSuccess) throw new InvalidDataException(preview.Message);
+                                var resolution = ImportConflictResolution.Cancel;
+                                if (preview.Value.HasConflict)
+                                {
+                                    var conflict = MessageBox.Show("A profile with this ID already exists.\n\nYes: replace it\nNo: import as a copy\nCancel: stop",
+                                        Languages.package_import, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                                    if (conflict == MessageBoxResult.Yes) resolution = ImportConflictResolution.Replace;
+                                    else if (conflict == MessageBoxResult.No) resolution = ImportConflictResolution.ImportAsCopy;
+                                    else break;
+                                }
+                                var import = AppServices.Packages.Import(filePath, resolution);
+                                if (!import.IsSuccess) throw new InvalidDataException(import.Message);
                             }
                             catch (Exception exception)
                             {
@@ -365,25 +357,12 @@ namespace TCLauncher
                     .Select(pair => pair.Split('='))
                     .ToDictionary(keyValue => Uri.UnescapeDataString(keyValue[0]), keyValue => Uri.UnescapeDataString(keyValue[1]));
 
-                foreach (string arg in URIArgs.Keys)
-                {
-                    switch (arg)
-                    {
-                        case "forgeAdValidationKey":
-                            var forgeAdFile = Path.Combine(IoUtils.Tcl.UdataPath, "forge.adtcl");
-                            if (File.Exists(forgeAdFile))
-                            {
-                                var guid = Guid.Parse(File.ReadAllText(forgeAdFile));
-                                if (guid != Guid.Empty && guid == Guid.Parse(URIArgs[arg]))
-                                {
-                                    File.Delete(forgeAdFile);
-                                }
-                            }
-                            break;
-                    }
-                }
+                AppServices.Log.Info("application.uri_received", string.Join(",", URIArgs.Keys));
             }
-            catch {}
+            catch (Exception exception)
+            {
+                AppServices.Log.Warning("application.uri_rejected", exception.Message);
+            }
         }
 
         private void RegisterURIScheme()
@@ -423,26 +402,36 @@ namespace TCLauncher
         private void ShowUI()
         {
             MainWin = new MainWindow(is_silent);
-            if (kill_old)
-            {
-                MainWin.ContentRendered += KillOldProcesses;
-                MainWin.Opacity = 0;
-            }
             MainWin.Show();
         }
 
-        private void KillOldProcesses(object sender, EventArgs e)
+        private async void HandleHandoff(string[] arguments)
         {
-            Process current = Process.GetCurrentProcess();
-            foreach (Process process in Process.GetProcessesByName(current.ProcessName))
+            try
             {
-                if (process.Id != current.Id)
+                if (MainWin != null)
                 {
-                    process.Kill();
-                    break;
+                    if (MainWin.WindowState == WindowState.Minimized) MainWin.WindowState = WindowState.Normal;
+                    MainWin.Show();
+                    MainWin.Activate();
+                    MainWin.Topmost = true;
+                    MainWin.Topmost = false;
                 }
+                var uri = Get_AppURI(arguments);
+                if (uri != null) ProcessAppURI(uri);
+                else await ProcessAppArgs(arguments);
             }
-            MainWin.Opacity = 1;
+            catch (Exception exception)
+            {
+                AppServices.Log.Error("single_instance.handoff_failed", exception);
+            }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _singleInstance?.Dispose();
+            mutex?.Dispose();
+            base.OnExit(e);
         }
     }
 }

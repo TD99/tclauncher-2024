@@ -1,0 +1,18 @@
+name: Windows build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - name: Restore
+        run: dotnet restore TCLauncher.sln
+      - name: Build
+        run: dotnet build TCLauncher.sln --no-restore --configuration Release --disable-build-servers -m:1
+      - name: Test
+        run: dotnet test TCLauncher.sln --no-build --configuration Release --disable-build-servers -m:1

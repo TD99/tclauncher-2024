@@ -1,0 +1,21 @@
+<Window x:Class="TCLauncher.MVVM.Windows.PackageExportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:TCLauncher.Core" Title="Export .tcl" Width="600" Height="470" MinWidth="520" MinHeight="410"
+        WindowStartupLocation="CenterOwner" Background="#1d2633" Foreground="White" Icon="/Assets/Images/logo.png">
+    <Grid Margin="26">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <StackPanel><TextBlock Text="Export .tcl" FontFamily="{StaticResource PixelifySans}" FontSize="30"/><TextBlock Text="Review the portable profile before creating the package." Foreground="#8ea6c8"/></StackPanel>
+        <Border Grid.Row="1" Margin="0,18" Padding="18" Background="#25101823" CornerRadius="8">
+            <StackPanel>
+                <TextBlock x:Name="ProfileName" FontSize="22"/>
+                <TextBlock x:Name="ProfileDetails" Margin="0,8,0,0" Foreground="#b2b9cc" TextWrapping="Wrap"/>
+                <CheckBox x:Name="IncludeSaves" Margin="0,20,0,0" Content="{core:Localize Key=include_saves}" Style="{StaticResource ModernCheckbox}"/>
+                <TextBlock Margin="0,8,0,0" Text="Account tokens, launcher logs, caches, and unrelated personal data are never included." Foreground="#8ea6c8" TextWrapping="Wrap"/>
+                <Label Margin="0,18,0,0" Content="Destination"/>
+                <DockPanel><Button DockPanel.Dock="Right" Margin="8,0,0,0" Content="…" Click="Browse_Click" Style="{StaticResource ModernButton}" Padding="12,7"/><TextBox x:Name="Destination" IsReadOnly="True" Style="{StaticResource ModernTextBoxV2}"/></DockPanel>
+            </StackPanel>
+        </Border>
+        <TextBlock Grid.Row="2" x:Name="Status" Foreground="#ff9b9b" TextWrapping="Wrap"/>
+        <Button Grid.Row="3" HorizontalAlignment="Right" Margin="0,12,0,0" Padding="18,8" Content="Export .tcl" Click="Export_Click" Style="{StaticResource ModernButton}"/>
+    </Grid>
+</Window>

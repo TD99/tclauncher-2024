@@ -7,11 +7,9 @@
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:converters="clr-namespace:TCLauncher.MVVM.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:gif="http://wpfanimatedgif.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
-    xmlns:vm="clr-namespace:TCLauncher.MVVM.ViewModel"
     d:Background="#1d2633"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -20,10 +18,6 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibility" />
     </UserControl.Resources>
-
-    <UserControl.DataContext>
-        <vm:ServerListViewModel />
-    </UserControl.DataContext>
 
     <b:Interaction.Behaviors>
         <animations:SlideInAnimation />
@@ -132,6 +126,29 @@
                             FontSize="20"
                             Style="{StaticResource ModernButton}" />
                         <Button
+                            x:Name="healthBtn"
+                            Margin="0,15,0,0"
+                            Click="healthBtn_Click"
+                            ToolTip="Health and backups"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}">
+                            <Button.Content><controls:Icon FontFamily="{StaticResource FaSolid}" Identifier="heart-pulse" Unicode="f21e" /></Button.Content>
+                        </Button>
+                        <Button
+                            x:Name="exportProfileBtn"
+                            Margin="0,15,0,0"
+                            Click="exportProfileBtn_Click"
+                            Content="Export .tcl"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
+                            x:Name="cloneProfileBtn"
+                            Margin="0,15,0,0"
+                            Click="cloneProfileBtn_Click"
+                            Content="Clone"
+                            FontSize="20"
+                            Style="{StaticResource ModernButton}" />
+                        <Button
                             x:Name="reconfigDef"
                             Margin="0,15,0,0"
                             Click="reconfigDef_Click"
@@ -181,13 +198,16 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock
-                Grid.Row="0"
-                Margin="0,0,0,20"
-                HorizontalAlignment="Left"
-                FontSize="28"
-                Foreground="White"
-                Text="{x:Static p:Languages.games_label_text}" />
+            <StackPanel Grid.Row="0" Margin="0,0,50,16">
+                <TextBlock FontSize="28" Foreground="White" Text="{x:Static p:Languages.games_label_text}" />
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <TextBox Width="230" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="Search profiles" Style="{StaticResource ModernTextBox}" />
+                    <ComboBox Width="120" Margin="10,0,0,0" ItemsSource="{Binding LoaderFilters}" SelectedItem="{Binding LoaderFilter}" Style="{StaticResource ModernComboBox}" />
+                    <CheckBox Margin="12,0,0,0" VerticalAlignment="Center" Content="Installed" IsChecked="{Binding InstalledOnly}" Style="{StaticResource ModernCheckbox}" />
+                    <Button Margin="12,0,0,0" Padding="10,4" Content="Refresh" Command="{Binding RefreshCommand}" Style="{StaticResource ModernButton}" />
+                </StackPanel>
+                <TextBlock Margin="0,6,0,0" Text="{Binding StatusText}" Foreground="#eab464" FontSize="12" />
+            </StackPanel>
 
             <ComboBox
                 x:Name="ActionComboBox"
@@ -440,13 +460,10 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibility}}">
-                <fa:ImageAwesome
-                    Width="60"
-                    Height="60"
-                    Cursor="Wait"
-                    Foreground="White"
-                    Icon="SquareOutline"
-                    Spin="True" />
+                <ProgressBar
+                    Width="120"
+                    Height="5"
+                    IsIndeterminate="True" />
                 <Label Margin="0,10,0,0" Content="{Binding LoadingText}" />
             </StackPanel>
 

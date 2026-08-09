@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,12 +15,11 @@ using System.Windows.Media;
 using BusyIndicator;
 using CmlLib.Core;
 using CmlLib.Core.Auth;
-using CmlLib.Core.Installer.FabricMC;
-using CmlLib.Utils;
+using CmlLib.Core.ProcessBuilder;
 using fNbt;
 using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json;
 using TCLauncher.Core;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
@@ -34,7 +34,6 @@ namespace TCLauncher.MVVM.View
         private ObservableCollection<Applet> Applets { get; set; }
         private readonly byte _startupBehaviourLevel = Settings.Default.StartBehaviour;
         private bool _isServerListLoading;
-        private bool _isAppletLoaderVisible = false;
 
         public HomeView()
         {
@@ -44,14 +43,15 @@ namespace TCLauncher.MVVM.View
 
             Loaded += (sender, e) =>
             {
-                LoadWv();
+                RefreshApplets();
             };
         }
 
-        private async void LoadWv()
+        private async Task LoadWv()
         {
             // TODO: Add language changement support
 
+            if (webView.CoreWebView2 != null) return;
             await webView.EnsureCoreWebView2Async();
 
             var core = webView.CoreWebView2;
@@ -109,6 +109,8 @@ namespace TCLauncher.MVVM.View
 
         private async void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
+            var launchStarted = false;
+            playBtn.IsEnabled = false;
             playBtn.Content = new Indicator()
             {
                 IndicatorType = IndicatorType.ThreeDots,
@@ -119,6 +121,7 @@ namespace TCLauncher.MVVM.View
             if (!(profileSelect.SelectedItem is InstalledInstance instance))
             {
                 MessageBox.Show(Languages.select_instance_message);
+                ResetPlayButton();
                 return;
             }
 
@@ -131,20 +134,13 @@ namespace TCLauncher.MVVM.View
                     if (result == MessageBoxResult.Yes)
                     {
                         App.MainWin.navigateToLogin();
+                        ResetPlayButton();
                         return;
                     }
-
-                    var dialog = new CustomInputDialog(Languages.offline_user_input_message)
-                    {
-                        Owner = App.MainWin
-                    };
-
-                    dialog.Show();
-
-                    if (!await dialog.Result) return;
-
-                    App.Session = MSession.CreateOfflineSession(dialog.ResponseText);
-                    App.MainWin.SetDisplayAccount(dialog.ResponseText + Languages.offline_annotation);
+                    MessageBox.Show("Choose a Microsoft account or create an explicit offline profile on the Accounts page.", Languages.login);
+                    App.MainWin.navigateToLogin();
+                    ResetPlayButton();
+                    return;
                 }
                 else
                 {
@@ -156,6 +152,7 @@ namespace TCLauncher.MVVM.View
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
+                        ResetPlayButton();
                         return;
                     }
                 }
@@ -169,14 +166,12 @@ namespace TCLauncher.MVVM.View
                 ServicePointManager.DefaultConnectionLimit = 256;
 
                 var path = new MinecraftPath();
-                var isIsolated = true;
                 if (instance.UseIsolation != true)
                 {
                     switch (Settings.Default.SandboxLevel)
                     {
                         case 0:
                             path = AppUtils.GetMinecraftPathShared(instance.Guid);
-                            isIsolated = false;
                             break;
                         case 1:
                             path = AppUtils.GetMinecraftPathIsolated(instance.Guid);
@@ -190,28 +185,26 @@ namespace TCLauncher.MVVM.View
 
                 App.MinecraftPath = path;
 
-                App.Launcher = new CMLauncher(App.MinecraftPath);
+                App.Launcher = new MinecraftLauncher(App.MinecraftPath.BasePath);
 
-                if (instance.UseFabric == true && !string.IsNullOrEmpty(instance.McVersion))
+                string startVersion;
+                using (var loaderCancellation = new CancellationTokenSource())
                 {
-                    var fabricLoader = new FabricVersionLoader();
-                    var fabricVersions = await fabricLoader.GetVersionMetadatasAsync();
-
-                    var fabric = fabricVersions.GetVersionMetadata(instance.McVersion);
-                    await fabric.SaveAsync(App.MinecraftPath);
-
-                    // update version list
-                    await App.Launcher.GetAllVersionsAsync();
-                }
-
-                if (instance.UseForge == true && !string.IsNullOrEmpty(instance.McVersion))
-                {
-                    var names = new List<string>
+                    var loaderWindow = new OperationWindow { Owner = App.MainWin };
+                    loaderWindow.CancelRequested += (loaderSender, loaderArgs) => loaderCancellation.Cancel();
+                    loaderWindow.Show();
+                    try
                     {
-                        instance.McVersion
-                    };
-
-                    await InstanceAssetsUtils.GetAssets(names, isIsolated);
+                        startVersion = await AppServices.ModLoaders.EnsureInstalledAsync(
+                            instance,
+                            App.Launcher,
+                            new Progress<OperationProgress>(loaderWindow.Update),
+                            loaderCancellation.Token);
+                    }
+                    finally
+                    {
+                        loaderWindow.Close();
+                    }
                 }
 
                 var serverAddressString = ((Server) ServerSelect.SelectedItem).Address;
@@ -225,7 +218,7 @@ namespace TCLauncher.MVVM.View
                     Path = App.MinecraftPath,
                     MinimumRamMb = instance.MinimumRamMb ?? 0,
                     MaximumRamMb = instance.MaximumRamMb ?? 1024,
-                    JVMArguments = instance.JVMArguments,
+                    ExtraJvmArguments = instance.JVMArguments?.Select(argument => new MArgument(argument)),
 
                     ServerIp = mcServerAddress.IP,
                     ServerPort = mcServerAddress.Port ?? 25565,
@@ -239,15 +232,15 @@ namespace TCLauncher.MVVM.View
 
                 var actionWindow = new ActionWindow(Languages.loading_game_message);
 
-                App.Launcher.FileChanged += (e1) =>
+                App.Launcher.FileProgressChanged += (sender1, e1) =>
                 {
                     // TODO: Check for start event
-                    var progress = e1.ProgressedFileCount;
-                    var total = e1.TotalFileCount;
-                    var percent = progress / total * 100;
+                    var progress = e1.ProgressedTasks;
+                    var total = e1.TotalTasks;
+                    var percent = total == 0 ? 0 : progress * 100d / total;
                     
-                    actionWindow.percent = percent;
-                    actionWindow.text = $"[{e1.FileKind}] {e1.FileName}";
+                    actionWindow.percent = (int)Math.Round(percent);
+                    actionWindow.text = e1.Name;
 
                     if (percent == 100)
                     {
@@ -255,7 +248,7 @@ namespace TCLauncher.MVVM.View
                     }
                 };
 
-                App.Launcher.ProgressChanged += (sender1, e1) =>
+                App.Launcher.ByteProgressChanged += (sender1, e1) =>
                 {
                     // This is only called when downloading, not when launching
                     // TODO: Add percent logic
@@ -338,18 +331,21 @@ namespace TCLauncher.MVVM.View
                 }
 
                 // TODO: Variable versions
-                var process = await App.Launcher.CreateProcessAsync(instance.McVersion, App.LaunchOption);
+                var process = await App.Launcher.CreateProcessAsync(startVersion, App.LaunchOption);
 
                 playBtn.Content = Languages.running_game_message;
 
-                var processUtil = new ProcessUtil(process);
-                processUtil.Exited += (sender1, e1) =>
+                process.EnableRaisingEvents = true;
+                process.Exited += (sender1, e1) =>
                 {
                     // TODO: Add closed logic
 
-                    Dispatcher.Invoke(() => playBtn.Content = Languages.play_button_text);
+                    AppServices.Log.Info("game.exited", $"profile={instance.Guid}; exitCode={process.ExitCode}");
+                    Dispatcher.Invoke(ResetPlayButton);
                 };
-                processUtil.StartWithEvents();
+                process.Start();
+                launchStarted = true;
+                AppServices.Log.Info("game.started", $"profile={instance.Guid}; processId={process.Id}; version={startVersion}");
                 switch (_startupBehaviourLevel)
                 {
                     case 0:
@@ -364,8 +360,19 @@ namespace TCLauncher.MVVM.View
             }
             catch (Exception ex)
             {
+                AppServices.Log.Error("game.launch_failed", ex);
                 MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                if (!launchStarted) ResetPlayButton();
+            }
+        }
+
+        private void ResetPlayButton()
+        {
+            playBtn.Content = Languages.play_button_text;
+            playBtn.IsEnabled = true;
         }
 
         private void SetAppletViewState(bool val = true)
@@ -375,28 +382,17 @@ namespace TCLauncher.MVVM.View
                 homeOverview.Visibility = Visibility.Collapsed;
                 mainApplets.Visibility = Visibility.Collapsed;
                 appletView.Visibility = Visibility.Visible;
-                _isAppletLoaderVisible = false;
             }
             else
             {
                 homeOverview.Visibility = Visibility.Visible;
                 mainApplets.Visibility = Visibility.Visible;
                 appletView.Visibility = Visibility.Collapsed;
-
-                try
-                {
-                    webView.Source = new Uri("https://tcraft.link/tclauncher/api/plugins/applet-loader/");
-                    _isAppletLoaderVisible = true;
-                }
-                catch
-                {
-                    _isAppletLoaderVisible = false;
-                    // ignore invalid uri or assignment failures
-                }
+                webView.Source = null;
             }
         }
 
-        private void AppletItem_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void AppletItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is Border border)) return;
             if (!(border.DataContext is Applet applet)) return;
@@ -404,9 +400,11 @@ namespace TCLauncher.MVVM.View
             if (!applet.is_action) return;
             if (applet.OpenExternal)
             {
-                if (InternetUtils.HasProtocol(applet.ActionURL))
+                Uri external;
+                if (Uri.TryCreate(applet.ActionURL, UriKind.Absolute, out external) && external.Scheme == Uri.UriSchemeHttps)
                 {
-                    Process.Start(applet.ActionURL);
+                    if (MessageBox.Show($"Open {external.Host} in your browser?", "TCLauncher", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+                        Process.Start(applet.ActionURL);
                     return;
                 }
 
@@ -414,6 +412,7 @@ namespace TCLauncher.MVVM.View
                 if (result == MessageBoxResult.Cancel) return;
             }
 
+            await LoadWv();
             SetAppletViewState();
             try
             {
@@ -474,27 +473,22 @@ namespace TCLauncher.MVVM.View
 
         private async void RefreshApplets()
         {
-            mainApplets.ItemsSource = new ObservableCollection<Applet>
+            CatalogStatus.Text = string.Empty;
+            var result = await AppServices.Catalog.LoadAsync(CancellationToken.None);
+            if (!result.IsSuccess)
             {
-                new Applet(1, null, "https://tcraft.link/tclauncher/api/assets/loader.gif", null, null, null),
-                new Applet(2, null, "https://tcraft.link/tclauncher/api/assets/loader.gif", null, null, null)
-            };
-
-            try
-            {
-                if (!(profileSelect.SelectedItem is InstalledInstance selectedInstance)) throw new Exception();
-                var appletsUrl = selectedInstance.AppletURL;
-                if (string.IsNullOrEmpty(appletsUrl)) throw new Exception();
-                var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(appletsUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    Applets = new ObservableCollection<Applet>(JsonConvert.DeserializeObject<ObservableCollection<Applet>>(content).OrderByDescending(a => a.Weight));
-                }
+                CatalogStatus.Text = result.Message;
+                Applets = new ObservableCollection<Applet>();
             }
-            catch {
-                Applets = null;
+            else
+            {
+                var load = result.Value;
+                if (load.IsOffline) CatalogStatus.Text = Languages.ResourceManager.GetString("catalog_offline");
+                else if (load.IsStale) CatalogStatus.Text = "Cached catalog may be out of date";
+                var cards = load.Catalog.Content.Select(card => new Applet(card.Weight, null, card.ImageUrl, card.Title, card.Summary, card.ActionUrl, true));
+                var featured = load.Catalog.Items.Where(item => item.Featured).Take(2).Select(item =>
+                    new Applet(100, item.Slug, item.ThumbnailUrl, item.Title, item.Summary, "https://tcraft.link/tclauncher/", true));
+                Applets = new ObservableCollection<Applet>(cards.Concat(featured).OrderByDescending(card => card.Weight).Take(4));
             }
 
             mainApplets.ItemsSource = Applets;
@@ -530,46 +524,16 @@ namespace TCLauncher.MVVM.View
             }
         }
 
-        private async void WebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        private void WebView_OnNavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            // If the applet-loader was set previously and we're navigating away from it,
-            // attempt to remove/normalize that entry from the history by running a small
-            // script that calls history.replaceState on the current entry.
-            try
+            Uri target;
+            if (!Uri.TryCreate(e.Uri, UriKind.Absolute, out target) || target.Scheme != Uri.UriSchemeHttps ||
+                !(target.Host.Equals("tcraft.link", StringComparison.OrdinalIgnoreCase) || target.Host.EndsWith(".tcraft.link", StringComparison.OrdinalIgnoreCase)))
             {
-                if (!_isAppletLoaderVisible) return;
-
-                const string loaderUrl = "https://tcraft.link/tclauncher/api/plugins/applet-loader/";
-
-                // e.Uri can be null for certain navigations; guard against that.
-                var target = e?.Uri ?? string.Empty;
-                if (!string.Equals(target, loaderUrl, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Replace the current history entry with itself to reduce chance of leaving a loader-only entry.
-                    // This won't guarantee removal of all historical entries across WebView2 internals,
-                    // but it helps prevent a distinct loader entry in the page history stack.
-                    try
-                    {
-                        if (webView?.CoreWebView2 != null)
-                        {
-                            // Use replaceState to normalize the current entry. Run it asynchronously and ignore the result.
-                            await webView.CoreWebView2.ExecuteScriptAsync("try{ history.replaceState(null, '', location.href); }catch(e){}");
-                        }
-                    }
-                    catch
-                    {
-                        // ignore script execution errors
-                    }
-                    finally
-                    {
-                        _isAppletLoaderVisible = false;
-                    }
-                }
-            }
-            catch
-            {
-                // Keep silent on any unexpected errors in the handler.
-                _isAppletLoaderVisible = false;
+                e.Cancel = true;
+                if (target != null && target.Scheme == Uri.UriSchemeHttps &&
+                    MessageBox.Show($"Open {target.Host} in your browser?", "TCLauncher", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+                    Process.Start(target.ToString());
             }
         }
     }
