@@ -1,308 +1,151 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using Microsoft.Win32;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Properties;
-using Microsoft.Win32;
 
 namespace TCLauncher.MVVM.View
 {
     public partial class SettingsView
     {
+        private readonly DispatcherTimer _textSaveTimer;
+        private bool _initializing = true;
+        private StackPanel[] _sections;
+        private Border[] _cards;
+
         public SettingsView()
         {
             InitializeComponent();
-            assemblyVersion.Text = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version);
-            string behaviourTagToSelect = Settings.Default.StartBehaviour.ToString();
-            foreach (ComboBoxItem item in Behaviour.Items)
-            {
-                if ((string) item.Tag == behaviourTagToSelect)
-                {
-                    Behaviour.SelectedItem = item;
-                    break;
-                }
-            }
+            _sections = new[] { GeneralSection, MinecraftSection, StorageSection, DownloadsSection, PrivacySection, AboutSection };
+            _cards = new[] { StartupCard, LanguageCard, AppearanceCard, JavaCard, MultiCard, SandboxCard, PathCard, MirrorCard, UpdateCard, DiagnosticsCard, ResetCard, AboutCard };
+            _textSaveTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(550) };
+            _textSaveTimer.Tick += (sender, args) => { _textSaveTimer.Stop(); SaveTextSettings(); };
 
-            string multiInstancesTagToSelect = Settings.Default.MultiInstances.ToString();
-            foreach (ComboBoxItem item in MultiInstances.Items)
-            {
-                if ((string)item.Tag == multiInstancesTagToSelect)
-                {
-                    MultiInstances.SelectedItem = item;
-                    break;
-                }
-            }
-
-            string sandboxLevelTagToSelect = Settings.Default.SandboxLevel.ToString();
-            foreach (ComboBoxItem item in SandboxLevel.Items)
-            {
-                if ((string)item.Tag == sandboxLevelTagToSelect)
-                {
-                    SandboxLevel.SelectedItem = item;
-                    break;
-                }
-            }
-
-            AppDataPath.Text = Settings.Default.VirtualAppDataPath;
-
-            frameworkVersion.Text = string.Format(Languages.framework_version_text, RuntimeInformation.FrameworkDescription);
-
-            string languageTagToSelect = Settings.Default.Language;
-            foreach (ComboBoxItem item in LanguageSelector.Items)
-            {
-                if ((string)item.Tag == languageTagToSelect)
-                {
-                    LanguageSelector.SelectedItem = item;
-                    break;
-                }
-            }
-
-            CheckBoxUsePixelFontEverywhere.IsChecked = Settings.Default.UsePixelFontEverywhere;
-
+            assemblyVersion.Text = "Version " + Assembly.GetExecutingAssembly().GetName().Version;
+            frameworkVersion.Text = RuntimeInformation.FrameworkDescription;
             CopyrightCompilationYear.Text = "Copyright © T-Craft " + AppUtils.GetCompilationDate().Year;
+            JavaStatus.Text = Environment.Is64BitOperatingSystem ? "64-bit Windows detected" : "32-bit Windows detected";
+            SelectByTag(Behaviour, Settings.Default.StartBehaviour.ToString());
+            SelectByTag(MultiInstances, Settings.Default.MultiInstances.ToString());
+            SelectByTag(SandboxLevel, Settings.Default.SandboxLevel.ToString());
+            SelectByTag(LanguageSelector, Settings.Default.Language);
+            AppDataPath.Text = Settings.Default.VirtualAppDataPath;
+            DownloadMirror.Text = Settings.Default.DownloadMirror;
+            CheckBoxUsePixelFontEverywhere.IsChecked = Settings.Default.UsePixelFontEverywhere;
+            SectionList.SelectedIndex = 0;
+            _initializing = false;
         }
 
-        private void resetSettBtn_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show(Languages.reset_settings_message, Languages.reset_settings_caption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        private static void SelectByTag(ComboBox comboBox, string tag) => comboBox.SelectedItem = comboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => Equals(item.Tag, tag));
+        private void SetSaved(string message = "Saved", bool restart = false) { SaveStatus.Text = restart ? "Restart required • " + message : message; SaveStatus.Foreground = restart ? System.Windows.Media.Brushes.Goldenrod : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(131, 213, 187)); }
+        private void SetError(string message) { SaveStatus.Text = "Error • " + message; SaveStatus.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 154, 154)); }
 
-            if (result != MessageBoxResult.Yes) return;
-            Settings.Default.Reset();
-            Settings.Default.Save();
+        private void SectionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!(SectionList.SelectedItem is ListBoxItem selected)) return;
+            SearchSettings.Text = string.Empty;
+            foreach (var section in _sections) section.Visibility = Equals(section.Tag, selected.Tag) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void resetDataBtn_Click(object sender, RoutedEventArgs e)
+        private void SearchSettings_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show(Languages.reset_data_message, Languages.reset_data_caption, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (_sections == null) return;
+            var query = SearchSettings.Text.Trim();
+            if (query.Length == 0) { if (SectionList.SelectedItem is ListBoxItem selected) foreach (var section in _sections) section.Visibility = Equals(section.Tag, selected.Tag) ? Visibility.Visible : Visibility.Collapsed; foreach (var card in _cards) card.Visibility = Visibility.Visible; return; }
+            foreach (var section in _sections) section.Visibility = Visibility.Visible;
+            foreach (var card in _cards) card.Visibility = ((card.Tag as string) ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
 
-            if (result == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    Directory.Delete(IoUtils.Tcl.RootPath, true);
-                    Settings.Default.Reset();
-                    Settings.Default.Save();
+        private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e) { if (TrySelectedByte(sender, out var value)) { Settings.Default.StartBehaviour = value; Save(); } }
+        private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e) { if (TrySelectedByte(sender, out var value)) { Settings.Default.MultiInstances = value; Save(); } }
+        private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e) { if (TrySelectedByte(sender, out var value)) { Settings.Default.SandboxLevel = value; Save(); } }
+        private bool TrySelectedByte(object sender, out byte value) { value = 0; if (_initializing || !((sender as ComboBox)?.SelectedItem is ComboBoxItem item)) return false; if (byte.TryParse(item.Tag as string, out value)) return true; SetError("Invalid selection."); return false; }
+        private void Save() { Settings.Default.Save(); SetSaved(); }
 
-                    MessageBox.Show(Languages.reset_data_success_message);
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    Process.Start(appPath);
-                    Application.Current.Shutdown();
-                }
-                catch
-                {
-                    MessageBox.Show(Languages.reset_data_error_message);
-                }
-            }
+        private void LanguageSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_initializing || !((sender as ComboBox)?.SelectedItem is ComboBoxItem item)) return;
+            Settings.Default.Language = (string)item.Tag; Settings.Default.Save(); SetSaved("Language saved", true);
+        }
+        private void PixelFont_OnChanged(object sender, RoutedEventArgs e)
+        {
+            if (_initializing) return; Settings.Default.UsePixelFontEverywhere = CheckBoxUsePixelFontEverywhere.IsChecked == true; Settings.Default.Save(); SetSaved("Appearance saved", true);
+        }
+        private void DebouncedTextSetting_OnChanged(object sender, TextChangedEventArgs e) { if (_initializing) return; SaveStatus.Text = "Saving…"; _textSaveTimer.Stop(); _textSaveTimer.Start(); }
+        private void SaveTextSettings()
+        {
+            if (!Uri.TryCreate(DownloadMirror.Text.Trim(), UriKind.Absolute, out var mirror) || mirror.Scheme != Uri.UriSchemeHttps) { SetError("Download service must be a secure HTTPS address."); return; }
+            var path = AppDataPath.Text.Trim();
+            if (path.Length > 0 && !IoUtils.FileSystem.HasFullAccess(path)) { SetError("The storage path is not writable."); return; }
+            var storageChanged = !string.Equals(Settings.Default.VirtualAppDataPath ?? string.Empty, path, StringComparison.OrdinalIgnoreCase);
+            Settings.Default.DownloadMirror = mirror.ToString(); Settings.Default.VirtualAppDataPath = path; Settings.Default.Save();
+            SetSaved(storageChanged ? "Storage path saved" : "Settings saved", storageChanged);
+        }
+
+        private async void MigrateStorage_OnClick(object sender, RoutedEventArgs e)
+        {
+            var basePath = AppDataPath.Text.Trim(); if (basePath.Length == 0) basePath = IoUtils.FileSystem.RealAppDataPath;
+            if (!IoUtils.FileSystem.HasFullAccess(basePath)) { SetError("The destination is not writable."); return; }
+            var source = Path.GetFullPath(IoUtils.Tcl.RootPath); var destination = Path.GetFullPath(Path.Combine(basePath, "TCL"));
+            if (string.Equals(source, destination, StringComparison.OrdinalIgnoreCase)) { SetSaved("Data is already here"); return; }
+            if (!await AppServices.Overlays.ConfirmAsync("Move launcher data", "Move all TCLauncher data to:\n" + destination + "\n\nClose games using these files first.", "Move data", "Cancel")) return;
+            try { await Task.Run(() => Directory.Move(source, destination)); Settings.Default.VirtualAppDataPath = AppDataPath.Text.Trim(); Settings.Default.Save(); SetSaved("Data moved", true); AppServices.Overlays.ShowToast("Storage moved", "Restart TCLauncher when convenient."); }
+            catch (Exception exception) { AppServices.Log.Error("settings.storage_move_failed", exception); SetError(exception.Message); }
         }
 
         private async void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            updateBtn.IsEnabled = false;
-            UpdateStatus.Text = Languages.search_for_updates_text;
+            updateBtn.IsEnabled = false; UpdateStatus.Text = "Checking…";
             try
             {
-                var current = Assembly.GetExecutingAssembly().GetName().Version;
-                var check = await AppServices.Updates.CheckAsync(current, System.Threading.CancellationToken.None);
-                if (!check.IsSuccess)
-                {
-                    UpdateStatus.Text = check.Message;
-                    return;
-                }
-                if (!check.Value.IsUpdateAvailable)
-                {
-                    UpdateStatus.Text = L("no_updates_found_message");
-                    return;
-                }
-
+                var check = await AppServices.Updates.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version, CancellationToken.None);
+                if (!check.IsSuccess || !check.Value.IsUpdateAvailable) { UpdateStatus.Text = check.IsSuccess ? "TCLauncher is up to date." : check.Message; return; }
+                if (!check.Value.IsCompatible) { UpdateStatus.Text = check.Value.CompatibilityMessage; return; }
                 var manifest = check.Value.Manifest;
-                if (!check.Value.IsCompatible)
-                {
-                    UpdateStatus.Text = check.Value.CompatibilityMessage;
-                    return;
-                }
-                var prompt = manifest.ReleaseNotes + Environment.NewLine + Environment.NewLine +
-                             string.Format(L("new_update_found_message"), manifest.Version);
-                if (MessageBox.Show(prompt, "TCLauncher Windows Edition", MessageBoxButton.YesNo, MessageBoxImage.Information) != MessageBoxResult.Yes)
-                    return;
-
-                UpdateStatus.Text = L("downloading_text");
+                if (!await AppServices.Overlays.ConfirmAsync("Update available", manifest.ReleaseNotes + "\n\nInstall " + manifest.Version + "?", "Download update", "Later")) return;
                 var staging = Path.Combine(IoUtils.Tcl.RootPath, "Updates", manifest.Version);
-                var download = await AppServices.Updates.DownloadAndVerifyAsync(manifest, staging, System.Threading.CancellationToken.None);
-                if (!download.IsSuccess)
-                {
-                    UpdateStatus.Text = download.Message;
-                    return;
-                }
-
-                Process.Start(new ProcessStartInfo("msiexec.exe", "/i \"" + download.Value + "\"") { UseShellExecute = true });
-                UpdateStatus.Text = L("update_installer_opened");
+                var download = await AppServices.Updates.DownloadAndVerifyAsync(manifest, staging, CancellationToken.None);
+                if (!download.IsSuccess) { UpdateStatus.Text = download.Message; return; }
+                Process.Start(new ProcessStartInfo("msiexec.exe", "/i \"" + download.Value + "\"") { UseShellExecute = true }); UpdateStatus.Text = "Verified installer opened.";
             }
-            catch (Exception exception)
-            {
-                AppServices.Log.Error("settings.update_failed", exception);
-                UpdateStatus.Text = exception.Message;
-            }
-            finally
-            {
-                updateBtn.IsEnabled = true;
-            }
+            catch (Exception exception) { AppServices.Log.Error("settings.update_failed", exception); UpdateStatus.Text = exception.Message; }
+            finally { updateBtn.IsEnabled = true; }
         }
 
-        private void SupportBundle_Click(object sender, RoutedEventArgs e)
+        private async void SupportBundle_Click(object sender, RoutedEventArgs e)
         {
-            var preview = AppServices.SupportBundles.Preview(null);
-            var message = string.Join(Environment.NewLine, preview.IncludedFiles) + Environment.NewLine + Environment.NewLine +
-                          L("support_bundle_excludes") + Environment.NewLine + string.Join(Environment.NewLine, preview.ExcludedData);
-            if (MessageBox.Show(message, L("support_bundle"), MessageBoxButton.OKCancel, MessageBoxImage.Information) != MessageBoxResult.OK) return;
-            var dialog = new SaveFileDialog { Filter = "ZIP archive (*.zip)|*.zip", FileName = "TCLauncher-support-" + DateTime.Now.ToString("yyyyMMdd-HHmm") + ".zip" };
-            if (dialog.ShowDialog() != true) return;
-            var result = AppServices.SupportBundles.Export(dialog.FileName, null);
-            MessageBox.Show(result.IsSuccess ? dialog.FileName : result.Message, L("support_bundle"),
-                MessageBoxButton.OK, result.IsSuccess ? MessageBoxImage.Information : MessageBoxImage.Error);
+            var preview = AppServices.SupportBundles.Preview(null); var text = "Includes:\n• " + string.Join("\n• ", preview.IncludedFiles) + "\n\nExcludes:\n• " + string.Join("\n• ", preview.ExcludedData) + "\n\nNothing is sent automatically.";
+            if (!await AppServices.Overlays.ConfirmAsync("Export support bundle", text, "Choose destination", "Cancel")) return;
+            var picker = new SaveFileDialog { Filter = "ZIP archive (*.zip)|*.zip", FileName = "TCLauncher-support-" + DateTime.Now.ToString("yyyyMMdd-HHmm") + ".zip" }; if (picker.ShowDialog() != true) return;
+            var result = AppServices.SupportBundles.Export(picker.FileName, null); AppServices.Overlays.ShowToast(result.IsSuccess ? "Support bundle exported" : "Export failed", result.IsSuccess ? picker.FileName : result.Message, result.IsSuccess ? ToastTone.Success : ToastTone.Error);
         }
+        private void OpenLogs_OnClick(object sender, RoutedEventArgs e) => Process.Start("explorer.exe", AppServices.Log.LogDirectory);
 
-        private static string L(string key)
+        private async void resetSettBtn_Click(object sender, RoutedEventArgs e)
         {
-            return Languages.ResourceManager.GetString(key, Languages.Culture) ?? key;
+            if (!await AppServices.Overlays.ConfirmAsync("Reset settings", "Restore all launcher settings to their defaults?", "Reset settings", "Cancel")) return;
+            Settings.Default.Reset(); Settings.Default.Save(); SetSaved("Defaults restored", true);
         }
-
-        private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void resetDataBtn_Click(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            string tag = (string)selectedItem.Tag;
-            byte value;
-
-            try
-            {
-                value = Byte.Parse(tag);
-            } catch
-            {
-                MessageBox.Show(Languages.startup_behavior_error_message);
-                return;
-            }
-
-            Settings.Default.StartBehaviour = value;
-            Settings.Default.Save();
+            if (!await AppServices.Overlays.ConfirmAsync("Reset all TCLauncher data", "This permanently removes local profiles, account storage, backups, settings, and logs.", "Delete all data", "Cancel")) return;
+            try { Directory.Delete(Path.GetFullPath(IoUtils.Tcl.RootPath), true); Settings.Default.Reset(); Settings.Default.Save(); AppServices.Overlays.ShowToast("Data removed", "Run setup again to continue."); }
+            catch (Exception exception) { SetError(exception.Message); }
         }
-
-        private void MultiInstances_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ReSetupBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            string tag = (string)selectedItem.Tag;
-            byte value;
-
-            try
-            {
-                value = Byte.Parse(tag);
-            }
-            catch
-            {
-                MessageBox.Show(Languages.multi_instance_setting_error_message);
-                return;
-            }
-
-            Settings.Default.MultiInstances = value;
-            Settings.Default.Save();
-        }
-
-        private void SandboxLevel_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            string tag = (string)selectedItem.Tag;
-            byte value;
-
-            try
-            {
-                value = byte.Parse(tag);
-            }
-            catch
-            {
-                MessageBox.Show(Languages.sandbox_level_setting_error_message);
-                return;
-            }
-
-            Settings.Default.SandboxLevel = value;
-            Settings.Default.Save();
-        }
-
-        private void AppDataPathBtn_OnClick(object sender, RoutedEventArgs e)
-        {
-            var oldPath = IoUtils.Tcl.RootPath;
-            var newPath = AppDataPath.Text == "" ? IoUtils.FileSystem.RealAppDataPath : AppDataPath.Text;
-
-            if (!IoUtils.FileSystem.HasFullAccess(newPath))
-            {
-                MessageBox.Show(Languages.invalid_path_error_message);
-                return;
-            }
-
-            newPath = Path.Combine(newPath, "TCL");
-
-            Settings.Default.VirtualAppDataPath = AppDataPath.Text;
-            Settings.Default.Save();
-
-            var result = MessageBox.Show(Languages.path_saved_prompt, Languages.path_saved, MessageBoxButton.YesNo, MessageBoxImage.Information);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        Directory.Move(oldPath, newPath);
-                        MessageBox.Show(Languages.files_migrated_success_message);
-                    }
-                    catch
-                    {
-                        MessageBox.Show(Languages.copy_error_message);
-                    }
-                });
-            }
-
-            var appPath = Process.GetCurrentProcess().MainModule.FileName;
-            Process.Start(appPath);
-            Application.Current.Shutdown();
-        }
-
-        private void LanguageSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            string tag = (string)selectedItem.Tag;
-
-            if (tag == Settings.Default.Language) return;
-            Settings.Default.Language = tag;
-            Settings.Default.Save();
-            App.SetLanguage(Settings.Default.Language, true);
-        }
-
-        private void ReSetupBtn_OnClick(object sender, RoutedEventArgs e)
-        {
-            var appPath = Process.GetCurrentProcess().MainModule.FileName;
-            Process.Start(appPath, "--installer-part-welcome");
-            Application.Current.Shutdown();
-        }
-
-        private void CheckBoxUsePixelFontEverywhere_OnCheckStateChanged(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is CheckBox checkBox)) return;
-
-            var isChecked = checkBox.IsChecked ?? false;
-
-            if (Settings.Default.UsePixelFontEverywhere == isChecked) return;
-
-            Settings.Default.UsePixelFontEverywhere = checkBox.IsChecked ?? false;
-            Settings.Default.Save();
-            App.HotReload();
+            if (!await AppServices.Overlays.ConfirmAsync("Run setup again", "Close TCLauncher and open the setup experience?", "Run setup", "Cancel")) return;
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName, "--installer-part-welcome"); Application.Current.Shutdown();
         }
     }
 }

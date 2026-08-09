@@ -1,77 +1,61 @@
-<UserControl x:Class="TCLauncher.MVVM.View.SettingsView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animations="clr-namespace:TCLauncher.MVVM.Animations"
-    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
-    xmlns:core="clr-namespace:TCLauncher.Core"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:p="clr-namespace:TCLauncher.Properties"
-    d:Background="#1d2633" mc:Ignorable="d">
-    <b:Interaction.Behaviors><animations:SlideInAnimation /></b:Interaction.Behaviors>
-
+<UserControl x:Class="TCLauncher.MVVM.View.SettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:Background="#1D2633" mc:Ignorable="d" Focusable="False" IsTabStop="False">
+    <UserControl.Resources>
+        <Style x:Key="SettingCard" TargetType="Border"><Setter Property="Margin" Value="0,0,0,12"/><Setter Property="Padding" Value="16"/><Setter Property="Background" Value="#222D3B"/><Setter Property="BorderBrush" Value="#344255"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="10"/></Style>
+        <Style x:Key="SettingTitle" TargetType="TextBlock"><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+        <Style x:Key="SettingHelp" TargetType="TextBlock"><Setter Property="Margin" Value="0,4,0,10"/><Setter Property="Foreground" Value="#AEB8C7"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+    </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-        <StackPanel Margin="0,0,0,12">
-            <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="30" Text="{x:Static p:Languages.settings_text}" />
-            <TextBlock Foreground="#8ea6c8" Text="{core:Localize Key=windows_edition}" />
-        </StackPanel>
-        <TabControl Grid.Row="1">
-            <TabItem Header="{core:Localize Key=settings_general}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
-                    <Label Content="{x:Static p:Languages.startup_behavior_label_text}" />
-                    <ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged" Style="{StaticResource ModernComboBox}">
-                        <ComboBoxItem Content="{x:Static p:Languages.keep_open_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.minimize_text}" Tag="1"/><ComboBoxItem Content="{x:Static p:Languages.close_text}" Tag="2"/>
-                    </ComboBox>
-                    <Label Content="{x:Static p:Languages.language}" />
-                    <ComboBox x:Name="LanguageSelector" SelectionChanged="LanguageSelector_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
-                        <ComboBoxItem Content="English" Tag="en"/><ComboBoxItem Content="Deutsch" Tag="de"/><ComboBoxItem Content="Français" Tag="fr"/>
-                    </ComboBox>
-                    <CheckBox x:Name="CheckBoxUsePixelFontEverywhere" Margin="0,14,0,0" Checked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" Unchecked="CheckBoxUsePixelFontEverywhere_OnCheckStateChanged" Content="{x:Static p:Languages.use_pixel_font_everywhere}" Style="{StaticResource ModernCheckbox}" />
-                </StackPanel></ScrollViewer>
-            </TabItem>
-            <TabItem Header="{core:Localize Key=settings_minecraft}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
-                    <Label Content="{x:Static p:Languages.multi_instances_text}" />
-                    <ComboBox x:Name="MultiInstances" SelectionChanged="MultiInstances_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
-                        <ComboBoxItem Content="{x:Static p:Languages.auto_detect_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.forbid_text}" Tag="1"/><ComboBoxItem Content="{x:Static p:Languages.allow_text}" Tag="2"/>
-                    </ComboBox>
-                    <Label Content="{x:Static p:Languages.sandbox_level_label_text}" />
-                    <ComboBox x:Name="SandboxLevel" SelectionChanged="SandboxLevel_OnSelectionChanged" Style="{StaticResource ModernComboBox}">
-                        <ComboBoxItem Content="{x:Static p:Languages.standard_text}" Tag="0"/><ComboBoxItem Content="{x:Static p:Languages.strict_text}" Tag="1"/>
-                    </ComboBox>
-                    <TextBlock Margin="0,16,0,0" Foreground="#8ea6c8" Text="{core:Localize Key=java_runtime_hint}" TextWrapping="Wrap" />
-                </StackPanel></ScrollViewer>
-            </TabItem>
-            <TabItem Header="{core:Localize Key=settings_storage}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
-                    <Label Content="{x:Static p:Languages.custom_appdata_path_label_text}" />
-                    <TextBox x:Name="AppDataPath" MinWidth="100" Style="{StaticResource ModernTextBoxV2}" />
-                    <TextBlock Margin="0,8,0,0" Foreground="#8ea6c8" Text="{core:Localize Key=restart_required_hint}" TextWrapping="Wrap"/>
-                    <Button x:Name="AppDataPathBtn" Margin="0,10,0,0" Padding="10,7" Click="AppDataPathBtn_OnClick" Content="{x:Static p:Languages.apply_button_text}" Style="{StaticResource ModernButton}" />
-                </StackPanel></ScrollViewer>
-            </TabItem>
-            <TabItem Header="{core:Localize Key=settings_privacy}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
-                    <TextBlock Text="{core:Localize Key=diagnostics_local_hint}" TextWrapping="Wrap" Foreground="#8ea6c8"/>
-                    <Button Margin="0,14,0,0" Padding="10,7" Click="SupportBundle_Click" Content="{core:Localize Key=support_bundle}" Style="{StaticResource ModernButton}" />
-                    <controls:HorizontalSeparator Margin="0,16,0,8"/>
-                    <Button x:Name="resetSettBtn" Margin="0,7,0,0" Padding="8" Click="resetSettBtn_Click" Content="{x:Static p:Languages.reset_local_settings_text}" Style="{StaticResource ModernButton}" />
-                    <Button x:Name="resetDataBtn" Margin="0,7,0,0" Padding="8" Click="resetDataBtn_Click" Content="{x:Static p:Languages.reset_tcl_data_text}" Style="{StaticResource ModernButton}" />
-                </StackPanel></ScrollViewer>
-            </TabItem>
-            <TabItem Header="{core:Localize Key=settings_about}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="4,0,12,16">
-                    <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="24" Text="TCLauncher Windows Edition"/>
-                    <TextBlock x:Name="assemblyVersion" Margin="0,10,0,0"/>
-                    <TextBlock x:Name="frameworkVersion" Margin="0,8,0,0"/>
-                    <TextBlock x:Name="CopyrightCompilationYear" Margin="0,8,0,0"/>
-                    <Button x:Name="updateBtn" Margin="0,18,0,0" Padding="10,7" Click="updateBtn_Click" Content="{x:Static p:Languages.search_for_updates_text}" Style="{StaticResource ModernButton}" />
-                    <TextBlock x:Name="UpdateStatus" Margin="0,8,0,0" Foreground="#8ea6c8" TextWrapping="Wrap"/>
-                    <Button x:Name="ReSetupBtn" Margin="0,18,0,0" Padding="8" Click="ReSetupBtn_OnClick" Content="{x:Static p:Languages.re_setup_text}" Style="{StaticResource ModernButton}"/>
-                </StackPanel></ScrollViewer>
-            </TabItem>
-        </TabControl>
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="205"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Border Margin="0,0,16,0" Padding="12" Background="#18212D" CornerRadius="12">
+            <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="26" Text="Settings"/>
+                <TextBox x:Name="SearchSettings" Grid.Row="1" Margin="0,14,0,10" ToolTip="Search settings" TextChanged="SearchSettings_OnTextChanged"/>
+                <ListBox x:Name="SectionList" Grid.Row="2" SelectionChanged="SectionList_OnSelectionChanged" Background="Transparent" BorderThickness="0">
+                    <ListBoxItem Tag="General" Content="General"/><ListBoxItem Tag="Minecraft" Content="Minecraft / Java"/><ListBoxItem Tag="Storage" Content="Storage"/><ListBoxItem Tag="Downloads" Content="Downloads"/><ListBoxItem Tag="Privacy" Content="Privacy / Diagnostics"/><ListBoxItem Tag="About" Content="About"/>
+                </ListBox>
+            </Grid>
+        </Border>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False" IsTabStop="False">
+            <Grid Margin="0,0,10,0">
+                <StackPanel x:Name="GeneralSection" Tag="General">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="General"/>
+                    <Border x:Name="StartupCard" Tag="startup behavior minimize close" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="After Minecraft starts"/><TextBlock Style="{StaticResource SettingHelp}" Text="Choose what the launcher window should do."/><ComboBox x:Name="Behaviour" SelectionChanged="Behaviour_SelectionChanged"><ComboBoxItem Content="Keep open" Tag="0"/><ComboBoxItem Content="Minimize" Tag="1"/><ComboBoxItem Content="Close" Tag="2"/></ComboBox></StackPanel></Border>
+                    <Border x:Name="LanguageCard" Tag="language english german french restart" Style="{StaticResource SettingCard}"><StackPanel><DockPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Language"/><Border DockPanel.Dock="Right" Padding="7,2" Background="#493C22" CornerRadius="5"><TextBlock FontSize="10" Foreground="#EAB464" Text="RESTART"/></Border></DockPanel><TextBlock Style="{StaticResource SettingHelp}" Text="Interface language; applies the next time the shell opens."/><ComboBox x:Name="LanguageSelector" SelectionChanged="LanguageSelector_OnSelectionChanged"><ComboBoxItem Content="English" Tag="en"/><ComboBoxItem Content="Deutsch" Tag="de"/><ComboBoxItem Content="Français" Tag="fr"/></ComboBox></StackPanel></Border>
+                    <Border x:Name="AppearanceCard" Tag="appearance font pixel readability restart" Style="{StaticResource SettingCard}"><StackPanel><DockPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Typography"/><Border DockPanel.Dock="Right" Padding="7,2" Background="#493C22" CornerRadius="5"><TextBlock FontSize="10" Foreground="#EAB464" Text="RESTART"/></Border></DockPanel><TextBlock Style="{StaticResource SettingHelp}" Text="Pixel typography is best kept for branding; enable it globally only if preferred."/><CheckBox x:Name="CheckBoxUsePixelFontEverywhere" Content="Use pixel font throughout the app" Checked="PixelFont_OnChanged" Unchecked="PixelFont_OnChanged"/></StackPanel></Border>
+                </StackPanel>
+
+                <StackPanel x:Name="MinecraftSection" Tag="Minecraft" Visibility="Collapsed">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="Minecraft / Java"/>
+                    <Border x:Name="JavaCard" Tag="java runtime health memory" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Java runtime"/><TextBlock Style="{StaticResource SettingHelp}" Text="TCLauncher checks runtime compatibility before launch and explains version or memory problems."/><TextBlock x:Name="JavaStatus" Foreground="#83D5BB"/></StackPanel></Border>
+                    <Expander Header="Advanced" Margin="0,4,0,0">
+                        <StackPanel Margin="0,12,0,0"><Border x:Name="MultiCard" Tag="multiple instances process" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Multiple launcher instances"/><TextBlock Style="{StaticResource SettingHelp}" Text="Control whether a second TCLauncher process is allowed."/><ComboBox x:Name="MultiInstances" SelectionChanged="MultiInstances_OnSelectionChanged"><ComboBoxItem Content="Auto detect" Tag="0"/><ComboBoxItem Content="Forbid" Tag="1"/><ComboBoxItem Content="Allow" Tag="2"/></ComboBox></StackPanel></Border><Border x:Name="SandboxCard" Tag="sandbox isolation shared strict" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Profile sandboxing"/><TextBlock Style="{StaticResource SettingHelp}" Text="Strict mode isolates Minecraft files per profile."/><ComboBox x:Name="SandboxLevel" SelectionChanged="SandboxLevel_OnSelectionChanged"><ComboBoxItem Content="Standard" Tag="0"/><ComboBoxItem Content="Strict" Tag="1"/></ComboBox></StackPanel></Border></StackPanel>
+                    </Expander>
+                </StackPanel>
+
+                <StackPanel x:Name="StorageSection" Tag="Storage" Visibility="Collapsed">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="Storage"/>
+                    <Border x:Name="PathCard" Tag="storage path appdata migration move restart" Style="{StaticResource SettingCard}"><StackPanel><DockPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Launcher data location"/><Border DockPanel.Dock="Right" Padding="7,2" Background="#493C22" CornerRadius="5"><TextBlock FontSize="10" Foreground="#EAB464" Text="RESTART"/></Border></DockPanel><TextBlock Style="{StaticResource SettingHelp}" Text="Leave empty for the Windows default. Valid paths save after you stop typing."/><TextBox x:Name="AppDataPath" TextChanged="DebouncedTextSetting_OnChanged"/><Button Margin="0,12,0,0" HorizontalAlignment="Left" Padding="14,8" Content="Move existing data…" Click="MigrateStorage_OnClick"/></StackPanel></Border>
+                </StackPanel>
+
+                <StackPanel x:Name="DownloadsSection" Tag="Downloads" Visibility="Collapsed">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="Downloads"/>
+                    <Border x:Name="MirrorCard" Tag="download mirror endpoint network" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Download service"/><TextBlock Style="{StaticResource SettingHelp}" Text="The trusted T-Craft endpoint used for legacy catalog compatibility."/><TextBox x:Name="DownloadMirror" TextChanged="DebouncedTextSetting_OnChanged"/></StackPanel></Border>
+                    <Border x:Name="UpdateCard" Tag="updates installer version" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Launcher updates"/><TextBlock Style="{StaticResource SettingHelp}" Text="Update failures never prevent Minecraft from launching."/><Button x:Name="updateBtn" HorizontalAlignment="Left" Padding="14,8" Click="updateBtn_Click" Content="Check for updates"/><TextBlock x:Name="UpdateStatus" Margin="0,8,0,0" Foreground="#AEB8C7" TextWrapping="Wrap"/></StackPanel></Border>
+                </StackPanel>
+
+                <StackPanel x:Name="PrivacySection" Tag="Privacy" Visibility="Collapsed">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="Privacy / Diagnostics"/>
+                    <Border x:Name="DiagnosticsCard" Tag="privacy diagnostics support logs bundle telemetry" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Local diagnostics"/><TextBlock Style="{StaticResource SettingHelp}" Text="No automatic telemetry or crash upload. Preview and export a redacted bundle when you choose."/><WrapPanel><Button Padding="14,8" Click="SupportBundle_Click" Content="Export support bundle"/><Button Margin="8,0,0,0" Padding="14,8" Click="OpenLogs_OnClick" Content="Open logs"/></WrapPanel></StackPanel></Border>
+                    <Expander Header="Destructive actions"><StackPanel Margin="0,12,0,0"><Border x:Name="ResetCard" Tag="reset settings data re-setup destructive" Style="{StaticResource SettingCard}"><StackPanel><TextBlock Style="{StaticResource SettingTitle}" Text="Reset and re-setup"/><TextBlock Style="{StaticResource SettingHelp}" Text="These actions always ask for confirmation."/><WrapPanel><Button Padding="12,7" Click="resetSettBtn_Click" Content="Reset settings"/><Button Margin="8,0,0,0" Padding="12,7" Click="resetDataBtn_Click" Content="Reset all data"/><Button Margin="8,0,0,0" Padding="12,7" Click="ReSetupBtn_OnClick" Content="Run setup"/></WrapPanel></StackPanel></Border></StackPanel></Expander>
+                </StackPanel>
+
+                <StackPanel x:Name="AboutSection" Tag="About" Visibility="Collapsed">
+                    <TextBlock Margin="0,0,0,14" FontSize="25" FontWeight="SemiBold" Text="About"/>
+                    <Border x:Name="AboutCard" Tag="about version framework windows edition copyright" Style="{StaticResource SettingCard}"><StackPanel><TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="24" Text="TCLauncher Windows Edition"/><TextBlock x:Name="assemblyVersion" Margin="0,12,0,0"/><TextBlock x:Name="frameworkVersion" Margin="0,7,0,0"/><TextBlock x:Name="CopyrightCompilationYear" Margin="0,7,0,0"/></StackPanel></Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        <Border Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,0" Padding="12,7" Background="#18212D" CornerRadius="8"><TextBlock x:Name="SaveStatus" Foreground="#83D5BB" Text="Saved"/></Border>
     </Grid>
 </UserControl>
