@@ -246,9 +246,13 @@
                             x:Name="AccountListButton"
                             Padding="0"
                             Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
                             Click="AccountListButton_OnClick">
                             <Button.Style>
                                 <Style BasedOn="{StaticResource ModernButtonLight}" TargetType="Button">
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentView, Converter={StaticResource ObjectTypeToBooleanConverter}, ConverterParameter={x:Type viewModel:AccountListViewModel}}" Value="True">
                                             <Setter Property="Template">

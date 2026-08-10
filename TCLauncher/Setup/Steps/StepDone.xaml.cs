@@ -6,6 +6,8 @@ namespace TCLauncher.Setup.Steps
 {
     public partial class StepDone
     {
+        public bool ShouldLaunch => LaunchOnFinish.IsChecked == true;
+
         public StepDone()
         {
             InitializeComponent();

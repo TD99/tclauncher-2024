@@ -2093,5 +2093,13 @@ namespace TCLauncher.Properties {
                 return ResourceManager.GetString("zip_files", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Start TCLauncher when I finish.
+        /// </summary>
+        public static string installer_launch_on_finish {
+            get {
+                return ResourceManager.GetString("installer_launch_on_finish", resourceCulture);
+            }
+        }
     }
 }

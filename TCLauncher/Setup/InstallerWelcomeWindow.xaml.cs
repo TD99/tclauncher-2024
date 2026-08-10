@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
 using TCLauncher.Setup.Steps;
 
@@ -68,6 +69,16 @@ namespace TCLauncher.Setup
 
         private void FinishBtn_OnClick(object sender, RoutedEventArgs e)
         {
+            var completionStep = _steps[_steps.Count - 1] as StepDone;
+            if (completionStep?.ShouldLaunch == true)
+            {
+                App.MainWin = new MainWindow(App.is_silent);
+                Application.Current.MainWindow = App.MainWin;
+                App.MainWin.Show();
+                Close();
+                return;
+            }
+
             Application.Current.Shutdown(0);
         }
 

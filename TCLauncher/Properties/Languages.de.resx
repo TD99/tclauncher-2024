@@ -773,6 +773,9 @@
     <data name="installer_launcher_ready_subtitle" xml:space="preserve">
     <value>TCLauncher ist einsatzbereit</value>
   </data>
+  <data name="installer_launch_on_finish" xml:space="preserve">
+    <value>TCLauncher starten</value>
+  </data>
     <data name="installer_additional_links" xml:space="preserve">
     <value>Entdecken Sie mehr:</value>
   </data>
