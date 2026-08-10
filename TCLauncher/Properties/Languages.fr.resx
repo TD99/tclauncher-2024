@@ -865,7 +865,7 @@
     <data name="settings_after_launch_help" xml:space="preserve"><value>Choisissez le comportement de la fenêtre du lanceur.</value></data>
     <data name="settings_language_help" xml:space="preserve"><value>La langue s’appliquera à la prochaine ouverture de l’interface.</value></data>
     <data name="settings_typography" xml:space="preserve"><value>Typographie</value></data>
-    <data name="settings_typography_help" xml:space="preserve"><value>La police pixel convient surtout à la marque ; activez-la partout uniquement si souhaité.</value></data>
+  <data name="settings_typography_help" xml:space="preserve"><value>Choisissez le style de police pour l’interface du lanceur.</value></data>
     <data name="settings_pixel_global" xml:space="preserve"><value>Utiliser la police pixel dans toute l’application</value></data>
     <data name="settings_java_help" xml:space="preserve"><value>TCLauncher vérifie avant le lancement la compatibilité Java, la version et la mémoire.</value></data>
     <data name="settings_advanced" xml:space="preserve"><value>Avancé</value></data>

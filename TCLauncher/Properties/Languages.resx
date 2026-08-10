@@ -865,7 +865,7 @@
     <data name="settings_after_launch_help" xml:space="preserve"><value>Choose what the launcher window should do.</value></data>
     <data name="settings_language_help" xml:space="preserve"><value>Interface language; applies the next time the shell opens.</value></data>
     <data name="settings_typography" xml:space="preserve"><value>Typography</value></data>
-    <data name="settings_typography_help" xml:space="preserve"><value>Pixel typography is best kept for branding; enable it globally only if preferred.</value></data>
+  <data name="settings_typography_help" xml:space="preserve"><value>Choose the font style for the launcher interface.</value></data>
     <data name="settings_pixel_global" xml:space="preserve"><value>Use pixel font throughout the app</value></data>
     <data name="settings_java_help" xml:space="preserve"><value>TCLauncher checks runtime compatibility before launch and explains version or memory problems.</value></data>
     <data name="settings_advanced" xml:space="preserve"><value>Advanced</value></data>

@@ -865,7 +865,7 @@
     <data name="settings_after_launch_help" xml:space="preserve"><value>Lege fest, was mit dem Launcherfenster geschieht.</value></data>
     <data name="settings_language_help" xml:space="preserve"><value>Die Sprache gilt beim nächsten Öffnen der Oberfläche.</value></data>
     <data name="settings_typography" xml:space="preserve"><value>Typografie</value></data>
-    <data name="settings_typography_help" xml:space="preserve"><value>Die Pixelschrift eignet sich am besten für die Marke; global nur bei Wunsch aktivieren.</value></data>
+  <data name="settings_typography_help" xml:space="preserve"><value>Wähle den Schriftstil für die Launcher-Oberfläche aus.</value></data>
     <data name="settings_pixel_global" xml:space="preserve"><value>Pixelschrift in der gesamten App verwenden</value></data>
     <data name="settings_java_help" xml:space="preserve"><value>TCLauncher prüft vor dem Start Java-Kompatibilität, Version und Arbeitsspeicher.</value></data>
     <data name="settings_advanced" xml:space="preserve"><value>Erweitert</value></data>
