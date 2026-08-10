@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +28,10 @@ namespace TCLauncher.Core.Services
         public string Title { get; set; }
         public string Message { get; set; }
         public ToastTone Tone { get; set; }
+        public string ActionText { get; set; }
+        public ICommand ActionCommand { get; set; }
+        public bool HasAction => ActionCommand != null;
+        public bool IsPersistent { get; set; }
     }
 
     public sealed class OverlaySurface
@@ -81,7 +86,9 @@ namespace TCLauncher.Core.Services
         void ShowDrawer(string title, object content);
         void Close(bool accepted = false);
         void DismissFromOutside();
-        void ShowToast(string title, string message, ToastTone tone = ToastTone.Success);
+
+        void ShowToast(string title, string message, ToastTone tone = ToastTone.Success,
+            string actionText = null, Action action = null, bool persistent = false);
     }
 
     public sealed class OverlayService : IOverlayService
@@ -156,12 +163,29 @@ namespace TCLauncher.Core.Services
             if (Host.Current?.AllowOutsideDismiss == true) Close();
         }
 
-        public void ShowToast(string title, string message, ToastTone tone = ToastTone.Success)
+        public void ShowToast(string title, string message, ToastTone tone = ToastTone.Success,
+            string actionText = null, Action action = null, bool persistent = false)
         {
             _dispatcher.Invoke(() =>
             {
-                var toast = new OverlayToast { Title = title, Message = message, Tone = tone };
+                if (persistent)
+                {
+                    var existing = Host.Toasts.FirstOrDefault(toast =>
+                        toast.IsPersistent && string.Equals(toast.Title, title, StringComparison.Ordinal));
+                    if (existing != null) return;
+                }
+
+                var toast = new OverlayToast
+                {
+                    Title = title,
+                    Message = message,
+                    Tone = tone,
+                    ActionText = actionText,
+                    ActionCommand = action == null ? null : new RelayCommand(_ => action()),
+                    IsPersistent = persistent
+                };
                 Host.Toasts.Add(toast);
+                if (persistent) return;
                 var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
                 timer.Tick += (sender, args) =>
                 {

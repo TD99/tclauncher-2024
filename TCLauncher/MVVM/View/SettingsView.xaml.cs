@@ -8,12 +8,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Forms;
 using System.Windows.Threading;
-using Microsoft.Win32;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Properties;
+using Application = System.Windows.Application;
+using ComboBox = System.Windows.Controls.ComboBox;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace TCLauncher.MVVM.View
 {
@@ -28,7 +30,7 @@ namespace TCLauncher.MVVM.View
         {
             InitializeComponent();
             _sections = new[]
-                { GeneralSection, MinecraftSection, StorageSection, DownloadsSection, PrivacySection, AboutSection };
+                { GeneralSection, MinecraftSection, StorageSection, ServicesSection, DiagnosticsSection, AboutSection };
             _cards = new[]
             {
                 StartupCard, LanguageCard, AppearanceCard, JavaCard, MultiCard, SandboxCard, PathCard, MirrorCard,
@@ -45,8 +47,9 @@ namespace TCLauncher.MVVM.View
             frameworkVersion.Text = RuntimeInformation.FrameworkDescription;
             CopyrightCompilationYear.Text = "Copyright © T-Craft " + AppUtils.GetCompilationDate().Year;
             JavaStatus.Text = Environment.Is64BitOperatingSystem
-                ? "64-bit Windows detected"
-                : "32-bit Windows detected";
+                ? "64-bit Windows detected\n"
+                : "32-bit Windows detected\n";
+            JavaStatus.Text += GetJavaVersion();
             SelectByTag(Behaviour, Settings.Default.StartBehaviour.ToString());
             SelectByTag(MultiInstances, Settings.Default.MultiInstances.ToString());
             SelectByTag(SandboxLevel, Settings.Default.SandboxLevel.ToString());
@@ -61,50 +64,57 @@ namespace TCLauncher.MVVM.View
         private static void SelectByTag(ComboBox comboBox, string tag) => comboBox.SelectedItem =
             comboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => Equals(item.Tag, tag));
 
+        private static string GetJavaVersion()
+        {
+            try
+            {
+                using (var process = Process.Start(new ProcessStartInfo
+                       {
+                           FileName = "java",
+                           Arguments = "-version",
+                           UseShellExecute = false,
+                           RedirectStandardError = true,
+                           CreateNoWindow = true
+                       }))
+                {
+                    var version = process.StandardError.ReadToEnd().Trim();
+                    process.WaitForExit(2000);
+                    return version.Length == 0 ? "Java was not found on PATH." : version;
+                }
+            }
+            catch
+            {
+                return "Java was not found on PATH.";
+            }
+        }
+
         private void SetSaved(string message = "Saved", bool restart = false)
         {
-            SaveStatus.Text = restart ? "Restart required • " + message : message;
-            SaveStatus.Foreground = restart
-                ? Brushes.Goldenrod
-                : new SolidColorBrush(Color.FromRgb(131, 213, 187));
+            if (restart)
+                ShowRestartNotice(message);
         }
 
         private void SetError(string message)
         {
-            SaveStatus.Text = "Error • " + message;
-            SaveStatus.Foreground =
-                new SolidColorBrush(Color.FromRgb(255, 154, 154));
+            AppServices.Overlays.ShowToast("Could not save settings", message, ToastTone.Error);
+        }
+
+        private static void ShowRestartNotice(string message) =>
+            AppServices.Overlays.ShowToast("Restart required",
+                "Restart TCLauncher to apply your changes.", ToastTone.Warning,
+                "Restart now", RestartLauncher, true);
+
+        private static void RestartLauncher()
+        {
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            Application.Current.Shutdown();
         }
 
         private void SectionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(SectionList.SelectedItem is ListBoxItem selected)) return;
-            SearchSettings.Text = string.Empty;
             foreach (var section in _sections)
                 section.Visibility = Equals(section.Tag, selected.Tag) ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void SearchSettings_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (_sections == null) return;
-            var query = SearchSettings.Text.Trim();
-            if (query.Length == 0)
-            {
-                if (SectionList.SelectedItem is ListBoxItem selected)
-                    foreach (var section in _sections)
-                        section.Visibility = Equals(section.Tag, selected.Tag)
-                            ? Visibility.Visible
-                            : Visibility.Collapsed;
-                foreach (var card in _cards) card.Visibility = Visibility.Visible;
-                return;
-            }
-
-            foreach (var section in _sections) section.Visibility = Visibility.Visible;
-            foreach (var card in _cards)
-                card.Visibility =
-                    ((card.Tag as string) ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
         }
 
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -145,30 +155,49 @@ namespace TCLauncher.MVVM.View
 
         private void Save()
         {
-            Settings.Default.Save();
-            SetSaved();
+            try
+            {
+                Settings.Default.Save();
+            }
+            catch (Exception exception)
+            {
+                SetError(exception.Message);
+            }
         }
 
         private void LanguageSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_initializing || !((sender as ComboBox)?.SelectedItem is ComboBoxItem item)) return;
             Settings.Default.Language = (string)item.Tag;
-            Settings.Default.Save();
-            SetSaved("Language saved", true);
+            try
+            {
+                Settings.Default.Save();
+                ShowRestartNotice("Language changes are ready.");
+            }
+            catch (Exception exception)
+            {
+                SetError(exception.Message);
+            }
         }
 
         private void PixelFont_OnChanged(object sender, RoutedEventArgs e)
         {
             if (_initializing) return;
             Settings.Default.UsePixelFontEverywhere = CheckBoxUsePixelFontEverywhere.IsChecked == true;
-            Settings.Default.Save();
-            SetSaved("Appearance saved", true);
+            try
+            {
+                Settings.Default.Save();
+                ShowRestartNotice("The new appearance will apply after restarting.");
+            }
+            catch (Exception exception)
+            {
+                SetError(exception.Message);
+            }
         }
 
         private void DebouncedTextSetting_OnChanged(object sender, TextChangedEventArgs e)
         {
             if (_initializing) return;
-            SaveStatus.Text = "Saving…";
             _textSaveTimer.Stop();
             _textSaveTimer.Start();
         }
@@ -193,8 +222,28 @@ namespace TCLauncher.MVVM.View
                 StringComparison.OrdinalIgnoreCase);
             Settings.Default.DownloadMirror = mirror.ToString();
             Settings.Default.VirtualAppDataPath = path;
-            Settings.Default.Save();
-            SetSaved(storageChanged ? "Storage path saved" : "Settings saved", storageChanged);
+            try
+            {
+                Settings.Default.Save();
+                if (storageChanged) ShowRestartNotice("The storage location changed.");
+            }
+            catch (Exception exception)
+            {
+                SetError(exception.Message);
+            }
+        }
+
+        private void BrowseDataLocation_OnClick(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog
+                   {
+                       Description = "Select the folder where launcher data should be stored.",
+                       ShowNewFolderButton = true,
+                       SelectedPath = AppDataPath.Text.Trim()
+                   })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK) AppDataPath.Text = dialog.SelectedPath;
+            }
         }
 
         private async void MigrateStorage_OnClick(object sender, RoutedEventArgs e)
@@ -223,8 +272,7 @@ namespace TCLauncher.MVVM.View
                 await Task.Run(() => Directory.Move(source, destination));
                 Settings.Default.VirtualAppDataPath = AppDataPath.Text.Trim();
                 Settings.Default.Save();
-                SetSaved("Data moved", true);
-                AppServices.Overlays.ShowToast("Storage moved", "Restart TCLauncher when convenient.");
+                ShowRestartNotice("The launcher data was moved successfully.");
             }
             catch (Exception exception)
             {
@@ -241,9 +289,15 @@ namespace TCLauncher.MVVM.View
             {
                 var check = await AppServices.Updates.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version,
                     CancellationToken.None);
-                if (!check.IsSuccess || !check.Value.IsUpdateAvailable)
+                if (!check.IsSuccess)
                 {
-                    UpdateStatus.Text = check.IsSuccess ? "TCLauncher is up to date." : check.Message;
+                    UpdateStatus.Text = check.Message;
+                    return;
+                }
+
+                if (!check.Value.IsUpdateAvailable)
+                {
+                    UpdateStatus.Text = "TCLauncher is up to date.";
                     return;
                 }
 
@@ -307,9 +361,16 @@ namespace TCLauncher.MVVM.View
         {
             if (!await AppServices.Overlays.ConfirmAsync("Reset settings",
                     "Restore all launcher settings to their defaults?", "Reset settings", "Cancel")) return;
-            Settings.Default.Reset();
-            Settings.Default.Save();
-            SetSaved("Defaults restored", true);
+            try
+            {
+                Settings.Default.Reset();
+                Settings.Default.Save();
+                ShowRestartNotice("Defaults restored.");
+            }
+            catch (Exception exception)
+            {
+                SetError(exception.Message);
+            }
         }
 
         private async void resetDataBtn_Click(object sender, RoutedEventArgs e)
@@ -322,7 +383,7 @@ namespace TCLauncher.MVVM.View
                 Directory.Delete(Path.GetFullPath(IoUtils.Tcl.RootPath), true);
                 Settings.Default.Reset();
                 Settings.Default.Save();
-                AppServices.Overlays.ShowToast("Data removed", "Run setup again to continue.");
+                AppServices.Overlays.ShowToast("Data removed", "Run setup again to continue.", ToastTone.Warning);
             }
             catch (Exception exception)
             {

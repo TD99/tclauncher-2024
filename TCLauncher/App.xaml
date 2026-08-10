@@ -39,6 +39,7 @@
             <Style BasedOn="{StaticResource ModernButton}" TargetType="{x:Type Button}" />
             <Style BasedOn="{StaticResource ModernComboBox}" TargetType="{x:Type ComboBox}" />
             <Style BasedOn="{StaticResource ModernTextBox}" TargetType="{x:Type TextBox}" />
+            <Style BasedOn="{StaticResource ModernCheckbox}" TargetType="{x:Type CheckBox}" />
 
             <FontFamily x:Key="FaRegular">Assets/Fonts/#Font Awesome 6 Free Regular</FontFamily>
             <FontFamily x:Key="FaSolid">Assets/Fonts/#Font Awesome 6 Free Solid</FontFamily>

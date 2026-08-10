@@ -2,24 +2,25 @@
     <Style x:Key="ModernCheckbox" TargetType="CheckBox">
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Background" Value="#88000000" />
-        <Setter Property="BorderBrush" Value="#88000000" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="6,3" />
+        <Setter Property="Background" Value="#202B3A" />
+        <Setter Property="BorderBrush" Value="#60738C" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="Padding" Value="7,4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
                     <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Border
                             x:Name="Box"
-                            Width="18"
-                            Height="18"
+                            Width="20"
+                            Height="20"
+                            Padding="3"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
+                            CornerRadius="6">
                             <Path
                                 x:Name="CheckMark"
                                 Data="M2,9 L7,14 L16,4"
@@ -41,12 +42,14 @@
                     <ControlTemplate.Triggers>
                         <!--  Hover  -->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Box" Property="Background" Value="#DD000000" />
+                            <Setter TargetName="Box" Property="Background" Value="#2D4056" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="#8CA9C9" />
                         </Trigger>
 
                         <!--  Checked  -->
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Box" Property="Background" Value="#FF0078D7" />
+                            <Setter TargetName="Box" Property="Background" Value="#4E8DDB" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="#8EC3FF" />
                             <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
                         </Trigger>
 

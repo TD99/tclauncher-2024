@@ -78,6 +78,15 @@
                                     Foreground="#D5DAE3"
                                     Text="{Binding Message}"
                                     TextWrapping="Wrap" />
+                                <Button
+                                    MinWidth="0"
+                                    Margin="0,9,0,0"
+                                    Padding="10,5"
+                                    HorizontalAlignment="Left"
+                                    HorizontalContentAlignment="Center"
+                                    Command="{Binding ActionCommand}"
+                                    Content="{Binding ActionText}"
+                                    Visibility="{Binding HasAction, Converter={StaticResource BoolToVisibility}}" />
                             </StackPanel>
                         </Border>
                     </DataTemplate>

@@ -27,6 +27,35 @@
             <Setter Property="Foreground" Value="#AEB8C7" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Foreground" Value="#AEB8C7" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                            x:Name="NavItem"
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent"
+                            CornerRadius="8">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavItem" Property="Background" Value="#26384D" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="NavItem" Property="Background" Value="#315579" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -34,46 +63,37 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="205" />
+            <ColumnDefinition Width="225" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border
-            Margin="0,0,16,0"
-            Padding="12"
-            Background="#18212D"
-            CornerRadius="12">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    FontFamily="{StaticResource PixelifySans}"
-                    FontSize="26"
-                    Text="{core:Localize Key=settings_text}" />
-                <TextBox
-                    x:Name="SearchSettings"
-                    Grid.Row="1"
-                    Margin="0,14,0,10"
-                    TextChanged="SearchSettings_OnTextChanged"
-                    ToolTip="{core:Localize Key=ux_search_settings}" />
+        <StackPanel Grid.Column="0" Margin="0,0,16,0">
+            <TextBlock
+                Margin="2,0,0,12"
+                FontFamily="{StaticResource PixelifySans}"
+                FontSize="29"
+                Text="{core:Localize Key=settings_text}" />
+            <Border
+                Padding="10"
+                Background="#18212D"
+                BorderBrush="#2F4054"
+                BorderThickness="1"
+                CornerRadius="14">
                 <ListBox
                     x:Name="SectionList"
-                    Grid.Row="2"
                     Background="Transparent"
                     BorderThickness="0"
                     SelectionChanged="SectionList_OnSelectionChanged">
                     <ListBoxItem Content="{core:Localize Key=settings_general}" Tag="General" />
                     <ListBoxItem Content="{core:Localize Key=settings_minecraft}" Tag="Minecraft" />
                     <ListBoxItem Content="{core:Localize Key=settings_storage}" Tag="Storage" />
-                    <ListBoxItem Content="{core:Localize Key=settings_downloads}" Tag="Downloads" />
-                    <ListBoxItem Content="{core:Localize Key=settings_privacy}" Tag="Privacy" />
+                    <ListBoxItem Content="Services" Tag="Services" />
+                    <ListBoxItem Content="Diagnostics" Tag="Diagnostics" />
                     <ListBoxItem Content="{core:Localize Key=settings_about}" Tag="About" />
                 </ListBox>
-            </Grid>
-        </Border>
+            </Border>
+        </StackPanel>
         <ScrollViewer
+            Grid.Row="0"
             Grid.Column="1"
             Focusable="False"
             HorizontalScrollBarVisibility="Disabled"
@@ -109,7 +129,11 @@
                                 <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=language}" />
                                 <Border
                                     Padding="7,2"
-                                    Background="#493C22"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    BorderBrush="#6B5730"
+                                    BorderThickness="1"
                                     CornerRadius="5"
                                     DockPanel.Dock="Right">
                                     <TextBlock
@@ -135,7 +159,11 @@
                                 <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=settings_typography}" />
                                 <Border
                                     Padding="7,2"
-                                    Background="#493C22"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    BorderBrush="#6B5730"
+                                    BorderThickness="1"
                                     CornerRadius="5"
                                     DockPanel.Dock="Right">
                                     <TextBlock
@@ -170,7 +198,10 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource SettingTitle}" Text="Java runtime" />
                             <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_java_help}" />
-                            <TextBlock x:Name="JavaStatus" Foreground="#83D5BB" />
+                            <TextBlock
+                                x:Name="JavaStatus"
+                                Foreground="#83D5BB"
+                                TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
                     <Expander Margin="0,4,0,0" Header="{core:Localize Key=settings_advanced}">
@@ -224,7 +255,11 @@
                                 <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=settings_data_location}" />
                                 <Border
                                     Padding="7,2"
-                                    Background="#493C22"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    BorderBrush="#6B5730"
+                                    BorderThickness="1"
                                     CornerRadius="5"
                                     DockPanel.Dock="Right">
                                     <TextBlock
@@ -235,66 +270,74 @@
                             </DockPanel>
                             <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_data_location_help}" />
                             <TextBox x:Name="AppDataPath" TextChanged="DebouncedTextSetting_OnChanged" />
-                            <Button
-                                Margin="0,12,0,0"
-                                Padding="14,8"
-                                HorizontalAlignment="Left"
-                                Click="MigrateStorage_OnClick"
-                                Content="{core:Localize Key=settings_move_data}" />
+                            <WrapPanel Margin="0,12,0,0">
+                                <Button
+                                    Padding="14,8"
+                                    Click="BrowseDataLocation_OnClick"
+                                    Content="Choose folder" />
+                                <Button
+                                    Margin="8,0,0,0"
+                                    Padding="14,8"
+                                    Click="MigrateStorage_OnClick"
+                                    Content="{core:Localize Key=settings_move_data}" />
+                            </WrapPanel>
                         </StackPanel>
                     </Border>
+                    <Expander Margin="0,4,0,0" Header="{core:Localize Key=settings_destructive}">
+                        <Border
+                            x:Name="ResetCard"
+                            Margin="0,12,0,0"
+                            Style="{StaticResource SettingCard}"
+                            Tag="reset settings data destructive">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=settings_reset_setup}" />
+                                <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_reset_setup_help}" />
+                                <WrapPanel>
+                                    <Button
+                                        Padding="12,7"
+                                        Click="resetSettBtn_Click"
+                                        Content="{core:Localize Key=reset_local_settings_text}" />
+                                    <Button
+                                        Margin="8,0,0,0"
+                                        Padding="12,7"
+                                        Click="resetDataBtn_Click"
+                                        Content="{core:Localize Key=settings_reset_all_data}" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </Expander>
                 </StackPanel>
 
                 <StackPanel
-                    x:Name="DownloadsSection"
-                    Tag="Downloads"
+                    x:Name="ServicesSection"
+                    Tag="Services"
                     Visibility="Collapsed">
                     <TextBlock
                         Margin="0,0,0,14"
                         FontSize="25"
                         FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_downloads}" />
+                        Text="Services" />
                     <Border
                         x:Name="MirrorCard"
                         Style="{StaticResource SettingCard}"
                         Tag="download mirror endpoint network">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=settings_download_service}" />
+                            <TextBlock Style="{StaticResource SettingTitle}" Text="Service endpoint" />
                             <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_download_service_help}" />
                             <TextBox x:Name="DownloadMirror" TextChanged="DebouncedTextSetting_OnChanged" />
-                        </StackPanel>
-                    </Border>
-                    <Border
-                        x:Name="UpdateCard"
-                        Style="{StaticResource SettingCard}"
-                        Tag="updates installer version">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource SettingTitle}" Text="Launcher updates" />
-                            <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_updates_help}" />
-                            <Button
-                                x:Name="updateBtn"
-                                Padding="14,8"
-                                HorizontalAlignment="Left"
-                                Click="updateBtn_Click"
-                                Content="{core:Localize Key=search_for_updates_text}" />
-                            <TextBlock
-                                x:Name="UpdateStatus"
-                                Margin="0,8,0,0"
-                                Foreground="#AEB8C7"
-                                TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
                 <StackPanel
-                    x:Name="PrivacySection"
-                    Tag="Privacy"
+                    x:Name="DiagnosticsSection"
+                    Tag="Diagnostics"
                     Visibility="Collapsed">
                     <TextBlock
                         Margin="0,0,0,14"
                         FontSize="25"
                         FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_privacy}" />
+                        Text="Diagnostics" />
                     <Border
                         x:Name="DiagnosticsCard"
                         Style="{StaticResource SettingCard}"
@@ -315,35 +358,6 @@
                             </WrapPanel>
                         </StackPanel>
                     </Border>
-                    <Expander Header="{core:Localize Key=settings_destructive}">
-                        <StackPanel Margin="0,12,0,0">
-                            <Border
-                                x:Name="ResetCard"
-                                Style="{StaticResource SettingCard}"
-                                Tag="reset settings data re-setup destructive">
-                                <StackPanel>
-                                    <TextBlock Style="{StaticResource SettingTitle}" Text="{core:Localize Key=settings_reset_setup}" />
-                                    <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_reset_setup_help}" />
-                                    <WrapPanel>
-                                        <Button
-                                            Padding="12,7"
-                                            Click="resetSettBtn_Click"
-                                            Content="{core:Localize Key=reset_local_settings_text}" />
-                                        <Button
-                                            Margin="8,0,0,0"
-                                            Padding="12,7"
-                                            Click="resetDataBtn_Click"
-                                            Content="{core:Localize Key=settings_reset_all_data}" />
-                                        <Button
-                                            Margin="8,0,0,0"
-                                            Padding="12,7"
-                                            Click="ReSetupBtn_OnClick"
-                                            Content="{core:Localize Key=settings_run_setup}" />
-                                    </WrapPanel>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-                    </Expander>
                 </StackPanel>
 
                 <StackPanel
@@ -367,22 +381,36 @@
                             <TextBlock x:Name="assemblyVersion" Margin="0,12,0,0" />
                             <TextBlock x:Name="frameworkVersion" Margin="0,7,0,0" />
                             <TextBlock x:Name="CopyrightCompilationYear" Margin="0,7,0,0" />
+                            <Button
+                                Margin="0,16,0,0"
+                                Padding="14,8"
+                                HorizontalAlignment="Left"
+                                Click="ReSetupBtn_OnClick"
+                                Content="{core:Localize Key=settings_run_setup}" />
+                        </StackPanel>
+                    </Border>
+                    <Border
+                        x:Name="UpdateCard"
+                        Style="{StaticResource SettingCard}"
+                        Tag="updates installer version">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SettingTitle}" Text="Launcher updates" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_updates_help}" />
+                            <Button
+                                x:Name="updateBtn"
+                                Padding="14,8"
+                                HorizontalAlignment="Left"
+                                Click="updateBtn_Click"
+                                Content="{core:Localize Key=search_for_updates_text}" />
+                            <TextBlock
+                                x:Name="UpdateStatus"
+                                Margin="0,8,0,0"
+                                Foreground="#AEB8C7"
+                                TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
-        <Border
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="0,12,0,0"
-            Padding="12,7"
-            Background="#18212D"
-            CornerRadius="8">
-            <TextBlock
-                x:Name="SaveStatus"
-                Foreground="#83D5BB"
-                Text="{core:Localize Key=ux_saved}" />
-        </Border>
     </Grid>
 </UserControl>
