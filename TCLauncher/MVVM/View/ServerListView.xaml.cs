@@ -29,7 +29,19 @@ namespace TCLauncher.MVVM.View
         private void GameCard_OnClick(object sender, RoutedEventArgs e)
         {
             if (!((sender as Button)?.Tag is Instance instance)) return;
-            AppServices.Overlays.ShowDrawer(instance.DisplayName, new GameDetailsView(instance, OnGameChanged));
+            DetailsContent.Content = new GameDetailsView(instance, OnGameChanged, CloseDetails);
+            CatalogView.Visibility = Visibility.Collapsed;
+            DetailsView.Visibility = Visibility.Visible;
+        }
+
+        private void BackFromDetails_OnClick(object sender, RoutedEventArgs e) => CloseDetails();
+
+        private void CloseDetails()
+        {
+            DetailsView.Visibility = Visibility.Collapsed;
+            CatalogView.Visibility = Visibility.Visible;
+            DetailsContent.Content = null;
+            SearchBox.Focus();
         }
 
         private async void OnGameChanged(Instance instance)

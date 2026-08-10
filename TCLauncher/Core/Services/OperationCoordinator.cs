@@ -32,7 +32,7 @@ namespace TCLauncher.Core.Services
         bool IsBusy { get; }
         Task<OperationResult<T>> RunAsync<T>(string title, bool canCancel,
             Func<IProgress<OperationProgress>, CancellationToken, Task<OperationResult<T>>> operation);
-        void RequestCancellation();
+        void RequestCancellation(bool force = false);
     }
 
     public sealed class OperationCoordinator : IOperationCoordinator
@@ -89,13 +89,20 @@ namespace TCLauncher.Core.Services
             }
         }
 
-        public void RequestCancellation()
+        public void RequestCancellation(bool force = false)
         {
             lock (_gate)
             {
-                if (Active == null || !Active.CanCancel || Active.IsCancelling) return;
+                if (Active == null || (!force && !Active.CanCancel) || (Active.IsCancelling && !force)) return;
                 Active.IsCancelling = true;
-                Active.Cancellation.Cancel();
+                try
+                {
+                    Active.Cancellation.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Completion won the race with a repeated/forced cancel click.
+                }
             }
         }
 

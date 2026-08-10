@@ -44,6 +44,13 @@ namespace TCLauncher.MVVM.Controls
             e.Handled = true;
         }
 
+        private void CancelOperation_OnClick(object sender, RoutedEventArgs e)
+        {
+            var active = AppServices.Operations.Active;
+            var force = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) || active?.IsCancelling == true;
+            AppServices.Operations.RequestCancellation(force);
+        }
+
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Escape || !AppServices.Overlays.Host.IsOpen) return;
@@ -55,7 +62,6 @@ namespace TCLauncher.MVVM.Controls
     internal sealed class OperationTrayViewModel : INotifyPropertyChanged
     {
         public IOperationCoordinator Coordinator { get; }
-        public ICommand CancelOperationCommand { get; }
         public bool IsBusy => Coordinator.IsBusy;
         public ActiveOperation Active => Coordinator.Active;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -63,7 +69,6 @@ namespace TCLauncher.MVVM.Controls
         public OperationTrayViewModel(IOperationCoordinator coordinator)
         {
             Coordinator = coordinator;
-            CancelOperationCommand = new RelayCommand(_ => Coordinator.RequestCancellation());
             Coordinator.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == nameof(IOperationCoordinator.IsBusy) || args.PropertyName == nameof(IOperationCoordinator.Active))

@@ -55,7 +55,7 @@ namespace TCLauncher.MVVM.Windows
                 _closeAfterOperation = true;
                 if (cancel) AppServices.Operations.RequestCancellation();
                 AppServices.Operations.PropertyChanged += Operations_OnPropertyChanged;
-            }), false);
+            }, () => Environment.Exit(0)), false);
         }
 
         private void Operations_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

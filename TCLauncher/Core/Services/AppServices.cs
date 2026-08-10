@@ -28,10 +28,10 @@ namespace TCLauncher.Core.Services
         public static void Initialize(string rootPath)
         {
             Log = new RollingLogService(Path.Combine(rootPath, "Logs"));
+            AtomicFiles = new AtomicFileService();
             Overlays = new OverlayService(System.Windows.Application.Current.Dispatcher);
             Operations = new OperationCoordinator();
             Activity = new ActivityStore(Path.Combine(rootPath, "Udata", "activity.json"), AtomicFiles);
-            AtomicFiles = new AtomicFileService();
             Archives = new SafeArchiveService();
             InstanceConfigs = new InstanceConfigService(AtomicFiles, Log);
             Backups = new BackupService(Path.Combine(rootPath, "Backups"), AtomicFiles, Archives, InstanceConfigs, Log);

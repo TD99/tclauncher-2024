@@ -12,37 +12,14 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False" IsTabStop="False">
             <StackPanel Margin="0,0,0,8">
                 <DockPanel Margin="0,0,0,16">
-                    <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="29"><Run Text="Welcome"/><Run x:Name="UserNameTextBlock"/></TextBlock>
+                    <StackPanel>
+                        <TextBlock FontFamily="{StaticResource PixelifySans}" FontSize="29"><Run Text="Welcome"/><Run x:Name="UserNameTextBlock"/></TextBlock>
+                        <TextBlock Margin="0,3,0,0" Foreground="#AEB8C7" FontSize="13" Text="Pick a game and server below, then press Play." />
+                    </StackPanel>
                     <TextBlock x:Name="CatalogStatus" DockPanel.Dock="Right" VerticalAlignment="Center" FontSize="12" Foreground="#EAB464"/>
                 </DockPanel>
 
-                <Grid>
-                    <Grid.ColumnDefinitions><ColumnDefinition Width="1.55*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                    <Border MinHeight="182" Padding="22" Background="#273748" CornerRadius="14">
-                        <Grid>
-                            <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                            <StackPanel>
-                                <TextBlock FontSize="13" Foreground="#83D5BB" Text="{core:Localize Key=home_continue_playing}"/>
-                                <TextBlock x:Name="ContinueProfileName" Margin="0,8,0,0" FontSize="27" FontWeight="SemiBold" Text="Choose a profile" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock x:Name="ContinueSummary" Margin="0,7,0,0" Foreground="#C7D0DC" Text="Your selected account and server appear here." TextWrapping="Wrap"/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="1" Margin="0,16,0,0" Orientation="Horizontal">
-                                <Button MinWidth="150" Padding="18,9" Content="{core:Localize Key=home_continue}" Click="PlayBtn_Click"/>
-                                <Button Margin="8,0,0,0" Padding="13,9" Content="{core:Localize Key=home_edit_selection}" Click="EditSelection_OnClick"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                    <Border Grid.Column="1" Margin="14,0,0,0" Padding="18" Background="#222D3B" CornerRadius="14">
-                        <StackPanel>
-                            <TextBlock FontSize="16" FontWeight="SemiBold" Text="{core:Localize Key=home_ready_check}"/>
-                            <TextBlock x:Name="AccountSummary" Margin="0,12,0,0" Foreground="#C7D0DC" TextWrapping="Wrap"/>
-                            <TextBlock x:Name="UpdateWarning" Margin="0,9,0,0" Foreground="#EAB464" TextWrapping="Wrap"/>
-                            <TextBlock x:Name="BackupWarning" Margin="0,9,0,0" Foreground="#EAB464" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <TextBlock Margin="0,22,0,10" FontSize="17" FontWeight="SemiBold" Text="{core:Localize Key=home_recent_profiles}"/>
+                <TextBlock Margin="0,8,0,10" FontSize="17" FontWeight="SemiBold" Text="{core:Localize Key=home_recent_profiles}"/>
                 <ItemsControl ItemsSource="{Binding RecentProfiles}">
                     <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate><DataTemplate><Button Width="180" Margin="0,0,10,0" Padding="13" Tag="{Binding}" Click="RecentProfile_OnClick" HorizontalContentAlignment="Left"><StackPanel><TextBlock FontWeight="SemiBold" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"/><TextBlock Margin="0,4,0,0" Foreground="#AEB8C7" FontSize="11" Text="{Binding McVersion, StringFormat=Minecraft {0}}"/></StackPanel></Button></DataTemplate></ItemsControl.ItemTemplate>
@@ -65,12 +42,12 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Row="1" Margin="0,14,0,0" Background="#2A384B" CornerRadius="14">
-            <Grid Height="54" Margin="18,8">
+        <Border Grid.Row="1" Margin="0,14,0,0" Padding="18,12" Background="#253447" BorderBrush="#3B4C62" BorderThickness="1" CornerRadius="14">
+            <Grid>
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                <ComboBox x:Name="profileSelect" HorizontalAlignment="Left" MinWidth="210" DisplayMemberPath="DisplayName" ItemsSource="{Binding LocalList}" SelectedItem="{Binding LastSelected}" SelectedValuePath="Guid" SelectionChanged="ProfileSelect_SelectionChanged"/>
-                <Button x:Name="playBtn" Grid.Column="1" Click="PlayBtn_Click" Content="Play" FontSize="18" FontWeight="SemiBold"/>
-                <ComboBox x:Name="ServerSelect" Grid.Column="2" HorizontalAlignment="Right" MinWidth="210" DisplayMemberPath="Name" SelectedValuePath="Address" SelectionChanged="ServerSelect_OnSelectionChanged"/>
+                <ComboBox x:Name="profileSelect" HorizontalAlignment="Stretch" Margin="0,0,14,0" DisplayMemberPath="DisplayName" ItemsSource="{Binding LocalList}" SelectedItem="{Binding LastSelected}" SelectedValuePath="Guid" SelectionChanged="ProfileSelect_SelectionChanged"/>
+                <Button x:Name="playBtn" Grid.Column="1" Click="PlayBtn_Click" Content="Play" FontSize="17" FontWeight="SemiBold" Background="#2F7A65" BorderBrush="#4AA88C"/>
+                <ComboBox x:Name="ServerSelect" Grid.Column="2" HorizontalAlignment="Stretch" Margin="14,0,0,0" DisplayMemberPath="Name" SelectedValuePath="Address" SelectionChanged="ServerSelect_OnSelectionChanged"/>
             </Grid>
         </Border>
     </Grid>

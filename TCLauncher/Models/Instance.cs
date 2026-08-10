@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using TCLauncher.Core;
 
@@ -55,9 +56,39 @@ namespace TCLauncher.Models
         public void NormalizeLegacyConfiguration()
         {
             Loader = GetEffectiveLoader();
+            NormalizeCompositeLoaderVersion();
             Patches = Patches ?? new List<Patch>();
             Servers = Servers ?? new List<Server>();
             JVMArguments = JVMArguments ?? new string[0];
+        }
+
+        private void NormalizeCompositeLoaderVersion()
+        {
+            var value = McVersion?.Trim();
+            if (string.IsNullOrWhiteSpace(value)) return;
+
+            Match match = null;
+            switch (Loader.Type)
+            {
+                case LoaderType.Fabric:
+                    match = Regex.Match(value,
+                        @"^fabric-loader-(?<loader>\d+(?:\.\d+){1,3})-(?<minecraft>.+)$",
+                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                    break;
+                case LoaderType.Forge:
+                    match = Regex.Match(value, @"^(?<minecraft>.+)-forge-(?<loader>.+)$",
+                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                    break;
+                case LoaderType.NeoForge:
+                    match = Regex.Match(value, @"^(?<minecraft>.+)-neoforge-(?<loader>.+)$",
+                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                    break;
+            }
+
+            if (match?.Success != true) return;
+            McVersion = match.Groups["minecraft"].Value;
+            if (string.IsNullOrWhiteSpace(Loader.Version))
+                Loader.Version = match.Groups["loader"].Value;
         }
 
         public void PrepareForV2Save()

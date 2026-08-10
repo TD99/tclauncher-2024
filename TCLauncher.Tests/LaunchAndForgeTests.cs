@@ -81,6 +81,34 @@ namespace TCLauncher.Tests
             }
         }
 
+        [TestMethod]
+        public async Task FabricResolutionReplacesInvalidRequestedVersionWithStableLoader()
+        {
+            var json = "[" +
+                       "{\"loader\":{\"version\":\"0.19.3\",\"stable\":true}}," +
+                       "{\"loader\":{\"version\":\"0.18.4\",\"stable\":false}}]";
+            var http = new HttpClient(new StaticJsonHandler(json));
+
+            var resolved = await ModLoaderService.ResolveFabricLoaderVersionAsync(
+                http, "1.20.1", "0.91.1", CancellationToken.None);
+
+            Assert.AreEqual("0.19.3", resolved);
+        }
+
+        [TestMethod]
+        public async Task FabricResolutionPreservesValidRequestedVersion()
+        {
+            var json = "[" +
+                       "{\"loader\":{\"version\":\"0.19.3\",\"stable\":true}}," +
+                       "{\"loader\":{\"version\":\"0.18.4\",\"stable\":false}}]";
+            var http = new HttpClient(new StaticJsonHandler(json));
+
+            var resolved = await ModLoaderService.ResolveFabricLoaderVersionAsync(
+                http, "1.21.1", "0.18.4", CancellationToken.None);
+
+            Assert.AreEqual("0.18.4", resolved);
+        }
+
         private static ForgeVersionResolver CreateResolver(string root, HttpMessageHandler handler)
         {
             return new ForgeVersionResolver(new HttpClient(handler), Path.Combine(root, "cache"), new AtomicFileService(), new RollingLogService(Path.Combine(root, "logs")));
@@ -108,6 +136,14 @@ namespace TCLauncher.Tests
                     : "{\"promos\":{\"1.20.1-recommended\":\"47.2.0\",\"1.20.1-latest\":\"47.3.0\"}}";
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(content) });
             }
+        }
+
+        private sealed class StaticJsonHandler : HttpMessageHandler
+        {
+            private readonly string _json;
+            public StaticJsonHandler(string json) { _json = json; }
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+                Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(_json) });
         }
     }
 }

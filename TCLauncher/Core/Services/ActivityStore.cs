@@ -19,7 +19,12 @@ namespace TCLauncher.Core.Services
         private readonly string _path;
         private readonly IAtomicFileService _files;
         private readonly object _sync = new object();
-        public ActivityStore(string path, IAtomicFileService files) { _path = path; _files = files; }
+        public ActivityStore(string path, IAtomicFileService files)
+        {
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("An activity store path is required.", nameof(path));
+            _path = path;
+            _files = files ?? throw new ArgumentNullException(nameof(files));
+        }
         public IReadOnlyList<LaunchActivity> List() { lock (_sync) return Load().OrderByDescending(item => item.LaunchedAtUtc).ToList(); }
         public LaunchActivity RecordStarted(Guid profileId, string server)
         {

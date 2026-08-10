@@ -43,7 +43,6 @@ namespace TCLauncher.MVVM.View
             Loaded += (sender, e) =>
             {
                 RefreshApplets();
-                UpdateDashboard();
             };
         }
 
@@ -307,7 +306,6 @@ namespace TCLauncher.MVVM.View
                 }
             }
             RefreshApplets();
-            UpdateDashboard();
         }
 
         private async void RefreshApplets()
@@ -317,7 +315,7 @@ namespace TCLauncher.MVVM.View
             var result = await AppServices.Catalog.LoadAsync(CancellationToken.None);
             if (!result.IsSuccess)
             {
-                CatalogStatus.Text = "Offline • local dashboard";
+                CatalogStatus.Text = "Offline";
             }
             else
             {
@@ -342,15 +340,6 @@ namespace TCLauncher.MVVM.View
                 catch (Exception exception) { AppServices.Log.Warning("home.profile_content_unavailable", exception.Message); }
             }
 
-            var localCount = (DataContext as MVVM.ViewModel.HomeViewModel)?.LocalList.Count ?? 0;
-            merged.Add(new Applet(10, "profiles", null, localCount + " profiles ready", "Installed games remain available even when T-Craft services are offline.", null, false, "Local"));
-            if (profileSelect.SelectedItem is InstalledInstance active)
-            {
-                var latest = AppServices.Backups.List(active.Guid).FirstOrDefault();
-                merged.Add(new Applet(9, "backup", null, latest == null ? "Backup recommended" : "Backup protected",
-                    latest == null ? "Create a backup before your next update." : "Latest backup: " + latest.Manifest.CreatedAtUtc.ToLocalTime().ToString("g"), null, false, "Local"));
-            }
-            merged.Add(new Applet(8, "privacy", null, "Private by default", "Diagnostics stay on this PC until you export a support bundle.", null, false, "Local"));
             Applets = new ObservableCollection<Applet>(merged.Where(card => !string.IsNullOrWhiteSpace(card.Title))
                 .GroupBy(card => (card.Origin ?? "") + "|" + card.Title).Select(group => group.First())
                 .OrderByDescending(card => card.Weight).Take(6));
@@ -365,16 +354,9 @@ namespace TCLauncher.MVVM.View
             
             selectedInstance.LastServer = (ServerSelect.SelectedItem as Server)?.Address;
             IoUtils.Tcl.SaveInstalledInstanceConfig(selectedInstance);
-            UpdateDashboard();
         }
 
         private void DiscoverButton_OnClick(object sender, RoutedEventArgs e) => App.MainWin.navigateToServer();
-
-        private void EditSelection_OnClick(object sender, RoutedEventArgs e)
-        {
-            profileSelect.Focus();
-            profileSelect.IsDropDownOpen = true;
-        }
 
         private void RecentProfile_OnClick(object sender, RoutedEventArgs e)
         {
@@ -382,17 +364,5 @@ namespace TCLauncher.MVVM.View
             profileSelect.SelectedItem = (profileSelect.ItemsSource as IEnumerable<InstalledInstance>)?.FirstOrDefault(item => item.Guid == profile.Guid);
         }
 
-        private void UpdateDashboard()
-        {
-            var profile = profileSelect.SelectedItem as InstalledInstance;
-            ContinueProfileName.Text = profile?.DisplayName ?? "Choose a profile";
-            var server = ServerSelect.SelectedItem as Server;
-            ContinueSummary.Text = profile == null ? "Install or create a game to begin." :
-                "Minecraft " + profile.McVersion + " • " + (string.IsNullOrWhiteSpace(server?.Address) ? "No direct server" : server.Name);
-            var selection = AppServices.AccountSelection.Get();
-            AccountSummary.Text = selection == null ? "No account selected" : selection.DisplayName + " • " + selection.Kind;
-            UpdateWarning.Text = profile?.Upgradeable == true ? "An update is ready for this profile." : "Profile is up to date.";
-            BackupWarning.Text = profile != null && AppServices.Backups.List(profile.Guid).Count == 0 ? "No backup yet — one click from Games." : "Backup available.";
-        }
     }
 }

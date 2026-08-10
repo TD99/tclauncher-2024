@@ -70,6 +70,27 @@ namespace TCLauncher.Tests
         }
 
         [TestMethod]
+        public async Task OperationCoordinatorAllowsExplicitForcedCancellation()
+        {
+            var coordinator = new OperationCoordinator();
+            var started = new TaskCompletionSource<bool>();
+            var operation = coordinator.RunAsync("Non-cancellable stage", false, async (progress, token) =>
+            {
+                started.SetResult(true);
+                await Task.Delay(Timeout.Infinite, token);
+                return OperationResult<string>.Success("unexpected");
+            });
+
+            await started.Task;
+            coordinator.RequestCancellation(true);
+            var result = await operation;
+
+            Assert.IsFalse(result.IsSuccess);
+            Assert.AreEqual(LauncherErrorCode.Cancelled, result.ErrorCode);
+            Assert.IsFalse(coordinator.IsBusy);
+        }
+
+        [TestMethod]
         public void OverlayHostExposesDrawerState()
         {
             var host = new OverlayHostViewModel

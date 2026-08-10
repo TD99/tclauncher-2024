@@ -15,12 +15,14 @@ namespace TCLauncher.MVVM.View
     public partial class GameDetailsView
     {
         private readonly Action<Instance> _changed;
+        private readonly Action _close;
         public GameDetailsPresentation Presentation { get; }
 
-        public GameDetailsView(Instance instance, Action<Instance> changed)
+        public GameDetailsView(Instance instance, Action<Instance> changed, Action close = null)
         {
             InitializeComponent();
             _changed = changed;
+            _close = close;
             Presentation = new GameDetailsPresentation(instance);
             DataContext = Presentation;
         }
@@ -137,6 +139,7 @@ namespace TCLauncher.MVVM.View
                 }
                 AppServices.Overlays.Close();
                 _changed?.Invoke(installed);
+                _close?.Invoke();
                 AppServices.Overlays.ShowToast("Profile uninstalled", removeBackups ? "Profile and backups removed." : "Backups were preserved.");
             }
             catch (Exception exception)

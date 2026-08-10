@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using CmlLib.Core.Installer.Forge;
 using CmlLib.Core.Installer.Forge.Versions;
 using CmlLib.Core.Installer.NeoForge;
 using CmlLib.Core.ModLoaders.FabricMC;
+using Newtonsoft.Json.Linq;
 using TCLauncher.Models;
 
 namespace TCLauncher.Core.Services
@@ -38,9 +41,20 @@ namespace TCLauncher.Core.Services
             {
                 case LoaderType.Fabric:
                     var fabric = new FabricInstaller(_http);
-                    return string.IsNullOrWhiteSpace(loader.Version)
-                        ? await fabric.Install(instance.McVersion, launcher.MinecraftPath)
-                        : await fabric.Install(instance.McVersion, loader.Version, launcher.MinecraftPath);
+                    var fabricVersion = await ResolveFabricLoaderVersionAsync(
+                        _http, instance.McVersion, loader.Version, cancellationToken);
+                    if (!string.Equals(fabricVersion, loader.Version, StringComparison.OrdinalIgnoreCase))
+                    {
+                        progress?.Report(new OperationProgress
+                        {
+                            Stage = OperationStage.InstallingLoader,
+                            Message = string.IsNullOrWhiteSpace(loader.Version)
+                                ? "Using Fabric Loader " + fabricVersion
+                                : "Fabric Loader " + loader.Version + " is unavailable; using " + fabricVersion
+                        });
+                        loader.Version = fabricVersion;
+                    }
+                    return await fabric.Install(instance.McVersion, fabricVersion, launcher.MinecraftPath);
                 case LoaderType.Forge:
                     var forge = new ForgeInstaller(launcher, _http);
                     var resolved = await _forgeVersions.ResolveAsync(instance.McVersion, loader.Version, cancellationToken);
@@ -75,6 +89,35 @@ namespace TCLauncher.Core.Services
                         : await neoForge.Install(instance.McVersion, loader.Version);
                 default:
                     return instance.McVersion;
+            }
+        }
+
+        internal static async Task<string> ResolveFabricLoaderVersionAsync(HttpClient http, string minecraftVersion,
+            string requestedVersion, CancellationToken cancellationToken)
+        {
+            if (http == null) throw new ArgumentNullException(nameof(http));
+            if (string.IsNullOrWhiteSpace(minecraftVersion))
+                throw new InvalidDataException("A Minecraft version is required to install Fabric.");
+
+            var uri = new Uri("https://meta.fabricmc.net/v2/versions/loader/" + Uri.EscapeDataString(minecraftVersion.Trim()));
+            using (var response = await http.GetAsync(uri, cancellationToken))
+            {
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                var entries = JArray.Parse(json).OfType<JObject>().ToList();
+                if (entries.Count == 0)
+                    throw new InvalidDataException("Fabric does not support Minecraft " + minecraftVersion + ".");
+
+                var requested = requestedVersion?.Trim();
+                var exact = entries.FirstOrDefault(entry => string.Equals(
+                    (string)entry["loader"]?["version"], requested, StringComparison.OrdinalIgnoreCase));
+                if (exact != null) return (string)exact["loader"]?["version"];
+
+                var fallback = entries.FirstOrDefault(entry => (bool?)entry["loader"]?["stable"] == true) ?? entries[0];
+                var version = (string)fallback["loader"]?["version"];
+                if (string.IsNullOrWhiteSpace(version))
+                    throw new InvalidDataException("Fabric returned an invalid loader version for Minecraft " + minecraftVersion + ".");
+                return version;
             }
         }
     }

@@ -23,6 +23,38 @@ namespace TCLauncher.Tests
         }
 
         [TestMethod]
+        public void LegacyFabricCompositeVersionSplitsLoaderAndMinecraftVersions()
+        {
+            var instance = new Instance
+            {
+                McVersion = "fabric-loader-0.18.4-1.21.1",
+                UseFabric = true
+            };
+
+            instance.NormalizeLegacyConfiguration();
+
+            Assert.AreEqual("1.21.1", instance.McVersion);
+            Assert.AreEqual(LoaderType.Fabric, instance.Loader.Type);
+            Assert.AreEqual("0.18.4", instance.Loader.Version);
+        }
+
+        [TestMethod]
+        public void LegacyForgeCompositeVersionSplitsLoaderAndMinecraftVersions()
+        {
+            var instance = new Instance
+            {
+                McVersion = "1.18.2-forge-40.2.21",
+                UseForge = true
+            };
+
+            instance.NormalizeLegacyConfiguration();
+
+            Assert.AreEqual("1.18.2", instance.McVersion);
+            Assert.AreEqual(LoaderType.Forge, instance.Loader.Type);
+            Assert.AreEqual("40.2.21", instance.Loader.Version);
+        }
+
+        [TestMethod]
         public void V2SaveIsAtomicAndSetsSchemaVersion()
         {
             var root = Path.Combine(Path.GetTempPath(), "tcl-test-" + Guid.NewGuid().ToString("N"));
@@ -86,6 +118,13 @@ namespace TCLauncher.Tests
             {
                 if (Directory.Exists(root)) Directory.Delete(root, true);
             }
+        }
+
+        [TestMethod]
+        public void ActivityStoreRejectsMissingAtomicFileServiceAtConstruction()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                new ActivityStore(Path.Combine(Path.GetTempPath(), "activity.json"), null));
         }
 
         [TestMethod]

@@ -7,8 +7,8 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </UserControl.Resources>
     <Grid x:Name="Root" Focusable="False">
-        <Border x:Name="ActivityTray" Width="360" MinHeight="56" Margin="0,0,20,18"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom" Panel.ZIndex="30"
+        <StackPanel Margin="0,62,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="40">
+        <Border x:Name="ActivityTray" Width="360" MinHeight="56"
                 Padding="14,10" Background="#F02A3442" CornerRadius="12"
                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
             <Grid>
@@ -16,15 +16,25 @@
                 <StackPanel>
                     <TextBlock FontWeight="SemiBold" Text="{Binding Active.Title}" />
                     <TextBlock Margin="0,2,0,7" Foreground="#B2B9CC" Text="{Binding Active.Message}" TextTrimming="CharacterEllipsis" />
-                    <ProgressBar Height="3" Maximum="100" Value="{Binding Active.Percent}" />
+                    <ProgressBar Height="3" Maximum="100" Value="{Binding Active.Percent, Mode=OneWay}" />
                 </StackPanel>
-                <Button Grid.Column="1" Margin="12,0,0,0" Padding="10,5" Content="Cancel"
-                        Command="{Binding CancelOperationCommand}" IsEnabled="{Binding Active.CanCancel}" />
+                <Button Grid.Column="1" Margin="12,0,0,0" Padding="10,5"
+                        Click="CancelOperation_OnClick" ToolTip="Click again or Shift+click to force a cancellation request">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ModernButton}">
+                            <Setter Property="Content" Value="Cancel" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Active.IsCancelling}" Value="True">
+                                    <Setter Property="Content" Value="Force cancel" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
         </Border>
 
-        <ItemsControl ItemsSource="{Binding Toasts}" HorizontalAlignment="Right" VerticalAlignment="Top"
-                      Margin="0,62,20,0" Panel.ZIndex="40" IsTabStop="False">
+        <ItemsControl ItemsSource="{Binding Toasts}" Margin="0,8,0,0" IsTabStop="False">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type core:OverlayToast}">
                     <Border Width="340" Margin="0,0,0,8" Padding="14" Background="#F02A3442" CornerRadius="10">
@@ -36,6 +46,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        </StackPanel>
 
         <Grid x:Name="ModalLayer" Panel.ZIndex="50" Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}"
               KeyboardNavigation.TabNavigation="Cycle">
