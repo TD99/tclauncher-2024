@@ -46,9 +46,6 @@ namespace TCLauncher.MVVM.View
             assemblyVersion.Text = "Version " + Assembly.GetExecutingAssembly().GetName().Version;
             frameworkVersion.Text = RuntimeInformation.FrameworkDescription;
             CopyrightCompilationYear.Text = "Copyright © T-Craft " + AppUtils.GetCompilationDate().Year;
-            JavaStatus.Text = Environment.Is64BitOperatingSystem
-                ? "64-bit Windows detected\n"
-                : "32-bit Windows detected\n";
             JavaStatus.Text += GetJavaVersion();
             SelectByTag(Behaviour, Settings.Default.StartBehaviour.ToString());
             SelectByTag(MultiInstances, Settings.Default.MultiInstances.ToString());

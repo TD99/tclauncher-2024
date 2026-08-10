@@ -198,9 +198,12 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource SettingTitle}" Text="Java runtime" />
                             <TextBlock Style="{StaticResource SettingHelp}" Text="{core:Localize Key=settings_java_help}" />
-                            <TextBlock
+                            <TextBox
                                 x:Name="JavaStatus"
+                                Padding="3"
                                 Foreground="#83D5BB"
+                                IsReadOnly="True"
+                                IsReadOnlyCaretVisible="False"
                                 TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
