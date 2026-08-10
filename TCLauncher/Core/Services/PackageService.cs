@@ -24,7 +24,8 @@ namespace TCLauncher.Core.Services
         private readonly IInstanceConfigService _configs;
         private readonly ILogService _log;
 
-        public PackageService(string instancesRoot, ISafeArchiveService archives, IAtomicFileService atomicFiles, IInstanceConfigService configs, ILogService log)
+        public PackageService(string instancesRoot, ISafeArchiveService archives, IAtomicFileService atomicFiles,
+            IInstanceConfigService configs, ILogService log)
         {
             _instancesRoot = instancesRoot;
             _archives = archives;
@@ -40,7 +41,8 @@ namespace TCLauncher.Core.Services
             try
             {
                 if (instance == null || !Directory.Exists(instance.DataDir))
-                    return OperationResult<string>.Failure(LauncherErrorCode.InvalidConfiguration, "The selected instance is not installed.", operationId: operationId);
+                    return OperationResult<string>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        "The selected instance is not installed.", operationId: operationId);
 
                 Directory.CreateDirectory(temporary);
                 var payloadSource = Path.Combine(temporary, "payload");
@@ -78,8 +80,10 @@ namespace TCLauncher.Core.Services
                         Sha256 = HashService.Sha256(Path.Combine(instance.DataDir, path))
                     }).ToList();
 
-                File.WriteAllText(Path.Combine(temporary, "manifest.json"), JsonConvert.SerializeObject(manifest, Formatting.Indented));
-                File.WriteAllText(Path.Combine(temporary, "config.json"), JsonConvert.SerializeObject(portable, Formatting.Indented));
+                File.WriteAllText(Path.Combine(temporary, "manifest.json"),
+                    JsonConvert.SerializeObject(manifest, Formatting.Indented));
+                File.WriteAllText(Path.Combine(temporary, "config.json"),
+                    JsonConvert.SerializeObject(portable, Formatting.Indented));
                 CopyArtwork(instance, temporary);
 
                 if (File.Exists(destinationPath)) File.Delete(destinationPath);
@@ -90,7 +94,8 @@ namespace TCLauncher.Core.Services
             catch (Exception exception)
             {
                 _log.Error("package.export_failed", exception, operationId);
-                return OperationResult<string>.Failure(LauncherErrorCode.Unexpected, "The profile package could not be exported.", exception, operationId);
+                return OperationResult<string>.Failure(LauncherErrorCode.Unexpected,
+                    "The profile package could not be exported.", exception, operationId);
             }
             finally
             {
@@ -105,7 +110,8 @@ namespace TCLauncher.Core.Services
             try
             {
                 if (!File.Exists(sourcePath))
-                    return OperationResult<ImportPreview>.Failure(LauncherErrorCode.InvalidConfiguration, "The package does not exist.", operationId: operationId);
+                    return OperationResult<ImportPreview>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        "The package does not exist.", operationId: operationId);
                 _archives.Extract(sourcePath, temporary, MaximumPackageBytes);
                 var manifestPath = Path.Combine(temporary, "manifest.json");
                 var isLegacy = !File.Exists(manifestPath);
@@ -113,10 +119,15 @@ namespace TCLauncher.Core.Services
                 if (isLegacy)
                 {
                     var configPath = Path.Combine(temporary, "config.json");
-                    if (!File.Exists(configPath)) throw new InvalidDataException("The package has no manifest or legacy configuration.");
+                    if (!File.Exists(configPath))
+                        throw new InvalidDataException("The package has no manifest or legacy configuration.");
                     var instance = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(configPath));
                     instance?.NormalizeLegacyConfiguration();
-                    manifest = new PackageManifest { SchemaVersion = 1, PackageId = instance?.Guid ?? Guid.Empty, Instance = instance, Payload = new PackagePayload() };
+                    manifest = new PackageManifest
+                    {
+                        SchemaVersion = 1, PackageId = instance?.Guid ?? Guid.Empty, Instance = instance,
+                        Payload = new PackagePayload()
+                    };
                 }
                 else
                 {
@@ -137,12 +148,14 @@ namespace TCLauncher.Core.Services
             catch (InvalidDataException exception)
             {
                 _log.Error("package.preview_invalid", exception, operationId);
-                return OperationResult<ImportPreview>.Failure(LauncherErrorCode.UnsafeArchive, exception.Message, exception, operationId);
+                return OperationResult<ImportPreview>.Failure(LauncherErrorCode.UnsafeArchive, exception.Message,
+                    exception, operationId);
             }
             catch (Exception exception)
             {
                 _log.Error("package.preview_failed", exception, operationId);
-                return OperationResult<ImportPreview>.Failure(LauncherErrorCode.InvalidConfiguration, "The package could not be inspected.", exception, operationId);
+                return OperationResult<ImportPreview>.Failure(LauncherErrorCode.InvalidConfiguration,
+                    "The package could not be inspected.", exception, operationId);
             }
             finally
             {
@@ -154,7 +167,8 @@ namespace TCLauncher.Core.Services
         {
             var previewResult = PreviewImport(sourcePath);
             if (!previewResult.IsSuccess)
-                return OperationResult<InstalledInstance>.Failure(previewResult.ErrorCode, previewResult.Message, previewResult.Exception, previewResult.OperationId);
+                return OperationResult<InstalledInstance>.Failure(previewResult.ErrorCode, previewResult.Message,
+                    previewResult.Exception, previewResult.OperationId);
 
             var operationId = Guid.NewGuid().ToString("N");
             var temporary = Path.Combine(Path.GetTempPath(), "tcl-import-" + operationId);
@@ -164,7 +178,8 @@ namespace TCLauncher.Core.Services
                 var manifest = previewResult.Value.Manifest;
                 var instance = manifest.Instance;
                 if (previewResult.Value.HasConflict && conflictResolution == ImportConflictResolution.Cancel)
-                    return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Conflict, "An instance with this ID is already installed.", operationId: operationId);
+                    return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Conflict,
+                        "An instance with this ID is already installed.", operationId: operationId);
                 if (previewResult.Value.HasConflict && conflictResolution == ImportConflictResolution.ImportAsCopy)
                 {
                     instance.Guid = Guid.NewGuid();
@@ -176,7 +191,8 @@ namespace TCLauncher.Core.Services
                 var payloadPath = Path.Combine(temporary, manifest.Payload?.Path ?? "payload.zip");
                 if (!File.Exists(payloadPath)) throw new InvalidDataException("The package payload is missing.");
                 if (!string.IsNullOrWhiteSpace(manifest.Payload?.Sha256) &&
-                    !HashService.Sha256(payloadPath).Equals(manifest.Payload.Sha256, StringComparison.OrdinalIgnoreCase))
+                    !HashService.Sha256(payloadPath)
+                        .Equals(manifest.Payload.Sha256, StringComparison.OrdinalIgnoreCase))
                     throw new InvalidDataException("The package payload checksum does not match.");
 
                 var destination = Path.Combine(_instancesRoot, instance.Guid.ToString());
@@ -197,7 +213,8 @@ namespace TCLauncher.Core.Services
                 CopyImportedArtwork(temporary, staging, destination, installed);
                 var saveResult = _configs.Save(installed, Path.Combine(staging, "config.json"));
                 if (!saveResult.IsSuccess) throw new InvalidDataException(saveResult.Message);
-                File.WriteAllText(Path.Combine(staging, "managed.json"), JsonConvert.SerializeObject(manifest, Formatting.Indented));
+                File.WriteAllText(Path.Combine(staging, "managed.json"),
+                    JsonConvert.SerializeObject(manifest, Formatting.Indented));
 
                 _atomicFiles.ReplaceDirectory(staging, destination, rollback);
                 _log.Info("package.imported", sourcePath, operationId);
@@ -206,12 +223,14 @@ namespace TCLauncher.Core.Services
             catch (InvalidDataException exception)
             {
                 _log.Error("package.import_invalid", exception, operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.ChecksumMismatch, exception.Message, exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.ChecksumMismatch, exception.Message,
+                    exception, operationId);
             }
             catch (Exception exception)
             {
                 _log.Error("package.import_failed", exception, operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected, "The package could not be imported. Existing data was preserved.", exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected,
+                    "The package could not be imported. Existing data was preserved.", exception, operationId);
             }
             finally
             {
@@ -223,12 +242,15 @@ namespace TCLauncher.Core.Services
         private void ValidateManifest(PackageManifest manifest, string root)
         {
             if (manifest?.Instance == null) throw new InvalidDataException("The package manifest has no instance.");
-            if (manifest.SchemaVersion < 1 || manifest.SchemaVersion > PackageManifest.CurrentVersion) throw new InvalidDataException("The package schema is not supported.");
+            if (manifest.SchemaVersion < 1 || manifest.SchemaVersion > PackageManifest.CurrentVersion)
+                throw new InvalidDataException("The package schema is not supported.");
             var errors = _configs.Validate(manifest.Instance);
             if (errors.Count > 0) throw new InvalidDataException(string.Join(Environment.NewLine, errors));
-            var payload = Path.Combine(root, (manifest.Payload?.Path ?? "payload.zip").Replace('/', Path.DirectorySeparatorChar));
+            var payload = Path.Combine(root,
+                (manifest.Payload?.Path ?? "payload.zip").Replace('/', Path.DirectorySeparatorChar));
             var safeRoot = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            if (!Path.GetFullPath(payload).StartsWith(safeRoot, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("The payload path is unsafe.");
+            if (!Path.GetFullPath(payload).StartsWith(safeRoot, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("The payload path is unsafe.");
             if (!File.Exists(payload)) throw new InvalidDataException("The package payload is missing.");
             _archives.Validate(payload, MaximumPackageBytes);
         }
@@ -245,15 +267,18 @@ namespace TCLauncher.Core.Services
             }
         }
 
-        private static bool IsSavePath(string path) => path.Replace('\\', '/').StartsWith("saves/", StringComparison.OrdinalIgnoreCase);
+        private static bool IsSavePath(string path) =>
+            path.Replace('\\', '/').StartsWith("saves/", StringComparison.OrdinalIgnoreCase);
 
         private static void CopyArtwork(InstalledInstance instance, string output)
         {
             if (string.IsNullOrWhiteSpace(instance.ThumbnailURL) || !File.Exists(instance.ThumbnailURL)) return;
-            File.Copy(instance.ThumbnailURL, Path.Combine(output, "thumb" + Path.GetExtension(instance.ThumbnailURL)), true);
+            File.Copy(instance.ThumbnailURL, Path.Combine(output, "thumb" + Path.GetExtension(instance.ThumbnailURL)),
+                true);
         }
 
-        private static void CopyImportedArtwork(string extracted, string staging, string finalDestination, InstalledInstance instance)
+        private static void CopyImportedArtwork(string extracted, string staging, string finalDestination,
+            InstalledInstance instance)
         {
             var artwork = Directory.GetFiles(extracted, "thumb.*").FirstOrDefault();
             if (artwork == null) return;

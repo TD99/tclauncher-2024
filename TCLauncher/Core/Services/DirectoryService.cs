@@ -12,7 +12,8 @@ namespace TCLauncher.Core.Services
             foreach (var directory in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
             {
                 var relative = Path.GetFullPath(directory).Substring(sourceRoot.Length);
-                if (include == null || include(relative)) Directory.CreateDirectory(Path.Combine(destination, relative));
+                if (include == null || include(relative))
+                    Directory.CreateDirectory(Path.Combine(destination, relative));
             }
 
             foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))

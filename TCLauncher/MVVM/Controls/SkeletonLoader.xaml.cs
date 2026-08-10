@@ -7,16 +7,20 @@ namespace TCLauncher.MVVM.Controls
     public partial class SkeletonLoader
     {
         public static readonly DependencyProperty RotationProperty =
-            DependencyProperty.Register(nameof(Rotation), typeof(double), typeof(SkeletonLoader), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(Rotation), typeof(double), typeof(SkeletonLoader),
+                new PropertyMetadata(0.0));
 
         public static readonly new DependencyProperty BackgroundProperty =
-            DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(SkeletonLoader), new PropertyMetadata(Brushes.LightGray));
+            DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(SkeletonLoader),
+                new PropertyMetadata(Brushes.LightGray));
 
         public static readonly DependencyProperty BorderRadiusProperty =
-            DependencyProperty.Register(nameof(BorderRadius), typeof(double), typeof(SkeletonLoader), new PropertyMetadata(0.0));
+            DependencyProperty.Register(nameof(BorderRadius), typeof(double), typeof(SkeletonLoader),
+                new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty AnimationDurationProperty =
-            DependencyProperty.Register(nameof(AnimationDuration), typeof(Duration), typeof(SkeletonLoader), new PropertyMetadata(new Duration(TimeSpan.FromSeconds(1))));
+            DependencyProperty.Register(nameof(AnimationDuration), typeof(Duration), typeof(SkeletonLoader),
+                new PropertyMetadata(new Duration(TimeSpan.FromSeconds(1))));
 
         public double Rotation
         {
@@ -48,5 +52,4 @@ namespace TCLauncher.MVVM.Controls
             DataContext = this;
         }
     }
-
 }

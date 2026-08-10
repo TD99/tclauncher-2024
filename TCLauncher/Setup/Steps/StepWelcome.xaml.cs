@@ -14,7 +14,8 @@ namespace TCLauncher.Setup.Steps
 
         private void StepWelcome_OnLoaded(object sender, RoutedEventArgs e)
         {
-            VersionLabel.Content = string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version);
+            VersionLabel.Content =
+                string.Format(Languages.version_text, Assembly.GetExecutingAssembly().GetName().Version);
         }
     }
 }

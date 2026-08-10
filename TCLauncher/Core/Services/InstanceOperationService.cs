@@ -12,7 +12,8 @@ namespace TCLauncher.Core.Services
 {
     public interface IInstanceOperationService
     {
-        Task<OperationResult<InstalledInstance>> InstallOrUpdateAsync(Instance instance, IProgress<OperationProgress> progress, CancellationToken cancellationToken);
+        Task<OperationResult<InstalledInstance>> InstallOrUpdateAsync(Instance instance,
+            IProgress<OperationProgress> progress, CancellationToken cancellationToken);
     }
 
     public sealed class InstanceOperationService : IInstanceOperationService
@@ -26,7 +27,8 @@ namespace TCLauncher.Core.Services
         private readonly IBackupService _backups;
         private readonly ILogService _log;
 
-        public InstanceOperationService(string instancesRoot, HttpClient http, ISafeArchiveService archives, IAtomicFileService atomic, IInstanceConfigService configs, IBackupService backups, ILogService log)
+        public InstanceOperationService(string instancesRoot, HttpClient http, ISafeArchiveService archives,
+            IAtomicFileService atomic, IInstanceConfigService configs, IBackupService backups, ILogService log)
         {
             _instancesRoot = instancesRoot;
             _http = http;
@@ -37,7 +39,8 @@ namespace TCLauncher.Core.Services
             _log = log;
         }
 
-        public async Task<OperationResult<InstalledInstance>> InstallOrUpdateAsync(Instance instance, IProgress<OperationProgress> progress, CancellationToken cancellationToken)
+        public async Task<OperationResult<InstalledInstance>> InstallOrUpdateAsync(Instance instance,
+            IProgress<OperationProgress> progress, CancellationToken cancellationToken)
         {
             var operationId = Guid.NewGuid().ToString("N");
             var destination = Path.Combine(_instancesRoot, instance.Guid.ToString());
@@ -47,7 +50,9 @@ namespace TCLauncher.Core.Services
             {
                 Report(progress, OperationStage.Preparing, "Preparing profile");
                 var errors = _configs.Validate(instance);
-                if (errors.Count > 0) return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.InvalidConfiguration, string.Join(Environment.NewLine, errors), operationId: operationId);
+                if (errors.Count > 0)
+                    return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        string.Join(Environment.NewLine, errors), operationId: operationId);
                 Directory.CreateDirectory(temporary);
                 Directory.CreateDirectory(Path.Combine(staging, "data"));
 
@@ -59,7 +64,9 @@ namespace TCLauncher.Core.Services
                     {
                         var current = new InstalledInstance(currentResult.Value);
                         var backup = _backups.Create(current, "Before update", true, false);
-                        if (!backup.IsSuccess) return OperationResult<InstalledInstance>.Failure(backup.ErrorCode, backup.Message, backup.Exception, operationId);
+                        if (!backup.IsSuccess)
+                            return OperationResult<InstalledInstance>.Failure(backup.ErrorCode, backup.Message,
+                                backup.Exception, operationId);
                     }
                 }
 
@@ -70,10 +77,12 @@ namespace TCLauncher.Core.Services
                     var payload = Path.Combine(temporary, "payload-" + index + ".zip");
                     await DownloadAsync(archives[index].Url, payload, progress, cancellationToken);
                     Report(progress, OperationStage.Verifying, "Verifying download");
-                    if (!string.IsNullOrWhiteSpace(archives[index].Sha256) && !HashService.Sha256(payload).Equals(archives[index].Sha256, StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrWhiteSpace(archives[index].Sha256) && !HashService.Sha256(payload)
+                            .Equals(archives[index].Sha256, StringComparison.OrdinalIgnoreCase))
                         throw new InvalidDataException("The downloaded package checksum does not match.");
                     var extracted = Path.Combine(temporary, "extracted-" + index);
-                    Report(progress, OperationStage.Extracting, "Extracting package " + (index + 1) + " of " + archives.Count);
+                    Report(progress, OperationStage.Extracting,
+                        "Extracting package " + (index + 1) + " of " + archives.Count);
                     _archives.Extract(payload, extracted, MaximumPayloadBytes);
                     DirectoryService.Copy(extracted, Path.Combine(staging, "data"));
                 }
@@ -86,24 +95,29 @@ namespace TCLauncher.Core.Services
                     ConfigFile = Path.Combine(destination, "config.json")
                 };
                 var save = _configs.Save(installed, Path.Combine(staging, "config.json"));
-                if (!save.IsSuccess) return OperationResult<InstalledInstance>.Failure(save.ErrorCode, save.Message, save.Exception, operationId);
+                if (!save.IsSuccess)
+                    return OperationResult<InstalledInstance>.Failure(save.ErrorCode, save.Message, save.Exception,
+                        operationId);
 
                 var managed = new PackageManifest
                 {
                     PackageId = instance.Guid,
                     CreatedAtUtc = DateTime.UtcNow,
                     Instance = instance,
-                    Files = DirectoryService.EnumerateRelativeFiles(Path.Combine(staging, "data")).Select(path => new PackageFileEntry
-                    {
-                        Path = path.Replace('\\', '/'),
-                        Size = new FileInfo(Path.Combine(staging, "data", path)).Length,
-                        Sha256 = HashService.Sha256(Path.Combine(staging, "data", path))
-                    }).ToList()
+                    Files = DirectoryService.EnumerateRelativeFiles(Path.Combine(staging, "data")).Select(path =>
+                        new PackageFileEntry
+                        {
+                            Path = path.Replace('\\', '/'),
+                            Size = new FileInfo(Path.Combine(staging, "data", path)).Length,
+                            Sha256 = HashService.Sha256(Path.Combine(staging, "data", path))
+                        }).ToList()
                 };
-                File.WriteAllText(Path.Combine(staging, "managed.json"), JsonConvert.SerializeObject(managed, Formatting.Indented));
+                File.WriteAllText(Path.Combine(staging, "managed.json"),
+                    JsonConvert.SerializeObject(managed, Formatting.Indented));
 
                 Report(progress, OperationStage.Activating, "Activating profile");
-                _atomic.ReplaceDirectory(staging, destination, destination + ".rollback-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+                _atomic.ReplaceDirectory(staging, destination,
+                    destination + ".rollback-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
                 Report(progress, OperationStage.Complete, "Profile is ready", 100);
                 _log.Info("instance.operation_complete", destination, operationId);
                 return OperationResult<InstalledInstance>.Success(installed, operationId);
@@ -111,17 +125,20 @@ namespace TCLauncher.Core.Services
             catch (OperationCanceledException exception)
             {
                 _log.Warning("instance.operation_cancelled", operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Cancelled, "The operation was cancelled. Existing data was preserved.", exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Cancelled,
+                    "The operation was cancelled. Existing data was preserved.", exception, operationId);
             }
             catch (InvalidDataException exception)
             {
                 _log.Error("instance.operation_invalid", exception, operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.ChecksumMismatch, exception.Message, exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.ChecksumMismatch, exception.Message,
+                    exception, operationId);
             }
             catch (Exception exception)
             {
                 _log.Error("instance.operation_failed", exception, operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected, "The profile operation failed. Existing data was preserved.", exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected,
+                    "The profile operation failed. Existing data was preserved.", exception, operationId);
             }
             finally
             {
@@ -130,11 +147,14 @@ namespace TCLauncher.Core.Services
             }
         }
 
-        private async Task DownloadAsync(string url, string destination, IProgress<OperationProgress> progress, CancellationToken cancellationToken)
+        private async Task DownloadAsync(string url, string destination, IProgress<OperationProgress> progress,
+            CancellationToken cancellationToken)
         {
             Uri uri;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri) || uri.Scheme != Uri.UriSchemeHttps) throw new InvalidDataException("Package downloads must use HTTPS.");
-            using (var response = await _http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri) || uri.Scheme != Uri.UriSchemeHttps)
+                throw new InvalidDataException("Package downloads must use HTTPS.");
+            using (var response =
+                   await _http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
             {
                 response.EnsureSuccessStatusCode();
                 var total = response.Content.Headers.ContentLength;
@@ -164,12 +184,15 @@ namespace TCLauncher.Core.Services
         private static List<ArchiveSource> BuildArchiveList(Instance instance)
         {
             if (instance.UsePatch && instance.Patches != null && instance.Patches.Count > 0)
-                return instance.Patches.OrderBy(patch => patch.ID).Select(patch => new ArchiveSource { Url = patch.URL }).ToList();
+                return instance.Patches.OrderBy(patch => patch.ID)
+                    .Select(patch => new ArchiveSource { Url = patch.URL }).ToList();
             if (string.IsNullOrWhiteSpace(instance.WorkingDirZipURL)) return new List<ArchiveSource>();
-            return new List<ArchiveSource> { new ArchiveSource { Url = instance.WorkingDirZipURL, Sha256 = instance.PayloadSha256 } };
+            return new List<ArchiveSource>
+                { new ArchiveSource { Url = instance.WorkingDirZipURL, Sha256 = instance.PayloadSha256 } };
         }
 
-        private static void Report(IProgress<OperationProgress> progress, OperationStage stage, string message, double? percent = null) =>
+        private static void Report(IProgress<OperationProgress> progress, OperationStage stage, string message,
+            double? percent = null) =>
             progress?.Report(new OperationProgress { Stage = stage, Message = message, Percent = percent });
 
         private sealed class ArchiveSource

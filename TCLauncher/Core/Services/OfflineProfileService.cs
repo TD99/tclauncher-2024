@@ -39,13 +39,17 @@ namespace TCLauncher.Core.Services
         {
             username = username?.Trim();
             if (!ValidUsername.IsMatch(username ?? string.Empty))
-                return OperationResult<OfflineProfile>.Failure(LauncherErrorCode.InvalidConfiguration, "Offline names must contain 3–16 letters, numbers, or underscores.");
+                return OperationResult<OfflineProfile>.Failure(LauncherErrorCode.InvalidConfiguration,
+                    "Offline names must contain 3–16 letters, numbers, or underscores.");
             lock (_sync)
             {
                 var document = Load();
-                if (document.Profiles.Any(profile => profile.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
-                    return OperationResult<OfflineProfile>.Failure(LauncherErrorCode.Conflict, "An offline profile with this name already exists.");
-                var profile = new OfflineProfile { Id = Guid.NewGuid(), Username = username, CreatedAtUtc = DateTime.UtcNow };
+                if (document.Profiles.Any(profile =>
+                        profile.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
+                    return OperationResult<OfflineProfile>.Failure(LauncherErrorCode.Conflict,
+                        "An offline profile with this name already exists.");
+                var profile = new OfflineProfile
+                    { Id = Guid.NewGuid(), Username = username, CreatedAtUtc = DateTime.UtcNow };
                 document.Profiles.Add(profile);
                 document.SelectedProfileId = profile.Id;
                 Save(document);
@@ -59,7 +63,9 @@ namespace TCLauncher.Core.Services
             {
                 var document = Load();
                 var profile = document.Profiles.FirstOrDefault(item => item.Id == id);
-                if (profile == null) return OperationResult.Failure(LauncherErrorCode.InvalidConfiguration, "The offline profile no longer exists.");
+                if (profile == null)
+                    return OperationResult.Failure(LauncherErrorCode.InvalidConfiguration,
+                        "The offline profile no longer exists.");
                 document.Profiles.Remove(profile);
                 if (document.SelectedProfileId == id) document.SelectedProfileId = null;
                 Save(document);
@@ -72,7 +78,8 @@ namespace TCLauncher.Core.Services
             lock (_sync)
             {
                 var document = Load();
-                document.SelectedProfileId = id.HasValue && document.Profiles.Any(item => item.Id == id.Value) ? id : null;
+                document.SelectedProfileId =
+                    id.HasValue && document.Profiles.Any(item => item.Id == id.Value) ? id : null;
                 Save(document);
             }
         }
@@ -89,10 +96,18 @@ namespace TCLauncher.Core.Services
         private OfflineProfileDocument Load()
         {
             if (!File.Exists(_path)) return new OfflineProfileDocument();
-            try { return JsonConvert.DeserializeObject<OfflineProfileDocument>(File.ReadAllText(_path)) ?? new OfflineProfileDocument(); }
-            catch { return new OfflineProfileDocument(); }
+            try
+            {
+                return JsonConvert.DeserializeObject<OfflineProfileDocument>(File.ReadAllText(_path)) ??
+                       new OfflineProfileDocument();
+            }
+            catch
+            {
+                return new OfflineProfileDocument();
+            }
         }
 
-        private void Save(OfflineProfileDocument document) => _files.WriteAllText(_path, JsonConvert.SerializeObject(document, Formatting.Indented));
+        private void Save(OfflineProfileDocument document) =>
+            _files.WriteAllText(_path, JsonConvert.SerializeObject(document, Formatting.Indented));
     }
 }

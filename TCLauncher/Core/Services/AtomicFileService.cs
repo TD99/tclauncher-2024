@@ -15,7 +15,8 @@ namespace TCLauncher.Core.Services
         public void WriteAllText(string path, string contents)
         {
             var directory = Path.GetDirectoryName(path);
-            if (string.IsNullOrEmpty(directory)) throw new ArgumentException("A parent directory is required.", nameof(path));
+            if (string.IsNullOrEmpty(directory))
+                throw new ArgumentException("A parent directory is required.", nameof(path));
             Directory.CreateDirectory(directory);
 
             var temporary = path + ".tmp-" + Guid.NewGuid().ToString("N");

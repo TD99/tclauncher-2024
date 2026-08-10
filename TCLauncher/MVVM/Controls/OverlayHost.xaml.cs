@@ -1,10 +1,11 @@
+using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.ComponentModel;
-using System;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
-using TCLauncher.Core;
+using System.Windows.Threading;
 using TCLauncher.Core.Services;
 
 namespace TCLauncher.MVVM.Controls
@@ -32,10 +33,10 @@ namespace TCLauncher.MVVM.Controls
                 Surface.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
                 if (!SystemParameters.ClientAreaAnimation) return;
                 Surface.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
-                SurfaceTranslate.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty,
+                SurfaceTranslate.BeginAnimation(TranslateTransform.XProperty,
                     new DoubleAnimation(AppServices.Overlays.Host.IsDrawer ? 28 : 0, 0, TimeSpan.FromMilliseconds(190))
-                    { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
-            }), System.Windows.Threading.DispatcherPriority.Input);
+                        { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+            }), DispatcherPriority.Input);
         }
 
         private void Backdrop_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,11 +72,12 @@ namespace TCLauncher.MVVM.Controls
             Coordinator = coordinator;
             Coordinator.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == nameof(IOperationCoordinator.IsBusy) || args.PropertyName == nameof(IOperationCoordinator.Active))
+                if (args.PropertyName == nameof(IOperationCoordinator.IsBusy) ||
+                    args.PropertyName == nameof(IOperationCoordinator.Active))
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBusy)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Active)));
-                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+                    CommandManager.InvalidateRequerySuggested();
                 }
             };
         }

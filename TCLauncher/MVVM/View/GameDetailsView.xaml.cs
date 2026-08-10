@@ -1,10 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.Models;
@@ -34,20 +33,26 @@ namespace TCLauncher.MVVM.View
                 await CreateBackupAsync();
                 return;
             }
+
             await InstallOrRepairAsync();
         }
 
         private async Task InstallOrRepairAsync()
         {
             var result = await AppServices.Operations.RunAsync(
-                Presentation.Game.Is_Installed ? "Repairing " + Presentation.Game.DisplayName : "Installing " + Presentation.Game.DisplayName,
+                Presentation.Game.Is_Installed
+                    ? "Repairing " + Presentation.Game.DisplayName
+                    : "Installing " + Presentation.Game.DisplayName,
                 true,
-                (progress, cancellationToken) => AppServices.InstanceOperations.InstallOrUpdateAsync(Presentation.Game, progress, cancellationToken));
+                (progress, cancellationToken) =>
+                    AppServices.InstanceOperations.InstallOrUpdateAsync(Presentation.Game, progress,
+                        cancellationToken));
             if (!result.IsSuccess)
             {
                 AppServices.Overlays.ShowToast("Operation failed", result.Message, ToastTone.Error);
                 return;
             }
+
             Presentation.SetGame(result.Value);
             _changed?.Invoke(result.Value);
             AppServices.Overlays.ShowToast("Profile ready", result.Value.DisplayName);
@@ -59,18 +64,22 @@ namespace TCLauncher.MVVM.View
             var result = await AppServices.Operations.RunAsync("Backing up " + installed.DisplayName, true,
                 (progress, cancellationToken) => Task.Run(() =>
                 {
-                    progress.Report(new OperationProgress { Stage = OperationStage.Snapshotting, Message = "Collecting profile data" });
+                    progress.Report(new OperationProgress
+                        { Stage = OperationStage.Snapshotting, Message = "Collecting profile data" });
                     cancellationToken.ThrowIfCancellationRequested();
-                    return AppServices.Backups.Create(installed, "Manual " + DateTime.Now.ToString("yyyy-MM-dd HH-mm"), false, false);
+                    return AppServices.Backups.Create(installed, "Manual " + DateTime.Now.ToString("yyyy-MM-dd HH-mm"),
+                        false, false);
                 }, cancellationToken));
             if (!result.IsSuccess)
             {
                 AppServices.Overlays.ShowToast("Backup failed", result.Message, ToastTone.Error);
                 return;
             }
+
             Presentation.RefreshHealth();
             AppServices.Overlays.ShowToast("Backup complete",
-                result.Value.Manifest.CreatedAtUtc.ToLocalTime().ToString("g") + " • " + FormatBytes(result.Value.SizeBytes));
+                result.Value.Manifest.CreatedAtUtc.ToLocalTime().ToString("g") + " • " +
+                FormatBytes(result.Value.SizeBytes));
         }
 
         private void Play_OnClick(object sender, RoutedEventArgs e)
@@ -88,12 +97,14 @@ namespace TCLauncher.MVVM.View
         }
 
         private async void Configure_OnClick(object sender, RoutedEventArgs e) =>
-            await AppServices.Overlays.ShowSheetAsync("Configure profile", new ProfileConfigurationSheet((InstalledInstance)Presentation.Game, _changed), false);
+            await AppServices.Overlays.ShowSheetAsync("Configure profile",
+                new ProfileConfigurationSheet((InstalledInstance)Presentation.Game, _changed), false);
 
         private void Clone_OnClick(object sender, RoutedEventArgs e)
         {
             if (!(Presentation.Game is InstalledInstance installed)) return;
-            _ = AppServices.Overlays.ShowSheetAsync("Clone profile", new ProfileCreatorSheet(installed, _changed), false);
+            _ = AppServices.Overlays.ShowSheetAsync("Clone profile", new ProfileCreatorSheet(installed, _changed),
+                false);
         }
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
@@ -111,7 +122,8 @@ namespace TCLauncher.MVVM.View
         private void ManageBackups_OnClick(object sender, RoutedEventArgs e)
         {
             if (Presentation.Game is InstalledInstance installed)
-                _ = AppServices.Overlays.ShowSheetAsync("Manage backups", new BackupManagerSheet(installed, _changed), false);
+                _ = AppServices.Overlays.ShowSheetAsync("Manage backups", new BackupManagerSheet(installed, _changed),
+                    false);
         }
 
         private void Health_OnClick(object sender, RoutedEventArgs e)
@@ -126,9 +138,11 @@ namespace TCLauncher.MVVM.View
         {
             if (!(Presentation.Game is InstalledInstance installed)) return;
             if (!await AppServices.Overlays.ConfirmAsync("Uninstall " + installed.DisplayName,
-                    "Remove the installed profile from this PC? Backups are kept unless you explicitly remove them next.", "Uninstall", "Cancel")) return;
+                    "Remove the installed profile from this PC? Backups are kept unless you explicitly remove them next.",
+                    "Uninstall", "Cancel")) return;
             var removeBackups = await AppServices.Overlays.ConfirmAsync("Keep backups?",
-                "Choose Remove backups to delete this profile's backup archives too.", "Remove backups", "Keep backups");
+                "Choose Remove backups to delete this profile's backup archives too.", "Remove backups",
+                "Keep backups");
             try
             {
                 if (Directory.Exists(installed.InstallationDir)) Directory.Delete(installed.InstallationDir, true);
@@ -137,10 +151,12 @@ namespace TCLauncher.MVVM.View
                     var backupDirectory = Path.Combine(IoUtils.Tcl.RootPath, "Backups", installed.Guid.ToString());
                     if (Directory.Exists(backupDirectory)) Directory.Delete(backupDirectory, true);
                 }
+
                 AppServices.Overlays.Close();
                 _changed?.Invoke(installed);
                 _close?.Invoke();
-                AppServices.Overlays.ShowToast("Profile uninstalled", removeBackups ? "Profile and backups removed." : "Backups were preserved.");
+                AppServices.Overlays.ShowToast("Profile uninstalled",
+                    removeBackups ? "Profile and backups removed." : "Backups were preserved.");
             }
             catch (Exception exception)
             {
@@ -156,38 +172,57 @@ namespace TCLauncher.MVVM.View
         }
     }
 
-    public sealed class GameDetailsPresentation : System.ComponentModel.INotifyPropertyChanged
+    public sealed class GameDetailsPresentation : INotifyPropertyChanged
     {
         private Instance _game;
         private InstanceHealthReport _health;
         public Instance Game => _game;
-        public string Summary => string.IsNullOrWhiteSpace(Game.Type) ? "A Minecraft profile for TCLauncher." : Game.Type;
-        public string LoaderLabel => Game.GetEffectiveLoader().Type + (string.IsNullOrWhiteSpace(Game.GetEffectiveLoader().Version) ? "" : " " + Game.GetEffectiveLoader().Version);
-        public string StateLabel => Game.Upgradeable ? "Update available" : Game.Is_Installed ? "Installed" : "Available";
+
+        public string Summary =>
+            string.IsNullOrWhiteSpace(Game.Type) ? "A Minecraft profile for TCLauncher." : Game.Type;
+
+        public string LoaderLabel => Game.GetEffectiveLoader().Type +
+                                     (string.IsNullOrWhiteSpace(Game.GetEffectiveLoader().Version)
+                                         ? ""
+                                         : " " + Game.GetEffectiveLoader().Version);
+
+        public string StateLabel =>
+            Game.Upgradeable ? "Update available" : Game.Is_Installed ? "Installed" : "Available";
+
         public Visibility InstalledVisibility => Game.Is_Installed ? Visibility.Visible : Visibility.Collapsed;
         public bool IsHealthy => _health == null || _health.OverallSeverity < HealthSeverity.Warning;
-        public string MainActionLabel => !Game.Is_Installed ? "Install" : Game.Upgradeable ? "Update" : !IsHealthy ? "Repair" : "Back up now";
+
+        public string MainActionLabel => !Game.Is_Installed ? "Install" :
+            Game.Upgradeable ? "Update" :
+            !IsHealthy ? "Repair" : "Back up now";
+
         public string Overview => "Minecraft " + Game.McVersion + " • Pack " + (Game.Version ?? "local") + "\n" +
-                                  (Game.Servers?.Count > 0 ? Game.Servers.Count + " configured server(s)" : "No default server");
-        public string HealthSummary => !Game.Is_Installed ? "Install this game to enable health checks and backups." :
-            _health.OverallSeverity + " • " + FormatBytes(_health.StorageBytes) + " • " +
-            (_health.LatestBackup == null ? "No backup yet" : "Last backup " + _health.LatestBackup.Manifest.CreatedAtUtc.ToLocalTime().ToString("g"));
+                                  (Game.Servers?.Count > 0
+                                      ? Game.Servers.Count + " configured server(s)"
+                                      : "No default server");
+
+        public string HealthSummary => !Game.Is_Installed
+            ? "Install this game to enable health checks and backups."
+            : _health.OverallSeverity + " • " + FormatBytes(_health.StorageBytes) + " • " +
+              (_health.LatestBackup == null
+                  ? "No backup yet"
+                  : "Last backup " + _health.LatestBackup.Manifest.CreatedAtUtc.ToLocalTime().ToString("g"));
 
         public GameDetailsPresentation(Instance game) => SetGame(game);
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void SetGame(Instance game)
         {
             _game = game;
             RefreshHealth();
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(string.Empty));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
         }
 
         public void RefreshHealth()
         {
             _health = Game is InstalledInstance installed ? AppServices.Health.Inspect(installed) : null;
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(HealthSummary)));
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(MainActionLabel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HealthSummary)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MainActionLabel)));
         }
 
         private static string FormatBytes(long bytes)

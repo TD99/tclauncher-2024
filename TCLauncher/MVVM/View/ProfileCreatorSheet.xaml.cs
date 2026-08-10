@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using Microsoft.Win32;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
@@ -10,6 +11,7 @@ namespace TCLauncher.MVVM.View
     public partial class ProfileCreatorSheet
     {
         private readonly ProfileCreatorViewModel _viewModel;
+
         public ProfileCreatorSheet(InstalledInstance cloneSource, Action<InstalledInstance> created)
         {
             InitializeComponent();
@@ -24,7 +26,7 @@ namespace TCLauncher.MVVM.View
             DataContext = _viewModel;
         }
 
-        private void BrowseIcon_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BrowseIcon_Click(object sender, RoutedEventArgs e)
         {
             var picker = new OpenFileDialog { Filter = "Images (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg" };
             if (picker.ShowDialog() != true) return;

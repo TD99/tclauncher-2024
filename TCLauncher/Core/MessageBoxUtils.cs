@@ -55,6 +55,7 @@ namespace TCLauncher.Core
                 {
                     return input;
                 }
+
                 MessageBox.Show(Languages.invalid_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
@@ -74,6 +75,7 @@ namespace TCLauncher.Core
                 {
                     return result;
                 }
+
                 MessageBox.Show(Languages.invalid_boolean_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
@@ -93,6 +95,7 @@ namespace TCLauncher.Core
                 {
                     return result;
                 }
+
                 MessageBox.Show(Languages.invalid_integer_input_message, Languages.error, MessageBoxButton.OK);
             }
         }
@@ -118,6 +121,7 @@ namespace TCLauncher.Core
                     {
                         return default;
                     }
+
                     MessageBox.Show(Languages.invalid_json_input_message, Languages.error, MessageBoxButton.OK);
                 }
             }

@@ -20,7 +20,9 @@ namespace TCLauncher.Setup.Steps
 
         private void UpdateUi()
         {
-            AppDataPath.Text = Default.VirtualAppDataPath == "" ? IoUtils.FileSystem.RealAppDataPath : Default.VirtualAppDataPath;
+            AppDataPath.Text = Default.VirtualAppDataPath == ""
+                ? IoUtils.FileSystem.RealAppDataPath
+                : Default.VirtualAppDataPath;
         }
 
         private void ApplyPath(string path)
@@ -35,7 +37,11 @@ namespace TCLauncher.Setup.Steps
             if (new DirectoryInfo(newParentPath).Name == "TCL")
             {
                 var correctedNewParentPath = Path.GetDirectoryName(newParentPath);
-                var result = MessageBox.Show("There is a mistake in the path you have entered. Should the path '" + newParentPath + "' be corrected to '" + correctedNewParentPath + "'?", "TCLauncher", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result =
+                    MessageBox.Show(
+                        "There is a mistake in the path you have entered. Should the path '" + newParentPath +
+                        "' be corrected to '" + correctedNewParentPath + "'?", "TCLauncher", MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     newParentPath = correctedNewParentPath ?? IoUtils.FileSystem.RealAppDataPath;
@@ -55,7 +61,8 @@ namespace TCLauncher.Setup.Steps
 
             if (Directory.Exists(oldPath) && oldPath != newPath)
             {
-                var result2 = MessageBox.Show(Languages.path_saved_prompt, Languages.path_saved, MessageBoxButton.YesNo, MessageBoxImage.Information);
+                var result2 = MessageBox.Show(Languages.path_saved_prompt, Languages.path_saved, MessageBoxButton.YesNo,
+                    MessageBoxImage.Information);
                 if (result2 == MessageBoxResult.Yes)
                 {
                     Task.Run(() =>

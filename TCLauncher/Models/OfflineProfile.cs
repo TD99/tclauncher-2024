@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TCLauncher.Models
 {
@@ -13,6 +14,8 @@ namespace TCLauncher.Models
     {
         public int SchemaVersion { get; set; } = 1;
         public Guid? SelectedProfileId { get; set; }
-        public System.Collections.Generic.List<OfflineProfile> Profiles { get; set; } = new System.Collections.Generic.List<OfflineProfile>();
+
+        public List<OfflineProfile> Profiles { get; set; } =
+            new List<OfflineProfile>();
     }
 }

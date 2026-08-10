@@ -1,8 +1,25 @@
-<UserControl x:Class="TCLauncher.MVVM.View.TextPromptSheet" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<UserControl
+    x:Class="TCLauncher.MVVM.View.TextPromptSheet"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>
-        <TextBlock x:Name="Prompt" Margin="0,0,0,8" Foreground="#B2B9CC" TextWrapping="Wrap"/>
-        <TextBox x:Name="Value"/>
-        <TextBlock x:Name="Error" Margin="0,10,0,0" Foreground="#FF9A9A" TextWrapping="Wrap"/>
-        <Button Margin="0,18,0,0" HorizontalAlignment="Right" Padding="17,8" Content="Continue" IsDefault="True" Click="Submit_Click"/>
+        <TextBlock
+            x:Name="Prompt"
+            Margin="0,0,0,8"
+            Foreground="#B2B9CC"
+            TextWrapping="Wrap" />
+        <TextBox x:Name="Value" />
+        <TextBlock
+            x:Name="Error"
+            Margin="0,10,0,0"
+            Foreground="#FF9A9A"
+            TextWrapping="Wrap" />
+        <Button
+            Margin="0,18,0,0"
+            Padding="17,8"
+            HorizontalAlignment="Right"
+            Click="Submit_Click"
+            Content="Continue"
+            IsDefault="True" />
     </StackPanel>
 </UserControl>

@@ -31,19 +31,22 @@ namespace TCLauncher.Core.Services
             {
                 var instance = JsonConvert.DeserializeObject<Instance>(File.ReadAllText(path));
                 if (instance == null)
-                    return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration, "The instance configuration is empty.", operationId: operationId);
+                    return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        "The instance configuration is empty.", operationId: operationId);
 
                 instance.NormalizeLegacyConfiguration();
                 var errors = Validate(instance);
                 if (errors.Count > 0)
-                    return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration, string.Join(Environment.NewLine, errors), operationId: operationId);
+                    return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        string.Join(Environment.NewLine, errors), operationId: operationId);
 
                 return OperationResult<Instance>.Success(instance, operationId);
             }
             catch (Exception exception)
             {
                 _log.Error("instance.config.load_failed", exception, operationId);
-                return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration, "The instance configuration could not be read.", exception, operationId);
+                return OperationResult<Instance>.Failure(LauncherErrorCode.InvalidConfiguration,
+                    "The instance configuration could not be read.", exception, operationId);
             }
         }
 
@@ -54,7 +57,8 @@ namespace TCLauncher.Core.Services
             {
                 var errors = Validate(instance);
                 if (errors.Count > 0)
-                    return OperationResult.Failure(LauncherErrorCode.InvalidConfiguration, string.Join(Environment.NewLine, errors), operationId: operationId);
+                    return OperationResult.Failure(LauncherErrorCode.InvalidConfiguration,
+                        string.Join(Environment.NewLine, errors), operationId: operationId);
 
                 instance.PrepareForV2Save();
                 _files.WriteAllText(path, JsonConvert.SerializeObject(instance, Formatting.Indented));
@@ -64,7 +68,8 @@ namespace TCLauncher.Core.Services
             catch (Exception exception)
             {
                 _log.Error("instance.config.save_failed", exception, operationId);
-                return OperationResult.Failure(LauncherErrorCode.Unexpected, "The instance configuration could not be saved.", exception, operationId);
+                return OperationResult.Failure(LauncherErrorCode.Unexpected,
+                    "The instance configuration could not be saved.", exception, operationId);
             }
         }
 
@@ -83,7 +88,8 @@ namespace TCLauncher.Core.Services
             if (string.IsNullOrWhiteSpace(instance.McVersion)) errors.Add("A Minecraft version is required.");
             if (instance.MinimumRamMb < 0) errors.Add("Minimum RAM cannot be negative.");
             if (instance.MaximumRamMb <= 0) errors.Add("Maximum RAM must be greater than zero.");
-            if ((instance.MinimumRamMb ?? 0) > (instance.MaximumRamMb ?? int.MaxValue)) errors.Add("Minimum RAM cannot exceed maximum RAM.");
+            if ((instance.MinimumRamMb ?? 0) > (instance.MaximumRamMb ?? int.MaxValue))
+                errors.Add("Minimum RAM cannot exceed maximum RAM.");
             return errors;
         }
     }

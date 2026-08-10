@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace TCLauncher.Core.Services
 {
@@ -25,15 +25,21 @@ namespace TCLauncher.Core.Services
                 {
                     ValidateEntryName(entry.FullName);
                     var normalized = entry.FullName.Replace('\\', '/').TrimEnd('/');
-                    if (!destinations.Add(normalized)) throw new InvalidDataException("The archive contains duplicate destinations.");
+                    if (!destinations.Add(normalized))
+                        throw new InvalidDataException("The archive contains duplicate destinations.");
                     var unixType = (entry.ExternalAttributes >> 16) & 0xF000;
                     if (unixType == 0xA000 || (entry.ExternalAttributes & (int)FileAttributes.ReparsePoint) != 0)
                         throw new InvalidDataException("Archive links are not supported.");
-                    checked { total += entry.Length; }
+                    checked
+                    {
+                        total += entry.Length;
+                    }
+
                     if (total > maximumUncompressedBytes)
                         throw new InvalidDataException("The archive exceeds the allowed extracted size.");
                 }
             }
+
             return total;
         }
 
@@ -47,7 +53,8 @@ namespace TCLauncher.Core.Services
             {
                 foreach (var entry in archive.Entries)
                 {
-                    var destination = Path.GetFullPath(Path.Combine(root, entry.FullName.Replace('/', Path.DirectorySeparatorChar)));
+                    var destination =
+                        Path.GetFullPath(Path.Combine(root, entry.FullName.Replace('/', Path.DirectorySeparatorChar)));
                     if (!destination.StartsWith(root, StringComparison.OrdinalIgnoreCase))
                         throw new InvalidDataException("Archive entry escapes the destination directory.");
 
@@ -59,7 +66,8 @@ namespace TCLauncher.Core.Services
 
                     Directory.CreateDirectory(Path.GetDirectoryName(destination));
                     using (var input = entry.Open())
-                    using (var output = new FileStream(destination, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                    using (var output =
+                           new FileStream(destination, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                         input.CopyTo(output);
                 }
             }

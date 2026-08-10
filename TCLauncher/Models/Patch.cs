@@ -15,15 +15,14 @@
 
         public Patch()
         {
-            
         }
 
         public bool IsSameAs(object compare)
         {
             if (compare == null) return false;
             if (compare.GetType() != GetType()) return false;
-            
-            var patch = (Patch) compare;
+
+            var patch = (Patch)compare;
 
             return ID == patch.ID &&
                    Name == patch.Name &&

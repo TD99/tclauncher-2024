@@ -11,8 +11,9 @@
         public bool OpenExternal { get; set; }
         public string Origin { get; set; }
         public bool is_action => ActionURL != null;
-        
-        public Applet(int weight, string name, string coverUrl, string title, string description, string actionUrl, bool openExternal=false, string origin = "T-Craft")
+
+        public Applet(int weight, string name, string coverUrl, string title, string description, string actionUrl,
+            bool openExternal = false, string origin = "T-Craft")
         {
             Weight = weight;
             Name = name;

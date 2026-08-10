@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,7 +48,7 @@ namespace TCLauncher.MVVM.View
         private async void OnGameChanged(Instance instance)
         {
             if (DataContext is ServerListViewModel viewModel)
-                await viewModel.LoadAsync(System.Threading.CancellationToken.None);
+                await viewModel.LoadAsync(CancellationToken.None);
         }
 
         private void GamesMenuButton_OnClick(object sender, RoutedEventArgs e)
@@ -58,7 +59,8 @@ namespace TCLauncher.MVVM.View
 
         private void CreateProfile_OnClick(object sender, RoutedEventArgs e)
         {
-            _ = AppServices.Overlays.ShowSheetAsync("Create profile", new ProfileCreatorSheet(null, OnGameChanged), false);
+            _ = AppServices.Overlays.ShowSheetAsync("Create profile", new ProfileCreatorSheet(null, OnGameChanged),
+                false);
         }
 
         private async void ImportPackage_OnClick(object sender, RoutedEventArgs e)
@@ -73,18 +75,26 @@ namespace TCLauncher.MVVM.View
             }
 
             var loader = preview.Value.Manifest.Instance.GetEffectiveLoader();
-            var includesSaves = preview.Value.Manifest.Files?.Any(file => file.Path.StartsWith("saves/", StringComparison.OrdinalIgnoreCase)) == true;
-            var summary = preview.Value.Manifest.Instance.DisplayName + "\nMinecraft " + preview.Value.Manifest.Instance.McVersion +
-                          " • " + loader.Type + (string.IsNullOrWhiteSpace(loader.Version) ? "" : " " + loader.Version) +
-                          "\nPack " + preview.Value.Manifest.Instance.Version + " • " + (preview.Value.PackageBytes / 1024d / 1024d).ToString("0.##") + " MB" +
-                          "\nSaves: " + (includesSaves ? "included" : "not included") + (preview.Value.IsLegacy ? "\nLegacy v1 package" : "\nVerified v2 package");
+            var includesSaves =
+                preview.Value.Manifest.Files?.Any(file =>
+                    file.Path.StartsWith("saves/", StringComparison.OrdinalIgnoreCase)) == true;
+            var summary = preview.Value.Manifest.Instance.DisplayName + "\nMinecraft " +
+                          preview.Value.Manifest.Instance.McVersion +
+                          " • " + loader.Type +
+                          (string.IsNullOrWhiteSpace(loader.Version) ? "" : " " + loader.Version) +
+                          "\nPack " + preview.Value.Manifest.Instance.Version + " • " +
+                          (preview.Value.PackageBytes / 1024d / 1024d).ToString("0.##") + " MB" +
+                          "\nSaves: " + (includesSaves ? "included" : "not included") + (preview.Value.IsLegacy
+                              ? "\nLegacy v1 package"
+                              : "\nVerified v2 package");
             if (!await AppServices.Overlays.ConfirmAsync("Import package", summary, "Import", "Cancel")) return;
 
             var resolution = ImportConflictResolution.Cancel;
             if (preview.Value.HasConflict)
             {
                 var replace = await AppServices.Overlays.ConfirmAsync("Profile already installed",
-                    "Replace the installed profile? Choose Import as copy to preserve it.", "Replace", "Import as copy");
+                    "Replace the installed profile? Choose Import as copy to preserve it.", "Replace",
+                    "Import as copy");
                 resolution = replace ? ImportConflictResolution.Replace : ImportConflictResolution.ImportAsCopy;
             }
 
@@ -94,6 +104,7 @@ namespace TCLauncher.MVVM.View
                 await AppServices.Overlays.ShowSheetAsync("Import failed", result.Message);
                 return;
             }
+
             OnGameChanged(result.Value);
             AppServices.Overlays.ShowToast("Package imported", result.Value.DisplayName);
         }

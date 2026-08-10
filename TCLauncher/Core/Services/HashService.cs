@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -16,7 +17,7 @@ namespace TCLauncher.Core.Services
 
         private static string ToHex(byte[] bytes)
         {
-            return System.BitConverter.ToString(bytes).Replace("-", string.Empty).ToLowerInvariant();
+            return BitConverter.ToString(bytes).Replace("-", string.Empty).ToLowerInvariant();
         }
     }
 }

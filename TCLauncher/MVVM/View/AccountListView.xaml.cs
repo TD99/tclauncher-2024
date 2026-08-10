@@ -30,11 +30,15 @@ namespace TCLauncher.MVVM.View
                     MicrosoftAccount = gameAccount,
                     StableId = id,
                     Username = gameAccount.Profile?.Username ?? gameAccount.Gamertag ?? "Microsoft account",
-                    Subtitle = string.IsNullOrWhiteSpace(gameAccount.Gamertag) ? "Microsoft" : gameAccount.Gamertag + " • Microsoft",
+                    Subtitle = string.IsNullOrWhiteSpace(gameAccount.Gamertag)
+                        ? "Microsoft"
+                        : gameAccount.Gamertag + " • Microsoft",
                     AvatarUri = GetAvatarUri(id),
-                    IsSelected = selected?.Kind == AccountSelectionKind.Microsoft && string.Equals(selected.StableId, id, StringComparison.OrdinalIgnoreCase)
+                    IsSelected = selected?.Kind == AccountSelectionKind.Microsoft &&
+                                 string.Equals(selected.StableId, id, StringComparison.OrdinalIgnoreCase)
                 });
             }
+
             foreach (var profile in AppServices.OfflineProfiles.List())
             {
                 Rows.Add(new AccountRow
@@ -43,9 +47,11 @@ namespace TCLauncher.MVVM.View
                     StableId = profile.Id.ToString("D"),
                     Username = profile.Username,
                     Subtitle = "Offline • stored on this device",
-                    IsSelected = selected?.Kind == AccountSelectionKind.Offline && string.Equals(selected.StableId, profile.Id.ToString("D"), StringComparison.OrdinalIgnoreCase)
+                    IsSelected = selected?.Kind == AccountSelectionKind.Offline && string.Equals(selected.StableId,
+                        profile.Id.ToString("D"), StringComparison.OrdinalIgnoreCase)
                 });
             }
+
             LogoutBtn.Visibility = selected == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
@@ -69,7 +75,9 @@ namespace TCLauncher.MVVM.View
                 "Minecraft name (3–16 letters, numbers, or underscores)", value =>
                 {
                     var result = AppServices.OfflineProfiles.Add(value);
-                    if (!result.IsSuccess) return OperationResult.Failure(result.ErrorCode, result.Message, result.Exception, result.OperationId);
+                    if (!result.IsSuccess)
+                        return OperationResult.Failure(result.ErrorCode, result.Message, result.Exception,
+                            result.OperationId);
                     App.SetOfflineSession(result.Value);
                     ListAccounts();
                     AppServices.Overlays.ShowToast("Offline profile added", result.Value.Username);
@@ -95,7 +103,8 @@ namespace TCLauncher.MVVM.View
         private async void RemoveAccount_OnClick(object sender, RoutedEventArgs e)
         {
             if (!((sender as Button)?.Tag is AccountRow row)) return;
-            if (!await AppServices.Overlays.ConfirmAsync("Remove account", "Remove " + row.Username + " from this device?", "Remove", "Cancel")) return;
+            if (!await AppServices.Overlays.ConfirmAsync("Remove account",
+                    "Remove " + row.Username + " from this device?", "Remove", "Cancel")) return;
             try
             {
                 if (row.IsOffline) AppServices.OfflineProfiles.Remove(row.OfflineProfile.Id);

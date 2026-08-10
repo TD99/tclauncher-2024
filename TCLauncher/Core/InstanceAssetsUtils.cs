@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TCLauncher.Core.Services;
 using TCLauncher.Models;
 using TCLauncher.MVVM.Windows;
 using TCLauncher.Properties;
-using TCLauncher.Core.Services;
 
 namespace TCLauncher.Core
 {
@@ -14,14 +14,16 @@ namespace TCLauncher.Core
     {
         private static readonly ActionWindow ActionWindow = new ActionWindow();
 
-        public static async Task GetAssets(List<string> names, bool isSandboxed, string url = "https://tcraft.link/tclauncher/api/mcassets/")
+        public static async Task GetAssets(List<string> names, bool isSandboxed,
+            string url = "https://tcraft.link/tclauncher/api/mcassets/")
         {
             ActionWindow.text = Languages.loading_assets;
             ActionWindow.Show();
 
             var downloadFiles = new List<AssetDownloadRecord>();
 
-            var assetsHistoryPath = Path.Combine(isSandboxed ? App.MinecraftPath.BasePath : IoUtils.Tcl.SharedPath, "DO_NOT_MODIFY_assetsHistory.json");
+            var assetsHistoryPath = Path.Combine(isSandboxed ? App.MinecraftPath.BasePath : IoUtils.Tcl.SharedPath,
+                "DO_NOT_MODIFY_assetsHistory.json");
 
             List<AssetDownloadRecord> assetsHistory;
             if (File.Exists(assetsHistoryPath))
@@ -71,7 +73,8 @@ namespace TCLauncher.Core
                 }
             }
 
-            var downloadedAssetsPath = Path.Combine(isSandboxed ? App.MinecraftPath.BasePath : IoUtils.Tcl.SharedPath, "DO_NOT_MODIFY_assetsHistory.json");
+            var downloadedAssetsPath = Path.Combine(isSandboxed ? App.MinecraftPath.BasePath : IoUtils.Tcl.SharedPath,
+                "DO_NOT_MODIFY_assetsHistory.json");
 
             if (!File.Exists(downloadedAssetsPath))
             {
@@ -85,7 +88,6 @@ namespace TCLauncher.Core
 
             ActionWindow.Hide();
         }
-
     }
 
     internal sealed class AssetDownloadRecord

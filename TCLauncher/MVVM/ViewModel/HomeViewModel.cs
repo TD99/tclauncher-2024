@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using Newtonsoft.Json;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
@@ -24,9 +23,12 @@ namespace TCLauncher.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<InstalledInstance> RecentProfiles { get; } = new ObservableCollection<InstalledInstance>();
+
+        public ObservableCollection<InstalledInstance> RecentProfiles { get; } =
+            new ObservableCollection<InstalledInstance>();
 
         private InstalledInstance _lastSelected;
+
         public InstalledInstance LastSelected
         {
             get => _lastSelected;
@@ -49,7 +51,8 @@ namespace TCLauncher.MVVM.ViewModel
         {
             try
             {
-                foreach (string file in Directory.GetFiles(IoUtils.Tcl.InstancesPath, "config.json", SearchOption.AllDirectories))
+                foreach (string file in Directory.GetFiles(IoUtils.Tcl.InstancesPath, "config.json",
+                             SearchOption.AllDirectories))
                 {
                     using (StreamReader reader = new StreamReader(file))
                     {
@@ -68,7 +71,8 @@ namespace TCLauncher.MVVM.ViewModel
             }
             catch (Exception exception)
             {
-                if (!Settings.Default.FirstTime) AppServices.Log.Warning("home.instances_load_failed", exception.Message);
+                if (!Settings.Default.FirstTime)
+                    AppServices.Log.Warning("home.instances_load_failed", exception.Message);
             }
         }
 
@@ -82,8 +86,10 @@ namespace TCLauncher.MVVM.ViewModel
                 {
                     LastSelected = LocalList[0];
                 }
+
                 return;
             }
+
             LastSelected = instance;
         }
 
@@ -95,7 +101,9 @@ namespace TCLauncher.MVVM.ViewModel
                 var profile = LocalList.FirstOrDefault(item => item.Guid == id);
                 if (profile != null) RecentProfiles.Add(profile);
             }
-            foreach (var profile in LocalList.Where(item => RecentProfiles.All(recent => recent.Guid != item.Guid)).Take(4 - RecentProfiles.Count))
+
+            foreach (var profile in LocalList.Where(item => RecentProfiles.All(recent => recent.Guid != item.Guid))
+                         .Take(4 - RecentProfiles.Count))
                 RecentProfiles.Add(profile);
         }
 

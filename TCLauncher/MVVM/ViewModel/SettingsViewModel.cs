@@ -23,10 +23,7 @@ namespace TCLauncher.MVVM.ViewModel
         public SettingsViewModel()
         {
             DownloadMirror = Settings.Default.DownloadMirror;
-            SaveCommand = new RelayCommand(
-                p => {
-                    Save();
-                });
+            SaveCommand = new RelayCommand(p => { Save(); });
         }
 
         private void Save()

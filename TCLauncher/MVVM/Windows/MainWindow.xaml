@@ -5,10 +5,10 @@
     xmlns:busyIndicator="https://github.com/moh3ngolshani/BusyIndicator"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     xmlns:converters="clr-namespace:TCLauncher.MVVM.Converters"
+    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="clr-namespace:TCLauncher.Properties"
-    xmlns:core="clr-namespace:TCLauncher.Core"
     xmlns:viewModel="clr-namespace:TCLauncher.MVVM.ViewModel"
     Title="TCLauncher"
     Width="1040"
@@ -16,6 +16,7 @@
     MinWidth="915"
     MinHeight="600"
     MaxWidth="1400"
+    core:InputModality.IsEnabled="True"
     Activated="MainWindow_OnActivated"
     Background="#737c88"
     Deactivated="MainWindow_OnDeactivated"
@@ -24,7 +25,6 @@
     Loaded="Window_Loaded"
     StateChanged="MainWindow_OnStateChanged"
     WindowStartupLocation="CenterScreen"
-    core:InputModality.IsEnabled="True"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -326,10 +326,21 @@
                                         Width="24"
                                         Height="24"
                                         Margin="0,0,10,0" />
-                                    <Border x:Name="OfflineAccountGlyph" Grid.Column="0" Width="24" Height="24" Margin="0,0,10,0"
-                                            Background="#28384A" CornerRadius="6" Visibility="Collapsed">
-                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Text="⌁"
-                                                   AutomationProperties.Name="Offline account" />
+                                    <Border
+                                        x:Name="OfflineAccountGlyph"
+                                        Grid.Column="0"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,0,10,0"
+                                        Background="#28384A"
+                                        CornerRadius="6"
+                                        Visibility="Collapsed">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            AutomationProperties.Name="Offline account"
+                                            FontSize="14"
+                                            Text="⌁" />
                                     </Border>
                                     <TextBlock
                                         x:Name="AccountManagerBtnName"
@@ -398,7 +409,7 @@
             </StackPanel>
         </Border>
 
-        <!-- Shell-owned drawers, sheets, activity, and toasts. -->
+        <!--  Shell-owned drawers, sheets, activity, and toasts.  -->
         <controls:OverlayHost Panel.ZIndex="100" />
     </Grid>
 </Window>

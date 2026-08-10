@@ -22,13 +22,18 @@ namespace TCLauncher.Core.Services
 
     public interface IForgeVersionResolver
     {
-        Task<ResolvedForgeVersion> ResolveAsync(string minecraftVersion, string requestedVersion, CancellationToken cancellationToken);
+        Task<ResolvedForgeVersion> ResolveAsync(string minecraftVersion, string requestedVersion,
+            CancellationToken cancellationToken);
     }
 
     public sealed class ForgeVersionResolver : IForgeVersionResolver
     {
-        private static readonly Uri PromotionsUri = new Uri("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json");
-        private static readonly Uri MetadataUri = new Uri("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
+        private static readonly Uri PromotionsUri =
+            new Uri("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json");
+
+        private static readonly Uri MetadataUri =
+            new Uri("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
+
         private readonly HttpClient _http;
         private readonly string _cacheDirectory;
         private readonly IAtomicFileService _files;
@@ -42,15 +47,18 @@ namespace TCLauncher.Core.Services
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public async Task<ResolvedForgeVersion> ResolveAsync(string minecraftVersion, string requestedVersion, CancellationToken cancellationToken)
+        public async Task<ResolvedForgeVersion> ResolveAsync(string minecraftVersion, string requestedVersion,
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(minecraftVersion))
                 throw new InvalidDataException("A Minecraft version is required to install Forge.");
 
-            var metadata = await GetWithCacheAsync(MetadataUri, Path.Combine(_cacheDirectory, "maven-metadata.xml"), cancellationToken);
+            var metadata = await GetWithCacheAsync(MetadataUri, Path.Combine(_cacheDirectory, "maven-metadata.xml"),
+                cancellationToken);
             var available = ParseArtifactVersions(metadata);
             var promotions = string.IsNullOrWhiteSpace(requestedVersion)
-                ? await GetWithCacheAsync(PromotionsUri, Path.Combine(_cacheDirectory, "promotions.json"), cancellationToken)
+                ? await GetWithCacheAsync(PromotionsUri, Path.Combine(_cacheDirectory, "promotions.json"),
+                    cancellationToken)
                 : null;
 
             var recommended = promotions == null ? null : ReadPromotion(promotions, minecraftVersion + "-recommended");
@@ -59,18 +67,21 @@ namespace TCLauncher.Core.Services
                 string.IsNullOrWhiteSpace(requestedVersion) ? recommended ?? latest : requestedVersion);
 
             if (string.IsNullOrWhiteSpace(forgeVersion))
-                throw new InvalidDataException($"Forge does not publish a recommended or latest build for Minecraft {minecraftVersion}.");
+                throw new InvalidDataException(
+                    $"Forge does not publish a recommended or latest build for Minecraft {minecraftVersion}.");
 
             var artifactVersion = minecraftVersion + "-" + forgeVersion;
             if (!available.Contains(artifactVersion))
-                throw new InvalidDataException($"Forge {artifactVersion} is not available in the official Forge Maven repository.");
+                throw new InvalidDataException(
+                    $"Forge {artifactVersion} is not available in the official Forge Maven repository.");
 
             return new ResolvedForgeVersion
             {
                 MinecraftVersion = minecraftVersion,
                 ForgeVersion = forgeVersion,
                 ArtifactVersion = artifactVersion,
-                InstallerUrl = $"https://maven.minecraftforge.net/net/minecraftforge/forge/{artifactVersion}/forge-{artifactVersion}-installer.jar",
+                InstallerUrl =
+                    $"https://maven.minecraftforge.net/net/minecraftforge/forge/{artifactVersion}/forge-{artifactVersion}-installer.jar",
                 IsRecommended = string.Equals(forgeVersion, recommended, StringComparison.OrdinalIgnoreCase),
                 IsLatest = string.Equals(forgeVersion, latest, StringComparison.OrdinalIgnoreCase)
             };
@@ -83,7 +94,8 @@ namespace TCLauncher.Core.Services
             var prefix = minecraftVersion + "-";
             if (value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return value.Substring(prefix.Length);
             if (value.Contains("-"))
-                throw new InvalidDataException($"Forge version '{value}' does not belong to Minecraft {minecraftVersion}.");
+                throw new InvalidDataException(
+                    $"Forge version '{value}' does not belong to Minecraft {minecraftVersion}.");
             return value;
         }
 
@@ -110,7 +122,9 @@ namespace TCLauncher.Core.Services
         {
             try
             {
-                return new HashSet<string>(XDocument.Parse(xml).Descendants("version").Select(node => node.Value.Trim()), StringComparer.OrdinalIgnoreCase);
+                return new HashSet<string>(
+                    XDocument.Parse(xml).Descendants("version").Select(node => node.Value.Trim()),
+                    StringComparer.OrdinalIgnoreCase);
             }
             catch (Exception exception)
             {

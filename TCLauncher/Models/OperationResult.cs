@@ -27,7 +27,8 @@ namespace TCLauncher.Models
         public Exception Exception { get; }
         public string OperationId { get; }
 
-        protected OperationResult(bool isSuccess, LauncherErrorCode errorCode, string message, Exception exception, string operationId)
+        protected OperationResult(bool isSuccess, LauncherErrorCode errorCode, string message, Exception exception,
+            string operationId)
         {
             IsSuccess = isSuccess;
             ErrorCode = errorCode;
@@ -39,7 +40,8 @@ namespace TCLauncher.Models
         public static OperationResult Success(string operationId = null) =>
             new OperationResult(true, LauncherErrorCode.None, null, null, operationId);
 
-        public static OperationResult Failure(LauncherErrorCode errorCode, string message, Exception exception = null, string operationId = null) =>
+        public static OperationResult Failure(LauncherErrorCode errorCode, string message, Exception exception = null,
+            string operationId = null) =>
             new OperationResult(false, errorCode, message, exception, operationId);
     }
 
@@ -47,7 +49,8 @@ namespace TCLauncher.Models
     {
         public T Value { get; }
 
-        private OperationResult(bool isSuccess, T value, LauncherErrorCode errorCode, string message, Exception exception, string operationId)
+        private OperationResult(bool isSuccess, T value, LauncherErrorCode errorCode, string message,
+            Exception exception, string operationId)
             : base(isSuccess, errorCode, message, exception, operationId)
         {
             Value = value;
@@ -56,7 +59,8 @@ namespace TCLauncher.Models
         public static OperationResult<T> Success(T value, string operationId = null) =>
             new OperationResult<T>(true, value, LauncherErrorCode.None, null, null, operationId);
 
-        public new static OperationResult<T> Failure(LauncherErrorCode errorCode, string message, Exception exception = null, string operationId = null) =>
+        public new static OperationResult<T> Failure(LauncherErrorCode errorCode, string message,
+            Exception exception = null, string operationId = null) =>
             new OperationResult<T>(false, default(T), errorCode, message, exception, operationId);
     }
 }

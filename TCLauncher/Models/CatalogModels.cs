@@ -6,17 +6,13 @@ namespace TCLauncher.Models
 {
     public sealed class CatalogDocument
     {
-        [JsonProperty("schemaVersion")]
-        public int SchemaVersion { get; set; }
+        [JsonProperty("schemaVersion")] public int SchemaVersion { get; set; }
 
-        [JsonProperty("generatedAtUtc")]
-        public DateTime GeneratedAtUtc { get; set; }
+        [JsonProperty("generatedAtUtc")] public DateTime GeneratedAtUtc { get; set; }
 
-        [JsonProperty("items")]
-        public List<CatalogItem> Items { get; set; } = new List<CatalogItem>();
+        [JsonProperty("items")] public List<CatalogItem> Items { get; set; } = new List<CatalogItem>();
 
-        [JsonProperty("content")]
-        public List<ContentCard> Content { get; set; } = new List<ContentCard>();
+        [JsonProperty("content")] public List<ContentCard> Content { get; set; } = new List<ContentCard>();
     }
 
     public sealed class CatalogItem
@@ -50,7 +46,9 @@ namespace TCLauncher.Models
                 Slug = instance.Name,
                 Title = instance.DisplayName,
                 Summary = instance.Type,
-                Description = instance.WorkingDirDesc == null ? null : string.Join(Environment.NewLine, instance.WorkingDirDesc.Keys),
+                Description = instance.WorkingDirDesc == null
+                    ? null
+                    : string.Join(Environment.NewLine, instance.WorkingDirDesc.Keys),
                 ThumbnailUrl = instance.ThumbnailURL,
                 MinecraftVersion = instance.McVersion,
                 Loader = instance.Loader,

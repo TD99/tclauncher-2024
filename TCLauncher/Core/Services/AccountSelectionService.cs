@@ -19,7 +19,8 @@ namespace TCLauncher.Core.Services
         private readonly IAtomicFileService _files;
         private readonly object _sync = new object();
 
-        public AccountSelectionService(string path, IAtomicFileService files, string legacyMicrosoftId, OfflineProfile legacyOffline)
+        public AccountSelectionService(string path, IAtomicFileService files, string legacyMicrosoftId,
+            OfflineProfile legacyOffline)
         {
             _path = path;
             _files = files;
@@ -33,8 +34,14 @@ namespace TCLauncher.Core.Services
             lock (_sync)
             {
                 if (!File.Exists(_path)) return null;
-                try { return JsonConvert.DeserializeObject<ActiveAccountSelection>(File.ReadAllText(_path)); }
-                catch { return null; }
+                try
+                {
+                    return JsonConvert.DeserializeObject<ActiveAccountSelection>(File.ReadAllText(_path));
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 

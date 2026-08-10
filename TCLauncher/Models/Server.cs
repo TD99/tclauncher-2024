@@ -29,13 +29,12 @@
         {
             if (compare == null) return false;
             if (compare.GetType() != GetType()) return false;
-            
-            var server = (Server) compare;
+
+            var server = (Server)compare;
 
             return Name == server.Name &&
                    Address == server.Address &&
                    ThumbnailURL == server.ThumbnailURL;
         }
-
     }
 }

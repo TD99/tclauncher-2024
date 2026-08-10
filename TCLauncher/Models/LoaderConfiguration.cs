@@ -12,8 +12,7 @@ namespace TCLauncher.Models
 
     public sealed class LoaderConfiguration
     {
-        [JsonProperty("type")]
-        public LoaderType Type { get; set; }
+        [JsonProperty("type")] public LoaderType Type { get; set; }
 
         [JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
         public string Version { get; set; }

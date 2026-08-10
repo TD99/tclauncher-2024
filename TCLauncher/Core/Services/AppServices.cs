@@ -1,4 +1,7 @@
+using System;
 using System.IO;
+using System.Windows;
+using TCLauncher.Properties;
 
 namespace TCLauncher.Core.Services
 {
@@ -29,31 +32,37 @@ namespace TCLauncher.Core.Services
         {
             Log = new RollingLogService(Path.Combine(rootPath, "Logs"));
             AtomicFiles = new AtomicFileService();
-            Overlays = new OverlayService(System.Windows.Application.Current.Dispatcher);
+            Overlays = new OverlayService(Application.Current.Dispatcher);
             Operations = new OperationCoordinator();
             Activity = new ActivityStore(Path.Combine(rootPath, "Udata", "activity.json"), AtomicFiles);
             Archives = new SafeArchiveService();
             InstanceConfigs = new InstanceConfigService(AtomicFiles, Log);
             Backups = new BackupService(Path.Combine(rootPath, "Backups"), AtomicFiles, Archives, InstanceConfigs, Log);
-            Packages = new PackageService(Path.Combine(rootPath, "Instances"), Archives, AtomicFiles, InstanceConfigs, Log);
+            Packages = new PackageService(Path.Combine(rootPath, "Instances"), Archives, AtomicFiles, InstanceConfigs,
+                Log);
             Catalog = new CatalogService(
                 LauncherHttpClient.Instance,
-                new System.Uri("https://tcraft.link/tclauncher/api/v2/catalog"),
-                new System.Uri("https://tcraft.link/tclauncher/api/"),
+                new Uri("https://tcraft.link/tclauncher/api/v2/catalog"),
+                new Uri("https://tcraft.link/tclauncher/api/"),
                 Path.Combine(rootPath, "Cache", "catalog-v2.json"),
                 AtomicFiles,
                 Log);
             Health = new InstanceHealthService(InstanceConfigs, Backups);
             SupportBundles = new SupportBundleService(Log);
-            Updates = new UpdateService(LauncherHttpClient.Instance, new System.Uri("https://tcraft.link/tclauncher/api/v2/update-manifest"), Log);
+            Updates = new UpdateService(LauncherHttpClient.Instance,
+                new Uri("https://tcraft.link/tclauncher/api/v2/update-manifest"), Log);
             Profiles = new ProfileService(Path.Combine(rootPath, "Instances"), AtomicFiles, InstanceConfigs, Log);
-            OfflineProfiles = new OfflineProfileService(Path.Combine(rootPath, "Udata", "offline_profiles.json"), AtomicFiles);
-            AccountSelection = new AccountSelectionService(Path.Combine(rootPath, "Udata", "active_account.json"), AtomicFiles,
-                TCLauncher.Properties.Settings.Default.LastAccountUUID, OfflineProfiles.GetSelected());
-            ForgeVersions = new ForgeVersionResolver(LauncherHttpClient.Instance, Path.Combine(rootPath, "Cache", "forge"), AtomicFiles, Log);
+            OfflineProfiles =
+                new OfflineProfileService(Path.Combine(rootPath, "Udata", "offline_profiles.json"), AtomicFiles);
+            AccountSelection = new AccountSelectionService(Path.Combine(rootPath, "Udata", "active_account.json"),
+                AtomicFiles,
+                Settings.Default.LastAccountUUID, OfflineProfiles.GetSelected());
+            ForgeVersions = new ForgeVersionResolver(LauncherHttpClient.Instance,
+                Path.Combine(rootPath, "Cache", "forge"), AtomicFiles, Log);
             ModLoaders = new ModLoaderService(LauncherHttpClient.Instance, ForgeVersions);
             Launches = new LaunchService(ModLoaders, Log, Activity);
-            InstanceOperations = new InstanceOperationService(Path.Combine(rootPath, "Instances"), LauncherHttpClient.Instance, Archives, AtomicFiles, InstanceConfigs, Backups, Log);
+            InstanceOperations = new InstanceOperationService(Path.Combine(rootPath, "Instances"),
+                LauncherHttpClient.Instance, Archives, AtomicFiles, InstanceConfigs, Backups, Log);
         }
     }
 }

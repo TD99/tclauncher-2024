@@ -42,9 +42,9 @@ namespace TCLauncher.MVVM.Windows
             DragMove();
         }
 
-         private void CustomInputDialog_OnClosing(object sender, CancelEventArgs e)
-         {
-             tcs.TrySetResult(false);
-         }
+        private void CustomInputDialog_OnClosing(object sender, CancelEventArgs e)
+        {
+            tcs.TrySetResult(false);
+        }
     }
 }

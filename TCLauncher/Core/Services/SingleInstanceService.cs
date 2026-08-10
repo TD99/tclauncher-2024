@@ -29,7 +29,8 @@ namespace TCLauncher.Core.Services
         {
             try
             {
-                using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.Out, PipeOptions.Asynchronous))
+                using (var client =
+                       new NamedPipeClientStream(".", pipeName, PipeDirection.Out, PipeOptions.Asynchronous))
                 {
                     await Task.Run(() => client.Connect(timeoutMilliseconds));
                     var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(arguments ?? new string[0]));

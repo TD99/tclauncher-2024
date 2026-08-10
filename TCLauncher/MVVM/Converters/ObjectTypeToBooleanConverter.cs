@@ -12,6 +12,7 @@ namespace TCLauncher.MVVM.Converters
             {
                 return value?.GetType() == type;
             }
+
             return false;
         }
 

@@ -6,12 +6,21 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using TCLauncher.Core;
 
 namespace TCLauncher.Core.Services
 {
-    public enum OverlayKind { Sheet, Drawer }
-    public enum ToastTone { Success, Warning, Error }
+    public enum OverlayKind
+    {
+        Sheet,
+        Drawer
+    }
+
+    public enum ToastTone
+    {
+        Success,
+        Warning,
+        Error
+    }
 
     public sealed class OverlayToast
     {
@@ -36,7 +45,19 @@ namespace TCLauncher.Core.Services
     public sealed class OverlayHostViewModel : INotifyPropertyChanged
     {
         private OverlaySurface _current;
-        public OverlaySurface Current { get => _current; internal set { _current = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsOpen)); OnPropertyChanged(nameof(IsDrawer)); } }
+
+        public OverlaySurface Current
+        {
+            get => _current;
+            internal set
+            {
+                _current = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsOpen));
+                OnPropertyChanged(nameof(IsDrawer));
+            }
+        }
+
         public bool IsOpen => Current != null;
         public bool IsDrawer => Current?.Kind == OverlayKind.Drawer;
         public ObservableCollection<OverlayToast> Toasts { get; } = new ObservableCollection<OverlayToast>();
@@ -44,14 +65,19 @@ namespace TCLauncher.Core.Services
         public ICommand ConfirmCommand { get; internal set; }
         public ICommand CancelCommand { get; internal set; }
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
     public interface IOverlayService
     {
         OverlayHostViewModel Host { get; }
         Task ShowSheetAsync(string title, object content, bool allowOutsideDismiss = true);
-        Task<bool> ConfirmAsync(string title, object content, string primaryText = "Continue", string secondaryText = "Cancel");
+
+        Task<bool> ConfirmAsync(string title, object content, string primaryText = "Continue",
+            string secondaryText = "Cancel");
+
         void ShowDrawer(string title, object content);
         void Close(bool accepted = false);
         void DismissFromOutside();
@@ -82,7 +108,8 @@ namespace TCLauncher.Core.Services
             });
         }
 
-        public async Task<bool> ConfirmAsync(string title, object content, string primaryText = "Continue", string secondaryText = "Cancel")
+        public async Task<bool> ConfirmAsync(string title, object content, string primaryText = "Continue",
+            string secondaryText = "Cancel")
         {
             var surface = new OverlaySurface
             {
@@ -111,7 +138,12 @@ namespace TCLauncher.Core.Services
 
         public void Close(bool accepted = false)
         {
-            if (!_dispatcher.CheckAccess()) { _dispatcher.Invoke(() => Close(accepted)); return; }
+            if (!_dispatcher.CheckAccess())
+            {
+                _dispatcher.Invoke(() => Close(accepted));
+                return;
+            }
+
             var current = Host.Current;
             if (current == null) return;
             Host.Current = null;
@@ -131,7 +163,11 @@ namespace TCLauncher.Core.Services
                 var toast = new OverlayToast { Title = title, Message = message, Tone = tone };
                 Host.Toasts.Add(toast);
                 var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
-                timer.Tick += (sender, args) => { timer.Stop(); Host.Toasts.Remove(toast); };
+                timer.Tick += (sender, args) =>
+                {
+                    timer.Stop();
+                    Host.Toasts.Remove(toast);
+                };
                 timer.Start();
             });
         }

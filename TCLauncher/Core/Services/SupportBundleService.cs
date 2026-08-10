@@ -35,16 +35,23 @@ namespace TCLauncher.Core.Services
             var preview = new SupportBundlePreview();
             preview.IncludedFiles.Add("system.json");
             preview.IncludedFiles.AddRange(Directory.Exists(_log.LogDirectory)
-                ? Directory.GetFiles(_log.LogDirectory, "*.jsonl").OrderByDescending(File.GetLastWriteTimeUtc).Take(3).Select(path => "logs/" + Path.GetFileName(path))
+                ? Directory.GetFiles(_log.LogDirectory, "*.jsonl").OrderByDescending(File.GetLastWriteTimeUtc).Take(3)
+                    .Select(path => "logs/" + Path.GetFileName(path))
                 : Enumerable.Empty<string>());
             if (instance != null)
             {
                 preview.IncludedFiles.Add("instance.json");
                 var crashRoot = Path.Combine(instance.DataDir, "crash-reports");
                 if (Directory.Exists(crashRoot))
-                    preview.IncludedFiles.AddRange(Directory.GetFiles(crashRoot, "*.txt").OrderByDescending(File.GetLastWriteTimeUtc).Take(3).Select(path => "crash-reports/" + Path.GetFileName(path)));
+                    preview.IncludedFiles.AddRange(Directory.GetFiles(crashRoot, "*.txt")
+                        .OrderByDescending(File.GetLastWriteTimeUtc).Take(3)
+                        .Select(path => "crash-reports/" + Path.GetFileName(path)));
             }
-            preview.ExcludedData.AddRange(new[] { "Microsoft account/token storage", "saves and worlds", "game assets and mods", "unrelated profile data" });
+
+            preview.ExcludedData.AddRange(new[]
+            {
+                "Microsoft account/token storage", "saves and worlds", "game assets and mods", "unrelated profile data"
+            });
             return preview;
         }
 
@@ -65,7 +72,8 @@ namespace TCLauncher.Core.Services
                     processorCount = Environment.ProcessorCount,
                     rootDriveFreeBytes = new DriveInfo(Path.GetPathRoot(IoUtils.Tcl.RootPath)).AvailableFreeSpace
                 };
-                File.WriteAllText(Path.Combine(temporary, "system.json"), JsonConvert.SerializeObject(system, Formatting.Indented));
+                File.WriteAllText(Path.Combine(temporary, "system.json"),
+                    JsonConvert.SerializeObject(system, Formatting.Indented));
 
                 CopyRecentLogs(temporary);
                 if (instance != null)
@@ -76,7 +84,8 @@ namespace TCLauncher.Core.Services
                         Loader = instance.GetEffectiveLoader(), instance.MinimumRamMb, instance.MaximumRamMb,
                         instance.UseIsolation, ServerCount = instance.Servers?.Count ?? 0
                     };
-                    File.WriteAllText(Path.Combine(temporary, "instance.json"), JsonConvert.SerializeObject(safeInstance, Formatting.Indented));
+                    File.WriteAllText(Path.Combine(temporary, "instance.json"),
+                        JsonConvert.SerializeObject(safeInstance, Formatting.Indented));
                     CopyCrashReports(instance, temporary);
                 }
 
@@ -88,7 +97,8 @@ namespace TCLauncher.Core.Services
             catch (Exception exception)
             {
                 _log.Error("support_bundle.failed", exception, operationId);
-                return OperationResult<string>.Failure(LauncherErrorCode.Unexpected, "The support bundle could not be created.", exception, operationId);
+                return OperationResult<string>.Failure(LauncherErrorCode.Unexpected,
+                    "The support bundle could not be created.", exception, operationId);
             }
             finally
             {
@@ -101,8 +111,10 @@ namespace TCLauncher.Core.Services
             if (!Directory.Exists(_log.LogDirectory)) return;
             var output = Path.Combine(temporary, "logs");
             Directory.CreateDirectory(output);
-            foreach (var path in Directory.GetFiles(_log.LogDirectory, "*.jsonl").OrderByDescending(File.GetLastWriteTimeUtc).Take(3))
-                File.WriteAllText(Path.Combine(output, Path.GetFileName(path)), SecretRedactor.Redact(File.ReadAllText(path)));
+            foreach (var path in Directory.GetFiles(_log.LogDirectory, "*.jsonl")
+                         .OrderByDescending(File.GetLastWriteTimeUtc).Take(3))
+                File.WriteAllText(Path.Combine(output, Path.GetFileName(path)),
+                    SecretRedactor.Redact(File.ReadAllText(path)));
         }
 
         private static void CopyCrashReports(InstalledInstance instance, string temporary)
@@ -112,7 +124,8 @@ namespace TCLauncher.Core.Services
             var output = Path.Combine(temporary, "crash-reports");
             Directory.CreateDirectory(output);
             foreach (var path in Directory.GetFiles(root, "*.txt").OrderByDescending(File.GetLastWriteTimeUtc).Take(3))
-                File.WriteAllText(Path.Combine(output, Path.GetFileName(path)), SecretRedactor.Redact(File.ReadAllText(path)));
+                File.WriteAllText(Path.Combine(output, Path.GetFileName(path)),
+                    SecretRedactor.Redact(File.ReadAllText(path)));
         }
     }
 }

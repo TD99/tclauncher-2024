@@ -16,7 +16,8 @@ namespace TCLauncher.Core.Services
 {
     public interface IModLoaderService
     {
-        Task<string> EnsureInstalledAsync(Instance instance, MinecraftLauncher launcher, IProgress<OperationProgress> progress, CancellationToken cancellationToken);
+        Task<string> EnsureInstalledAsync(Instance instance, MinecraftLauncher launcher,
+            IProgress<OperationProgress> progress, CancellationToken cancellationToken);
     }
 
     public sealed class ModLoaderService : IModLoaderService
@@ -30,10 +31,12 @@ namespace TCLauncher.Core.Services
             _forgeVersions = forgeVersions;
         }
 
-        public async Task<string> EnsureInstalledAsync(Instance instance, MinecraftLauncher launcher, IProgress<OperationProgress> progress, CancellationToken cancellationToken)
+        public async Task<string> EnsureInstalledAsync(Instance instance, MinecraftLauncher launcher,
+            IProgress<OperationProgress> progress, CancellationToken cancellationToken)
         {
             var loader = instance.GetEffectiveLoader();
-            progress?.Report(new OperationProgress { Stage = OperationStage.InstallingLoader, Message = "Installing " + loader.Type });
+            progress?.Report(new OperationProgress
+                { Stage = OperationStage.InstallingLoader, Message = "Installing " + loader.Type });
             await launcher.InstallAsync(instance.McVersion, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -54,10 +57,12 @@ namespace TCLauncher.Core.Services
                         });
                         loader.Version = fabricVersion;
                     }
+
                     return await fabric.Install(instance.McVersion, fabricVersion, launcher.MinecraftPath);
                 case LoaderType.Forge:
                     var forge = new ForgeInstaller(launcher, _http);
-                    var resolved = await _forgeVersions.ResolveAsync(instance.McVersion, loader.Version, cancellationToken);
+                    var resolved =
+                        await _forgeVersions.ResolveAsync(instance.McVersion, loader.Version, cancellationToken);
                     var forgeVersion = new ForgeVersion(resolved.MinecraftVersion, resolved.ForgeVersion)
                     {
                         IsLatestVersion = resolved.IsLatest,
@@ -99,7 +104,8 @@ namespace TCLauncher.Core.Services
             if (string.IsNullOrWhiteSpace(minecraftVersion))
                 throw new InvalidDataException("A Minecraft version is required to install Fabric.");
 
-            var uri = new Uri("https://meta.fabricmc.net/v2/versions/loader/" + Uri.EscapeDataString(minecraftVersion.Trim()));
+            var uri = new Uri("https://meta.fabricmc.net/v2/versions/loader/" +
+                              Uri.EscapeDataString(minecraftVersion.Trim()));
             using (var response = await http.GetAsync(uri, cancellationToken))
             {
                 response.EnsureSuccessStatusCode();
@@ -116,7 +122,8 @@ namespace TCLauncher.Core.Services
                 var fallback = entries.FirstOrDefault(entry => (bool?)entry["loader"]?["stable"] == true) ?? entries[0];
                 var version = (string)fallback["loader"]?["version"];
                 if (string.IsNullOrWhiteSpace(version))
-                    throw new InvalidDataException("Fabric returned an invalid loader version for Minecraft " + minecraftVersion + ".");
+                    throw new InvalidDataException("Fabric returned an invalid loader version for Minecraft " +
+                                                   minecraftVersion + ".");
                 return version;
             }
         }

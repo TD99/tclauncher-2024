@@ -1,4 +1,5 @@
-﻿using TCLauncher.Core;
+﻿using System;
+using TCLauncher.Core;
 
 namespace TCLauncher.MVVM.ViewModel
 {
@@ -37,25 +38,13 @@ namespace TCLauncher.MVVM.ViewModel
 
             CurrentView = HomeViewModel;
 
-            HomeViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = HomeViewModel;
-            });
-            ServerListViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = ServerListViewModel;
-            });
-            SettingsViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = SettingsViewModel;
-            });
-            AccountListViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = AccountListViewModel;
-            });
+            HomeViewCommand = new RelayCommand(o => { CurrentView = HomeViewModel; });
+            ServerListViewCommand = new RelayCommand(o => { CurrentView = ServerListViewModel; });
+            SettingsViewCommand = new RelayCommand(o => { CurrentView = SettingsViewModel; });
+            AccountListViewCommand = new RelayCommand(o => { CurrentView = AccountListViewModel; });
         }
 
-        internal void SelectHomeProfile(System.Guid profileId)
+        internal void SelectHomeProfile(Guid profileId)
         {
             HomeViewModel.SelectProfile(profileId);
             CurrentView = HomeViewModel;

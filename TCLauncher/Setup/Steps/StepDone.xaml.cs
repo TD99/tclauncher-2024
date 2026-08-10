@@ -23,7 +23,8 @@ namespace TCLauncher.Setup.Steps
 
         private void SupportLinkButton_OnClick(object sender, RoutedEventArgs e)
         {
-            OpenEmail("support@tcraft.ch", "Support request: TCLauncher " + Assembly.GetExecutingAssembly().GetName().Version);
+            OpenEmail("support@tcraft.ch",
+                "Support request: TCLauncher " + Assembly.GetExecutingAssembly().GetName().Version);
         }
     }
 }

@@ -7,7 +7,9 @@ namespace TCLauncher.Core.Services
         private static readonly Regex[] Patterns =
         {
             new Regex("(?i)bearer\\s+[a-z0-9._~+/-]+=*", RegexOptions.Compiled),
-            new Regex("(?i)(access[_ -]?token|refresh[_ -]?token|authorization|client[_ -]?secret|password)(\\s*[:=]\\s*)([^\\s,;]+)", RegexOptions.Compiled),
+            new Regex(
+                "(?i)(access[_ -]?token|refresh[_ -]?token|authorization|client[_ -]?secret|password)(\\s*[:=]\\s*)([^\\s,;]+)",
+                RegexOptions.Compiled),
             new Regex("(?i)(code=|token=)[^&\\s]+", RegexOptions.Compiled)
         };
 
@@ -21,6 +23,7 @@ namespace TCLauncher.Core.Services
                         ? match.Groups[1].Value + match.Groups[2].Value + "[REDACTED]"
                         : "[REDACTED]");
             }
+
             return value;
         }
     }

@@ -1,7 +1,52 @@
-<UserControl x:Class="TCLauncher.MVVM.View.HealthSheet" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core="clr-namespace:TCLauncher.Core">
+<UserControl
+    x:Class="TCLauncher.MVVM.View.HealthSheet"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:TCLauncher.Core">
     <StackPanel>
-        <ItemsControl x:Name="Checks"><ItemsControl.ItemTemplate><DataTemplate><Border Margin="0,0,0,8" Padding="12" Background="#202B39" CornerRadius="8"><StackPanel><TextBlock FontWeight="SemiBold" Text="{Binding Name}"/><TextBlock Margin="0,4,0,0" Foreground="#B2B9CC" Text="{Binding Message}" TextWrapping="Wrap"/></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
-        <Border Margin="0,12,0,0" Padding="14" Background="#17202C" CornerRadius="9"><TextBlock x:Name="BundlePreview" Foreground="#AEB8C7" TextWrapping="Wrap"/></Border>
-        <StackPanel Margin="0,16,0,0" HorizontalAlignment="Right" Orientation="Horizontal"><Button Padding="14,8" Content="{core:Localize Key=manage_backups}" Click="Backups_Click"/><Button Margin="8,0,0,0" Padding="14,8" Content="{core:Localize Key=support_bundle}" Click="Support_Click"/></StackPanel>
+        <ItemsControl x:Name="Checks">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="12"
+                        Background="#202B39"
+                        CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Foreground="#B2B9CC"
+                                Text="{Binding Message}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border
+            Margin="0,12,0,0"
+            Padding="14"
+            Background="#17202C"
+            CornerRadius="9">
+            <TextBlock
+                x:Name="BundlePreview"
+                Foreground="#AEB8C7"
+                TextWrapping="Wrap" />
+        </Border>
+        <StackPanel
+            Margin="0,16,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Padding="14,8"
+                Click="Backups_Click"
+                Content="{core:Localize Key=manage_backups}" />
+            <Button
+                Margin="8,0,0,0"
+                Padding="14,8"
+                Click="Support_Click"
+                Content="{core:Localize Key=support_bundle}" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

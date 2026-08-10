@@ -9,6 +9,7 @@ namespace TCLauncher.MVVM.Controls
     {
         public static readonly DependencyProperty UnicodeProperty = DependencyProperty.Register(
             nameof(Unicode), typeof(string), typeof(Icon), new PropertyMetadata(default(string)));
+
         public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
             nameof(Color), typeof(string), typeof(Icon), new PropertyMetadata(default(string)));
 

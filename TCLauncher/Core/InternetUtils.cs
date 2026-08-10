@@ -31,6 +31,7 @@ namespace TCLauncher.Core
                     // ignore the exception and try the next protocol
                 }
             }
+
             return false;
         }
 
@@ -139,7 +140,8 @@ namespace TCLauncher.Core
             }
             else
             {
-                MessageBox.Show(Languages.sandbox_security_message_blocked + " (" + url + ")", Languages.tclauncher_security);
+                MessageBox.Show(Languages.sandbox_security_message_blocked + " (" + url + ")",
+                    Languages.tclauncher_security);
             }
         }
 
@@ -165,11 +167,13 @@ namespace TCLauncher.Core
         /// <param name="bcc">The blind carbon copy recipient's email address.</param>
         public static void OpenEmail(string to, string subject = "", string body = "", string cc = "", string bcc = "")
         {
-            if (CheckIsValidEmail(to) && (string.IsNullOrEmpty(cc) || CheckIsValidEmail(cc)) && (string.IsNullOrEmpty(bcc) || CheckIsValidEmail(bcc)))
+            if (CheckIsValidEmail(to) && (string.IsNullOrEmpty(cc) || CheckIsValidEmail(cc)) &&
+                (string.IsNullOrEmpty(bcc) || CheckIsValidEmail(bcc)))
             {
                 try
                 {
-                    Process.Start($"mailto:{to}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(body)}&cc={Uri.EscapeDataString(cc)}&bcc={Uri.EscapeDataString(bcc)}");
+                    Process.Start(
+                        $"mailto:{to}?subject={Uri.EscapeDataString(subject)}&body={Uri.EscapeDataString(body)}&cc={Uri.EscapeDataString(cc)}&bcc={Uri.EscapeDataString(bcc)}");
                 }
                 catch (Exception ex)
                 {

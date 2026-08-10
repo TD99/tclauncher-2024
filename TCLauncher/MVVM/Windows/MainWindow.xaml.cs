@@ -1,4 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,10 +10,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
+using TCLauncher.MVVM.View;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
-using System.ComponentModel;
-using TCLauncher.MVVM.View;
 
 namespace TCLauncher.MVVM.Windows
 {
@@ -42,6 +45,7 @@ namespace TCLauncher.MVVM.Windows
             {
                 FontFamily = (FontFamily)FindResource("PixelifySans");
             }
+
             Closing += MainWindow_OnClosing;
         }
 
@@ -50,26 +54,33 @@ namespace TCLauncher.MVVM.Windows
             if (_allowClose || !AppServices.Operations.IsBusy) return;
             e.Cancel = true;
             if (AppServices.Overlays.Host.IsOpen) return;
-            _ = AppServices.Overlays.ShowSheetAsync(Languages.ResourceManager.GetString("operation_in_progress") ?? "Operation in progress", new OperationCloseSheet(cancel =>
-            {
-                _closeAfterOperation = true;
-                if (cancel) AppServices.Operations.RequestCancellation();
-                AppServices.Operations.PropertyChanged += Operations_OnPropertyChanged;
-            }, () => Environment.Exit(0)), false);
+            _ = AppServices.Overlays.ShowSheetAsync(
+                Languages.ResourceManager.GetString("operation_in_progress") ?? "Operation in progress",
+                new OperationCloseSheet(cancel =>
+                {
+                    _closeAfterOperation = true;
+                    if (cancel) AppServices.Operations.RequestCancellation();
+                    AppServices.Operations.PropertyChanged += Operations_OnPropertyChanged;
+                }, () => Environment.Exit(0)), false);
         }
 
         private void Operations_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!_closeAfterOperation || e.PropertyName != nameof(IOperationCoordinator.IsBusy) || AppServices.Operations.IsBusy) return;
+            if (!_closeAfterOperation || e.PropertyName != nameof(IOperationCoordinator.IsBusy) ||
+                AppServices.Operations.IsBusy) return;
             AppServices.Operations.PropertyChanged -= Operations_OnPropertyChanged;
-            Dispatcher.BeginInvoke(new Action(() => { _allowClose = true; Close(); }));
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _allowClose = true;
+                Close();
+            }));
         }
 
-        private static async System.Threading.Tasks.Task CheckForUpdatesSilently()
+        private static async Task CheckForUpdatesSilently()
         {
             var result = await AppServices.Updates.CheckAsync(
-                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
-                System.Threading.CancellationToken.None);
+                Assembly.GetExecutingAssembly().GetName().Version,
+                CancellationToken.None);
             if (result.IsSuccess && result.Value.IsUpdateAvailable)
                 AppServices.Log.Info("update.available", result.Value.Manifest.Version);
         }
@@ -96,8 +107,10 @@ namespace TCLauncher.MVVM.Windows
                 {
                     loadingGrid.Visibility = Visibility.Collapsed;
                 }
+
                 loadingAnim();
-            } else
+            }
+            else
             {
                 loadingGrid.Visibility = Visibility.Collapsed;
                 mainBorder.Visibility = Visibility.Visible;
@@ -114,7 +127,7 @@ namespace TCLauncher.MVVM.Windows
                 Duration = new Duration(TimeSpan.FromSeconds(1.5)),
                 EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseInOut }
             };
-            
+
             Storyboard pageStoryboard = new Storyboard();
             pageStoryboard.Children.Add(pageAnim);
 
@@ -128,7 +141,7 @@ namespace TCLauncher.MVVM.Windows
 
                 loadingGrid.Visibility = Visibility.Collapsed;
                 MainFrame.Children.Remove(loadingGrid);
-                
+
                 mainBorder.Visibility = Visibility.Visible;
                 mainBorder.Opacity = 100;
             };
@@ -213,14 +226,17 @@ namespace TCLauncher.MVVM.Windows
                 AccountManagerBtnName.Text = isOffline ? username + " • Offline" : username;
                 OfflineAccountGlyph.Visibility = isOffline ? Visibility.Visible : Visibility.Collapsed;
                 AccountFallbackPicture.Visibility = isOffline ? Visibility.Collapsed : Visibility.Visible;
-                AccountManagerBtnPicture.Source = isOffline ? null : new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
+                AccountManagerBtnPicture.Source = isOffline
+                    ? null
+                    : new BitmapImage(new Uri($"https://mc-heads.net/avatar/{username}", UriKind.Absolute));
             }
             else
             {
                 AccountManagerBtnName.Text = Languages.not_logged_button_text;
                 OfflineAccountGlyph.Visibility = Visibility.Collapsed;
                 AccountFallbackPicture.Visibility = Visibility.Visible;
-                AccountManagerBtnPicture.Source = new BitmapImage(new Uri("pack://application:,,,/Assets/Images/anonymous.png"));
+                AccountManagerBtnPicture.Source =
+                    new BitmapImage(new Uri("pack://application:,,,/Assets/Images/anonymous.png"));
             }
         }
 

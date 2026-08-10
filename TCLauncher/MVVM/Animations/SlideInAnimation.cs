@@ -32,7 +32,8 @@ namespace TCLauncher.MVVM.Animations
                 To = 0,
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
             };
-            Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath("RenderTransform.(TranslateTransform.Y)")); // Change from X to Y
+            Storyboard.SetTargetProperty(doubleAnimation,
+                new PropertyPath("RenderTransform.(TranslateTransform.Y)")); // Change from X to Y
             Storyboard.SetTarget(doubleAnimation, frameworkElement);
             var storyboard = new Storyboard();
             storyboard.Children.Add(doubleAnimation);

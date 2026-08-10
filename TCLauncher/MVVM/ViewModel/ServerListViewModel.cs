@@ -30,19 +30,97 @@ namespace TCLauncher.MVVM.ViewModel
         public ObservableCollection<Instance> ServerList
         {
             get => _serverList;
-            set { _serverList = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasResults)); }
+            set
+            {
+                _serverList = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasResults));
+            }
         }
+
         public bool HasResults => ServerList.Count > 0;
-        public bool IsLoading { get => _isLoading; set { _isLoading = value; OnPropertyChanged(); } }
-        public string LoadingText { get => _loadingText; set { _loadingText = value; OnPropertyChanged(); } }
-        public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(); } }
-        public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); ApplyFilters(); } }
-        public string LoaderFilter { get => _loaderFilter; set { _loaderFilter = value; OnPropertyChanged(); ApplyFilters(); } }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string LoadingText
+        {
+            get => _loadingText;
+            set
+            {
+                _loadingText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
+        public string LoaderFilter
+        {
+            get => _loaderFilter;
+            set
+            {
+                _loaderFilter = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
         public IReadOnlyList<string> LoaderFilters { get; } = new[] { "All", "Vanilla", "Fabric", "Forge", "NeoForge" };
-        public ObservableCollection<string> MinecraftVersionFilters { get; } = new ObservableCollection<string> { "All versions" };
+
+        public ObservableCollection<string> MinecraftVersionFilters { get; } =
+            new ObservableCollection<string> { "All versions" };
+
         public IReadOnlyList<string> AvailabilityFilters { get; } = new[] { "All games", "Installed", "Available" };
-        public string MinecraftVersionFilter { get => _minecraftVersionFilter; set { _minecraftVersionFilter = value; OnPropertyChanged(); ApplyFilters(); } }
-        public string AvailabilityFilter { get => _availabilityFilter; set { _availabilityFilter = value; OnPropertyChanged(); ApplyFilters(); } }
+
+        public string MinecraftVersionFilter
+        {
+            get => _minecraftVersionFilter;
+            set
+            {
+                _minecraftVersionFilter = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
+        public string AvailabilityFilter
+        {
+            get => _availabilityFilter;
+            set
+            {
+                _availabilityFilter = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
         public ICommand RefreshCommand { get; }
 
         public ServerListViewModel(bool loadAutomatically = true)
@@ -75,25 +153,33 @@ namespace TCLauncher.MVVM.ViewModel
                         {
                             LastServer = installed.LastServer,
                             Is_LocalSource = installed.Is_LocalSource,
-                            ThumbnailURL = File.Exists(installed.ThumbnailURL) ? installed.ThumbnailURL : remoteInstance.ThumbnailURL
+                            ThumbnailURL = File.Exists(installed.ThumbnailURL)
+                                ? installed.ThumbnailURL
+                                : remoteInstance.ThumbnailURL
                         };
                         _allInstances.Add(merged);
                         localById.Remove(remoteInstance.Guid);
                     }
                     else _allInstances.Add(remoteInstance);
                 }
+
                 _allInstances.AddRange(localById.Values);
 
-                var versions = _allInstances.Select(item => item.McVersion).Where(value => !string.IsNullOrWhiteSpace(value))
+                var versions = _allInstances.Select(item => item.McVersion)
+                    .Where(value => !string.IsNullOrWhiteSpace(value))
                     .Distinct(StringComparer.OrdinalIgnoreCase).OrderByDescending(value => value).ToList();
+
                 void UpdateVersions()
                 {
                     MinecraftVersionFilters.Clear();
                     MinecraftVersionFilters.Add("All versions");
                     foreach (var version in versions) MinecraftVersionFilters.Add(version);
-                    if (!MinecraftVersionFilters.Contains(MinecraftVersionFilter)) MinecraftVersionFilter = "All versions";
+                    if (!MinecraftVersionFilters.Contains(MinecraftVersionFilter))
+                        MinecraftVersionFilter = "All versions";
                 }
-                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess()) Application.Current.Dispatcher.Invoke((Action)UpdateVersions);
+
+                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+                    Application.Current.Dispatcher.Invoke((Action)UpdateVersions);
                 else UpdateVersions();
 
                 if (!result.IsSuccess) StatusText = result.Message;
@@ -140,6 +226,7 @@ namespace TCLauncher.MVVM.ViewModel
                     AppServices.Log.Warning("discovery.local_skipped", exception.Message);
                     continue;
                 }
+
                 if (installed == null || AppServices.InstanceConfigs.Validate(installed).Count > 0) continue;
                 installed.InstallationDir = directory;
                 installed.DataDir = Path.Combine(directory, "data");
@@ -147,6 +234,7 @@ namespace TCLauncher.MVVM.ViewModel
                 installed.Is_Installed = true;
                 result.Add(installed);
             }
+
             return result;
         }
 
@@ -163,20 +251,27 @@ namespace TCLauncher.MVVM.ViewModel
                     (item.Version ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
                     (item.Type ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
                     item.GetEffectiveLoader().Type.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    (item.GetEffectiveLoader().Version ?? string.Empty).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    (item.WorkingDirDesc?.Any(pair => pair.Key.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        pair.Value.Any(value => value.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)) ?? false));
+                    (item.GetEffectiveLoader().Version ?? string.Empty).IndexOf(query,
+                        StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    (item.WorkingDirDesc?.Any(pair =>
+                         pair.Key.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                         pair.Value.Any(value => value.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)) ??
+                     false));
             }
+
             if (!string.IsNullOrWhiteSpace(LoaderFilter) && LoaderFilter != "All")
                 filtered = filtered.Where(item => item.GetEffectiveLoader().Type.ToString() == LoaderFilter);
             if (!string.IsNullOrWhiteSpace(MinecraftVersionFilter) && MinecraftVersionFilter != "All versions")
-                filtered = filtered.Where(item => string.Equals(item.McVersion, MinecraftVersionFilter, StringComparison.OrdinalIgnoreCase));
+                filtered = filtered.Where(item =>
+                    string.Equals(item.McVersion, MinecraftVersionFilter, StringComparison.OrdinalIgnoreCase));
             if (AvailabilityFilter == "Installed") filtered = filtered.Where(item => item.Is_Installed);
             else if (AvailabilityFilter == "Available") filtered = filtered.Where(item => !item.Is_Installed);
 
-            var materialized = filtered.OrderByDescending(item => item.Is_Installed).ThenBy(item => item.DisplayName).ToList();
+            var materialized = filtered.OrderByDescending(item => item.Is_Installed).ThenBy(item => item.DisplayName)
+                .ToList();
             void Update() => ServerList = new ObservableCollection<Instance>(materialized);
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess()) Application.Current.Dispatcher.Invoke((Action)Update);
+            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+                Application.Current.Dispatcher.Invoke((Action)Update);
             else Update();
         }
 

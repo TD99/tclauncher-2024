@@ -59,6 +59,5 @@ namespace TCLauncher.MVVM.Windows
             if (_tcs.Task.IsCompleted) return;
             _tcs.TrySetResult(null);
         }
-        
     }
 }

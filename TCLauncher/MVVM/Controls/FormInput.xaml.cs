@@ -22,6 +22,7 @@ namespace TCLauncher.MVVM.Controls
             get => (string)GetValue(HintProperty);
             set => SetValue(HintProperty, value);
         }
+
         public static readonly DependencyProperty HintProperty =
             DependencyProperty.Register(nameof(Hint), typeof(string), typeof(FormInput));
 
@@ -30,6 +31,7 @@ namespace TCLauncher.MVVM.Controls
             get => (string)GetValue(CaptionProperty);
             set => SetValue(CaptionProperty, value);
         }
+
         public static readonly DependencyProperty CaptionProperty =
             DependencyProperty.Register(nameof(Caption), typeof(string), typeof(FormInput));
 
@@ -38,6 +40,7 @@ namespace TCLauncher.MVVM.Controls
             get => (string)GetValue(RequirementCaptionProperty);
             set => SetValue(RequirementCaptionProperty, value);
         }
+
         public static readonly DependencyProperty RequirementCaptionProperty =
             DependencyProperty.Register(nameof(RequirementCaption), typeof(string), typeof(FormInput));
 
@@ -46,8 +49,10 @@ namespace TCLauncher.MVVM.Controls
             get => (string)GetValue(RequirementCaptionColorProperty);
             set => SetValue(RequirementCaptionColorProperty, value);
         }
+
         public static readonly DependencyProperty RequirementCaptionColorProperty =
-            DependencyProperty.Register(nameof(RequirementCaptionColor), typeof(string), typeof(FormInput), new PropertyMetadata("#3b4149"));
+            DependencyProperty.Register(nameof(RequirementCaptionColor), typeof(string), typeof(FormInput),
+                new PropertyMetadata("#3b4149"));
 
 
         public bool IsPassword
@@ -55,6 +60,7 @@ namespace TCLauncher.MVVM.Controls
             get => (bool)GetValue(IsPasswordProperty);
             set => SetValue(IsPasswordProperty, value);
         }
+
         public static readonly DependencyProperty IsPasswordProperty =
             DependencyProperty.Register(nameof(IsPassword), typeof(bool), typeof(FormInput));
 
@@ -97,32 +103,40 @@ namespace TCLauncher.MVVM.Controls
             get => (Brush)GetValue(AccentColorProperty);
             set => SetValue(AccentColorProperty, value);
         }
+
         public static readonly DependencyProperty AccentColorProperty =
-            DependencyProperty.Register(nameof(AccentColor), typeof(Brush), typeof(FormInput), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(30, 144, 255))));
+            DependencyProperty.Register(nameof(AccentColor), typeof(Brush), typeof(FormInput),
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(30, 144, 255))));
 
         public Brush AccentHoverColor
         {
             get => (Brush)GetValue(AccentHoverColorProperty);
             set => SetValue(AccentHoverColorProperty, value);
         }
+
         public static readonly DependencyProperty AccentHoverColorProperty =
-            DependencyProperty.Register(nameof(AccentHoverColor), typeof(Brush), typeof(FormInput), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(100, 178, 255))));
+            DependencyProperty.Register(nameof(AccentHoverColor), typeof(Brush), typeof(FormInput),
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(100, 178, 255))));
 
         public Brush AccentBlurColor
         {
             get => (Brush)GetValue(AccentBlurColorProperty);
             set => SetValue(AccentBlurColorProperty, value);
         }
+
         public static readonly DependencyProperty AccentBlurColorProperty =
-            DependencyProperty.Register(nameof(AccentBlurColor), typeof(Brush), typeof(FormInput), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(101, 112, 124))));
+            DependencyProperty.Register(nameof(AccentBlurColor), typeof(Brush), typeof(FormInput),
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(101, 112, 124))));
 
         public Brush AccentContrastColor
         {
             get => (Brush)GetValue(AccentContrastColorProperty);
             set => SetValue(AccentContrastColorProperty, value);
         }
+
         public static readonly DependencyProperty AccentContrastColorProperty =
-            DependencyProperty.Register(nameof(AccentContrastColor), typeof(Brush), typeof(FormInput), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(30, 0, 0, 0))));
+            DependencyProperty.Register(nameof(AccentContrastColor), typeof(Brush), typeof(FormInput),
+                new PropertyMetadata(new SolidColorBrush(Color.FromArgb(30, 0, 0, 0))));
 
         public bool IsReadOnly
         {
@@ -141,6 +155,7 @@ namespace TCLauncher.MVVM.Controls
             get => (string)GetValue(PasswordProperty);
             set => SetValue(PasswordProperty, value);
         }
+
         public static readonly DependencyProperty PasswordProperty =
             DependencyProperty.Register(nameof(Password), typeof(string), typeof(FormInput));
 
@@ -149,6 +164,7 @@ namespace TCLauncher.MVVM.Controls
             get => (bool)GetValue(IsRequiredProperty);
             set => SetValue(IsRequiredProperty, value);
         }
+
         public static readonly DependencyProperty IsRequiredProperty =
             DependencyProperty.Register(nameof(IsRequired), typeof(bool), typeof(FormInput));
 
@@ -157,7 +173,8 @@ namespace TCLauncher.MVVM.Controls
             get => (bool)GetValue(IsComboBoxProperty);
             set => SetValue(IsComboBoxProperty, value);
         }
-        public static readonly DependencyProperty IsComboBoxProperty = 
+
+        public static readonly DependencyProperty IsComboBoxProperty =
             DependencyProperty.Register(nameof(IsComboBox), typeof(bool), typeof(FormInput));
 
         public IEnumerable ComboBoxItems
@@ -190,23 +207,24 @@ namespace TCLauncher.MVVM.Controls
         private void CaptionBlock_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
-            new Action(delegate () {
-                if ((bool)GetValue(IsPasswordProperty))
+                new Action(delegate()
                 {
-                    PasswordBox.Focus();
-                    Keyboard.Focus(PasswordBox);
-                }
-                else if ((bool)GetValue(IsComboBoxProperty))
-                {
-                    ComboBox.IsDropDownOpen = true;
-                    Keyboard.Focus(ComboBox);
-                }
-                else
-                {
-                    TextBox.Focus();
-                    Keyboard.Focus(TextBox);
-                }
-            }));
+                    if ((bool)GetValue(IsPasswordProperty))
+                    {
+                        PasswordBox.Focus();
+                        Keyboard.Focus(PasswordBox);
+                    }
+                    else if ((bool)GetValue(IsComboBoxProperty))
+                    {
+                        ComboBox.IsDropDownOpen = true;
+                        Keyboard.Focus(ComboBox);
+                    }
+                    else
+                    {
+                        TextBox.Focus();
+                        Keyboard.Focus(TextBox);
+                    }
+                }));
         }
     }
 }

@@ -10,6 +10,7 @@ namespace TCLauncher.MVVM.Windows
         private TaskbarItemInfo taskbarInfo;
         private int _percent;
         private string _text;
+
         public int percent
         {
             get => _percent;

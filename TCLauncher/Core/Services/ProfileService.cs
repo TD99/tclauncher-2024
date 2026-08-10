@@ -34,7 +34,8 @@ namespace TCLauncher.Core.Services
         private readonly IInstanceConfigService _configs;
         private readonly ILogService _log;
 
-        public ProfileService(string instancesRoot, IAtomicFileService atomic, IInstanceConfigService configs, ILogService log)
+        public ProfileService(string instancesRoot, IAtomicFileService atomic, IInstanceConfigService configs,
+            ILogService log)
         {
             _instancesRoot = instancesRoot;
             _atomic = atomic;
@@ -58,7 +59,8 @@ namespace TCLauncher.Core.Services
                     Version = "1.0.0",
                     Type = "Local profile",
                     McVersion = draft.MinecraftVersion?.Trim(),
-                    Loader = new LoaderConfiguration { Type = draft.LoaderType, Version = NullIfWhiteSpace(draft.LoaderVersion) },
+                    Loader = new LoaderConfiguration
+                        { Type = draft.LoaderType, Version = NullIfWhiteSpace(draft.LoaderVersion) },
                     UseIsolation = draft.Isolated,
                     MinimumRamMb = draft.MinimumRamMb,
                     MaximumRamMb = draft.MaximumRamMb,
@@ -74,7 +76,8 @@ namespace TCLauncher.Core.Services
 
                 var validation = _configs.Validate(instance);
                 if (validation.Count > 0)
-                    return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.InvalidConfiguration, string.Join(Environment.NewLine, validation), operationId: operationId);
+                    return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.InvalidConfiguration,
+                        string.Join(Environment.NewLine, validation), operationId: operationId);
 
                 Directory.CreateDirectory(Path.Combine(staging, "data"));
                 if (!string.IsNullOrWhiteSpace(draft.IconPath) && File.Exists(draft.IconPath))
@@ -85,7 +88,9 @@ namespace TCLauncher.Core.Services
                 }
 
                 var save = _configs.Save(instance, Path.Combine(staging, "config.json"));
-                if (!save.IsSuccess) return OperationResult<InstalledInstance>.Failure(save.ErrorCode, save.Message, save.Exception, operationId);
+                if (!save.IsSuccess)
+                    return OperationResult<InstalledInstance>.Failure(save.ErrorCode, save.Message, save.Exception,
+                        operationId);
                 _atomic.ReplaceDirectory(staging, destination, destination + ".rollback");
                 _log.Info("profile.created", destination, operationId);
                 return OperationResult<InstalledInstance>.Success(instance, operationId);
@@ -93,7 +98,8 @@ namespace TCLauncher.Core.Services
             catch (Exception exception)
             {
                 _log.Error("profile.create_failed", exception, operationId);
-                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected, "The profile could not be created.", exception, operationId);
+                return OperationResult<InstalledInstance>.Failure(LauncherErrorCode.Unexpected,
+                    "The profile could not be created.", exception, operationId);
             }
             finally
             {

@@ -6,17 +6,19 @@ using TCLauncher.Properties;
 using TCLauncher.Setup.Steps;
 
 namespace TCLauncher.Setup
-{   public partial class InstallerWelcomeWindow
+{
+    public partial class InstallerWelcomeWindow
     {
         private readonly Dictionary<int, UserControl> _steps = new Dictionary<int, UserControl>
         {
-            {0, new StepWelcome()},
-            {1, new StepLanguage()},
-            {2, new StepPath()},
-            {3, new StepDone()}
+            { 0, new StepWelcome() },
+            { 1, new StepLanguage() },
+            { 2, new StepPath() },
+            { 3, new StepDone() }
         };
 
         private int _currentStep;
+
         public int CurrentStep
         {
             get => _currentStep;
@@ -43,7 +45,9 @@ namespace TCLauncher.Setup
             NextBtn.Visibility = CurrentStep < _steps.Count - 1 ? Visibility.Visible : Visibility.Collapsed;
 
             // Special buttons
-            SkipBtn.Visibility = CurrentStep == 0 && CurrentStep != _steps.Count - 1 ? Visibility.Visible : Visibility.Collapsed;
+            SkipBtn.Visibility = CurrentStep == 0 && CurrentStep != _steps.Count - 1
+                ? Visibility.Visible
+                : Visibility.Collapsed;
             FinishBtn.Visibility = CurrentStep == _steps.Count - 1 ? Visibility.Visible : Visibility.Collapsed;
 
             FrameView.Content = _steps[CurrentStep];
@@ -73,7 +77,7 @@ namespace TCLauncher.Setup
         }
 
         private void TopDrag_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        { 
+        {
             DragMove();
         }
 

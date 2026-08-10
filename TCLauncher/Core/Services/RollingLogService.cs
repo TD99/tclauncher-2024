@@ -19,9 +19,14 @@ namespace TCLauncher.Core.Services
             DeleteExpiredLogs();
         }
 
-        public void Info(string eventName, string message, string operationId = null) => Write("information", eventName, message, null, operationId);
-        public void Warning(string eventName, string message, string operationId = null) => Write("warning", eventName, message, null, operationId);
-        public void Error(string eventName, Exception exception, string operationId = null) => Write("error", eventName, exception?.Message, exception, operationId);
+        public void Info(string eventName, string message, string operationId = null) =>
+            Write("information", eventName, message, null, operationId);
+
+        public void Warning(string eventName, string message, string operationId = null) =>
+            Write("warning", eventName, message, null, operationId);
+
+        public void Error(string eventName, Exception exception, string operationId = null) =>
+            Write("error", eventName, exception?.Message, exception, operationId);
 
         private void Write(string level, string eventName, string message, Exception exception, string operationId)
         {

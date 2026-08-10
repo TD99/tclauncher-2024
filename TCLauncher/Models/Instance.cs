@@ -25,6 +25,7 @@ namespace TCLauncher.Models
 
         [JsonProperty("loader", NullValueHandling = NullValueHandling.Ignore, Order = -10)]
         public LoaderConfiguration Loader { get; set; }
+
         public string WorkingDirZipURL { get; set; }
         public string PayloadSha256 { get; set; }
         public List<Patch> Patches { get; set; }
@@ -99,7 +100,11 @@ namespace TCLauncher.Models
             UseForge = Loader.Type == LoaderType.Forge;
         }
 
-        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable, string thumbnailUrl, string type, string mcVersion, bool? useFabric, bool? useForge, string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation, Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements, List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
+        public Instance(string name, string displayName, Guid guid, string version, bool upgradeable,
+            string thumbnailUrl, string type, string mcVersion, bool? useFabric, bool? useForge,
+            string workingDirZipUrl, List<Patch> patches, bool usePatch, bool? useIsolation,
+            Dictionary<string, List<string>> workingDirDesc, string appletUrl, Dictionary<string, object> requirements,
+            List<Server> servers, int? minimumRamMb, int? maximumRamMb, string[] jvmArguments)
         {
             Name = name;
             DisplayName = displayName;
@@ -147,10 +152,12 @@ namespace TCLauncher.Models
             var instance = (Instance)compare;
 
             // ReSharper disable once ReplaceWithSingleAssignment.True
-            var areThumbnailsSame = true; // IoUtils.TclFile.CompareImages(ThumbnailURL, instance.ThumbnailURL); // TODO: Fix -> too intensive
+            var areThumbnailsSame =
+                true; // IoUtils.TclFile.CompareImages(ThumbnailURL, instance.ThumbnailURL); // TODO: Fix -> too intensive
             if (!IoUtils.TclFile.DoesFileExistByUrlOrPath(ThumbnailURL)) areThumbnailsSame = false;
-            
-            var arePatchesSame = !(Patches == null && instance.Patches != null || Patches != null && instance.Patches == null);
+
+            var arePatchesSame = !(Patches == null && instance.Patches != null ||
+                                   Patches != null && instance.Patches == null);
             if (Patches != null && instance.Patches != null && Patches.Count == instance.Patches.Count)
             {
                 // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -163,11 +170,18 @@ namespace TCLauncher.Models
                 }
             }
 
-            var areWorkingDirDescSame = WorkingDirDesc == null && instance.WorkingDirDesc == null || WorkingDirDesc != null && instance.WorkingDirDesc != null && WorkingDirDesc.Keys.All(k => instance.WorkingDirDesc.ContainsKey(k) && instance.WorkingDirDesc[k].SequenceEqual(WorkingDirDesc[k]));
-            
-            var areRequirementsSame = Requirements == null && instance.Requirements == null || Requirements != null && instance.Requirements != null && Requirements.Keys.All(k => instance.Requirements.ContainsKey(k) && instance.Requirements[k].Equals(Requirements[k]));
-            
-            var areServersSame = !(Servers == null && instance.Servers != null || Servers != null && instance.Servers == null);
+            var areWorkingDirDescSame = WorkingDirDesc == null && instance.WorkingDirDesc == null ||
+                                        WorkingDirDesc != null && instance.WorkingDirDesc != null &&
+                                        WorkingDirDesc.Keys.All(k =>
+                                            instance.WorkingDirDesc.ContainsKey(k) && instance.WorkingDirDesc[k]
+                                                .SequenceEqual(WorkingDirDesc[k]));
+
+            var areRequirementsSame = Requirements == null && instance.Requirements == null || Requirements != null &&
+                instance.Requirements != null && Requirements.Keys.All(k =>
+                    instance.Requirements.ContainsKey(k) && instance.Requirements[k].Equals(Requirements[k]));
+
+            var areServersSame = !(Servers == null && instance.Servers != null ||
+                                   Servers != null && instance.Servers == null);
             if (Servers != null && instance.Servers != null && Servers.Count == instance.Servers.Count)
             {
                 // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -181,7 +195,8 @@ namespace TCLauncher.Models
                 }
             }
 
-            var areJVMArgumentsSame = JVMArguments == null && instance.JVMArguments == null || JVMArguments != null && instance.JVMArguments != null && JVMArguments.SequenceEqual(instance.JVMArguments);
+            var areJVMArgumentsSame = JVMArguments == null && instance.JVMArguments == null || JVMArguments != null &&
+                instance.JVMArguments != null && JVMArguments.SequenceEqual(instance.JVMArguments);
 
             return Name == instance.Name &&
                    DisplayName == instance.DisplayName &&

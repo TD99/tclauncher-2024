@@ -37,6 +37,7 @@ namespace TCLauncher.Core
                         }
                     }
                 }
+
                 return false;
             }
 
@@ -112,17 +113,17 @@ namespace TCLauncher.Core
             /// The path of the default TCL root directory
             /// </summary>
             public static readonly string DefaultRootPath = Path.Combine(FileSystem.RealAppDataPath, "TCL");
-            
+
             /// <summary>
             /// The path of the cache directory
             /// </summary>
             public static readonly string CachePath = Path.Combine(RootPath, "Cache");
-            
+
             /// <summary>
             /// The path of the instances directory
             /// </summary>
             public static readonly string InstancesPath = Path.Combine(RootPath, "Instances");
-            
+
             /// <summary>
             /// The path of the udata directory
             /// </summary>
@@ -198,7 +199,8 @@ namespace TCLauncher.Core
             /// <summary>
             /// Saves the specified instance's config file.
             /// </summary>
-            public static string SaveInstalledInstanceConfig(InstalledInstance instance, string configFileOverride = null)
+            public static string SaveInstalledInstanceConfig(InstalledInstance instance,
+                string configFileOverride = null)
             {
                 var path = configFileOverride ?? instance.ConfigFile;
                 var json = JsonConvert.SerializeObject(instance);
@@ -214,7 +216,7 @@ namespace TCLauncher.Core
         {
             public static string RealAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            public static string AppDataPath = 
+            public static string AppDataPath =
                 Settings.Default.VirtualAppDataPath == ""
                     ? RealAppDataPath
                     : Settings.Default.VirtualAppDataPath;

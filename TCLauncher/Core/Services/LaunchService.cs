@@ -40,7 +40,8 @@ namespace TCLauncher.Core.Services
             _activity = activity ?? throw new ArgumentNullException(nameof(activity));
         }
 
-        public async Task<OperationResult<GameLaunchHandle>> StartAsync(Instance instance, MSession session, Server server,
+        public async Task<OperationResult<GameLaunchHandle>> StartAsync(Instance instance, MSession session,
+            Server server,
             MinecraftLauncher launcher, MinecraftPath path, IProgress<OperationProgress> progress,
             CancellationToken cancellationToken)
         {
@@ -54,7 +55,8 @@ namespace TCLauncher.Core.Services
 
                 var version = await _modLoaders.EnsureInstalledAsync(instance, launcher, progress, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
-                progress?.Report(new OperationProgress { Stage = OperationStage.Validating, Message = "Preparing Minecraft" });
+                progress?.Report(new OperationProgress
+                    { Stage = OperationStage.Validating, Message = "Preparing Minecraft" });
 
                 var options = BuildOptions(instance, session, server, path);
                 var process = await launcher.CreateProcessAsync(version, options);
@@ -66,10 +68,14 @@ namespace TCLauncher.Core.Services
                 {
                     var duration = DateTime.UtcNow - startedAt;
                     _activity.RecordCompleted(activity.Id, duration, process.ExitCode);
-                    _log.Info("game.exited", $"profile={instance.Guid}; exitCode={process.ExitCode}; durationSeconds={(long)duration.TotalSeconds}", operationId);
+                    _log.Info("game.exited",
+                        $"profile={instance.Guid}; exitCode={process.ExitCode}; durationSeconds={(long)duration.TotalSeconds}",
+                        operationId);
                 };
                 process.Start();
-                _log.Info("game.started", $"profile={instance.Guid}; processId={process.Id}; version={version}; account={session.Username}; server={server?.Address ?? "local"}", operationId);
+                _log.Info("game.started",
+                    $"profile={instance.Guid}; processId={process.Id}; version={version}; account={session.Username}; server={server?.Address ?? "local"}",
+                    operationId);
 
                 return OperationResult<GameLaunchHandle>.Success(new GameLaunchHandle
                 {
@@ -83,16 +89,19 @@ namespace TCLauncher.Core.Services
             }
             catch (OperationCanceledException exception)
             {
-                return OperationResult<GameLaunchHandle>.Failure(LauncherErrorCode.Cancelled, "Launch cancelled.", exception, operationId);
+                return OperationResult<GameLaunchHandle>.Failure(LauncherErrorCode.Cancelled, "Launch cancelled.",
+                    exception, operationId);
             }
             catch (Exception exception)
             {
                 _log.Error("game.launch_failed", exception, operationId);
-                return OperationResult<GameLaunchHandle>.Failure(LauncherErrorCode.LaunchFailed, exception.Message, exception, operationId);
+                return OperationResult<GameLaunchHandle>.Failure(LauncherErrorCode.LaunchFailed, exception.Message,
+                    exception, operationId);
             }
         }
 
-        internal static MLaunchOption BuildOptions(Instance instance, MSession session, Server server, MinecraftPath path)
+        internal static MLaunchOption BuildOptions(Instance instance, MSession session, Server server,
+            MinecraftPath path)
         {
             var options = new MLaunchOption
             {

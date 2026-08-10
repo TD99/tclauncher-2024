@@ -14,6 +14,7 @@ namespace TCLauncher.MVVM.Converters
             {
                 boolValue = !boolValue;
             }
+
             return boolValue ? Visibility.Visible : Visibility.Collapsed;
         }
 

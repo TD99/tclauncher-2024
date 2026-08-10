@@ -13,7 +13,9 @@ namespace TCLauncher.MVVM.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var width = double.IsInfinity(availableSize.Width) ? MinimumCardWidth * MinimumColumns : availableSize.Width;
+            var width = double.IsInfinity(availableSize.Width)
+                ? MinimumCardWidth * MinimumColumns
+                : availableSize.Width;
             var columns = GetColumns(width);
             var itemWidth = Math.Max(MinimumCardWidth, (width - Gap * (columns - 1)) / columns);
             var totalHeight = 0d;
@@ -30,6 +32,7 @@ namespace TCLauncher.MVVM.Controls
                     rowHeight = 0;
                 }
             }
+
             return new Size(width, totalHeight);
         }
 
@@ -42,14 +45,17 @@ namespace TCLauncher.MVVM.Controls
             {
                 var rowHeight = 0d;
                 var rowEnd = Math.Min(rowStart + columns, InternalChildren.Count);
-                for (var index = rowStart; index < rowEnd; index++) rowHeight = Math.Max(rowHeight, InternalChildren[index].DesiredSize.Height);
+                for (var index = rowStart; index < rowEnd; index++)
+                    rowHeight = Math.Max(rowHeight, InternalChildren[index].DesiredSize.Height);
                 for (var index = rowStart; index < rowEnd; index++)
                 {
                     var column = index - rowStart;
                     InternalChildren[index].Arrange(new Rect(column * (itemWidth + Gap), y, itemWidth, rowHeight));
                 }
+
                 y += rowHeight + Gap;
             }
+
             return finalSize;
         }
 
