@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
+using TCLauncher.MVVM.Animations;
 using TCLauncher.MVVM.View;
 using TCLauncher.MVVM.ViewModel;
 using TCLauncher.Properties;
@@ -157,87 +158,18 @@ namespace TCLauncher.MVVM.Windows
             var incomingHost = _inactivePageHost;
             var direction = GetNavigationDirection(outgoingHost.Content, _pendingView);
 
-            ResetPageHost(outgoingHost);
-            ResetPageHost(incomingHost);
+            PageTransition.Reset(outgoingHost);
+            PageTransition.Reset(incomingHost);
             incomingHost.Content = _pendingView;
-            incomingHost.Opacity = 0;
-            Panel.SetZIndex(outgoingHost, 0);
-            Panel.SetZIndex(incomingHost, 1);
-
-            var departingTransform = CreatePageTransform(1, 0);
-            var arrivingTransform = CreatePageTransform(0.99, 12 * direction);
-            outgoingHost.RenderTransform = departingTransform;
-            incomingHost.RenderTransform = arrivingTransform;
-
-            var exitAnimation = new DoubleAnimation
-            {
-                From = 0,
-                To = -8 * direction,
-                Duration = TimeSpan.FromMilliseconds(180),
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-            };
-
-            outgoingHost.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation
-            {
-                From = 1,
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(160),
-                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-            });
-            ((TranslateTransform)departingTransform.Children[1]).BeginAnimation(
-                TranslateTransform.YProperty, exitAnimation);
-            ((ScaleTransform)departingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleXProperty,
-                new DoubleAnimation(1, 0.995, TimeSpan.FromMilliseconds(180))
-                {
-                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-                });
-            ((ScaleTransform)departingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleYProperty,
-                new DoubleAnimation(1, 0.995, TimeSpan.FromMilliseconds(180))
-                {
-                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
-                });
-
-            var opacityAnimation = new DoubleAnimation
-            {
-                From = 0,
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(35),
-                Duration = TimeSpan.FromMilliseconds(280),
-                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
-            };
-            opacityAnimation.Completed += (_, _) => CompletePageTransition(outgoingHost, incomingHost);
-            incomingHost.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
-            ((TranslateTransform)arrivingTransform.Children[1]).BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation
-            {
-                From = 12 * direction,
-                To = 0,
-                BeginTime = TimeSpan.FromMilliseconds(35),
-                Duration = TimeSpan.FromMilliseconds(280),
-                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
-            });
-            ((ScaleTransform)arrivingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation
-            {
-                From = 0.99,
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(35),
-                Duration = TimeSpan.FromMilliseconds(280),
-                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
-            });
-            ((ScaleTransform)arrivingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation
-            {
-                From = 0.99,
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(35),
-                Duration = TimeSpan.FromMilliseconds(280),
-                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
-            });
+            PageTransition.Begin(outgoingHost, incomingHost, direction,
+                () => CompletePageTransition(outgoingHost, incomingHost));
         }
 
         private void CompletePageTransition(ContentControl outgoingHost, ContentControl incomingHost)
         {
             outgoingHost.Content = null;
             outgoingHost.Visibility = Visibility.Collapsed;
-            ResetPageHost(incomingHost);
+            PageTransition.Reset(incomingHost);
 
             _activePageHost = incomingHost;
             _inactivePageHost = outgoingHost;
@@ -250,17 +182,9 @@ namespace TCLauncher.MVVM.Windows
         private void ShowPageImmediately(object page)
         {
             _activePageHost.Content = page;
-            ResetPageHost(_activePageHost);
+            PageTransition.Reset(_activePageHost);
             _inactivePageHost.Content = null;
-            _inactivePageHost.Visibility = Visibility.Collapsed;
-        }
-
-        private static void ResetPageHost(ContentControl host)
-        {
-            host.BeginAnimation(UIElement.OpacityProperty, null);
-            host.Opacity = 1;
-            host.RenderTransform = null;
-            host.Visibility = Visibility.Visible;
+            PageTransition.Reset(_inactivePageHost, false);
         }
 
         private static int GetNavigationDirection(object currentView, object nextView)
@@ -275,14 +199,6 @@ namespace TCLauncher.MVVM.Windows
             if (view is ServerListViewModel) return 1;
             if (view is SettingsViewModel) return 2;
             return 0;
-        }
-
-        private static TransformGroup CreatePageTransform(double scale, double verticalOffset)
-        {
-            var transform = new TransformGroup();
-            transform.Children.Add(new ScaleTransform(scale, scale));
-            transform.Children.Add(new TranslateTransform(0, verticalOffset));
-            return transform;
         }
 
         public void loadingAnim()

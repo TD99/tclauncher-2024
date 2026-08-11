@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
+using TCLauncher.MVVM.Animations;
 using TCLauncher.Properties;
 using Application = System.Windows.Application;
 using ComboBox = System.Windows.Controls.ComboBox;
@@ -25,12 +26,17 @@ namespace TCLauncher.MVVM.View
         private bool _initializing = true;
         private StackPanel[] _sections;
         private Border[] _cards;
+        private StackPanel _activeSection;
+        private StackPanel _pendingSection;
+        private bool _sectionTransitionQueued;
+        private bool _sectionTransitioning;
 
         public SettingsView()
         {
             InitializeComponent();
             _sections = new[]
                 { GeneralSection, MinecraftSection, StorageSection, ServicesSection, DiagnosticsSection, AboutSection };
+            _activeSection = GeneralSection;
             _cards = new[]
             {
                 StartupCard, LanguageCard, AppearanceCard, JavaCard, MultiCard, SandboxCard, PathCard, MirrorCard,
@@ -110,8 +116,66 @@ namespace TCLauncher.MVVM.View
         private void SectionList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(SectionList.SelectedItem is ListBoxItem selected)) return;
+
+            var selectedSection = _sections.FirstOrDefault(section => Equals(section.Tag, selected.Tag));
+            if (selectedSection == null) return;
+
+            if (_initializing)
+            {
+                _activeSection = selectedSection;
+                foreach (var section in _sections)
+                    section.Visibility = ReferenceEquals(section, selectedSection)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                return;
+            }
+
+            _pendingSection = selectedSection;
+            if (_sectionTransitionQueued || _sectionTransitioning) return;
+
+            _sectionTransitionQueued = true;
+            Dispatcher.BeginInvoke(StartSectionTransition, DispatcherPriority.DataBind);
+        }
+
+        private void StartSectionTransition()
+        {
+            _sectionTransitionQueued = false;
+            if (_pendingSection == null || ReferenceEquals(_activeSection, _pendingSection)) return;
+
+            var outgoingSection = _activeSection;
+            var incomingSection = _pendingSection;
+            var direction = Array.IndexOf(_sections, incomingSection) > Array.IndexOf(_sections, outgoingSection)
+                ? 1
+                : -1;
+
+            if (!SystemParameters.ClientAreaAnimation)
+            {
+                CompleteSectionTransition(outgoingSection, incomingSection);
+                return;
+            }
+
+            _sectionTransitioning = true;
             foreach (var section in _sections)
-                section.Visibility = Equals(section.Tag, selected.Tag) ? Visibility.Visible : Visibility.Collapsed;
+                if (!ReferenceEquals(section, outgoingSection) && !ReferenceEquals(section, incomingSection))
+                    section.Visibility = Visibility.Collapsed;
+
+            outgoingSection.RenderTransformOrigin = new Point(0.5, 0.02);
+            incomingSection.RenderTransformOrigin = new Point(0.5, 0.02);
+            PageTransition.Reset(outgoingSection);
+            PageTransition.Reset(incomingSection);
+            PageTransition.Begin(outgoingSection, incomingSection, direction,
+                () => CompleteSectionTransition(outgoingSection, incomingSection));
+        }
+
+        private void CompleteSectionTransition(StackPanel outgoingSection, StackPanel incomingSection)
+        {
+            outgoingSection.Visibility = Visibility.Collapsed;
+            PageTransition.Reset(incomingSection);
+            _activeSection = incomingSection;
+            _sectionTransitioning = false;
+
+            if (_pendingSection != null && !ReferenceEquals(_activeSection, _pendingSection))
+                StartSectionTransition();
         }
 
         private void Behaviour_SelectionChanged(object sender, SelectionChangedEventArgs e)

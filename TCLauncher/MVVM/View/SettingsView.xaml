@@ -23,6 +23,12 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
+        <Style x:Key="SettingsSectionHeading" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,0,14" />
+            <Setter Property="FontFamily" Value="{StaticResource PixelifySans}" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
         <Style x:Key="SettingHelp" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,4,0,10" />
             <Setter Property="Foreground" Value="#AEB8C7" />
@@ -104,11 +110,7 @@
             VerticalScrollBarVisibility="Auto">
             <Grid Margin="0,0,10,0">
                 <StackPanel x:Name="GeneralSection" Tag="General">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_general}" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="{core:Localize Key=settings_general}" />
                     <Border
                         x:Name="StartupCard"
                         Style="{StaticResource SettingCard}"
@@ -189,11 +191,7 @@
                     x:Name="MinecraftSection"
                     Tag="Minecraft"
                     Visibility="Collapsed">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_minecraft}" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="{core:Localize Key=settings_minecraft}" />
                     <Border
                         x:Name="JavaCard"
                         Style="{StaticResource SettingCard}"
@@ -247,11 +245,7 @@
                     x:Name="StorageSection"
                     Tag="Storage"
                     Visibility="Collapsed">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_storage}" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="{core:Localize Key=settings_storage}" />
                     <Border
                         x:Name="PathCard"
                         Style="{StaticResource SettingCard}"
@@ -318,11 +312,7 @@
                     x:Name="ServicesSection"
                     Tag="Services"
                     Visibility="Collapsed">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="Services" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="Services" />
                     <Border
                         x:Name="MirrorCard"
                         Style="{StaticResource SettingCard}"
@@ -339,11 +329,7 @@
                     x:Name="DiagnosticsSection"
                     Tag="Diagnostics"
                     Visibility="Collapsed">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="Diagnostics" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="Diagnostics" />
                     <Border
                         x:Name="DiagnosticsCard"
                         Style="{StaticResource SettingCard}"
@@ -370,11 +356,7 @@
                     x:Name="AboutSection"
                     Tag="About"
                     Visibility="Collapsed">
-                    <TextBlock
-                        Margin="0,0,0,14"
-                        FontSize="25"
-                        FontWeight="SemiBold"
-                        Text="{core:Localize Key=settings_about}" />
+                    <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="{core:Localize Key=settings_about}" />
                     <Border
                         x:Name="AboutCard"
                         Style="{StaticResource SettingCard}"
