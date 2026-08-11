@@ -280,7 +280,7 @@ namespace TCLauncher.MVVM.View
 
         private async void updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            updateBtn.IsEnabled = false;
+            updateBtn.IsLoading = true;
             UpdateStatus.Text = "Checking…";
             try
             {
@@ -328,7 +328,7 @@ namespace TCLauncher.MVVM.View
             }
             finally
             {
-                updateBtn.IsEnabled = true;
+                updateBtn.IsLoading = false;
             }
         }
 
