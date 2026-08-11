@@ -391,22 +391,6 @@
                                 Click="updateBtn_Click"
                                 Content="{core:Localize Key=search_for_updates_text}"
                                 Style="{StaticResource LoadingButton}" />
-                            <TextBlock
-                                x:Name="UpdateStatus"
-                                Margin="0,8,0,0"
-                                Foreground="#AEB8C7"
-                                TextWrapping="Wrap">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
                         </StackPanel>
                     </Border>
                 </StackPanel>

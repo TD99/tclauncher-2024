@@ -35,6 +35,10 @@ namespace TCLauncher.MVVM.Controls
             DependencyProperty.Register(nameof(ShadowColor), typeof(Brush), typeof(ScrollShadowLayout),
                 new PropertyMetadata(new SolidColorBrush(Color.FromArgb(185, 21, 29, 40)), OnVisualPropertyChanged));
 
+        public static readonly DependencyProperty ShadowsEnabledProperty =
+            DependencyProperty.Register(nameof(ShadowsEnabled), typeof(bool), typeof(ScrollShadowLayout),
+                new PropertyMetadata(true, OnVisualPropertyChanged));
+
         public object ScrollContent
         {
             get => GetValue(ScrollContentProperty);
@@ -57,6 +61,12 @@ namespace TCLauncher.MVVM.Controls
         {
             get => (Brush)GetValue(ShadowColorProperty);
             set => SetValue(ShadowColorProperty, value);
+        }
+
+        public bool ShadowsEnabled
+        {
+            get => (bool)GetValue(ShadowsEnabledProperty);
+            set => SetValue(ShadowsEnabledProperty, value);
         }
 
         public ScrollViewer ScrollViewer => _scrollViewer;
@@ -114,6 +124,12 @@ namespace TCLauncher.MVVM.Controls
         private void UpdateShadows()
         {
             if (!IsLoaded || _scrollViewer == null) return;
+            if (!ShadowsEnabled)
+            {
+                HideAllShadows();
+                return;
+            }
+
             _scrollViewer.Resources[SystemColors.ControlBrushKey] =
                 new SolidColorBrush(Color.FromRgb(0x20, 0x2A, 0x38));
             var showVerticalShadows = Orientation == ScrollShadowOrientation.Vertical ||

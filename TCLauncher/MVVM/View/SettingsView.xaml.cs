@@ -345,26 +345,25 @@ namespace TCLauncher.MVVM.View
         private async void updateBtn_Click(object sender, RoutedEventArgs e)
         {
             updateBtn.IsLoading = true;
-            UpdateStatus.Text = "Checking…";
             try
             {
                 var check = await AppServices.Updates.CheckAsync(Assembly.GetExecutingAssembly().GetName().Version,
                     CancellationToken.None);
                 if (!check.IsSuccess)
                 {
-                    UpdateStatus.Text = check.Message;
+                    ShowUpdateNotification("Update check failed", check.Message, ToastTone.Error);
                     return;
                 }
 
                 if (!check.Value.IsUpdateAvailable)
                 {
-                    UpdateStatus.Text = "TCLauncher is up to date.";
+                    ShowUpdateNotification("Launcher is up to date", "No update is available.", ToastTone.Success);
                     return;
                 }
 
                 if (!check.Value.IsCompatible)
                 {
-                    UpdateStatus.Text = check.Value.CompatibilityMessage;
+                    ShowUpdateNotification("Update unavailable", check.Value.CompatibilityMessage, ToastTone.Warning);
                     return;
                 }
 
@@ -377,24 +376,27 @@ namespace TCLauncher.MVVM.View
                     await AppServices.Updates.DownloadAndVerifyAsync(manifest, staging, CancellationToken.None);
                 if (!download.IsSuccess)
                 {
-                    UpdateStatus.Text = download.Message;
+                    ShowUpdateNotification("Update download failed", download.Message, ToastTone.Error);
                     return;
                 }
 
                 Process.Start(new ProcessStartInfo("msiexec.exe", "/i \"" + download.Value + "\"")
                     { UseShellExecute = true });
-                UpdateStatus.Text = "Verified installer opened.";
+                ShowUpdateNotification("Update ready", "The verified installer has been opened.", ToastTone.Success);
             }
             catch (Exception exception)
             {
                 AppServices.Log.Error("settings.update_failed", exception);
-                UpdateStatus.Text = exception.Message;
+                ShowUpdateNotification("Update failed", exception.Message, ToastTone.Error);
             }
             finally
             {
                 updateBtn.IsLoading = false;
             }
         }
+
+        private static void ShowUpdateNotification(string title, string message, ToastTone tone) =>
+            AppServices.Overlays.ShowToast(title, message, tone);
 
         private async void SupportBundle_Click(object sender, RoutedEventArgs e)
         {
