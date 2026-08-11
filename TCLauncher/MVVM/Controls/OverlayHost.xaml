@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="clr-namespace:TCLauncher.Core.Services"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls"
     Focusable="False"
     IsTabStop="False">
     <UserControl.Resources>
@@ -10,74 +11,202 @@
     </UserControl.Resources>
     <Grid x:Name="Root" Focusable="False">
         <StackPanel
-            Margin="0,62,20,0"
+            x:Name="ToastPanel"
+            Margin="0,20,20,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Panel.ZIndex="40">
-            <Border
-                x:Name="ActivityTray"
-                Width="360"
-                MinHeight="56"
-                Padding="14,10"
-                Background="#F02A3442"
-                CornerRadius="12"
-                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel>
-                        <TextBlock FontWeight="SemiBold" Text="{Binding Active.Title}" />
-                        <TextBlock
-                            Margin="0,2,0,7"
-                            Foreground="#B2B9CC"
-                            Text="{Binding Active.Message}"
-                            TextTrimming="CharacterEllipsis" />
-                        <ProgressBar
-                            Height="3"
-                            Maximum="100"
-                            Value="{Binding Active.Percent, Mode=OneWay}" />
-                    </StackPanel>
-                    <Button
-                        Grid.Column="1"
-                        Margin="12,0,0,0"
-                        Padding="10,5"
-                        Click="CancelOperation_OnClick"
-                        ToolTip="Click again or Shift+click to force a cancellation request">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
-                                <Setter Property="Content" Value="Cancel" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Active.IsCancelling}" Value="True">
-                                        <Setter Property="Content" Value="Force cancel" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </Grid>
-            </Border>
-
-            <ItemsControl
+            <Grid
+                x:Name="ToastViewport"
                 Margin="0,8,0,0"
-                IsTabStop="False"
-                ItemsSource="{Binding Toasts}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type core:OverlayToast}">
+                MaxHeight="600"
+                MouseEnter="ToastViewport_OnMouseEnter"
+                MouseLeftButtonDown="ToastViewport_OnMouseLeftButtonDown"
+                MouseLeave="ToastViewport_OnMouseLeave"
+                VerticalAlignment="Top"
+                ClipToBounds="False">
+                <ItemsControl
+                    x:Name="StackPreview"
+                    Width="340"
+                    Height="116"
+                    HorizontalAlignment="Left"
+                    IsHitTestVisible="False"
+                    ItemsSource="{Binding StackPreviewItems}"
+                    Panel.ZIndex="0"
+                    RenderTransformOrigin="0.5,0"
+                    Visibility="Collapsed">
+                    <ItemsControl.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                            <TranslateTransform X="0" Y="0" />
+                        </TransformGroup>
+                    </ItemsControl.RenderTransform>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Offset}" />
+                            <Setter Property="HorizontalAlignment" Value="Left" />
+                            <Setter Property="VerticalAlignment" Value="Top" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type core:ToastStackPreview}">
+                            <Border
+                                Width="{Binding Width}"
+                                Height="66"
+                                Padding="14,10"
+                                Background="#E2222D3B"
+                                BorderBrush="#43546A"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                RenderTransformOrigin="0.5,0"
+                                Opacity="{Binding Opacity}">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                                </Border.RenderTransform>
+                                <StackPanel>
+                                    <TextBlock
+                                        Foreground="#E4EAF2"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Toast.Title}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock
+                                        Margin="0,3,0,0"
+                                        Foreground="#AEB8C7"
+                                        Text="{Binding Toast.Message}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <controls:ScrollShadowLayout
+                    x:Name="ToastScrollShadow"
+                    Orientation="Vertical"
+                    Panel.ZIndex="1"
+                    RenderTransformOrigin="0.5,0"
+                    ShadowColor="#B8151D28"
+                    ShadowSize="12">
+                    <controls:ScrollShadowLayout.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </TransformGroup>
+                    </controls:ScrollShadowLayout.RenderTransform>
+                    <controls:ScrollShadowLayout.ScrollContent>
+                <ScrollViewer
+                    HorizontalScrollBarVisibility="Disabled"
+                    ClipToBounds="False"
+                    VerticalScrollBarVisibility="Auto">
+                <ItemsControl IsTabStop="False" ItemsSource="{Binding ToastItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type core:OverlayToast}">
+                        <Grid Margin="0,0,0,8">
                         <Border
+                            Loaded="ToastBorder_OnLoaded"
+                            MouseLeftButtonDown="ToastBorder_OnMouseLeftButtonDown"
                             Width="340"
-                            Margin="0,0,0,8"
+                            Margin="0,4,0,4"
                             Padding="14"
+                            HorizontalAlignment="Left"
                             Background="#F02A3442"
-                            CornerRadius="10">
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
+                                    <TranslateTransform Y="0" />
+                                </TransformGroup>
+                            </Border.RenderTransform>
                             <StackPanel>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                                <Grid>
+                                    <TextBlock
+                                        Margin="0,0,28,0"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Title}" />
+                                    <Button
+                                        Width="22"
+                                        Height="22"
+                                        Padding="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Command="{Binding DismissCommand}"
+                                        Content="×">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="BorderBrush" Value="Transparent" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Cursor" Value="Hand" />
+                                                <Setter Property="Foreground" Value="#AEB8C7" />
+                                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <ContentPresenter
+                                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CanDismiss}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
                                 <TextBlock
                                     Margin="0,3,0,0"
                                     Foreground="#D5DAE3"
                                     Text="{Binding Message}"
                                     TextWrapping="Wrap" />
+                                <ProgressBar
+                                    Height="3"
+                                    Margin="0,10,0,0"
+                                    Maximum="100"
+                                    Value="{Binding ProgressPercent}">
+                                    <ProgressBar.Style>
+                                        <Style TargetType="ProgressBar">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsInProgress}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ProgressBar.Style>
+                                </ProgressBar>
+                                <Button
+                                    MinWidth="0"
+                                    Margin="0,9,0,0"
+                                    Padding="10,5"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding CancelCommand}"
+                                    Content="Cancel">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource ModernButton}" TargetType="Button">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CanCancel}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                                 <Button
                                     MinWidth="0"
                                     Margin="0,9,0,0"
@@ -88,10 +217,31 @@
                                     Content="{Binding ActionText}"
                                     Visibility="{Binding HasAction, Converter={StaticResource BoolToVisibility}}" />
                             </StackPanel>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderBrush" Value="#5A6E87" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Tone}" Value="Success">
+                                            <Setter Property="BorderBrush" Value="#70D6A0" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Tone}" Value="Warning">
+                                            <Setter Property="BorderBrush" Value="#FFCF66" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Tone}" Value="Error">
+                                            <Setter Property="BorderBrush" Value="#FF7D87" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                         </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                        </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                </ScrollViewer>
+                    </controls:ScrollShadowLayout.ScrollContent>
+                </controls:ScrollShadowLayout>
+             </Grid>
         </StackPanel>
 
         <Grid

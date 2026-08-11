@@ -76,18 +76,24 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Opacity="1" />
-                            <TextBlock
+                            <Grid
                                 x:Name="loadingIndicator"
+                                Width="22"
+                                Height="22"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="18"
-                                Foreground="{TemplateBinding Foreground}"
                                 Opacity="0"
-                                Text="⟳">
-                                <TextBlock.RenderTransform>
-                                    <RotateTransform x:Name="loadingRotation" CenterX="9" CenterY="9" />
-                                </TextBlock.RenderTransform>
-                            </TextBlock>
+                                RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <RotateTransform x:Name="loadingRotation" />
+                                </Grid.RenderTransform>
+                                <TextBlock
+                                    FontSize="18"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Text="↻" />
+                            </Grid>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -109,7 +115,7 @@
                         </Trigger>
                         <Trigger Property="IsLoading" Value="True">
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
+                                <BeginStoryboard Name="LoadingStoryboard">
                                     <Storyboard>
                                         <DoubleAnimation
                                             Storyboard.TargetName="contentPresenter"
@@ -132,6 +138,7 @@
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="LoadingStoryboard" />
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation

@@ -380,10 +380,17 @@
         <Border
             Margin="0,19,21,0"
             HorizontalAlignment="Right"
+            Panel.ZIndex="200"
             VerticalAlignment="Top"
             Background="#DD1D2633"
             CornerRadius="5">
             <StackPanel Orientation="Horizontal">
+                <Border
+                    Width="18"
+                    Height="34"
+                    Background="Transparent"
+                    Cursor="SizeAll"
+                    MouseLeftButtonDown="TopDrag_OnMouseLeftButtonDown" />
                 <Button
                     x:Name="minimizeBtn"
                     Width="34"
@@ -414,6 +421,6 @@
         </Border>
 
         <!--  Shell-owned drawers, sheets, activity, and toasts.  -->
-        <controls:OverlayHost Panel.ZIndex="100" />
+        <controls:OverlayHost NotificationTopInset="68" Panel.ZIndex="100" />
     </Grid>
 </Window>

@@ -1,0 +1,51 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.NotificationsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <Grid MinHeight="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Notifications" />
+        <TextBlock Grid.Row="1" Margin="0,8,0,22" Foreground="#AEB8C7" Text="Toast states, persistent actions, and non-dismissible in-progress work." TextWrapping="Wrap" />
+        <WrapPanel Grid.Row="2" Margin="0,0,0,18" VerticalAlignment="Center">
+            <CheckBox
+                x:Name="PersistentToggle"
+                Margin="0,0,18,0"
+                Content="Persistent action notice"
+                Checked="PersistentToggle_OnChanged"
+                Unchecked="PersistentToggle_OnChanged" />
+            <CheckBox x:Name="DismissibleToggle" IsChecked="True" Content="Dismissible" />
+            <TextBlock Margin="18,0,6,0" VerticalAlignment="Center" Text="Duration (seconds)" />
+            <TextBox
+                x:Name="DurationText"
+                Width="108"
+                Padding="10,5"
+                Background="#2A3A4D"
+                Foreground="White"
+                HorizontalContentAlignment="Center"
+                Text="5" />
+        </WrapPanel>
+        <WrapPanel Grid.Row="3" Margin="0,0,0,22">
+            <Button Margin="0,0,10,10" Content="Success" Click="Success_OnClick" />
+            <Button Margin="0,0,10,10" Content="Warning" Click="Warning_OnClick" />
+            <Button Margin="0,0,10,10" Content="Error" Click="Error_OnClick" />
+            <Button Margin="0,0,10,10" Content="Restart required" Click="Restart_OnClick" />
+            <Button Margin="0,0,10,10" Content="Start in progress" Click="Progress_OnClick" />
+        </WrapPanel>
+        <Border Grid.Row="4" MinHeight="300" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="10">
+            <Grid>
+                <StackPanel Margin="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center" FontSize="18" FontWeight="SemiBold" Text="Notification playground" />
+                    <TextBlock Margin="0,8,0,0" Foreground="#AEB8C7" Text="Try multiple states and dismiss them from the toast close button." />
+                </StackPanel>
+                <controls:OverlayHost />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

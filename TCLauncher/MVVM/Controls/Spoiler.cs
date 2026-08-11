@@ -19,6 +19,7 @@ namespace TCLauncher.MVVM.Controls
             _button = new Button();
             _button.Click += SpoilerControl_Click;
             Content = _button;
+            UpdateButtonContent();
         }
 
         public string SpoilerText
@@ -33,18 +34,30 @@ namespace TCLauncher.MVVM.Controls
             set => SetValue(SpoilerContentProperty, value);
         }
 
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.Property == SpoilerTextProperty || e.Property == SpoilerContentProperty)
+                UpdateButtonContent();
+        }
+
+        private void UpdateButtonContent()
+        {
+            if (_button != null) _button.Content = _isContentVisible ? SpoilerContent : SpoilerText;
+        }
+
         private void SpoilerControl_Click(object sender, RoutedEventArgs e)
         {
             if (_isContentVisible)
             {
-                _button.Content = SpoilerText;
                 _isContentVisible = false;
             }
             else
             {
-                _button.Content = SpoilerContent;
                 _isContentVisible = true;
             }
+
+            UpdateButtonContent();
         }
     }
 }

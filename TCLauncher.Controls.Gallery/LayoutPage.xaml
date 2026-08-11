@@ -25,5 +25,29 @@
             SpoilerContent="This content is revealed on click."
             SpoilerText="Show details"
             HorizontalAlignment="Left" />
+        <TextBlock Margin="0,28,0,0" FontSize="18" FontWeight="SemiBold" Text="ScrollShadowLayout" />
+        <TextBlock Margin="0,8,0,12" Foreground="#AEB8C7" Text="Edge shadows appear only while more content is available in that direction." TextWrapping="Wrap" />
+        <Border Height="190" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="8">
+            <controls:ScrollShadowLayout
+                Orientation="All"
+                ShadowColor="#D9151D28"
+                ShadowSize="14">
+                <controls:ScrollShadowLayout.ScrollContent>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Width="980">
+                            <TextBlock Margin="18,16,18,8" FontWeight="SemiBold" Text="Scroll in every direction" />
+                            <TextBlock Margin="18,0,18,14" Foreground="#AEB8C7" Text="The shadow indicates when content continues beyond an edge." />
+                            <WrapPanel Margin="18,0" Orientation="Horizontal">
+                                <Border Width="210" Height="82" Margin="0,0,12,12" Padding="14" Background="#2A3A4D" CornerRadius="6"><TextBlock Text="Content card 1" /></Border>
+                                <Border Width="210" Height="82" Margin="0,0,12,12" Padding="14" Background="#2A3A4D" CornerRadius="6"><TextBlock Text="Content card 2" /></Border>
+                                <Border Width="210" Height="82" Margin="0,0,12,12" Padding="14" Background="#2A3A4D" CornerRadius="6"><TextBlock Text="Content card 3" /></Border>
+                                <Border Width="210" Height="82" Margin="0,0,12,12" Padding="14" Background="#2A3A4D" CornerRadius="6"><TextBlock Text="Content card 4" /></Border>
+                            </WrapPanel>
+                            <TextBlock Margin="18,4,18,20" Foreground="#AEB8C7" Text="More content below and to the right." />
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:ScrollShadowLayout.ScrollContent>
+            </controls:ScrollShadowLayout>
+        </Border>
     </StackPanel>
 </UserControl>
