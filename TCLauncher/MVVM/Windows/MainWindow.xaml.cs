@@ -4,10 +4,12 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using TCLauncher.Core;
 using TCLauncher.Core.Services;
 using TCLauncher.MVVM.View;
@@ -25,11 +27,20 @@ namespace TCLauncher.MVVM.Windows
         private readonly bool is_silent;
         private bool _allowClose;
         private bool _closeAfterOperation;
+        private object _pendingView;
+        private bool _transitionQueued;
+        private bool _isTransitioning;
+        private ContentControl _activePageHost;
+        private ContentControl _inactivePageHost;
 
         public MainWindow(bool silent = false)
         {
             InitializeComponent();
             vm = (MainViewModel)this.DataContext;
+            vm.PropertyChanged += ViewModel_OnPropertyChanged;
+            _activePageHost = CurrentPageHost;
+            _inactivePageHost = PreviousPageHost;
+            _activePageHost.Content = vm.CurrentView;
             is_silent = silent;
 
             //ResetBgMedia();
@@ -116,6 +127,162 @@ namespace TCLauncher.MVVM.Windows
                 mainBorder.Visibility = Visibility.Visible;
                 mainBorder.Opacity = 100;
             }
+        }
+
+        private void ViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(MainViewModel.CurrentView)) return;
+
+            _pendingView = vm.CurrentView;
+            if (_transitionQueued || _isTransitioning) return;
+
+            // Let the view model finish publishing its new page before starting the handoff.
+            _transitionQueued = true;
+            Dispatcher.BeginInvoke(StartPageTransition, DispatcherPriority.DataBind);
+        }
+
+        private void StartPageTransition()
+        {
+            _transitionQueued = false;
+            if (_pendingView == null || ReferenceEquals(_activePageHost.Content, _pendingView)) return;
+
+            if (!SystemParameters.ClientAreaAnimation)
+            {
+                ShowPageImmediately(_pendingView);
+                return;
+            }
+
+            _isTransitioning = true;
+            var outgoingHost = _activePageHost;
+            var incomingHost = _inactivePageHost;
+            var direction = GetNavigationDirection(outgoingHost.Content, _pendingView);
+
+            ResetPageHost(outgoingHost);
+            ResetPageHost(incomingHost);
+            incomingHost.Content = _pendingView;
+            incomingHost.Opacity = 0;
+            Panel.SetZIndex(outgoingHost, 0);
+            Panel.SetZIndex(incomingHost, 1);
+
+            var departingTransform = CreatePageTransform(1, 0);
+            var arrivingTransform = CreatePageTransform(0.99, 12 * direction);
+            outgoingHost.RenderTransform = departingTransform;
+            incomingHost.RenderTransform = arrivingTransform;
+
+            var exitAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = -8 * direction,
+                Duration = TimeSpan.FromMilliseconds(180),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            };
+
+            outgoingHost.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(160),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            });
+            ((TranslateTransform)departingTransform.Children[1]).BeginAnimation(
+                TranslateTransform.YProperty, exitAnimation);
+            ((ScaleTransform)departingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleXProperty,
+                new DoubleAnimation(1, 0.995, TimeSpan.FromMilliseconds(180))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                });
+            ((ScaleTransform)departingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleYProperty,
+                new DoubleAnimation(1, 0.995, TimeSpan.FromMilliseconds(180))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                });
+
+            var opacityAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                BeginTime = TimeSpan.FromMilliseconds(35),
+                Duration = TimeSpan.FromMilliseconds(280),
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            };
+            opacityAnimation.Completed += (_, _) => CompletePageTransition(outgoingHost, incomingHost);
+            incomingHost.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
+            ((TranslateTransform)arrivingTransform.Children[1]).BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation
+            {
+                From = 12 * direction,
+                To = 0,
+                BeginTime = TimeSpan.FromMilliseconds(35),
+                Duration = TimeSpan.FromMilliseconds(280),
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            });
+            ((ScaleTransform)arrivingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation
+            {
+                From = 0.99,
+                To = 1,
+                BeginTime = TimeSpan.FromMilliseconds(35),
+                Duration = TimeSpan.FromMilliseconds(280),
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            });
+            ((ScaleTransform)arrivingTransform.Children[0]).BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation
+            {
+                From = 0.99,
+                To = 1,
+                BeginTime = TimeSpan.FromMilliseconds(35),
+                Duration = TimeSpan.FromMilliseconds(280),
+                EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut }
+            });
+        }
+
+        private void CompletePageTransition(ContentControl outgoingHost, ContentControl incomingHost)
+        {
+            outgoingHost.Content = null;
+            outgoingHost.Visibility = Visibility.Collapsed;
+            ResetPageHost(incomingHost);
+
+            _activePageHost = incomingHost;
+            _inactivePageHost = outgoingHost;
+            _isTransitioning = false;
+
+            if (_pendingView != null && !ReferenceEquals(_activePageHost.Content, _pendingView))
+                StartPageTransition();
+        }
+
+        private void ShowPageImmediately(object page)
+        {
+            _activePageHost.Content = page;
+            ResetPageHost(_activePageHost);
+            _inactivePageHost.Content = null;
+            _inactivePageHost.Visibility = Visibility.Collapsed;
+        }
+
+        private static void ResetPageHost(ContentControl host)
+        {
+            host.BeginAnimation(UIElement.OpacityProperty, null);
+            host.Opacity = 1;
+            host.RenderTransform = null;
+            host.Visibility = Visibility.Visible;
+        }
+
+        private static int GetNavigationDirection(object currentView, object nextView)
+        {
+            return GetPageOrder(nextView) > GetPageOrder(currentView) ? 1 : -1;
+        }
+
+        private static int GetPageOrder(object view)
+        {
+            if (view is AccountListViewModel) return -1;
+            if (view is HomeViewModel) return 0;
+            if (view is ServerListViewModel) return 1;
+            if (view is SettingsViewModel) return 2;
+            return 0;
+        }
+
+        private static TransformGroup CreatePageTransform(double scale, double verticalOffset)
+        {
+            var transform = new TransformGroup();
+            transform.Children.Add(new ScaleTransform(scale, scale));
+            transform.Children.Add(new TranslateTransform(0, verticalOffset));
+            return transform;
         }
 
         public void loadingAnim()
