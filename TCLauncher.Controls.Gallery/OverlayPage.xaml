@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.OverlayPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <StackPanel MaxWidth="900">
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="OverlayHost" />
+        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="The launcher-level overlay surface, rendered in an isolated gallery frame." />
+        <Border Height="420" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="10">
+            <Grid>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center" FontSize="18" FontWeight="SemiBold" Text="OverlayHost is ready" />
+                    <TextBlock Margin="0,8,0,16" Foreground="#AEB8C7" Text="Open a sample overlay to inspect the modal layer." />
+                    <Button
+                        HorizontalAlignment="Center"
+                        Content="Show sample overlay"
+                        Click="ShowSampleOverlay_OnClick" />
+                </StackPanel>
+                <controls:OverlayHost />
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

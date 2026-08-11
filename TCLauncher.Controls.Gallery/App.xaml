@@ -1,0 +1,28 @@
+<Application
+    x:Class="TCLauncher.Controls.Gallery.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    ShutdownMode="OnMainWindowClose"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/MenuButtonTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ModernButtonTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/TextBoxTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/WindowControlButtonTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ModernToolTipTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ModernScrollbarTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ModernComboBoxTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ModernCheckBoxTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/ButtonComboBoxTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/SelectableLabel.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/GlobalTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style BasedOn="{StaticResource ModernButton}" TargetType="{x:Type Button}" />
+            <Style BasedOn="{StaticResource ModernTextBox}" TargetType="{x:Type TextBox}" />
+            <Style BasedOn="{StaticResource ModernCheckbox}" TargetType="{x:Type CheckBox}" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

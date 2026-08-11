@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net481</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>TCLauncher.Controls.Gallery</RootNamespace>
+        <AssemblyName>TCLauncher.Controls.Gallery</AssemblyName>
+        <StartupObject>TCLauncher.Controls.Gallery.App</StartupObject>
+        <PlatformTarget>x64</PlatformTarget>
+        <LangVersion>latest</LangVersion>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TCLauncher\TCLauncher.App.csproj" />
+    </ItemGroup>
+</Project>

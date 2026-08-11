@@ -1,0 +1,63 @@
+<Window
+    x:Class="TCLauncher.Controls.Gallery.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="TCLauncher Component Gallery"
+    Width="1180"
+    Height="760"
+    MinWidth="900"
+    MinHeight="600"
+    Background="#151D28"
+    Foreground="#F4F7FB">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="275" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Padding="22" Background="#1D2633">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock FontSize="24" FontWeight="SemiBold" Text="Component Gallery" />
+                    <TextBlock Margin="0,6,0,24" Foreground="#AEB8C7" Text="Interactive control stories" />
+                </StackPanel>
+                <ListBox
+                    x:Name="StoryList"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="#E7EDF5"
+                    ItemsSource="{Binding Stories}"
+                    SelectedValuePath="Title">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="10,9" CornerRadius="6">
+                                <TextBlock Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="0,0,0,4" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Foreground" Value="#E7EDF5" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#2A3A4D" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#253447" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer Grid.Column="1" Padding="34" HorizontalScrollBarVisibility="Disabled">
+            <ContentControl x:Name="PageHost" />
+        </ScrollViewer>
+    </Grid>
+</Window>

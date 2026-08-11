@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.FormInputPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <StackPanel MaxWidth="620">
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="FormInput" />
+        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Caption, hint, required state, and password presentation." />
+        <controls:FormInput
+            Caption="Display name"
+            Hint="Enter a profile name"
+            RequirementCaption="Required"
+            TextColor="White"
+            BackgroundColor="#2A3A4D"
+            Width="420"
+            HorizontalAlignment="Left" />
+        <controls:FormInput
+            Margin="0,20,0,0"
+            Caption="Password"
+            Hint="Enter a password"
+            IsPassword="True"
+            TextColor="White"
+            BackgroundColor="#2A3A4D"
+            Width="420"
+            HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

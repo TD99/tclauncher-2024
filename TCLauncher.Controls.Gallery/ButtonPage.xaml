@@ -1,0 +1,45 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.ButtonPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <StackPanel MaxWidth="760">
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Button" />
+        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Variants, sizes, and async loading behavior." />
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Variants" />
+        <WrapPanel Margin="0,12,0,28">
+            <Button Margin="0,0,12,0" Content="Primary" />
+            <Button
+                Margin="0,0,12,0"
+                Background="Transparent"
+                BorderBrush="#607996"
+                Content="Secondary" />
+            <Button Margin="0,0,12,0" IsEnabled="False" Content="Disabled" />
+        </WrapPanel>
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Sizes" />
+        <StackPanel Margin="0,12,0,28" HorizontalAlignment="Left">
+            <Button Width="100" MinHeight="30" Padding="10,4" Content="Small" />
+            <Button Width="150" Margin="0,8,0,0" Content="Medium" />
+            <Button Width="220" MinHeight="48" Margin="0,8,0,0" Padding="20,12" Content="Large" />
+        </StackPanel>
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="LoadingButton" />
+        <WrapPanel Margin="0,12,0,12" VerticalAlignment="Center">
+            <controls:LoadingButton
+                x:Name="LoadingButton"
+                Width="180"
+                Content="Save changes"
+                Style="{StaticResource LoadingButton}" />
+            <CheckBox
+                x:Name="LoadingToggle"
+                Margin="18,0,0,0"
+                VerticalAlignment="Center"
+                Content="IsLoading"
+                Checked="LoadingToggle_OnChanged"
+                Unchecked="LoadingToggle_OnChanged" />
+        </WrapPanel>
+        <TextBlock Foreground="#AEB8C7" Text="The button disables itself and cross-fades to a rotating reload indicator." TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

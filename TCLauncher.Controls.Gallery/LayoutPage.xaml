@@ -1,0 +1,29 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.LayoutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <StackPanel MaxWidth="820">
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Layout" />
+        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Responsive panels, separators, and progressive disclosure." />
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="AdaptiveCardPanel" />
+        <controls:AdaptiveCardPanel Margin="0,12,0,28" Gap="12" MinimumCardWidth="190" MaximumColumns="3">
+            <Border Padding="18" Background="#222D3B" CornerRadius="8">
+                <StackPanel><TextBlock FontWeight="SemiBold" Text="Card one" /><TextBlock Margin="0,8,0,0" Foreground="#AEB8C7" Text="Fluid width" /></StackPanel>
+            </Border>
+            <Border Padding="18" Background="#222D3B" CornerRadius="8">
+                <StackPanel><TextBlock FontWeight="SemiBold" Text="Card two" /><TextBlock Margin="0,8,0,0" Foreground="#AEB8C7" Text="Shared rhythm" /></StackPanel>
+            </Border>
+            <Border Padding="18" Background="#222D3B" CornerRadius="8">
+                <StackPanel><TextBlock FontWeight="SemiBold" Text="Card three" /><TextBlock Margin="0,8,0,0" Foreground="#AEB8C7" Text="Responsive grid" /></StackPanel>
+            </Border>
+        </controls:AdaptiveCardPanel>
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Spoiler" />
+        <controls:Spoiler
+            Margin="0,12,0,0"
+            Padding="0"
+            SpoilerContent="This content is revealed on click."
+            SpoilerText="Show details"
+            HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

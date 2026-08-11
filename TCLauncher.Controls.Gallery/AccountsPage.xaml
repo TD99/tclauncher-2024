@@ -1,0 +1,14 @@
+<UserControl
+    x:Class="TCLauncher.Controls.Gallery.AccountsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
+    <StackPanel MaxWidth="700">
+        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Account controls" />
+        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Account presentation states with gallery-safe sample data." />
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="AccountControl" />
+        <controls:AccountControl Margin="0,12,0,28" />
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="OfflineAccountControl" />
+        <ContentControl x:Name="OfflineAccountHost" Margin="0,12,0,0" />
+    </StackPanel>
+</UserControl>
