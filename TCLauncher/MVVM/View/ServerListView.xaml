@@ -49,7 +49,7 @@
                     Content="☰"
                     ToolTip="Games menu">
                     <Button.ContextMenu>
-                        <ContextMenu>
+                        <ContextMenu Style="{DynamicResource ModernContextMenu}">
                             <MenuItem Click="CreateProfile_OnClick" Header="{core:Localize Key=create_profile}" />
                             <MenuItem Click="ImportPackage_OnClick" Header="{core:Localize Key=package_import}" />
                         </ContextMenu>

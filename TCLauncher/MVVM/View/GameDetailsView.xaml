@@ -73,7 +73,7 @@
                 Content="•••"
                 Visibility="{Binding InstalledVisibility}">
                 <Button.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu Style="{DynamicResource ModernContextMenu}">
                         <MenuItem Click="Configure_OnClick" Header="{core:Localize Key=configure_action}" />
                         <MenuItem Click="Clone_OnClick" Header="{core:Localize Key=clone_action}" />
                         <MenuItem Click="Export_OnClick" Header="{core:Localize Key=export_package}" />

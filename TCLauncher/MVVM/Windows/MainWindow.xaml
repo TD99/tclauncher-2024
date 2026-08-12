@@ -136,7 +136,8 @@
                             Margin="0"
                             HorizontalOffset="0"
                             Placement="MousePoint"
-                            VerticalOffset="0">
+                            VerticalOffset="0"
+                            Style="{DynamicResource ModernContextMenu}">
                             <MenuItem Click="minimizeBtn_Click" Header="{x:Static p:Languages.minimize_menu_item_text}" />
                             <MenuItem
                                 Click="closeBtn_Click"
