@@ -335,6 +335,7 @@ namespace TCLauncher.MVVM.Controls
             {
                 if (args.PropertyName != nameof(OverlayToast.IsDismissing)) return;
                 AnimateToastOut(border, scale, translate);
+                AnimateCollapsedStackOut(toast);
             };
             _toastHandlers[border] = handler;
             toast.PropertyChanged += handler;
@@ -403,6 +404,19 @@ namespace TCLauncher.MVVM.Controls
             border.BeginAnimation(OpacityProperty, MotionAnimations.CreatePlayful(1, 0.28, 0, 220));
             scale.BeginAnimation(ScaleTransform.ScaleXProperty, MotionAnimations.CreatePlayful(1, 0.97, 0.985, 220));
             scale.BeginAnimation(ScaleTransform.ScaleYProperty, MotionAnimations.CreatePlayful(1, 0.97, 0.985, 220));
+        }
+
+        private void AnimateCollapsedStackOut(OverlayToast dismissingToast)
+        {
+            // The preview is a separate visual tree from the foreground toast. Fade it
+            // with the dismissing item so the background notification does not remain
+            // fully visible while the stack is transitioning to its next foreground.
+            if (CurrentHost.IsToastStackExpanded || !CurrentHost.HasHiddenToasts ||
+                StackPreview.Visibility != Visibility.Visible ||
+                !ReferenceEquals(CurrentHost.ForegroundToast, dismissingToast)) return;
+
+            StackPreview.BeginAnimation(OpacityProperty,
+                MotionAnimations.CreatePlayful(StackPreview.Opacity, 0.28, 0, 220));
         }
 
         private static TransformGroup GetWritableTransformGroup(FrameworkElement element)
