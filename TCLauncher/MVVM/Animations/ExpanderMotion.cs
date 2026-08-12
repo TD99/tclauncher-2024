@@ -83,7 +83,9 @@ namespace TCLauncher.MVVM.Animations
                 var targetHeight = Math.Max(0, content.DesiredSize.Height);
                 content.Height = currentHeight > 0 ? currentHeight : 0;
                 content.Opacity = currentHeight > 0 ? content.Opacity : 0;
-                var heightAnimation = MotionAnimations.CreatePlayful(content.Height, targetHeight * 1.015, targetHeight, 340);
+                // Keep only a very small settle so the panel does not visibly bump
+                // past its final height while expanding.
+                var heightAnimation = MotionAnimations.CreatePlayful(content.Height, targetHeight * 1.003, targetHeight, 340);
                 Complete(content, state, version, true, heightAnimation);
                 content.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
                 content.BeginAnimation(UIElement.OpacityProperty,
@@ -93,7 +95,7 @@ namespace TCLauncher.MVVM.Animations
             {
                 if (currentHeight <= 0) currentHeight = content.DesiredSize.Height;
                 content.Height = currentHeight;
-                var heightAnimation = MotionAnimations.CreatePlayful(currentHeight, currentHeight * 0.97, 0, 220);
+                var heightAnimation = MotionAnimations.CreatePlayful(currentHeight, currentHeight * 0.99, 0, 220);
                 Complete(content, state, version, false, heightAnimation);
                 content.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
                 content.BeginAnimation(UIElement.OpacityProperty,
