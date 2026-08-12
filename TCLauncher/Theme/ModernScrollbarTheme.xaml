@@ -116,11 +116,11 @@
     </Style>
 
     <Style TargetType="{x:Type Separator}">
-        <Setter Property="Margin" Value="8,5" />
+        <Setter Property="Margin" Value="8,8" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border Height="1" Background="#526176" SnapsToDevicePixels="True" />
+                    <Border Height="1" Background="#526176" Opacity="0.7" SnapsToDevicePixels="True" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

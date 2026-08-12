@@ -36,10 +36,43 @@
                 <view:AccountListView />
             </DataTemplate>
 
+            <!--
+                WPF creates editing menus for input controls independently of the
+                ContextMenu style. Assign this menu explicitly so those menus use
+                the same visual treatment as the rest of the application.
+            -->
+            <ContextMenu x:Key="TextEditingContextMenu" x:Shared="False" Style="{DynamicResource ModernContextMenu}">
+                <MenuItem
+                    Command="ApplicationCommands.Cut"
+                    CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                    Header="Cut" />
+                <MenuItem
+                    Command="ApplicationCommands.Copy"
+                    CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                    Header="Copy" />
+                <MenuItem
+                    Command="ApplicationCommands.Paste"
+                    CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                    Header="Paste" />
+                <Separator />
+                <MenuItem
+                    Command="ApplicationCommands.SelectAll"
+                    CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                    Header="Select All" />
+            </ContextMenu>
+
             <!--  Application controls use one consistent visual language by default.  -->
             <Style BasedOn="{StaticResource ModernButton}" TargetType="{x:Type Button}" />
             <Style BasedOn="{StaticResource ModernComboBox}" TargetType="{x:Type ComboBox}" />
-            <Style BasedOn="{StaticResource ModernTextBox}" TargetType="{x:Type TextBox}" />
+            <Style BasedOn="{StaticResource ModernTextBox}" TargetType="{x:Type TextBox}">
+                <Setter Property="ContextMenu" Value="{DynamicResource TextEditingContextMenu}" />
+            </Style>
+            <Style TargetType="{x:Type RichTextBox}">
+                <Setter Property="ContextMenu" Value="{DynamicResource TextEditingContextMenu}" />
+            </Style>
+            <Style TargetType="{x:Type PasswordBox}">
+                <Setter Property="ContextMenu" Value="{DynamicResource TextEditingContextMenu}" />
+            </Style>
             <Style BasedOn="{StaticResource ModernCheckbox}" TargetType="{x:Type CheckBox}" />
 
             <FontFamily x:Key="FaRegular">Assets/Fonts/#Font Awesome 6 Free Regular</FontFamily>

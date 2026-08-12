@@ -74,6 +74,7 @@
                             Focusable="True"
                             Foreground="White"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
+                            ContextMenu="{DynamicResource TextEditingContextMenu}"
                             Style="{x:Null}"
                             Template="{StaticResource ComboBoxTextBox}"
                             Visibility="Hidden" />
