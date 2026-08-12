@@ -4,7 +4,7 @@ using TCLauncher.Core.Services;
 
 namespace TCLauncher.Controls.Gallery
 {
-    [Story("Overlays")]
+    [Story("Overlays", Description = "Modal sheets, drawers, confirmations, and the isolated OverlayHost surface.")]
     public partial class OverlaysPage : UserControl
     {
         private readonly OverlayService _overlayService;

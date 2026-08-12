@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
     <StackPanel MaxWidth="820">
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Layout" />
-        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Responsive panels, separators, and progressive disclosure." />
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="AdaptiveCardPanel" />
         <controls:AdaptiveCardPanel Margin="0,12,0,28" Gap="12" MinimumCardWidth="190" MaximumColumns="3">
             <Border Padding="18" Background="#222D3B" CornerRadius="8">

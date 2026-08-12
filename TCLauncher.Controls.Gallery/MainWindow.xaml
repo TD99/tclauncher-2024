@@ -56,8 +56,14 @@
             </DockPanel>
         </Border>
 
-        <ScrollViewer Grid.Column="1" Padding="34" HorizontalScrollBarVisibility="Disabled">
-            <ContentControl x:Name="PageHost" />
+        <ScrollViewer x:Name="PageScrollViewer" Grid.Column="1" Padding="34" HorizontalScrollBarVisibility="Disabled">
+            <ContentControl x:Name="PageHost">
+                <TextBlock
+                    Margin="0,24,0,0"
+                    Foreground="#AEB8C7"
+                    Text="Select a component from the list to explore its story."
+                    TextWrapping="Wrap" />
+            </ContentControl>
         </ScrollViewer>
     </Grid>
 </Window>

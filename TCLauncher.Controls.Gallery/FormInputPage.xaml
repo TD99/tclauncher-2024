@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
     <StackPanel MaxWidth="620">
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="FormInput" />
-        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Caption, hint, required state, and password presentation." />
         <controls:FormInput
             Caption="Display name"
             Hint="Enter a profile name"

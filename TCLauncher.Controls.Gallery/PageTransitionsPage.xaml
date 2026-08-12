@@ -4,16 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Background="Transparent">
     <StackPanel>
-        <TextBlock
-            FontFamily="Segoe UI"
-            FontSize="30"
-            FontWeight="SemiBold"
-            Text="Page transitions" />
-        <TextBlock
-            Margin="0,8,0,22"
-            Foreground="#AEB8C7"
-            Text="Explore the shared directional crossfade used throughout the launcher." />
-
         <Border
             Margin="0,0,0,18"
             Padding="16"

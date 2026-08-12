@@ -3,27 +3,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
-    <Grid MinHeight="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Overlays" />
-        <TextBlock
-            Grid.Row="1"
-            Margin="0,8,0,22"
-            Foreground="#AEB8C7"
-            Text="Modal sheets, drawers, confirmations, and the isolated OverlayHost surface."
-            TextWrapping="Wrap" />
-        <WrapPanel Grid.Row="2" Margin="0,0,0,22">
+        <WrapPanel Grid.Row="0" Margin="0,0,0,22">
             <Button Margin="0,0,10,10" Content="Show drawer" Click="ShowDrawer_OnClick" />
             <Button Margin="0,0,10,10" Content="Show sheet" Click="ShowSheet_OnClick" />
             <Button Margin="0,0,10,10" Content="Show confirmation" Click="ShowConfirmation_OnClick" />
         </WrapPanel>
         <Border
-            Grid.Row="3"
+            Grid.Row="1"
             MinHeight="300"
             Background="#202A38"
             BorderBrush="#43546A"

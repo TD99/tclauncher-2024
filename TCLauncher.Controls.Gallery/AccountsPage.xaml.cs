@@ -5,7 +5,7 @@ using TCLauncher.MVVM.Controls;
 
 namespace TCLauncher.Controls.Gallery
 {
-    [Story("Accounts")]
+    [Story("Accounts", Description = "Account presentation states with gallery-safe sample data.")]
     public partial class AccountsPage : UserControl
     {
         public AccountsPage()

@@ -3,17 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
-    <Grid MinHeight="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Notifications" />
-        <TextBlock Grid.Row="1" Margin="0,8,0,22" Foreground="#AEB8C7" Text="Toast states, persistent actions, and non-dismissible in-progress work." TextWrapping="Wrap" />
-        <WrapPanel Grid.Row="2" Margin="0,0,0,18" VerticalAlignment="Center">
+        <WrapPanel Grid.Row="0" Margin="0,0,0,18" VerticalAlignment="Center">
             <CheckBox
                 x:Name="PersistentToggle"
                 Margin="0,0,18,0"
@@ -31,14 +27,14 @@
                 HorizontalContentAlignment="Center"
                 Text="5" />
         </WrapPanel>
-        <WrapPanel Grid.Row="3" Margin="0,0,0,22">
+        <WrapPanel Grid.Row="1" Margin="0,0,0,22">
             <Button Margin="0,0,10,10" Content="Success" Click="Success_OnClick" />
             <Button Margin="0,0,10,10" Content="Warning" Click="Warning_OnClick" />
             <Button Margin="0,0,10,10" Content="Error" Click="Error_OnClick" />
             <Button Margin="0,0,10,10" Content="Restart required" Click="Restart_OnClick" />
             <Button Margin="0,0,10,10" Content="Start in progress" Click="Progress_OnClick" />
         </WrapPanel>
-        <Border Grid.Row="4" MinHeight="300" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="10">
+        <Border Grid.Row="2" MinHeight="300" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="10">
             <Grid>
                 <StackPanel Margin="28" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock HorizontalAlignment="Center" FontSize="18" FontWeight="SemiBold" Text="Notification playground" />

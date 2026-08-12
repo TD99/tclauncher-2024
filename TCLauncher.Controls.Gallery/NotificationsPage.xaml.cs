@@ -8,7 +8,7 @@ using TCLauncher.Models;
 
 namespace TCLauncher.Controls.Gallery
 {
-    [Story("Notifications")]
+    [Story("Notifications", Description = "Toast states, persistent actions, and non-dismissible in-progress work.")]
     public partial class NotificationsPage : UserControl
     {
         public NotificationsPage() => InitializeComponent();

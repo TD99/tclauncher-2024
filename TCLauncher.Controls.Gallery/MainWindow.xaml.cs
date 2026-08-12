@@ -17,7 +17,12 @@ namespace TCLauncher.Controls.Gallery
 
         private void StoryList_OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (StoryList.SelectedItem is StoryDescriptor story) PageHost.Content = story.CreatePage();
+            if (StoryList.SelectedItem is StoryDescriptor story)
+            {
+                var borderless = story.Presentation == StoryPresentation.Borderless;
+                PageScrollViewer.Padding = borderless ? new Thickness(0) : new Thickness(34);
+                PageHost.Content = new StoryPresenter(story, story.CreatePage());
+            }
         }
     }
 }

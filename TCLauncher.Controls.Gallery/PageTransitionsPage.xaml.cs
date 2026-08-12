@@ -6,7 +6,7 @@ using TCLauncher.MVVM.Animations;
 
 namespace TCLauncher.Controls.Gallery
 {
-    [Story("Page Transitions")]
+    [Story("Page Transitions", Description = "Explore the shared directional crossfade used throughout the launcher.")]
     public partial class PageTransitionsPage : UserControl
     {
         private readonly string[] _pageTitles = { "Overview", "Activity", "Details" };

@@ -3,8 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel MaxWidth="820">
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Context Menu" />
-        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="A spacious menu surface with hover, separators, shortcuts, and submenus." />
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="Interactive example" />
         <Border Margin="0,12,0,0" Padding="28" Background="#202A38" BorderBrush="#43546A" BorderThickness="1" CornerRadius="8">
             <Button Width="190" HorizontalAlignment="Left" Content="Open context menu">

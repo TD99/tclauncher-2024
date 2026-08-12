@@ -6,11 +6,19 @@ using System.Windows.Controls;
 
 namespace TCLauncher.Controls.Gallery
 {
+    public enum StoryPresentation
+    {
+        Standard,
+        Borderless
+    }
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class StoryAttribute : Attribute
     {
         public string Component { get; }
         public string Variant { get; }
+        public string Description { get; set; }
+        public StoryPresentation Presentation { get; set; }
 
         public StoryAttribute(string component, string variant = null)
         {
@@ -25,6 +33,8 @@ namespace TCLauncher.Controls.Gallery
 
         public string Component { get; }
         public string Variant { get; }
+        public string Description { get; }
+        public StoryPresentation Presentation { get; }
         public string Title => string.IsNullOrWhiteSpace(Variant) ? Component : Component + " · " + Variant;
 
         public StoryDescriptor(Type pageType, StoryAttribute story)
@@ -32,6 +42,8 @@ namespace TCLauncher.Controls.Gallery
             _pageType = pageType;
             Component = story.Component;
             Variant = story.Variant;
+            Description = story.Description;
+            Presentation = story.Presentation;
         }
 
         public UserControl CreatePage() => (UserControl)Activator.CreateInstance(_pageType);

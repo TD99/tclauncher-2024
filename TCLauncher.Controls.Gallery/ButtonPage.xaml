@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:TCLauncher.MVVM.Controls;assembly=TCLauncher">
     <StackPanel MaxWidth="760">
-        <TextBlock FontSize="32" FontWeight="SemiBold" Text="Button" />
-        <TextBlock Margin="0,8,0,28" Foreground="#AEB8C7" Text="Variants, sizes, and async loading behavior." />
 
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="Variants" />
         <WrapPanel Margin="0,12,0,28">
