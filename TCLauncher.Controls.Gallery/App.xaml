@@ -21,6 +21,20 @@
                 <ResourceDictionary Source="pack://application:,,,/TCLauncher;component/Theme/GlobalTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <FontFamily x:Key="Fredoka">pack://application:,,,/TCLauncher;component/Assets/Fonts/#Inter</FontFamily>
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="FontFamily" Value="{StaticResource Inter}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="{StaticResource Inter}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+            <Style TargetType="{x:Type Window}">
+                <Setter Property="FontFamily" Value="{StaticResource Inter}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+
             <Style BasedOn="{StaticResource ModernButton}" TargetType="{x:Type Button}" />
             <Style BasedOn="{StaticResource ModernTextBox}" TargetType="{x:Type TextBox}" />
             <Style BasedOn="{StaticResource ModernCheckbox}" TargetType="{x:Type CheckBox}" />
