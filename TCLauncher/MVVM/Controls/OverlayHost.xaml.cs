@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TCLauncher.Core.Services;
+using TCLauncher.MVVM.Animations;
 
 namespace TCLauncher.MVVM.Controls
 {
@@ -218,11 +219,11 @@ namespace TCLauncher.MVVM.Controls
             scale.ScaleY = startScale;
 
             ToastScrollShadow.BeginAnimation(OpacityProperty,
-                CreateShortSoftAnimation(startOpacity, 1, expanded ? 260 : 210));
+                MotionAnimations.CreateSoft(startOpacity, 1, expanded ? 260 : 210));
             scale.BeginAnimation(ScaleTransform.ScaleXProperty,
-                CreateShortSoftAnimation(startScale, 1, expanded ? 300 : 230));
+                MotionAnimations.CreateSoft(startScale, 1, expanded ? 300 : 230));
             scale.BeginAnimation(ScaleTransform.ScaleYProperty,
-                CreateShortSoftAnimation(startScale, 1, expanded ? 300 : 230));
+                MotionAnimations.CreateSoft(startScale, 1, expanded ? 300 : 230));
         }
 
         private void UpdateStackPreviewVisibility(bool show)
@@ -240,24 +241,24 @@ namespace TCLauncher.MVVM.Controls
                 if (translate != null) translate.Y = 6;
 
                 StackPreview.BeginAnimation(OpacityProperty,
-                    CreatePlayfulAnimation(0, 0.82, 1, 300));
+                    MotionAnimations.CreatePlayful(0, 0.82, 1, 300));
                 scale?.BeginAnimation(ScaleTransform.ScaleXProperty,
-                    CreatePlayfulAnimation(0.985, 0.998, 1, 320));
+                    MotionAnimations.CreatePlayful(0.985, 0.998, 1, 320));
                 scale?.BeginAnimation(ScaleTransform.ScaleYProperty,
-                    CreatePlayfulAnimation(0.985, 0.998, 1, 320));
+                    MotionAnimations.CreatePlayful(0.985, 0.998, 1, 320));
                 translate?.BeginAnimation(TranslateTransform.YProperty,
-                    CreatePlayfulAnimation(6, 1.5, 0, 320));
+                    MotionAnimations.CreatePlayful(6, 1.5, 0, 320));
                 return;
             }
 
             StackPreview.BeginAnimation(OpacityProperty,
-                CreatePlayfulAnimation(1, 0.35, 0, 220));
+                MotionAnimations.CreatePlayful(1, 0.35, 0, 220));
             scale?.BeginAnimation(ScaleTransform.ScaleXProperty,
-                CreatePlayfulAnimation(scale?.ScaleX ?? 1, 0.99, 0.985, 220));
+                MotionAnimations.CreatePlayful(scale?.ScaleX ?? 1, 0.99, 0.985, 220));
             scale?.BeginAnimation(ScaleTransform.ScaleYProperty,
-                CreatePlayfulAnimation(scale?.ScaleY ?? 1, 0.99, 0.985, 220));
+                MotionAnimations.CreatePlayful(scale?.ScaleY ?? 1, 0.99, 0.985, 220));
             translate?.BeginAnimation(TranslateTransform.YProperty,
-                CreatePlayfulAnimation(translate?.Y ?? 0, 3.5, 4, 220));
+                MotionAnimations.CreatePlayful(translate?.Y ?? 0, 3.5, 4, 220));
             var hideTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(240) };
             hideTimer.Tick += (sender, args) =>
             {
@@ -276,11 +277,11 @@ namespace TCLauncher.MVVM.Controls
                 var translate = transforms.Children.OfType<TranslateTransform>().FirstOrDefault();
                 var scale = transforms.Children.OfType<ScaleTransform>().FirstOrDefault();
                 translate?.BeginAnimation(TranslateTransform.YProperty,
-                    CreateShortSoftAnimation(translate.Y, StackHoverTravel, 230));
+                    MotionAnimations.CreateSoft(translate.Y, StackHoverTravel, 230));
                 scale?.BeginAnimation(ScaleTransform.ScaleXProperty,
-                    CreateShortSoftAnimation(scale.ScaleX, StackHoverScale, 230));
+                    MotionAnimations.CreateSoft(scale.ScaleX, StackHoverScale, 230));
                 scale?.BeginAnimation(ScaleTransform.ScaleYProperty,
-                    CreateShortSoftAnimation(scale.ScaleY, StackHoverScale, 230));
+                    MotionAnimations.CreateSoft(scale.ScaleY, StackHoverScale, 230));
             }
         }
 
@@ -292,11 +293,11 @@ namespace TCLauncher.MVVM.Controls
                 var translate = transforms.Children.OfType<TranslateTransform>().FirstOrDefault();
                 var scale = transforms.Children.OfType<ScaleTransform>().FirstOrDefault();
                 translate?.BeginAnimation(TranslateTransform.YProperty,
-                    CreateShortSoftAnimation(translate.Y, 0, 230));
+                    MotionAnimations.CreateSoft(translate.Y, 0, 230));
                 scale?.BeginAnimation(ScaleTransform.ScaleXProperty,
-                    CreateShortSoftAnimation(scale.ScaleX, 1, 230));
+                    MotionAnimations.CreateSoft(scale.ScaleX, 1, 230));
                 scale?.BeginAnimation(ScaleTransform.ScaleYProperty,
-                    CreateShortSoftAnimation(scale.ScaleY, 1, 230));
+                    MotionAnimations.CreateSoft(scale.ScaleY, 1, 230));
             }
         }
 
@@ -326,9 +327,9 @@ namespace TCLauncher.MVVM.Controls
             scale.ScaleX = 0.985;
             scale.ScaleY = 0.985;
             translate.Y = 0;
-            border.BeginAnimation(OpacityProperty, CreatePlayfulAnimation(0, 0.82, 1, 280));
-            scale.BeginAnimation(ScaleTransform.ScaleXProperty, CreatePlayfulAnimation(0.985, 0.998, 1, 340));
-            scale.BeginAnimation(ScaleTransform.ScaleYProperty, CreatePlayfulAnimation(0.985, 0.998, 1, 340));
+            border.BeginAnimation(OpacityProperty, MotionAnimations.CreatePlayful(0, 0.82, 1, 280));
+            scale.BeginAnimation(ScaleTransform.ScaleXProperty, MotionAnimations.CreatePlayful(0.985, 0.998, 1, 340));
+            scale.BeginAnimation(ScaleTransform.ScaleYProperty, MotionAnimations.CreatePlayful(0.985, 0.998, 1, 340));
 
             PropertyChangedEventHandler handler = (changeSender, args) =>
             {
@@ -399,34 +400,10 @@ namespace TCLauncher.MVVM.Controls
         {
             translate.BeginAnimation(TranslateTransform.YProperty, null);
             translate.Y = 0;
-            border.BeginAnimation(OpacityProperty, CreatePlayfulAnimation(1, 0.28, 0, 220));
-            scale.BeginAnimation(ScaleTransform.ScaleXProperty, CreatePlayfulAnimation(1, 0.97, 0.985, 220));
-            scale.BeginAnimation(ScaleTransform.ScaleYProperty, CreatePlayfulAnimation(1, 0.97, 0.985, 220));
+            border.BeginAnimation(OpacityProperty, MotionAnimations.CreatePlayful(1, 0.28, 0, 220));
+            scale.BeginAnimation(ScaleTransform.ScaleXProperty, MotionAnimations.CreatePlayful(1, 0.97, 0.985, 220));
+            scale.BeginAnimation(ScaleTransform.ScaleYProperty, MotionAnimations.CreatePlayful(1, 0.97, 0.985, 220));
         }
-
-        private static DoubleAnimationUsingKeyFrames CreatePlayfulAnimation(double from, double settle,
-            double to, int milliseconds)
-        {
-            var animation = new DoubleAnimationUsingKeyFrames
-            {
-                Duration = TimeSpan.FromMilliseconds(milliseconds),
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            animation.KeyFrames.Add(new EasingDoubleKeyFrame(from,
-                KeyTime.FromPercent(0), new CubicEase { EasingMode = EasingMode.EaseOut }));
-            animation.KeyFrames.Add(new EasingDoubleKeyFrame(settle,
-                KeyTime.FromPercent(0.62), new CubicEase { EasingMode = EasingMode.EaseOut }));
-            animation.KeyFrames.Add(new EasingDoubleKeyFrame(to,
-                KeyTime.FromPercent(1), new CubicEase { EasingMode = EasingMode.EaseInOut }));
-            return animation;
-        }
-
-        private static DoubleAnimation CreateShortSoftAnimation(double from, double to, int milliseconds) =>
-            new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
-            {
-                FillBehavior = FillBehavior.HoldEnd,
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
-            };
 
         private static TransformGroup GetWritableTransformGroup(FrameworkElement element)
         {
@@ -437,14 +414,6 @@ namespace TCLauncher.MVVM.Controls
             element.RenderTransform = writable;
             return writable;
         }
-
-        private static DoubleAnimation CreateBoundedAnimation(double from, double to, int milliseconds,
-            EasingMode easingMode) =>
-            new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(milliseconds))
-            {
-                FillBehavior = FillBehavior.HoldEnd,
-                EasingFunction = new CubicEase { EasingMode = easingMode }
-            };
 
         private static bool IsInside(DependencyObject source, DependencyObject ancestor)
         {

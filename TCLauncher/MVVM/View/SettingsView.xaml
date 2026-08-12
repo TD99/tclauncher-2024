@@ -204,7 +204,9 @@
                                 Padding="3"
                                 Foreground="#83D5BB"
                                 IsReadOnly="True"
+                                FontFamily="{StaticResource FiraCode}"
                                 IsReadOnlyCaretVisible="False"
+                                TextAlignment="Left"
                                 TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
