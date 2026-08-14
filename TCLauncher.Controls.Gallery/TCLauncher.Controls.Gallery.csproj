@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net481</TargetFramework>
@@ -12,6 +12,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\TCLauncher\TCLauncher.App.csproj" />
+        <ProjectReference Include="..\TCLauncher\TCLauncher.App.csproj">
+            <Private>false</Private>
+        </ProjectReference>
+
+        <Content Include="..\TCLauncher\bin\$(Configuration)\net481\**\*">
+            <Link>lib\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>

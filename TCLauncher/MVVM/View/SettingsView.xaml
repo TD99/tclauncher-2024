@@ -361,23 +361,41 @@
                     <TextBlock Style="{StaticResource SettingsSectionHeading}" Text="{core:Localize Key=settings_about}" />
                     <Border
                         x:Name="AboutCard"
+                        Padding="0"
                         Style="{StaticResource SettingCard}"
                         Tag="about version framework windows edition copyright">
-                        <StackPanel>
-                            <TextBlock
-                                FontFamily="{StaticResource PixelifySans}"
-                                FontSize="24"
-                                Text="TCLauncher Windows Edition" />
-                            <TextBlock x:Name="assemblyVersion" Margin="0,12,0,0" />
-                            <TextBlock x:Name="frameworkVersion" Margin="0,7,0,0" />
-                            <TextBlock x:Name="CopyrightCompilationYear" Margin="0,7,0,0" />
-                            <Button
-                                Margin="0,16,0,0"
-                                Padding="14,8"
-                                HorizontalAlignment="Left"
-                                Click="ReSetupBtn_OnClick"
-                                Content="{core:Localize Key=settings_run_setup}" />
-                        </StackPanel>
+                        <Grid>
+                            <StackPanel Margin="16,16,196,16">
+                                <TextBlock
+                                    FontFamily="{StaticResource PixelifySans}"
+                                    FontSize="24"
+                                    Text="TCLauncher Windows Edition" />
+                                <TextBlock x:Name="assemblyVersion" Margin="0,12,0,0" />
+                                <TextBlock x:Name="frameworkVersion" Margin="0,7,0,0" />
+                                <TextBlock x:Name="CopyrightCompilationYear" Margin="0,7,0,0" />
+                                <Button
+                                    Margin="0,16,0,0"
+                                    Padding="14,8"
+                                    HorizontalAlignment="Left"
+                                    Click="ReSetupBtn_OnClick"
+                                    Content="{core:Localize Key=settings_run_setup}" />
+                            </StackPanel>
+                            <Canvas
+                                x:Name="AboutMascotHost"
+                                ClipToBounds="True"
+                                IsHitTestVisible="False"
+                                SizeChanged="AboutMascotHost_OnSizeChanged">
+                                <Image
+                                    x:Name="AboutMascot"
+                                    Canvas.Bottom="0"
+                                    Canvas.Right="30"
+                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                    SnapsToDevicePixels="True"
+                                    Source="/Assets/Images/tclauncher-mascot-seated-looking-right.png"
+                                    Stretch="Uniform"
+                                    UseLayoutRounding="True" />
+                            </Canvas>
+                        </Grid>
                     </Border>
                     <Border
                         x:Name="UpdateCard"

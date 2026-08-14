@@ -64,6 +64,11 @@ namespace TCLauncher.MVVM.View
             _initializing = false;
         }
 
+        private void AboutMascotHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AboutMascot.Height = e.NewSize.Height * 0.8;
+        }
+
         private static void SelectByTag(ComboBox comboBox, string tag) => comboBox.SelectedItem =
             comboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => Equals(item.Tag, tag));
 
